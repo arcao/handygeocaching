@@ -1,0 +1,2099 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MVDData version="1.3">
+    <DesignDocument designVersion="MIDP-2" uidCounter="479">
+        <DesignComponent id="$MobileDevice" typeid="MIDP:$MobileDevice" uid="0"/>
+        <DesignComponent id="$StartPoint" typeid="MIDP:$StartPoint" uid="1">
+            <Property name="targetDisplayable" value="ssAdvertisement"/>
+            <Property name="targetForwardDisplayable"/>
+        </DesignComponent>
+        <DesignComponent id="lstDevices" typeid="MIDP:javax.microedition.lcdui.List" uid="3">
+            <Property name="title" value="STRING:Vyberte GPS modul:"/>
+            <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="selectCommandAction" value="$SelectCommandAction1"/>
+            <Property name="indexBasedSwitch" value="true"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction2"/>
+                <ContainerPropertyItem value="$CommandAction9"/>
+            </ContainerProperty>
+            <ContainerProperty name="elements">
+                <ContainerPropertyItem value="Midp2ListElementDC10"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$SelectCommandAction1" typeid="MIDP:SelectCommandAction" uid="4">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionOrigin" value="lstDevices"/>
+        </DesignComponent>
+        <DesignComponent id="lstMenu" typeid="MIDP:javax.microedition.lcdui.List" uid="5">
+            <Property name="title" value="STRING:Handy Geocaching"/>
+            <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="selectCommandAction" value="$SelectCommandAction2"/>
+            <Property name="indexBasedSwitch" value="true"/>
+            <ContainerProperty name="commands"/>
+            <ContainerProperty name="elements">
+                <ContainerPropertyItem value="Midp2ListElementDC5"/>
+                <ContainerPropertyItem value="Midp2ListElementDC12"/>
+                <ContainerPropertyItem value="Midp2ListElementDC6"/>
+                <ContainerPropertyItem value="Midp2ListElementDC9"/>
+                <ContainerPropertyItem value="Midp2ListElementDC7"/>
+                <ContainerPropertyItem value="Midp2ListElementDC8"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$SelectCommandAction2" typeid="MIDP:SelectCommandAction" uid="6">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionOrigin" value="lstMenu"/>
+        </DesignComponent>
+        <DesignComponent id="frmAveraging" typeid="MIDP:javax.microedition.lcdui.Form" uid="7">
+            <Property name="title" value="STRING:Pr\u016Fm\u011Brov\u00E1n\u00ED"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction4"/>
+                <ContainerPropertyItem value="$CommandAction5"/>
+                <ContainerPropertyItem value="$CommandAction6"/>
+                <ContainerPropertyItem value="$CommandAction80"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="siCurrentCoordinates"/>
+                <ContainerPropertyItem value="siAverageLattitude"/>
+                <ContainerPropertyItem value="siAverageLongitude"/>
+                <ContainerPropertyItem value="siMeasures"/>
+                <ContainerPropertyItem value="siAdditional"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="siCurrentCoordinates" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="10">
+            <Property name="label" value="STRING:Aktu\u00E1ln\u00ED sou\u0159adnice:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siAverageLattitude" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="11">
+            <Property name="label" value="STRING:Pr\u016Fm\u011Brn\u00E9 sou\u0159adnice:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siMeasures" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="12">
+            <Property name="label" value="STRING:Po\u010Det m\u011B\u0159en\u00ED:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siAdditional" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="13">
+            <Property name="label" value="STRING:Satelity/Rychlost/P\u0159esnost"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="cmdExit" typeid="MIDP:javax.microedition.lcdui.Command" uid="15">
+            <Property name="label" value="STRING:Konec"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="EXIT"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction2" typeid="MIDP:CommandAction" uid="17">
+            <Property name="targetDisplayable" value="$MobileDevice"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdExit"/>
+            <Property name="actionOrigin" value="lstDevices"/>
+        </DesignComponent>
+        <DesignComponent id="cmdBack" typeid="MIDP:javax.microedition.lcdui.Command" uid="21">
+            <Property name="label" value="STRING:Zp\u011Bt"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="BACK"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction4" typeid="MIDP:CommandAction" uid="22">
+            <Property name="targetDisplayable" value="lstGPS"/>
+            <Property name="targetForwardDisplayable" value="frmAveraging"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmAveraging"/>
+        </DesignComponent>
+        <DesignComponent id="cmdPause" typeid="MIDP:javax.microedition.lcdui.Command" uid="23">
+            <Property name="label" value="STRING:Pozastavit"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction5" typeid="MIDP:CommandAction" uid="24">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdPause"/>
+            <Property name="actionOrigin" value="frmAveraging"/>
+        </DesignComponent>
+        <DesignComponent id="cmdResume" typeid="MIDP:javax.microedition.lcdui.Command" uid="25">
+            <Property name="label" value="STRING:Pokra\u010Dovat"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction6" typeid="MIDP:CommandAction" uid="26">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdResume"/>
+            <Property name="actionOrigin" value="frmAveraging"/>
+        </DesignComponent>
+        <DesignComponent id="lstMode" typeid="MIDP:javax.microedition.lcdui.List" uid="27">
+            <Property name="title" value="STRING:Zvolte m\u00F3d:"/>
+            <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="selectCommandAction" value="$SelectCommandAction3"/>
+            <Property name="indexBasedSwitch" value="true"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction7"/>
+                <ContainerPropertyItem value="$CommandAction89"/>
+            </ContainerProperty>
+            <ContainerProperty name="elements">
+                <ContainerPropertyItem value="Midp2ListElementDC2"/>
+                <ContainerPropertyItem value="Midp2ListElementDC22"/>
+                <ContainerPropertyItem value="Midp2ListElementDC19"/>
+                <ContainerPropertyItem value="Midp2ListElementDC3"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$SelectCommandAction3" typeid="MIDP:SelectCommandAction" uid="28">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionOrigin" value="lstMode"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC2" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="29">
+            <Property name="string" value="STRING:Bluetooth GPS"/>
+            <Property name="image" value="imgBluetooth"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction2"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction2" typeid="MIDP:SelectCaseCommandAction" uid="30">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC2"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC3" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="31">
+            <Property name="string" value="STRING:Bez GPS"/>
+            <Property name="image" value="imgNoGps"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction3"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction3" typeid="MIDP:SelectCaseCommandAction" uid="32">
+            <Property name="targetDisplayable" value="lstMenu"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC3"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction7" typeid="MIDP:CommandAction" uid="33">
+            <Property name="targetDisplayable" value="$MobileDevice"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdExit"/>
+            <Property name="actionOrigin" value="lstMode"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC5" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="36">
+            <Property name="string" value="STRING:Vyhled\u00E1v\u00E1n\u00ED"/>
+            <Property name="image" value="imgSearch"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction5"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction5" typeid="MIDP:SelectCaseCommandAction" uid="37">
+            <Property name="targetDisplayable" value="lstSearch"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC5"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC7" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="40">
+            <Property name="string" value="STRING:O aplikaci"/>
+            <Property name="image" value="imgAbout"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction7"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction7" typeid="MIDP:SelectCaseCommandAction" uid="41">
+            <Property name="targetDisplayable" value="frmAbout"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC7"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction9" typeid="MIDP:CommandAction" uid="43">
+            <Property name="targetDisplayable" value="lstMode"/>
+            <Property name="targetForwardDisplayable" value="lstDevices"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="lstDevices"/>
+        </DesignComponent>
+        <DesignComponent id="frmLoading" typeid="MIDP:javax.microedition.lcdui.Form" uid="53">
+            <Property name="title" value="STRING:Pros\u00EDm \u010Dekejte"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction29"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="siMessage"/>
+                <ContainerPropertyItem value="gaLoading"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="siMessage" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="54">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING:P\u0159ipojuji se k serveru a stahuji data..."/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="cmdSend" typeid="MIDP:javax.microedition.lcdui.Command" uid="58">
+            <Property name="label" value="STRING:Ok"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="cmdMenu" typeid="MIDP:javax.microedition.lcdui.Command" uid="62">
+            <Property name="label" value="STRING:Menu"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="frmCoordinates" typeid="MIDP:javax.microedition.lcdui.Form" uid="65">
+            <Property name="title" value="STRING:Zadejte sou\u0159adnice:"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction14"/>
+                <ContainerPropertyItem value="$CommandAction15"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="tfLattitude"/>
+                <ContainerPropertyItem value="tfLongitude"/>
+                <ContainerPropertyItem value="stringItem6"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="tfLattitude" typeid="MIDP:javax.microedition.lcdui.TextField" uid="66">
+            <Property name="label" value="STRING:"/>
+            <Property name="string" value="STRING:"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfLongitude" typeid="MIDP:javax.microedition.lcdui.TextField" uid="67">
+            <Property name="label" value="STRING:"/>
+            <Property name="string" value="STRING:"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction14" typeid="MIDP:CommandAction" uid="68">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdSend"/>
+            <Property name="actionOrigin" value="frmCoordinates"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction15" typeid="MIDP:CommandAction" uid="69">
+            <Property name="targetDisplayable" value="lstSearch"/>
+            <Property name="targetForwardDisplayable" value="frmCoordinates"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmCoordinates"/>
+        </DesignComponent>
+        <DesignComponent id="lstNearestCaches" typeid="MIDP:javax.microedition.lcdui.List" uid="71">
+            <Property name="title" value="STRING:Nejbli\u017E\u0161\u00ED cache"/>
+            <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="fitPolicy" value="TEXT_WRAP_ON"/>
+            <Property name="selectCommandAction" value="$SelectCommandAction4"/>
+            <Property name="indexBasedSwitch" value="true"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction16"/>
+            </ContainerProperty>
+            <ContainerProperty name="elements">
+                <ContainerPropertyItem value="Midp2ListElementDC4"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$SelectCommandAction4" typeid="MIDP:SelectCommandAction" uid="72">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionOrigin" value="lstNearestCaches"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction16" typeid="MIDP:CommandAction" uid="73">
+            <Property name="targetDisplayable" value="frmCoordinates"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="lstNearestCaches"/>
+        </DesignComponent>
+        <DesignComponent id="frmWaypoint" typeid="MIDP:javax.microedition.lcdui.Form" uid="85">
+            <Property name="title" value="STRING:Zadejte waypoint:"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction17"/>
+                <ContainerPropertyItem value="$CommandAction18"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="tfWaypoint"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="tfWaypoint" typeid="MIDP:javax.microedition.lcdui.TextField" uid="86">
+            <Property name="label" value="STRING:"/>
+            <Property name="string" value="STRING:GC"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction17" typeid="MIDP:CommandAction" uid="87">
+            <Property name="targetDisplayable" value="lstSearch"/>
+            <Property name="targetForwardDisplayable" value="frmWaypoint"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmWaypoint"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction18" typeid="MIDP:CommandAction" uid="88">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdSend"/>
+            <Property name="actionOrigin" value="frmWaypoint"/>
+        </DesignComponent>
+        <DesignComponent id="frmOverview" typeid="MIDP:javax.microedition.lcdui.Form" uid="90">
+            <Property name="title" value="STRING:Detaily cache"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction19"/>
+                <ContainerPropertyItem value="$CommandAction20"/>
+                <ContainerPropertyItem value="$CommandAction21"/>
+                <ContainerPropertyItem value="$CommandAction22"/>
+                <ContainerPropertyItem value="$CommandAction23"/>
+                <ContainerPropertyItem value="$CommandAction33"/>
+                <ContainerPropertyItem value="$CommandAction34"/>
+                <ContainerPropertyItem value="$CommandAction38"/>
+                <ContainerPropertyItem value="$CommandAction45"/>
+                <ContainerPropertyItem value="$CommandAction78"/>
+                <ContainerPropertyItem value="$CommandAction85"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="siName"/>
+                <ContainerPropertyItem value="siAuthor"/>
+                <ContainerPropertyItem value="siType"/>
+                <ContainerPropertyItem value="siSize"/>
+                <ContainerPropertyItem value="siOverviewLattitude"/>
+                <ContainerPropertyItem value="siOverviewLongitude"/>
+                <ContainerPropertyItem value="siDifficulty"/>
+                <ContainerPropertyItem value="siWaypoint"/>
+                <ContainerPropertyItem value="siInventory"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction19" typeid="MIDP:CommandAction" uid="91">
+            <Property name="targetDisplayable" value="frmWaypoint"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmOverview"/>
+        </DesignComponent>
+        <DesignComponent id="siName" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="94">
+            <Property name="label" value="STRING:N\u00E1zev"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siAuthor" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="95">
+            <Property name="label" value="STRING:Autor"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siWaypoint" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="96">
+            <Property name="label" value="STRING:Waypoint"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siType" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="97">
+            <Property name="label" value="STRING:Typ"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siSize" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="98">
+            <Property name="label" value="STRING:Velikost"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siDifficulty" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="100">
+            <Property name="label" value="STRING:Obt\u00ED\u017Enost/Ter\u00E9n"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siInventory" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="101">
+            <Property name="label" value="STRING:Invent\u00E1\u0159"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="cmdHint" typeid="MIDP:javax.microedition.lcdui.Command" uid="102">
+            <Property name="label" value="STRING:N\u00E1pov\u011Bda"/>
+            <Property name="priority" value="2"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction20" typeid="MIDP:CommandAction" uid="103">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdHint"/>
+            <Property name="actionOrigin" value="frmOverview"/>
+        </DesignComponent>
+        <DesignComponent id="cmdInfo" typeid="MIDP:javax.microedition.lcdui.Command" uid="104">
+            <Property name="label" value="STRING:Podrobnosti"/>
+            <Property name="priority" value="3"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction21" typeid="MIDP:CommandAction" uid="105">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdInfo"/>
+            <Property name="actionOrigin" value="frmOverview"/>
+        </DesignComponent>
+        <DesignComponent id="cmdLogs" typeid="MIDP:javax.microedition.lcdui.Command" uid="106">
+            <Property name="label" value="STRING:Logy"/>
+            <Property name="priority" value="4"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction22" typeid="MIDP:CommandAction" uid="107">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdLogs"/>
+            <Property name="actionOrigin" value="frmOverview"/>
+        </DesignComponent>
+        <DesignComponent id="cmdWaypoints" typeid="MIDP:javax.microedition.lcdui.Command" uid="108">
+            <Property name="label" value="STRING:Waypointy"/>
+            <Property name="priority" value="5"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction23" typeid="MIDP:CommandAction" uid="109">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdWaypoints"/>
+            <Property name="actionOrigin" value="frmOverview"/>
+        </DesignComponent>
+        <DesignComponent id="frmInfo" typeid="MIDP:javax.microedition.lcdui.Form" uid="110">
+            <Property name="title" value="STRING:Podrobnosti"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction24"/>
+                <ContainerPropertyItem value="$CommandAction13"/>
+                <ContainerPropertyItem value="$CommandAction82"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="siBegin"/>
+                <ContainerPropertyItem value="siContent"/>
+                <ContainerPropertyItem value="siEnd"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction24" typeid="MIDP:CommandAction" uid="111">
+            <Property name="targetDisplayable" value="frmOverview"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmInfo"/>
+        </DesignComponent>
+        <DesignComponent id="frmHint" typeid="MIDP:javax.microedition.lcdui.Form" uid="112">
+            <Property name="title" value="STRING:N\u00E1pov\u011Bda"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction25"/>
+            </ContainerProperty>
+            <ContainerProperty name="items"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction25" typeid="MIDP:CommandAction" uid="113">
+            <Property name="targetDisplayable" value="frmOverview"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmHint"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC8" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="114">
+            <Property name="string" value="STRING:Konec"/>
+            <Property name="image" value="imgExit"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction8"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction8" typeid="MIDP:SelectCaseCommandAction" uid="115">
+            <Property name="targetDisplayable" value="$MobileDevice"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC8"/>
+        </DesignComponent>
+        <DesignComponent id="frmWaypoints" typeid="MIDP:javax.microedition.lcdui.Form" uid="116">
+            <Property name="title" value="STRING:Waypointy"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction3"/>
+                <ContainerPropertyItem value="$CommandAction48"/>
+            </ContainerProperty>
+            <ContainerProperty name="items"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction3" typeid="MIDP:CommandAction" uid="117">
+            <Property name="targetDisplayable" value="frmOverview"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmWaypoints"/>
+        </DesignComponent>
+        <DesignComponent id="frmLogs" typeid="MIDP:javax.microedition.lcdui.Form" uid="118">
+            <Property name="title" value="STRING:Posledn\u00ED logy"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction26"/>
+                <ContainerPropertyItem value="$CommandAction35"/>
+            </ContainerProperty>
+            <ContainerProperty name="items"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction26" typeid="MIDP:CommandAction" uid="119">
+            <Property name="targetDisplayable" value="frmOverview"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmLogs"/>
+        </DesignComponent>
+        <DesignComponent id="imgSearch" typeid="MIDP:javax.microedition.lcdui.Image" uid="120">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="imgNoGps" typeid="MIDP:javax.microedition.lcdui.Image" uid="121">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="imgGps" typeid="MIDP:javax.microedition.lcdui.Image" uid="122">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="imgAveraging" typeid="MIDP:javax.microedition.lcdui.Image" uid="123">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="imgAbout" typeid="MIDP:javax.microedition.lcdui.Image" uid="124">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="imgExit" typeid="MIDP:javax.microedition.lcdui.Image" uid="125">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="frmAbout" typeid="MIDP:javax.microedition.lcdui.Form" uid="126">
+            <Property name="title" value="STRING:Handy Geocaching"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction27"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="siVerze"/>
+                <ContainerPropertyItem value="stringItem1"/>
+                <ContainerPropertyItem value="siDonate"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="siVerze" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="127">
+            <Property name="label" value="STRING:Verze:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="stringItem1" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="128">
+            <Property name="label" value="STRING:O aplikaci:"/>
+            <Property name="text" value="STRING:Tuto aplikaci sponzoruje Axima spol. s.r.o., Palack\u00E9ho t\u0159\u00EDda 16, 61200 Brno.\n\nAplikaci vytvo\u0159il David V\u00E1vra (Destil). Kontakt: me@destil.cz\n\nV p\u0159\u00EDpad\u011B probl\u00E9m\u016F a pro v\u00EDce informac\u00ED nav\u0161tivte str\u00E1nky http://hg.destil.cz"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction27" typeid="MIDP:CommandAction" uid="129">
+            <Property name="targetDisplayable" value="lstMenu"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmAbout"/>
+        </DesignComponent>
+        <DesignComponent id="cmdStop" typeid="MIDP:javax.microedition.lcdui.Command" uid="135">
+            <Property name="label" value="STRING:Stop"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="STOP"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction29" typeid="MIDP:CommandAction" uid="136">
+            <Property name="targetDisplayable" value="lstMenu"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdStop"/>
+            <Property name="actionOrigin" value="frmLoading"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC9" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="138">
+            <Property name="string" value="STRING:Nastaven\u00ED"/>
+            <Property name="image" value="imgSettings"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction9"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction9" typeid="MIDP:SelectCaseCommandAction" uid="139">
+            <Property name="targetDisplayable" value="frmSettings"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC9"/>
+        </DesignComponent>
+        <DesignComponent id="imgSettings" typeid="MIDP:javax.microedition.lcdui.Image" uid="140">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="frmSettings" typeid="MIDP:javax.microedition.lcdui.Form" uid="141">
+            <Property name="title" value="STRING:Nastaven\u00ED"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction32"/>
+                <ContainerPropertyItem value="$CommandAction1"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="stringItem3"/>
+                <ContainerPropertyItem value="tfName"/>
+                <ContainerPropertyItem value="tfPassword"/>
+                <ContainerPropertyItem value="cgOtherSettings"/>
+                <ContainerPropertyItem value="tfNumberCaches"/>
+                <ContainerPropertyItem value="tfBackLight"/>
+                <ContainerPropertyItem value="stringItem10"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="cmdSave" typeid="MIDP:javax.microedition.lcdui.Command" uid="143">
+            <Property name="label" value="STRING:Ulo\u017Eit"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="OK"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction32" typeid="MIDP:CommandAction" uid="144">
+            <Property name="targetDisplayable" value="lstMenu"/>
+            <Property name="targetForwardDisplayable" value="frmSettings"/>
+            <Property name="actionSource" value="cmdSave"/>
+            <Property name="actionOrigin" value="frmSettings"/>
+        </DesignComponent>
+        <DesignComponent id="stringItem3" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="145">
+            <Property name="label" value="STRING:P\u0159ihla\u0161ovac\u00ED \u00FAdaje na geocaching.com:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfName" typeid="MIDP:javax.microedition.lcdui.TextField" uid="146">
+            <Property name="label" value="STRING:Jm\u00E9no:"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfPassword" typeid="MIDP:javax.microedition.lcdui.TextField" uid="147">
+            <Property name="label" value="STRING:Heslo:"/>
+            <Property name="maxSize" value="120"/>
+            <Property name="constraints" value="65536"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="cgOtherSettings" typeid="MIDP:javax.microedition.lcdui.ChoiceGroup" uid="148">
+            <Property name="label" value="STRING:Nejbli\u017E\u0161\u00ED cache:"/>
+            <Property name="choiceType" value="MULTIPLE"/>
+            <ContainerProperty name="commands"/>
+            <ContainerProperty name="elements">
+                <ContainerPropertyItem value="Midp2ChoiceElementDC1"/>
+                <ContainerPropertyItem value="Midp2ChoiceElementDC2"/>
+                <ContainerPropertyItem value="Midp2ChoiceElementDC4"/>
+                <ContainerPropertyItem value="Midp2ChoiceElementDC5"/>
+                <ContainerPropertyItem value="Midp2ChoiceElementDC6"/>
+                <ContainerPropertyItem value="Midp2ChoiceElementDC7"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC1" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="149">
+            <Property name="string" value="STRING:Traditional"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC2" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="150">
+            <Property name="string" value="STRING:Multi"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="frmConnecting" typeid="MIDP:javax.microedition.lcdui.Form" uid="152">
+            <Property name="title" value="STRING:Pr\u016Fb\u011Bh p\u0159ipojen\u00ED"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction11"/>
+            </ContainerProperty>
+            <ContainerProperty name="items"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction11" typeid="MIDP:CommandAction" uid="153">
+            <Property name="targetDisplayable" value="lstMode"/>
+            <Property name="targetForwardDisplayable" value="frmConnecting"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmConnecting"/>
+        </DesignComponent>
+        <DesignComponent id="cmdNavigate" typeid="MIDP:javax.microedition.lcdui.Command" uid="167">
+            <Property name="label" value="STRING:Navigovat"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction33" typeid="MIDP:CommandAction" uid="168">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable" value="frmOverview"/>
+            <Property name="actionSource" value="cmdNavigate"/>
+            <Property name="actionOrigin" value="frmOverview"/>
+        </DesignComponent>
+        <DesignComponent id="stringItem6" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="169">
+            <Property name="label" value="STRING:Form\u00E1t:"/>
+            <Property name="text" value="STRING:N ss\u00B0 mm.mmm\nE sss\u00B0 mm.mmm"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="cmdNext" typeid="MIDP:javax.microedition.lcdui.Command" uid="172">
+            <Property name="label" value="STRING:Naj\u00EDt nejbli\u017E\u0161\u00ED"/>
+            <Property name="priority" value="10"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction34" typeid="MIDP:CommandAction" uid="173">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdNext"/>
+            <Property name="actionOrigin" value="frmOverview"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction35" typeid="MIDP:CommandAction" uid="176">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource"/>
+            <Property name="actionOrigin" value="frmLogs"/>
+        </DesignComponent>
+        <DesignComponent id="frmAllLogs" typeid="MIDP:javax.microedition.lcdui.Form" uid="177">
+            <Property name="title" value="STRING:V\u0161echny dal\u0161\u00ED logy"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction36"/>
+            </ContainerProperty>
+            <ContainerProperty name="items"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction36" typeid="MIDP:CommandAction" uid="178">
+            <Property name="targetDisplayable" value="frmLogs"/>
+            <Property name="targetForwardDisplayable" value="frmAllLogs"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmAllLogs"/>
+        </DesignComponent>
+        <DesignComponent id="imgNavigate" typeid="MIDP:javax.microedition.lcdui.Image" uid="179">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="fntBold" typeid="MIDP:javax.microedition.lcdui.Font" uid="182">
+            <Property name="face" value="FACE_SYSTEM"/>
+            <Property name="style" value="1"/>
+            <Property name="size" value="SIZE_MEDIUM"/>
+        </DesignComponent>
+        <DesignComponent id="fntNormal" typeid="MIDP:javax.microedition.lcdui.Font" uid="183">
+            <Property name="face" value="FACE_SYSTEM"/>
+            <Property name="style" value="0"/>
+            <Property name="size" value="SIZE_MEDIUM"/>
+        </DesignComponent>
+        <DesignComponent id="ssAdvertisement" typeid="MIDP-2:org.netbeans.microedition.lcdui.SplashScreen" uid="184">
+            <Property name="timeout" value="2000"/>
+            <Property name="dismissCommandAction" value="$InternalCommandAction1"/>
+            <Property name="text" value="STRING:"/>
+            <Property name="image" value="imgAdvertisement"/>
+            <Property name="fullScreen" value="true"/>
+            <Property name="title" value="STRING:Handy Geocaching"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$InternalCommandAction1" typeid="MIDP:InternalCommandAction" uid="185">
+            <Property name="targetDisplayable" value="lstMode"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="ssAdvertisement"/>
+            <Property name="actionOrigin" value="ssAdvertisement"/>
+        </DesignComponent>
+        <DesignComponent id="imgAdvertisement" typeid="MIDP:javax.microedition.lcdui.Image" uid="189">
+            <Property name="imageResourcePath" value="/reklama.png"/>
+        </DesignComponent>
+        <DesignComponent id="frmDebug" typeid="MIDP:javax.microedition.lcdui.Form" uid="190">
+            <Property name="title" value="STRING:Debug"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction10"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="siDebug"/>
+                <ContainerPropertyItem value="siDebug2"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction10" typeid="MIDP:CommandAction" uid="191">
+            <Property name="targetDisplayable" value="lstMenu"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdMenu"/>
+            <Property name="actionOrigin" value="frmDebug"/>
+        </DesignComponent>
+        <DesignComponent id="siDebug" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="192">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siDebug2" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="193">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC10" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="197">
+            <Property name="string" value="STRING:Pros\u00EDm \u010Dekejte..."/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction10"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction10" typeid="MIDP:SelectCaseCommandAction" uid="198">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC10"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC3" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="201">
+            <Property name="string" value="STRING:Choice Element"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction38" typeid="MIDP:CommandAction" uid="209">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource"/>
+            <Property name="actionOrigin" value="frmOverview"/>
+        </DesignComponent>
+        <DesignComponent id="imgKeyword" typeid="MIDP:javax.microedition.lcdui.Image" uid="212">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC12" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="213">
+            <Property name="string" value="STRING:Obl\u00EDben\u00E9"/>
+            <Property name="image" value="imgFavourites"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction12"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction12" typeid="MIDP:SelectCaseCommandAction" uid="214">
+            <Property name="targetDisplayable" value="lstFavourites"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC12"/>
+        </DesignComponent>
+        <DesignComponent id="imgFavourites" typeid="MIDP:javax.microedition.lcdui.Image" uid="215">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="tfNumberCaches" typeid="MIDP:javax.microedition.lcdui.TextField" uid="218">
+            <Property name="label" value="STRING:Po\u010Det ke\u0161\u00ED:"/>
+            <Property name="string" value="STRING:10"/>
+            <Property name="maxSize" value="120"/>
+            <Property name="constraints" value="2"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="frmKeyword" typeid="MIDP:javax.microedition.lcdui.Form" uid="219">
+            <Property name="title" value="STRING:Zadejte kl\u00ED\u010Dov\u00E9 slovo:"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction39"/>
+                <ContainerPropertyItem value="$CommandAction40"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="tfKeyword"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="tfKeyword" typeid="MIDP:javax.microedition.lcdui.TextField" uid="220">
+            <Property name="label" value="STRING:"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction39" typeid="MIDP:CommandAction" uid="221">
+            <Property name="targetDisplayable" value="lstSearch"/>
+            <Property name="targetForwardDisplayable" value="frmKeyword"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmKeyword"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction40" typeid="MIDP:CommandAction" uid="222">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdSend"/>
+            <Property name="actionOrigin" value="frmKeyword"/>
+        </DesignComponent>
+        <DesignComponent id="lstKeyword" typeid="MIDP:javax.microedition.lcdui.List" uid="223">
+            <Property name="title" value="STRING:Nalezen\u00E9 cache:"/>
+            <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="fitPolicy" value="TEXT_WRAP_ON"/>
+            <Property name="selectCommandAction" value="$SelectCommandAction5"/>
+            <Property name="indexBasedSwitch" value="true"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction41"/>
+            </ContainerProperty>
+            <ContainerProperty name="elements">
+                <ContainerPropertyItem value="Midp2ListElementDC17"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$SelectCommandAction5" typeid="MIDP:SelectCommandAction" uid="224">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionOrigin" value="lstKeyword"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction41" typeid="MIDP:CommandAction" uid="225">
+            <Property name="targetDisplayable" value="frmKeyword"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="lstKeyword"/>
+        </DesignComponent>
+        <DesignComponent id="lstSearch" typeid="MIDP:javax.microedition.lcdui.List" uid="226">
+            <Property name="title" value="STRING:Vyhled\u00E1v\u00E1n\u00ED"/>
+            <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="selectCommandAction" value="$SelectCommandAction6"/>
+            <Property name="indexBasedSwitch" value="true"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction42"/>
+            </ContainerProperty>
+            <ContainerProperty name="elements">
+                <ContainerPropertyItem value="Midp2ListElementDC13"/>
+                <ContainerPropertyItem value="Midp2ListElementDC14"/>
+                <ContainerPropertyItem value="Midp2ListElementDC15"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$SelectCommandAction6" typeid="MIDP:SelectCommandAction" uid="227">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionOrigin" value="lstSearch"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC13" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="228">
+            <Property name="string" value="STRING:Nejbli\u017E\u0161\u00ED"/>
+            <Property name="image" value="imgNearest"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction13"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction13" typeid="MIDP:SelectCaseCommandAction" uid="229">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC13"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC14" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="230">
+            <Property name="string" value="STRING:Waypoint"/>
+            <Property name="image" value="imgWaypoint"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction14"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction14" typeid="MIDP:SelectCaseCommandAction" uid="231">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC14"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC15" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="232">
+            <Property name="string" value="STRING:Kl\u00ED\u010Dov\u00E9 slovo"/>
+            <Property name="image" value="imgKeyword"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction15"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction15" typeid="MIDP:SelectCaseCommandAction" uid="233">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC15"/>
+        </DesignComponent>
+        <DesignComponent id="imgNearest" typeid="MIDP:javax.microedition.lcdui.Image" uid="234">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC6" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="235">
+            <Property name="string" value="STRING:Dal\u0161\u00ED funkce"/>
+            <Property name="image" value="imgOther"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction6"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction6" typeid="MIDP:SelectCaseCommandAction" uid="236">
+            <Property name="targetDisplayable" value="lstGPS"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC6"/>
+        </DesignComponent>
+        <DesignComponent id="lstGPS" typeid="MIDP:javax.microedition.lcdui.List" uid="237">
+            <Property name="title" value="STRING:Dal\u0161\u00ED funkce"/>
+            <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="selectCommandAction" value="$SelectCommandAction7"/>
+            <Property name="indexBasedSwitch" value="true"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction43"/>
+            </ContainerProperty>
+            <ContainerProperty name="elements">
+                <ContainerPropertyItem value="Midp2ListElementDC18"/>
+                <ContainerPropertyItem value="Midp2ListElementDC23"/>
+                <ContainerPropertyItem value="Midp2ListElementDC21"/>
+                <ContainerPropertyItem value="Midp2ListElementDC16"/>
+                <ContainerPropertyItem value="Midp2ListElementDC11"/>
+                <ContainerPropertyItem value="Midp2ListElementDC1"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$SelectCommandAction7" typeid="MIDP:SelectCommandAction" uid="238">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionOrigin" value="lstGPS"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC11" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="239">
+            <Property name="string" value="STRING:Navigace"/>
+            <Property name="image" value="imgNavigate"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction11"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction11" typeid="MIDP:SelectCaseCommandAction" uid="240">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC11"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC16" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="241">
+            <Property name="string" value="STRING:Pr\u016Fm\u011Brov\u00E1n\u00ED"/>
+            <Property name="image" value="imgAveraging"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction16"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction16" typeid="MIDP:SelectCaseCommandAction" uid="242">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC16"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction42" typeid="MIDP:CommandAction" uid="243">
+            <Property name="targetDisplayable" value="lstMenu"/>
+            <Property name="targetForwardDisplayable" value="lstSearch"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="lstSearch"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction43" typeid="MIDP:CommandAction" uid="244">
+            <Property name="targetDisplayable" value="lstMenu"/>
+            <Property name="targetForwardDisplayable" value="lstGPS"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="lstGPS"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC4" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="245">
+            <Property name="string" value="STRING:Mystery"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC5" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="246">
+            <Property name="string" value="STRING:Ostatn\u00ED typy"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC6" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="247">
+            <Property name="string" value="STRING:Nalezen\u00E9 a vlastn\u00ED"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC7" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="248">
+            <Property name="string" value="STRING:Disabled"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="siOverviewLattitude" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="249">
+            <Property name="label" value="STRING:Sou\u0159adnice"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siOverviewLongitude" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="250">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="lstFavourites" typeid="MIDP:javax.microedition.lcdui.List" uid="251">
+            <Property name="title" value="STRING:Obl\u00EDben\u00E9"/>
+            <Property name="choiceType" value="MULTIPLE"/>
+            <Property name="selectCommandAction" value="$SelectCommandAction8"/>
+            <Property name="indexBasedSwitch" value="true"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction44"/>
+                <ContainerPropertyItem value="$CommandAction46"/>
+                <ContainerPropertyItem value="$CommandAction47"/>
+                <ContainerPropertyItem value="$CommandAction51"/>
+                <ContainerPropertyItem value="$CommandAction52"/>
+                <ContainerPropertyItem value="$CommandAction53"/>
+                <ContainerPropertyItem value="$CommandAction56"/>
+                <ContainerPropertyItem value="$CommandAction79"/>
+                <ContainerPropertyItem value="$CommandAction84"/>
+                <ContainerPropertyItem value="$CommandAction88"/>
+                <ContainerPropertyItem value="$CommandAction37"/>
+            </ContainerProperty>
+            <ContainerProperty name="elements"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCommandAction8" typeid="MIDP:SelectCommandAction" uid="252">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction44" typeid="MIDP:CommandAction" uid="253">
+            <Property name="targetDisplayable" value="lstMenu"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="cmdFavourite" typeid="MIDP:javax.microedition.lcdui.Command" uid="254">
+            <Property name="label" value="STRING:Do obl\u00EDben\u00FDch"/>
+            <Property name="priority" value="6"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction45" typeid="MIDP:CommandAction" uid="255">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdFavourite"/>
+            <Property name="actionOrigin" value="frmOverview"/>
+        </DesignComponent>
+        <DesignComponent id="cmdDeleteAll" typeid="MIDP:javax.microedition.lcdui.Command" uid="256">
+            <Property name="label" value="STRING:Smazat v\u0161e"/>
+            <Property name="priority" value="8"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction46" typeid="MIDP:CommandAction" uid="257">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdDeleteAll"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="cmdSelect" typeid="MIDP:javax.microedition.lcdui.Command" uid="258">
+            <Property name="label" value="STRING:Zobrazit"/>
+            <Property name="priority" value="2"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction47" typeid="MIDP:CommandAction" uid="259">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdSelect"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction48" typeid="MIDP:CommandAction" uid="260">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdFavourite"/>
+            <Property name="actionOrigin" value="frmWaypoints"/>
+        </DesignComponent>
+        <DesignComponent id="frmFavourite" typeid="MIDP:javax.microedition.lcdui.Form" uid="261">
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction49"/>
+                <ContainerPropertyItem value="$CommandAction50"/>
+                <ContainerPropertyItem value="$CommandAction73"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="siFavouriteLattitude"/>
+                <ContainerPropertyItem value="siFavouriteLongitude"/>
+                <ContainerPropertyItem value="siDescription"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction49" typeid="MIDP:CommandAction" uid="262">
+            <Property name="targetDisplayable" value="lstFavourites"/>
+            <Property name="targetForwardDisplayable" value="frmFavourite"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmFavourite"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction50" typeid="MIDP:CommandAction" uid="263">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdNavigate"/>
+            <Property name="actionOrigin" value="frmFavourite"/>
+        </DesignComponent>
+        <DesignComponent id="siFavouriteLattitude" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="264">
+            <Property name="label" value="STRING:Sou\u0159adnice:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siFavouriteLongitude" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="265">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siDescription" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="266">
+            <Property name="label" value="STRING:Popis:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="cmdAddActual" typeid="MIDP:javax.microedition.lcdui.Command" uid="267">
+            <Property name="label" value="STRING:+Aktu\u00E1ln\u00ED bod"/>
+            <Property name="priority" value="4"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="cmdAddGiven" typeid="MIDP:javax.microedition.lcdui.Command" uid="268">
+            <Property name="label" value="STRING:+Zadan\u00FD bod"/>
+            <Property name="priority" value="5"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction51" typeid="MIDP:CommandAction" uid="269">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdAddActual"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction52" typeid="MIDP:CommandAction" uid="270">
+            <Property name="targetDisplayable" value="frmAddGiven"/>
+            <Property name="targetForwardDisplayable" value="lstFavourites"/>
+            <Property name="actionSource" value="cmdAddGiven"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="cmdDelete" typeid="MIDP:javax.microedition.lcdui.Command" uid="271">
+            <Property name="label" value="STRING:Smazat"/>
+            <Property name="priority" value="6"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction53" typeid="MIDP:CommandAction" uid="272">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdDelete"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="frmAddGiven" typeid="MIDP:javax.microedition.lcdui.Form" uid="273">
+            <Property name="title" value="STRING:P\u0159idat bod"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction54"/>
+                <ContainerPropertyItem value="$CommandAction55"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="tfGivenLattitude"/>
+                <ContainerPropertyItem value="tfGivenLongitude"/>
+                <ContainerPropertyItem value="cgGivenFormat"/>
+                <ContainerPropertyItem value="stringItem4"/>
+                <ContainerPropertyItem value="tfGivenName"/>
+                <ContainerPropertyItem value="tfGivenDescription"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="tfGivenLattitude" typeid="MIDP:javax.microedition.lcdui.TextField" uid="274">
+            <Property name="label" value="STRING:Sou\u0159adnice:"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfGivenLongitude" typeid="MIDP:javax.microedition.lcdui.TextField" uid="275">
+            <Property name="label" value="STRING:"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="stringItem4" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="276">
+            <Property name="label" value="STRING:Vzor:"/>
+            <Property name="text" value="STRING:\n1) N st\u00B0 mi.mmm \n    E sst\u00B0 mi.mmm\n2) N st\u00B0 mi ss.sss \n    E sst\u00B0 mi ss.sss"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfGivenName" typeid="MIDP:javax.microedition.lcdui.TextField" uid="277">
+            <Property name="label" value="STRING: N\u00E1zev:"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfGivenDescription" typeid="MIDP:javax.microedition.lcdui.TextField" uid="278">
+            <Property name="label" value="STRING:Popis:"/>
+            <Property name="maxSize" value="1200"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction54" typeid="MIDP:CommandAction" uid="279">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdSave"/>
+            <Property name="actionOrigin" value="frmAddGiven"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction55" typeid="MIDP:CommandAction" uid="280">
+            <Property name="targetDisplayable" value="lstFavourites"/>
+            <Property name="targetForwardDisplayable" value="frmAddGiven"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmAddGiven"/>
+        </DesignComponent>
+        <DesignComponent id="siDonate" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="281">
+            <Property name="label" value="STRING:Donate:"/>
+            <Property name="text" value="STRING:Pokud se V\u00E1m aplikace l\u00EDb\u00ED, podpo\u0159te finan\u010Dn\u011B jej\u00ED v\u00FDvoj! Za\u0161lete pros\u00EDm libovolnou \u010D\u00E1stku na \u00FA\u010Det autora:\n\n51-5385890237/0100\n\nVe zpr\u00E1v\u011B pro p\u0159\u00EDjemce uve\u010F\u0165e sv\u016Fj nick na GC.com, p\u0159estane se V\u00E1m pak ukazovat \u00FAvodn\u00ED reklama."/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="cmdEdit" typeid="MIDP:javax.microedition.lcdui.Command" uid="284">
+            <Property name="label" value="STRING:Upravit"/>
+            <Property name="priority" value="7"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction56" typeid="MIDP:CommandAction" uid="285">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdEdit"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="imgTravelbug" typeid="MIDP:javax.microedition.lcdui.Image" uid="288">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="frmTrackingNumber" typeid="MIDP:javax.microedition.lcdui.Form" uid="289">
+            <Property name="title" value="STRING:TB/GC"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction30"/>
+                <ContainerPropertyItem value="$CommandAction58"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="tfTrackingNumber"/>
+                <ContainerPropertyItem value="stringItem7"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="tfTrackingNumber" typeid="MIDP:javax.microedition.lcdui.TextField" uid="290">
+            <Property name="label" value="STRING:Tracking number:"/>
+            <Property name="string" value="STRING:"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="stringItem7" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="291">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING:Tracking number naleznete na dan\u00E9m trackovateln\u00E9m p\u0159edm\u011Btu."/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction30" typeid="MIDP:CommandAction" uid="292">
+            <Property name="targetDisplayable" value="lstGPS"/>
+            <Property name="targetForwardDisplayable" value="frmTrackingNumber"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmTrackingNumber"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction58" typeid="MIDP:CommandAction" uid="294">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdSend"/>
+            <Property name="actionOrigin" value="frmTrackingNumber"/>
+        </DesignComponent>
+        <DesignComponent id="frmTrackable" typeid="MIDP:javax.microedition.lcdui.Form" uid="295">
+            <Property name="title" value="STRING:TB/GC"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction57"/>
+                <ContainerPropertyItem value="$CommandAction59"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="siOrigin"/>
+                <ContainerPropertyItem value="siLastLocation"/>
+                <ContainerPropertyItem value="siReleased"/>
+                <ContainerPropertyItem value="siOwner"/>
+                <ContainerPropertyItem value="siGoal"/>
+                <ContainerPropertyItem value="siAbout"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction57" typeid="MIDP:CommandAction" uid="296">
+            <Property name="targetDisplayable" value="frmTrackingNumber"/>
+            <Property name="targetForwardDisplayable" value="frmTrackable"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmTrackable"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction59" typeid="MIDP:CommandAction" uid="297">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource"/>
+            <Property name="actionOrigin" value="frmTrackable"/>
+        </DesignComponent>
+        <DesignComponent id="siOrigin" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="298">
+            <Property name="label" value="STRING:P\u016Fvod"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siLastLocation" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="299">
+            <Property name="label" value="STRING:Posledn\u00ED v\u00FDskyt"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siReleased" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="300">
+            <Property name="label" value="STRING:Vysl\u00E1no"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siOwner" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="301">
+            <Property name="label" value="STRING:Vlastn\u00EDk"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siGoal" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="302">
+            <Property name="label" value="STRING:C\u00EDl p\u0159edm\u011Btu"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siAbout" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="303">
+            <Property name="label" value="STRING:Popis p\u0159edm\u011Btu"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="fntSmall" typeid="MIDP:javax.microedition.lcdui.Font" uid="311">
+            <Property name="face" value="FACE_SYSTEM"/>
+            <Property name="style" value="0"/>
+            <Property name="size" value="SIZE_SMALL"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC4" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="313">
+            <Property name="string" value="STRING:\u017D\u00E1dn\u00E1 data"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction4"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction4" typeid="MIDP:SelectCaseCommandAction" uid="314">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC4"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC17" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="315">
+            <Property name="string" value="STRING:\u017D\u00E1dn\u00E1 data"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction17"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction17" typeid="MIDP:SelectCaseCommandAction" uid="316">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC17"/>
+        </DesignComponent>
+        <DesignComponent id="frmMultiSolver" typeid="MIDP:javax.microedition.lcdui.Form" uid="317">
+            <Property name="title" value="STRING:MultiSolver"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction62"/>
+                <ContainerPropertyItem value="$CommandAction65"/>
+                <ContainerPropertyItem value="$CommandAction64"/>
+                <ContainerPropertyItem value="$CommandAction70"/>
+                <ContainerPropertyItem value="$CommandAction63"/>
+                <ContainerPropertyItem value="$CommandAction83"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="siLattitudePattern"/>
+                <ContainerPropertyItem value="siLongitudePattern"/>
+                <ContainerPropertyItem value="siLetters"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="siLattitudePattern" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="319">
+            <Property name="label" value="STRING:Aktu\u00E1ln\u00ED vzorec:"/>
+            <Property name="text" value="STRING:Nen\u00ED zvolen aktu\u00E1ln\u00ED vzorec"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siLongitudePattern" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="320">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siLetters" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="321">
+            <Property name="label" value="STRING:P\u00EDsmena:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction62" typeid="MIDP:CommandAction" uid="322">
+            <Property name="targetDisplayable" value="lstGPS"/>
+            <Property name="targetForwardDisplayable" value="frmMultiSolver"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmMultiSolver"/>
+        </DesignComponent>
+        <DesignComponent id="cmdAddPattern" typeid="MIDP:javax.microedition.lcdui.Command" uid="324">
+            <Property name="label" value="STRING:+Vzorec"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction65" typeid="MIDP:CommandAction" uid="327">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdDeleteAll"/>
+            <Property name="actionOrigin" value="frmMultiSolver"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC18" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="330">
+            <Property name="string" value="STRING:MultiSolver"/>
+            <Property name="image" value="imgMultiSolver"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction18"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction18" typeid="MIDP:SelectCaseCommandAction" uid="331">
+            <Property name="targetDisplayable" value="frmMultiSolver"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC18"/>
+        </DesignComponent>
+        <DesignComponent id="imgMultiSolver" typeid="MIDP:javax.microedition.lcdui.Image" uid="332">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="frmEditPattern" typeid="MIDP:javax.microedition.lcdui.Form" uid="333">
+            <Property name="title" value="STRING:Upravit/P\u0159idat vzorec"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction67"/>
+                <ContainerPropertyItem value="$CommandAction68"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="tfPatternName"/>
+                <ContainerPropertyItem value="tfEditPatternLattitude"/>
+                <ContainerPropertyItem value="tfEditPatternLongitude"/>
+                <ContainerPropertyItem value="stringItem8"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="tfEditPatternLattitude" typeid="MIDP:javax.microedition.lcdui.TextField" uid="334">
+            <Property name="label" value="STRING:Vzorec sou\u0159adnic:"/>
+            <Property name="string" value="STRING:N ab\u00B0 cd.efg"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfEditPatternLongitude" typeid="MIDP:javax.microedition.lcdui.TextField" uid="335">
+            <Property name="label" value="STRING:"/>
+            <Property name="string" value="STRING:E hij\u00B0 kl.mno"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="stringItem8" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="336">
+            <Property name="label" value="STRING:Help:"/>
+            <Property name="text" value="STRING:Do vzorce m\u016F\u017Eete ps\u00E1t \u010D\u00EDsla nebo jednop\u00EDsmenn\u00E9 prom\u011Bnn\u00E9(velk\u00E1 a mal\u00E1 p\u00EDsmena anglick\u00E9 abecedy). M\u016F\u017Eete pou\u017E\u00EDvat tyto matematick\u00E9 znaky: (,),+,-,*(n\u00E1soben\u00ED),/(celo\u010D\u00EDseln\u00E9 d\u011Blen\u00ED),^(mocnina),%(modulo). \u010C\u00E1sti, kde se m\u00E1 prov\u00E1d\u011Bt n\u011Bjak\u00FD v\u00FDpo\u010Det uzav\u00EDrejte do hranat\u00FDch z\u00E1vorek.\n\nP\u0159\u00EDklad:\nN 49\u00B0 14.[A*(B+C)][D^2][A-3]\nE 014\u00B0 AB.[A*B*C/(1+E)]"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction67" typeid="MIDP:CommandAction" uid="337">
+            <Property name="targetDisplayable" value="lstPatterns"/>
+            <Property name="targetForwardDisplayable" value="frmEditPattern"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmEditPattern"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction68" typeid="MIDP:CommandAction" uid="338">
+            <Property name="targetDisplayable" value="lstPatterns"/>
+            <Property name="targetForwardDisplayable" value="frmEditPattern"/>
+            <Property name="actionSource" value="cmdSave"/>
+            <Property name="actionOrigin" value="frmEditPattern"/>
+        </DesignComponent>
+        <DesignComponent id="frmAddLetter" typeid="MIDP:javax.microedition.lcdui.Form" uid="339">
+            <Property name="title" value="STRING:P\u0159idat p\u00EDsmeno"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction66"/>
+                <ContainerPropertyItem value="$CommandAction69"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="tfLetter"/>
+                <ContainerPropertyItem value="tfValue"/>
+                <ContainerPropertyItem value="stringItem9"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="cmdAddLetter" typeid="MIDP:javax.microedition.lcdui.Command" uid="341">
+            <Property name="label" value="STRING:+P\u00EDsmeno"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction64" typeid="MIDP:CommandAction" uid="342">
+            <Property name="targetDisplayable" value="frmAddLetter"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdAddLetter"/>
+            <Property name="actionOrigin" value="frmMultiSolver"/>
+        </DesignComponent>
+        <DesignComponent id="tfLetter" typeid="MIDP:javax.microedition.lcdui.TextField" uid="343">
+            <Property name="label" value="STRING:P\u00EDsmeno"/>
+            <Property name="maxSize" value="1"/>
+            <Property name="constraints" value="524288"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfValue" typeid="MIDP:javax.microedition.lcdui.TextField" uid="344">
+            <Property name="label" value="STRING:Hodnota"/>
+            <Property name="maxSize" value="120"/>
+            <Property name="constraints" value="2"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="stringItem9" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="345">
+            <Property name="label" value="STRING:Pozn\u00E1mka:"/>
+            <Property name="text" value="STRING:Zad\u00E1n\u00EDm ji\u017E ulo\u017Een\u00E9ho p\u00EDsmena m\u016F\u017Eete toto p\u00EDsmeno editovat."/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction66" typeid="MIDP:CommandAction" uid="346">
+            <Property name="targetDisplayable" value="frmMultiSolver"/>
+            <Property name="targetForwardDisplayable" value="frmAddLetter"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmAddLetter"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction69" typeid="MIDP:CommandAction" uid="347">
+            <Property name="targetDisplayable" value="frmMultiSolver"/>
+            <Property name="targetForwardDisplayable" value="frmAddLetter"/>
+            <Property name="actionSource" value="cmdSave"/>
+            <Property name="actionOrigin" value="frmAddLetter"/>
+        </DesignComponent>
+        <DesignComponent id="cmdCompute" typeid="MIDP:javax.microedition.lcdui.Command" uid="348">
+            <Property name="label" value="STRING:Vypo\u010D\u00EDtat"/>
+            <Property name="priority" value="3"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction70" typeid="MIDP:CommandAction" uid="349">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdCompute"/>
+            <Property name="actionOrigin" value="frmMultiSolver"/>
+        </DesignComponent>
+        <DesignComponent id="frmResult" typeid="MIDP:javax.microedition.lcdui.Form" uid="350">
+            <Property name="title" value="STRING:V\u00FDsledek"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction71"/>
+                <ContainerPropertyItem value="$CommandAction72"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="siAfterReplacement"/>
+                <ContainerPropertyItem value="tfResultLattitude"/>
+                <ContainerPropertyItem value="tfResultLongitude"/>
+                <ContainerPropertyItem value="tfResultName"/>
+                <ContainerPropertyItem value="tfResultDescription"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction71" typeid="MIDP:CommandAction" uid="351">
+            <Property name="targetDisplayable" value="frmMultiSolver"/>
+            <Property name="targetForwardDisplayable" value="frmResult"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmResult"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction72" typeid="MIDP:CommandAction" uid="352">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdFavourite"/>
+            <Property name="actionOrigin" value="frmResult"/>
+        </DesignComponent>
+        <DesignComponent id="tfResultLattitude" typeid="MIDP:javax.microedition.lcdui.TextField" uid="355">
+            <Property name="label" value="STRING:Vypo\u010Dten\u00E9 sou\u0159adnice:"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfResultLongitude" typeid="MIDP:javax.microedition.lcdui.TextField" uid="356">
+            <Property name="label" value="STRING:"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfResultName" typeid="MIDP:javax.microedition.lcdui.TextField" uid="357">
+            <Property name="label" value="STRING:N\u00E1zev:"/>
+            <Property name="string" value="STRING:Vypo\u010Dten\u00FD bod"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfResultDescription" typeid="MIDP:javax.microedition.lcdui.TextField" uid="358">
+            <Property name="label" value="STRING:Popis:"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="gaLoading" typeid="MIDP:javax.microedition.lcdui.Gauge" uid="359">
+            <Property name="label" value="STRING:"/>
+            <Property name="interactive" value="false"/>
+            <Property name="maxValue" value="60"/>
+            <Property name="value" value="0"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction73" typeid="MIDP:CommandAction" uid="360">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdNext"/>
+            <Property name="actionOrigin" value="frmFavourite"/>
+        </DesignComponent>
+        <DesignComponent id="tfBackLight" typeid="MIDP:javax.microedition.lcdui.TextField" uid="361">
+            <Property name="label" value="STRING:Frekvence blik\u00E1n\u00ED:"/>
+            <Property name="maxSize" value="120"/>
+            <Property name="constraints" value="2"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="stringItem10" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="362">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING:Frekvence rozsvicov\u00E1n\u00ED displeje p\u0159i navigaci v sekund\u00E1ch.0=vypne blik\u00E1n\u00ED."/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="cmdYes" typeid="MIDP:javax.microedition.lcdui.Command" uid="366">
+            <Property name="label" value="STRING:Ano"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="CANCEL"/>
+        </DesignComponent>
+        <DesignComponent id="cmdNo" typeid="MIDP:javax.microedition.lcdui.Command" uid="367">
+            <Property name="label" value="STRING:Ne"/>
+            <Property name="priority" value="2"/>
+            <Property name="type" value="OK"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC19" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="371">
+            <Property name="string" value="STRING:PDA GPS"/>
+            <Property name="image" value="imgPdaGps"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction19"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction19" typeid="MIDP:SelectCaseCommandAction" uid="372">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC19"/>
+        </DesignComponent>
+        <DesignComponent id="imgBluetooth" typeid="MIDP:javax.microedition.lcdui.Image" uid="374">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="lstPatterns" typeid="MIDP:javax.microedition.lcdui.List" uid="375">
+            <Property name="title" value="STRING:Vzore\u010Dky"/>
+            <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="selectCommandAction" value="$SelectCommandAction9"/>
+            <Property name="indexBasedSwitch" value="true"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction28"/>
+                <ContainerPropertyItem value="$CommandAction76"/>
+                <ContainerPropertyItem value="$CommandAction77"/>
+                <ContainerPropertyItem value="$CommandAction91"/>
+            </ContainerProperty>
+            <ContainerProperty name="elements">
+                <ContainerPropertyItem value="Midp2ListElementDC20"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$SelectCommandAction9" typeid="MIDP:SelectCommandAction" uid="376">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionOrigin" value="lstPatterns"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction28" typeid="MIDP:CommandAction" uid="377">
+            <Property name="targetDisplayable" value="frmMultiSolver"/>
+            <Property name="targetForwardDisplayable" value="lstPatterns"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="lstPatterns"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction76" typeid="MIDP:CommandAction" uid="378">
+            <Property name="targetDisplayable" value="frmEditPattern"/>
+            <Property name="targetForwardDisplayable" value="lstPatterns"/>
+            <Property name="actionSource" value="cmdAddPattern"/>
+            <Property name="actionOrigin" value="lstPatterns"/>
+        </DesignComponent>
+        <DesignComponent id="cmdPatterns" typeid="MIDP:javax.microedition.lcdui.Command" uid="379">
+            <Property name="label" value="STRING:Vzore\u010Dky"/>
+            <Property name="priority" value="2"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction63" typeid="MIDP:CommandAction" uid="380">
+            <Property name="targetDisplayable" value="lstPatterns"/>
+            <Property name="targetForwardDisplayable" value="frmMultiSolver"/>
+            <Property name="actionSource" value="cmdPatterns"/>
+            <Property name="actionOrigin" value="frmMultiSolver"/>
+        </DesignComponent>
+        <DesignComponent id="cmdEditPattern" typeid="MIDP:javax.microedition.lcdui.Command" uid="381">
+            <Property name="label" value="STRING:Upr.vzorec"/>
+            <Property name="priority" value="2"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction77" typeid="MIDP:CommandAction" uid="382">
+            <Property name="targetDisplayable" value="frmEditPattern"/>
+            <Property name="targetForwardDisplayable" value="lstPatterns"/>
+            <Property name="actionSource" value="cmdEditPattern"/>
+            <Property name="actionOrigin" value="lstPatterns"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC20" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="383">
+            <Property name="string" value="STRING:\u017D\u00E1dn\u00FD vzorec"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction20"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction20" typeid="MIDP:SelectCaseCommandAction" uid="384">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC20"/>
+        </DesignComponent>
+        <DesignComponent id="tfPatternName" typeid="MIDP:javax.microedition.lcdui.TextField" uid="385">
+            <Property name="label" value="STRING:N\u00E1zev:"/>
+            <Property name="string" value="STRING:Beze jm\u00E9na"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siAfterReplacement" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="386">
+            <Property name="label" value="STRING:Po nahrazen\u00ED p\u00EDsmen:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="cmdDownloadPatterns" typeid="MIDP:javax.microedition.lcdui.Command" uid="387">
+            <Property name="label" value="STRING:Vzore\u010Dky"/>
+            <Property name="priority" value="9"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction78" typeid="MIDP:CommandAction" uid="388">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdDownloadPatterns"/>
+            <Property name="actionOrigin" value="frmOverview"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction79" typeid="MIDP:CommandAction" uid="390">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdNavigate"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction80" typeid="MIDP:CommandAction" uid="391">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdFavourite"/>
+            <Property name="actionOrigin" value="frmAveraging"/>
+        </DesignComponent>
+        <DesignComponent id="siAverageLongitude" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="392">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tbError" typeid="MIDP:javax.microedition.lcdui.TextBox" uid="393">
+            <Property name="title" value="STRING:Nastala chyba"/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction81"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction81" typeid="MIDP:CommandAction" uid="394">
+            <Property name="targetDisplayable" value="lstMenu"/>
+            <Property name="targetForwardDisplayable" value="tbError"/>
+            <Property name="actionSource" value="cmdMenu"/>
+            <Property name="actionOrigin" value="tbError"/>
+        </DesignComponent>
+        <DesignComponent id="fntSmallBold" typeid="MIDP:javax.microedition.lcdui.Font" uid="395">
+            <Property name="face" value="FACE_SYSTEM"/>
+            <Property name="style" value="1"/>
+            <Property name="size" value="SIZE_SMALL"/>
+        </DesignComponent>
+        <DesignComponent id="cmdBegin" typeid="MIDP:javax.microedition.lcdui.Command" uid="396">
+            <Property name="label" value="STRING:Na za\u010D\u00E1tek"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="cmdEnd" typeid="MIDP:javax.microedition.lcdui.Command" uid="397">
+            <Property name="label" value="STRING:Na konec"/>
+            <Property name="priority" value="2"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction13" typeid="MIDP:CommandAction" uid="398">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdBegin"/>
+            <Property name="actionOrigin" value="frmInfo"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction82" typeid="MIDP:CommandAction" uid="399">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdEnd"/>
+            <Property name="actionOrigin" value="frmInfo"/>
+        </DesignComponent>
+        <DesignComponent id="siContent" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="401">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING:"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siEnd" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="402">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING:--KONEC--"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siBegin" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="403">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING: "/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="cmdFavourites" typeid="MIDP:javax.microedition.lcdui.Command" uid="405">
+            <Property name="label" value="STRING:Obl\u00EDben\u00E9"/>
+            <Property name="priority" value="6"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction83" typeid="MIDP:CommandAction" uid="406">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdFavourites"/>
+            <Property name="actionOrigin" value="frmMultiSolver"/>
+        </DesignComponent>
+        <DesignComponent id="cmdMultiSolver" typeid="MIDP:javax.microedition.lcdui.Command" uid="407">
+            <Property name="label" value="STRING:MultiSolver"/>
+            <Property name="priority" value="9"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction84" typeid="MIDP:CommandAction" uid="408">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdMultiSolver"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="cmdRefresh" typeid="MIDP:javax.microedition.lcdui.Command" uid="409">
+            <Property name="label" value="STRING:Obnovit"/>
+            <Property name="priority" value="12"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction85" typeid="MIDP:CommandAction" uid="410">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdRefresh"/>
+            <Property name="actionOrigin" value="frmOverview"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC21" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="411">
+            <Property name="string" value="STRING:De\u0161ifr\u00E1tor"/>
+            <Property name="image" value="imgDecypher"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction21"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction21" typeid="MIDP:SelectCaseCommandAction" uid="412">
+            <Property name="targetDisplayable" value="tbDecypher"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC21"/>
+        </DesignComponent>
+        <DesignComponent id="imgDecypher" typeid="MIDP:javax.microedition.lcdui.Image" uid="413">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="tbDecypher" typeid="MIDP:javax.microedition.lcdui.TextBox" uid="415">
+            <Property name="title" value="STRING:De\u0161ifr\u00E1tor"/>
+            <Property name="maxSize" value="1200"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction86"/>
+                <ContainerPropertyItem value="$CommandAction87"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="cmdDecypher" typeid="MIDP:javax.microedition.lcdui.Command" uid="416">
+            <Property name="label" value="STRING:De\u0161ifruj"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction86" typeid="MIDP:CommandAction" uid="417">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdDecypher"/>
+            <Property name="actionOrigin" value="tbDecypher"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction87" typeid="MIDP:CommandAction" uid="418">
+            <Property name="targetDisplayable" value="lstGPS"/>
+            <Property name="targetForwardDisplayable" value="tbDecypher"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="tbDecypher"/>
+        </DesignComponent>
+        <DesignComponent id="cmdMap" typeid="MIDP:javax.microedition.lcdui.Command" uid="419">
+            <Property name="label" value="STRING:Mapa"/>
+            <Property name="priority" value="2"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction88" typeid="MIDP:CommandAction" uid="420">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdMap"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC22" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="421">
+            <Property name="string" value="STRING:Intern\u00ED GPS"/>
+            <Property name="image" value="imgGps"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction22"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction22" typeid="MIDP:SelectCaseCommandAction" uid="422">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC22"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction89" typeid="MIDP:CommandAction" uid="423">
+            <Property name="targetDisplayable" value="frmConnectionHelp"/>
+            <Property name="targetForwardDisplayable" value="lstMode"/>
+            <Property name="actionSource" value="cmdHint"/>
+            <Property name="actionOrigin" value="lstMode"/>
+        </DesignComponent>
+        <DesignComponent id="frmConnectionHelp" typeid="MIDP:javax.microedition.lcdui.Form" uid="424">
+            <Property name="title" value="STRING:N\u00E1pov\u011Bda"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction90"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="stringItem12"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="stringItem12" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="425">
+            <Property name="label" value="STRING:"/>
+            <Property name="text" value="STRING:Program m\u016F\u017Eete s GPS p\u0159ipojit n\u011Bkolika zp\u016Fsoby. P\u0159i volb\u011B \'Bluetooth GPS\' mus\u00EDte vlastnit Bluetooth GPS modul a v\u00E1\u0161 telefon mus\u00ED podporovat Bluetooth API (JSR-82).\n\nP\u0159i volb\u011B \'Intern\u00ED GPS\' se m\u016F\u017Eete p\u0159ipojit k intern\u00ED GPS, kterou maj\u00ED n\u011Bkter\u00E9 telefony jako nap\u0159.Nokia N95. V\u00E1\u0161 telefon mus\u00ED podporovat Location API (JSR-179).\n\nVolba \'PDA GPS\' V\u00E1m zp\u0159\u00EDstupn\u00ED GPSku na PDA. Mus\u00EDte m\u00EDt ale spu\u0161t\u011Bn speci\u00E1ln\u00ED propojovac\u00ED software, v\u00EDce na str\u00E1nk\u00E1ch aplikace.\n\nVolba \'Bez GPS\' nevy\u017Eaduje \u017E\u00E1dn\u00E9 p\u0159ipojen\u00ED, av\u0161ak mus\u00EDte se obej\u00EDt bez v\u0161ech lokaliza\u010Dn\u00EDch a naviga\u010Dn\u00EDch funkc\u00ED."/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction90" typeid="MIDP:CommandAction" uid="426">
+            <Property name="targetDisplayable" value="lstMode"/>
+            <Property name="targetForwardDisplayable" value="frmConnectionHelp"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmConnectionHelp"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction91" typeid="MIDP:CommandAction" uid="427">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdDelete"/>
+            <Property name="actionOrigin" value="lstPatterns"/>
+        </DesignComponent>
+        <DesignComponent id="imgWaypoint" typeid="MIDP:javax.microedition.lcdui.Image" uid="431">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC23" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="432">
+            <Property name="string" value="STRING:TB/GC"/>
+            <Property name="image" value="imgTravelbug"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction23"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction23" typeid="MIDP:SelectCaseCommandAction" uid="433">
+            <Property name="targetDisplayable" value="frmTrackingNumber"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC23"/>
+        </DesignComponent>
+        <DesignComponent id="frmDebug1" typeid="MIDP:javax.microedition.lcdui.Form" uid="443">
+            <Property name="title" value="STRING:Debug"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction12"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="siPart"/>
+                <ContainerPropertyItem value="siDebug1"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction12" typeid="MIDP:CommandAction" uid="444">
+            <Property name="targetDisplayable" value="lstMenu"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmDebug1"/>
+        </DesignComponent>
+        <DesignComponent id="siPart" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="450">
+            <Property name="label" value="STRING:Part"/>
+            <Property name="text" value="STRING:&lt;Enter Text&gt;"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="siDebug1" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="451">
+            <Property name="label" value="STRING:Debug"/>
+            <Property name="text" value="STRING:&lt;Enter Text&gt;"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="cmdMapyCz" typeid="MIDP:javax.microedition.lcdui.Command" uid="452">
+            <Property name="label" value="STRING:Mapy.cz"/>
+            <Property name="priority" value="3"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction37" typeid="MIDP:CommandAction" uid="453">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdMapyCz"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="imgPdaGps" typeid="MIDP:javax.microedition.lcdui.Image" uid="454">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="imgOther" typeid="MIDP:javax.microedition.lcdui.Image" uid="455">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="cgGivenFormat" typeid="MIDP:javax.microedition.lcdui.ChoiceGroup" uid="456">
+            <Property name="label" value="STRING:Form\u00E1t:"/>
+            <Property name="choiceType" value="EXCLUSIVE"/>
+            <Property name="fitPolicy" value="TEXT_WRAP_ON"/>
+            <ContainerProperty name="commands"/>
+            <ContainerProperty name="elements">
+                <ContainerPropertyItem value="Midp2ChoiceElementDC8"/>
+                <ContainerPropertyItem value="Midp2ChoiceElementDC9"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC8" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="457">
+            <Property name="string" value="STRING:Stupn\u011B, Min."/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC9" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="458">
+            <Property name="string" value="STRING:Stupn\u011B, Min., Sec"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="itemCommand1" typeid="MIDP:javax.microedition.lcdui.Command" uid="461">
+            <Property name="label" value="STRING:Item"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="ITEM"/>
+        </DesignComponent>
+        <DesignComponent id="itemCommand2" typeid="MIDP:javax.microedition.lcdui.Command" uid="462">
+            <Property name="label" value="STRING:Item"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="ITEM"/>
+        </DesignComponent>
+        <DesignComponent id="itemCommand3" typeid="MIDP:javax.microedition.lcdui.Command" uid="464">
+            <Property name="label" value="STRING:Item"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="ITEM"/>
+        </DesignComponent>
+        <DesignComponent id="backCommand1" typeid="MIDP:javax.microedition.lcdui.Command" uid="466">
+            <Property name="label" value="STRING:Back"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="BACK"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ListElementDC1" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="468">
+            <Property name="string" value="STRING:GPS Sign\u00E1l"/>
+            <Property name="image" value="imgGps"/>
+            <Property name="selected" value="false"/>
+            <Property name="commandAction" value="$SelectCaseCommandAction1"/>
+        </DesignComponent>
+        <DesignComponent id="$SelectCaseCommandAction1" typeid="MIDP:SelectCaseCommandAction" uid="469">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionHolder" value="Midp2ListElementDC1"/>
+        </DesignComponent>
+        <DesignComponent id="cmdStorno" typeid="MIDP:javax.microedition.lcdui.Command" uid="477">
+            <Property name="label" value="STRING:Cancel"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="CANCEL"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction1" typeid="MIDP:CommandAction" uid="478">
+            <Property name="targetDisplayable" value="lstMenu"/>
+            <Property name="targetForwardDisplayable" value="frmSettings"/>
+            <Property name="actionSource" value="cmdStorno"/>
+            <Property name="actionOrigin" value="frmSettings"/>
+        </DesignComponent>
+    </DesignDocument>
+    <FlowDocument version="1.1">
+        <Node id="$MobileDevice" location="160,928" order=",$StartPoint,,,,,,,,,$ExitPoint,,,,,"/>
+        <Node id="lstDevices" location="5000,208" order="$CommandAction2,$CommandAction9,$SelectCaseCommandAction10,,,,,,,,$Default,,,,,"/>
+        <Node id="lstMenu" location="912,1040" order="$SelectCaseCommandAction8,,$SelectCaseCommandAction6,$SelectCaseCommandAction5,$SelectCaseCommandAction12,$SelectCaseCommandAction7,$SelectCaseCommandAction9,,,,$Default,,,,,"/>
+        <Node id="frmAveraging" location="6280,208" order="$CommandAction4,$CommandAction5,$CommandAction6,$CommandAction80,,,,,,,$Default,,,,,"/>
+        <Node id="lstMode" location="640,928" order="$SelectCaseCommandAction2,$SelectCaseCommandAction3,$CommandAction7,$SelectCaseCommandAction19,$SelectCaseCommandAction22,$CommandAction89,,,,,$Default,,,,,"/>
+        <Node id="frmLoading" location="5960,208" order="$CommandAction29,,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmCoordinates" location="1472,208" order="$CommandAction14,$CommandAction15,,,,,,,,,$Default,,,,,"/>
+        <Node id="lstNearestCaches" location="4680,208" order="$CommandAction16,$SelectCaseCommandAction4,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmWaypoint" location="824,208" order="$CommandAction17,$CommandAction18,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmOverview" location="1792,208" order="$CommandAction21,$CommandAction23,$CommandAction19,$CommandAction22,$CommandAction33,$CommandAction20,$CommandAction34,$CommandAction38,$CommandAction45,$CommandAction78,$Default,$CommandAction85,,,,"/>
+        <Node id="frmInfo" location="504,208" order="$CommandAction24,$CommandAction13,$CommandAction82,,,,,,,,$Default,,,,,"/>
+        <Node id="frmHint" location="3712,208" order="$CommandAction25,,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmWaypoints" location="4360,208" order="$CommandAction3,$CommandAction48,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmLogs" location="4040,208" order="$CommandAction26,$CommandAction35,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmAbout" location="1192,688" order="$CommandAction27,,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmSettings" location="1192,928" order=",$CommandAction32,$CommandAction1,,,,,,,,$Default,,,,,"/>
+        <Node id="frmConnecting" location="3392,208" order="$CommandAction11,,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmAllLogs" location="2752,208" order="$CommandAction36,,,,,,,,,,$Default,,,,,"/>
+        <Node id="ssAdvertisement" location="432,928" order="$InternalCommandAction1,,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmDebug" location="5640,208" order="$CommandAction10,,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmKeyword" location="184,208" order="$CommandAction39,$CommandAction40,,,,,,,,,$Default,,,,,"/>
+        <Node id="lstKeyword" location="3072,208" order="$CommandAction41,$SelectCaseCommandAction17,,,,,,,,,$Default,,,,,"/>
+        <Node id="lstSearch" location="1192,448" order="$SelectCaseCommandAction13,$SelectCaseCommandAction14,$SelectCaseCommandAction15,$CommandAction42,,,,,,,$Default,,,,,"/>
+        <Node id="lstGPS" location="1192,1400" order="$SelectCaseCommandAction11,$SelectCaseCommandAction16,$CommandAction43,$SelectCaseCommandAction18,$SelectCaseCommandAction21,$SelectCaseCommandAction23,$SelectCaseCommandAction1,,,,$Default,,,,,"/>
+        <Node id="lstFavourites" location="1192,1160" order="$CommandAction44,$CommandAction46,$CommandAction47,$CommandAction51,$CommandAction52,$CommandAction53,$CommandAction56,$CommandAction79,$CommandAction84,$CommandAction88,$Default,$CommandAction37,,,,"/>
+        <Node id="frmFavourite" location="2432,208" order="$CommandAction49,$CommandAction50,$CommandAction73,,,,,,,,$Default,,,,,"/>
+        <Node id="frmAddGiven" location="1464,592" order="$CommandAction54,$CommandAction55,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmTrackingNumber" location="1464,1256" order="$CommandAction30,,$CommandAction58,,,,,,,,$Default,,,,,"/>
+        <Node id="frmTrackable" location="1144,208" order="$CommandAction57,$CommandAction59,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmMultiSolver" location="1464,816" order="$CommandAction62,$CommandAction63,$CommandAction64,$CommandAction65,$CommandAction70,$CommandAction83,,,,,$Default,,,,,"/>
+        <Node id="frmEditPattern" location="1944,928" order="$CommandAction67,$CommandAction68,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmAddLetter" location="1696,816" order="$CommandAction66,$CommandAction69,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmResult" location="5320,208" order="$CommandAction71,$CommandAction72,,,,,,,,,$Default,,,,,"/>
+        <Node id="lstPatterns" location="1696,1032" order="$CommandAction28,$CommandAction76,$CommandAction77,$SelectCaseCommandAction20,$CommandAction91,,,,,,$Default,,,,,"/>
+        <Node id="tbError" location="2112,208" order="$CommandAction81,,,,,,,,,,$Default,,,,,"/>
+        <Node id="tbDecypher" location="1464,1040" order="$CommandAction86,$CommandAction87,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmConnectionHelp" location="912,816" order="$CommandAction90,,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmDebug1" location="6608,208" order="$CommandAction12,,,,,,,,,,$Default,,,,,"/>
+        <Link id="$StartPoint$ActionLink" path="200,904,392,904"/>
+        <Link id="$CommandAction2$ActionLink" path="5040,200,5200,200,5200,278,47,278,47,904,120,904"/>
+        <Link id="$CommandAction4$ActionLink" path="6320,200,6478,200,6478,1437,1133,1437,1133,1376,1152,1376"/>
+        <Link id="$SelectCaseCommandAction3$ActionLink" path="680,904,815,904,815,1016,872,1016"/>
+        <Link id="$CommandAction7$ActionLink" path="680,888,790,888,790,965,47,965,47,904,120,904"/>
+        <Link id="$SelectCaseCommandAction5$ActionLink" path="952,984,1047,984,1047,424,1152,424"/>
+        <Link id="$SelectCaseCommandAction7$ActionLink" path="920,968,920,863,1023,863,1023,664,1152,664"/>
+        <Link id="$CommandAction9$ActionLink" path="5040,184,5166,184,5166,269,562,269,562,904,600,904"/>
+        <Link id="$CommandAction15$ActionLink" path="1512,184,1608,184,1608,306,1132,306,1132,424,1152,424"/>
+        <Link id="$CommandAction16$ActionLink" path="4720,200,4869,200,4869,296,1378,296,1378,184,1432,184"/>
+        <Link id="$CommandAction17$ActionLink" path="864,200,990,200,990,424,1152,424"/>
+        <Link id="$CommandAction19$ActionLink" path="1832,168,1980,168,1980,260,687,260,687,184,784,184"/>
+        <Link id="$CommandAction24$ActionLink" path="544,200,725,200,725,251,1638,251,1638,184,1752,184"/>
+        <Link id="$CommandAction25$ActionLink" path="3752,200,3889,200,3889,251,1638,251,1638,184,1752,184"/>
+        <Link id="$SelectCaseCommandAction8$ActionLink" path="952,1032,1068,1032,1068,1100,47,1100,47,904,120,904"/>
+        <Link id="$CommandAction3$ActionLink" path="4400,200,4546,200,4546,251,1638,251,1638,184,1752,184"/>
+        <Link id="$CommandAction26$ActionLink" path="4080,200,4226,200,4226,251,1638,251,1638,184,1752,184"/>
+        <Link id="$CommandAction27$ActionLink" path="1232,680,1296,680,1296,850,815,850,815,1016,872,1016"/>
+        <Link id="$CommandAction29$ActionLink" path="6000,200,6127,200,6127,850,815,850,815,1016,872,1016"/>
+        <Link id="$SelectCaseCommandAction9$ActionLink" path="904,968,904,877,1040,877,1040,904,1152,904"/>
+        <Link id="$CommandAction32$ActionLink" path="1232,904,1310,904,1310,850,815,850,815,1016,872,1016"/>
+        <Link id="$CommandAction11$ActionLink" path="3432,200,3566,200,3566,269,562,269,562,904,600,904"/>
+        <Link id="$CommandAction36$ActionLink" path="2792,200,2923,200,2923,128,3889,128,3889,184,4000,184"/>
+        <Link id="$InternalCommandAction1$ActionLink" path="472,920,562,920,562,904,600,904"/>
+        <Link id="$CommandAction10$ActionLink" path="5680,200,5812,200,5812,850,827,850,827,1016,872,1016"/>
+        <Link id="$SelectCaseCommandAction12$ActionLink" path="936,968,936,891,1033,891,1033,1136,1152,1136"/>
+        <Link id="$CommandAction39$ActionLink" path="224,200,358,200,358,424,1152,424"/>
+        <Link id="$CommandAction41$ActionLink" path="3112,200,3253,200,3253,287,112,287,112,184,144,184"/>
+        <Link id="$SelectCaseCommandAction6$ActionLink" path="952,1000,1043,1000,1043,1376,1152,1376"/>
+        <Link id="$CommandAction42$ActionLink" path="1232,392,1317,392,1317,850,827,850,827,1016,872,1016"/>
+        <Link id="$CommandAction43$ActionLink" path="1232,1360,1316,1360,1316,1208,853,1208,853,1016,872,1016"/>
+        <Link id="$CommandAction44$ActionLink" path="1232,1152,1318,1152,1318,850,827,850,827,1016,872,1016"/>
+        <Link id="$CommandAction49$ActionLink" path="2472,200,2623,200,2623,498,1054,498,1054,1136,1152,1136"/>
+        <Link id="$CommandAction52$ActionLink" path="1216,1088,1216,986,1288,986,1288,568,1424,568"/>
+        <Link id="$CommandAction55$ActionLink" path="1504,568,1603,568,1603,962,1054,962,1054,1136,1152,1136"/>
+        <Link id="$CommandAction30$ActionLink" path="1504,1248,1559,1248,1559,1437,1133,1437,1133,1376,1152,1376"/>
+        <Link id="$CommandAction57$ActionLink" path="1184,200,1325,200,1325,1232,1424,1232"/>
+        <Link id="$CommandAction62$ActionLink" path="1504,808,1588,808,1588,1437,1133,1437,1133,1376,1152,1376"/>
+        <Link id="$SelectCaseCommandAction18$ActionLink" path="1232,1344,1353,1344,1353,792,1424,792"/>
+        <Link id="$CommandAction67$ActionLink" path="1984,920,4252,920,4252,1247,1616,1247,1616,1008,1656,1008"/>
+        <Link id="$CommandAction68$ActionLink" path="1984,904,4252,904,4252,1247,1616,1247,1616,1008,1656,1008"/>
+        <Link id="$CommandAction64$ActionLink" path="1504,776,1591,776,1591,792,1656,792"/>
+        <Link id="$CommandAction66$ActionLink" path="1736,808,1828,808,1828,877,1361,877,1361,792,1424,792"/>
+        <Link id="$CommandAction69$ActionLink" path="1736,792,1828,792,1828,878,1339,878,1339,792,1424,792"/>
+        <Link id="$CommandAction71$ActionLink" path="5360,200,5515,200,5515,242,1354,242,1354,792,1424,792"/>
+        <Link id="$CommandAction28$ActionLink" path="1736,1024,1830,1024,1830,879,1361,879,1361,792,1424,792"/>
+        <Link id="$CommandAction76$ActionLink" path="1736,1008,1846,1008,1846,904,1904,904"/>
+        <Link id="$CommandAction63$ActionLink" path="1504,792,1580,792,1580,1008,1656,1008"/>
+        <Link id="$CommandAction77$ActionLink" path="1736,992,1846,992,1846,904,1904,904"/>
+        <Link id="$CommandAction81$ActionLink" path="2152,200,2282,200,2282,850,827,850,827,1016,872,1016"/>
+        <Link id="$SelectCaseCommandAction21$ActionLink" path="1216,1328,1216,1196,1339,1196,1339,1016,1424,1016"/>
+        <Link id="$CommandAction87$ActionLink" path="1504,1016,1585,1016,1585,1437,1133,1437,1133,1376,1152,1376"/>
+        <Link id="$CommandAction89$ActionLink" path="648,856,648,605,799,605,799,792,872,792"/>
+        <Link id="$CommandAction90$ActionLink" path="952,808,1007,808,1007,676,562,676,562,904,600,904"/>
+        <Link id="$SelectCaseCommandAction23$ActionLink" path="1200,1328,1200,1232,1424,1232"/>
+        <Link id="$CommandAction12$ActionLink" path="6648,200,6696,200,6696,850,827,850,827,1016,872,1016"/>
+        <Link id="$CommandAction1$ActionLink" path="1232,888,1303,888,1303,850,815,850,815,1016,872,1016"/>
+    </FlowDocument>
+    <ScreenDesigner version="1.0">
+        <CustomScreenSize height="128" width="128"/>
+    </ScreenDesigner>
+</MVDData>
