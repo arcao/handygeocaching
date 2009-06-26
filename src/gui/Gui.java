@@ -415,7 +415,7 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert pre-action code here
                 gps.stop();
                 favourites.editId = -1;
-                favourites.addEdit("Výsledek prùmìrování","",siAverageLattitude.getText(),siAverageLongitude.getText(),"average",get_lstFavourites(), false, "");
+                favourites.addEdit("Výsledek prùmìrování","",siAverageLattitude.getText(),siAverageLongitude.getText(),"average",get_lstFavourites(), false, "NE");
                 // Do nothing//GEN-LINE:MVDCAAction391
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase391
@@ -633,7 +633,7 @@ public class Gui extends MIDlet implements CommandListener
                 favourites.addEdit(siName.getText(),
                         http.favouriteResponse,
                         siOverviewLattitude.getText(), siOverviewLongitude.getText(),
-                        http.typeNumber,get_frmOverview(), false, "");
+                        http.typeNumber,get_frmOverview(), false, "NE");
                 //Zephy oprava 22.12.07 +/
             } else if (command == cmdDownloadPatterns) {//GEN-LINE:MVDCACase255
                 // Insert pre-action code here
@@ -1073,7 +1073,7 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction279
                 // Insert post-action code here
-                favourites.addEdit(tfGivenName.getString(),tfGivenDescription.getString(),tfGivenLattitude.getString(),tfGivenLongitude.getString(),"waypoint",get_lstFavourites(), (cgGivenFormat.getSelectedIndex()==1), "");
+                favourites.addEdit(tfGivenName.getString(),tfGivenDescription.getString(),tfGivenLattitude.getString(),tfGivenLongitude.getString(),"waypoint",get_lstFavourites(), (cgGivenFormat.getSelectedIndex()==1), "NE");
                 /*
                  *Zephy 19.11.07 REM - pri editaci bodu a zadani chybnych souradnic byla prebita hlaska o chybne zadanych souradnicich a vlezlo se zpet do seznamu. Toto bylo presunuto do Favourites.java
                  */
@@ -1169,7 +1169,7 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert pre-action code here
                 favourites.editId = -1;
                 //Zephy oprava 22.12.07 - posledni parametr na false +\
-                favourites.addEdit(tfResultName.getString(),tfResultDescription.getString(),tfResultLattitude.getString(),tfResultLongitude.getString(),"multisolver_waypoint",get_lstFavourites(), false, "");
+                favourites.addEdit(tfResultName.getString(),tfResultDescription.getString(),tfResultLattitude.getString(),tfResultLongitude.getString(),"multisolver_waypoint",get_lstFavourites(), false, "NE");
                 //Zephy oprava 22.12.07 - posledni parametr na false +/
                 // Do nothing//GEN-LINE:MVDCAAction352
                 // Insert post-action code here

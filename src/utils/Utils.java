@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 /***
@@ -286,5 +288,15 @@ public class Utils
         s = s.replace('y','L');
         s = s.replace('z','M');
         return s;
+    }
+    
+    public static String formatDate(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        StringBuffer sb = new StringBuffer();
+        sb.append(c.get(Calendar.DATE)).append(".").append(c.get(Calendar.MONTH) + 1).append(". ");
+        sb.append(c.get(Calendar.HOUR_OF_DAY)).append(":").append(c.get(Calendar.MINUTE));
+
+        return sb.toString();
     }
 }

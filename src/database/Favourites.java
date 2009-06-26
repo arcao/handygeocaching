@@ -80,7 +80,11 @@ public class Favourites extends Database
             String description = dis.readUTF();
             String lattitude = dis.readUTF();
             String longitude = dis.readUTF();
-            found = dis.readUTF();
+            try {
+                found = dis.readUTF();
+            } catch (Exception e) {
+                found = "NE";
+            }
             //nastaveni editId pro pripad refreshe v overview a nasledneho ulozeni do oblibenych
             if (isCache(type)) //cache
             {
@@ -137,7 +141,9 @@ public class Favourites extends Database
             dis.readUTF();
             String lattitude = dis.readUTF();
             String longitude = dis.readUTF();
-            dis.readUTF();
+            try {
+                dis.readUTF();
+            } catch (Exception e) {}
             lattitude = Utils.replaceString(Utils.replaceString(lattitude, "° ","d"),"N ","");
             longitude = Utils.replaceString(Utils.replaceString(longitude, "° ","d"),"E ","");
             gui.platformRequest("http://wap.mapy.cz/search?from=&query="+lattitude+"+"+longitude+"&mapType=ophoto&zoom=16");
@@ -282,7 +288,7 @@ public class Favourites extends Database
             editId = id;
             editType = type;
             
-            addEdit(name, description, lattitude, longitude, type, nextScreen, false, found.toString());
+            addEdit(name, description, lattitude, longitude, type, nextScreen, false, Utils.formatDate(found));
         }
         catch (Exception e)
         {
@@ -310,7 +316,11 @@ public class Favourites extends Database
             String description = dis.readUTF();
             String lattitude = dis.readUTF();
             String longitude = dis.readUTF();
-            String found = dis.readUTF();
+            try {
+                found = dis.readUTF();
+            } catch (Exception e) {
+                found = "NE";
+            }
             editId = id;
             editType = type;
             
@@ -408,7 +418,10 @@ public class Favourites extends Database
                 dis.readUTF();
                 double lattitude = Gps.convertLattitude(dis.readUTF());
                 double longitude = Gps.convertLongitude(dis.readUTF());
-                dis.readLong();
+                try {
+                    dis.readUTF();
+                } catch (Exception e) {}
+                
                 if (!name.equals("_Poslední cache"))
                     gui.get_cvsMap().addMapItem(lattitude,longitude,type,name);
             }

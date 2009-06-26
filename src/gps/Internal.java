@@ -100,10 +100,10 @@ public class Internal implements LocationListener
                 gpsParser.longitude = coordinates.getLongitude();
                 String friendly = Coordinates.convert(coordinates.getLongitude(),Coordinates.DD_MM);
                 gpsParser.friendlyLongitude = ((gpsParser.longitude>0)?"E ":"W ")+Utils.addZeros(friendly.substring(0,2),3)+Utils.replaceString(friendly.substring(2),":","° ");
-                gpsParser.altitude = coordinates.getAltitude();
+                gpsParser.altitude = Math.floor(coordinates.getAltitude());
                 gpsParser.accuracy = coordinates.getHorizontalAccuracy();
                 gpsParser.heading = location.getCourse();
-                gpsParser.speed = location.getSpeed();
+                gpsParser.speed = Math.floor(location.getSpeed() * 3.59999);
             }
             else
             {

@@ -222,7 +222,7 @@ public class Settings
     {
         try
         {
-            vip = mode;
+            vip = true;
             store(false);
         }
         catch (Exception e)
