@@ -15,6 +15,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Date;
+import javax.microedition.apdu.APDUConnection;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.rms.RecordEnumeration;
@@ -35,6 +38,7 @@ public class Favourites extends Database
     //ostatni promenne
     public int editId = -1;
     private String editType;
+    public String found = "";
     
     public Favourites(Gui ref, Settings ref2, IconLoader ref3)
     {
@@ -76,6 +80,7 @@ public class Favourites extends Database
             String description = dis.readUTF();
             String lattitude = dis.readUTF();
             String longitude = dis.readUTF();
+            found = dis.readUTF();
             //nastaveni editId pro pripad refreshe v overview a nasledneho ulozeni do oblibenych
             if (isCache(type)) //cache
             {
@@ -94,6 +99,7 @@ public class Favourites extends Database
                 gui.get_siFavouriteLattitude().setText(lattitude);
                 gui.get_siFavouriteLongitude().setText(longitude);
                 gui.get_siDescription().setText(description);
+                gui.get_siNalezeno1().setText(found);
                 if (isCache(type)) //cache
                 {
                     http.startOffline(Http.OVERVIEW, description);
@@ -131,6 +137,7 @@ public class Favourites extends Database
             dis.readUTF();
             String lattitude = dis.readUTF();
             String longitude = dis.readUTF();
+            dis.readUTF();
             lattitude = Utils.replaceString(Utils.replaceString(lattitude, "° ","d"),"N ","");
             longitude = Utils.replaceString(Utils.replaceString(longitude, "° ","d"),"E ","");
             gui.platformRequest("http://wap.mapy.cz/search?from=&query="+lattitude+"+"+longitude+"&mapType=ophoto&zoom=16");
@@ -144,7 +151,7 @@ public class Favourites extends Database
     /**
      * Prida oblibenou polozku do databaze (editId=-1), nebo edituje zadany zaznam (editId>=0)
      */
-    public void addEdit(String name, String description, String lattitude, String longitude, String type, Displayable nextScreen, boolean DegMinSecFormat)
+    public void addEdit(String name, String description, String lattitude, String longitude, String type, Displayable nextScreen, boolean DegMinSecFormat, String found)
     {
         try
         {
@@ -186,6 +193,7 @@ public class Favourites extends Database
                 dos.writeUTF(description);
                 dos.writeUTF(lattitude);
                 dos.writeUTF(longitude);
+                dos.writeUTF(found);
                 byte[] bytes = buffer.toByteArray();
                 //posledni cache
                 if (name.equals("_Poslední cache"))
@@ -233,6 +241,55 @@ public class Favourites extends Database
         }
     }
     
+    public String getCacheName(int number) {
+        try
+        {
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
+            int id = 0;
+            for (int i = 0; i <= number; i++)
+            {
+                id = rc.nextRecordId();
+            }
+            DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
+            return dis.readUTF();
+        }
+        catch (Exception e)
+        {
+            gui.showError("getCacheName",e.toString(),"");
+            return "";
+        }
+    }
+    
+    
+    public void setFound(int number, Date found, Displayable nextScreen) {
+        try
+        {
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
+            int id = 0;
+            for (int i = 0; i <= number; i++)
+            {
+                id = rc.nextRecordId();
+            }
+            DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
+            String name = dis.readUTF();
+            String type = dis.readUTF();
+            String description = dis.readUTF();
+            String lattitude = dis.readUTF();
+            String longitude = dis.readUTF();
+            dis.readUTF();
+            editId = id;
+            editType = type;
+            
+            addEdit(name, description, lattitude, longitude, type, nextScreen, false, found.toString());
+        }
+        catch (Exception e)
+        {
+            gui.showError("setFound",e.toString(),"");
+        }
+    }
+    
     /**
      * Zobrazi jednu konkretni oblibenou pro editaci
      */
@@ -253,6 +310,7 @@ public class Favourites extends Database
             String description = dis.readUTF();
             String lattitude = dis.readUTF();
             String longitude = dis.readUTF();
+            String found = dis.readUTF();
             editId = id;
             editType = type;
             
@@ -268,6 +326,7 @@ public class Favourites extends Database
                 gui.get_tfGivenLattitude().setString(lattitude);
                 gui.get_tfGivenLongitude().setString(longitude);
                 gui.get_tfGivenDescription().setString(description);
+                gui.get_siNalezeno().setText(found);
                 gui.getDisplay().setCurrent(gui.get_frmAddGiven());
             }
         }
@@ -349,6 +408,7 @@ public class Favourites extends Database
                 dis.readUTF();
                 double lattitude = Gps.convertLattitude(dis.readUTF());
                 double longitude = Gps.convertLongitude(dis.readUTF());
+                dis.readLong();
                 if (!name.equals("_Poslední cache"))
                     gui.get_cvsMap().addMapItem(lattitude,longitude,type,name);
             }

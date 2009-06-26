@@ -272,6 +272,11 @@ public class Http implements Runnable
                             gui.get_frmOverview().setTitle(listing[0][9]);
                         }
                         typeNumber = listing[0][10];
+                        
+                        gui.get_frmOverview().removeCommand(gui.get_cmdNastavitNalez());
+                        if (offline)
+                            gui.get_frmOverview().addCommand(gui.get_cmdNastavitNalez());
+                        
                         //jsou pridavne waypointy?
                         gui.get_frmOverview().removeCommand(gui.get_cmdWaypoints());
                         if (listing[0][11].equals("1"))
@@ -298,13 +303,14 @@ public class Http implements Runnable
                         if (offline)
                             gui.get_frmOverview().addCommand(gui.get_cmdRefresh());
                         favouriteResponse = response;
+                        gui.get_siNalezenoOver().setText(favourites.found);
                         if (refresh)
                             //Zephy 19.11.07 +\ -pridan posledni parametr
-                            favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],typeNumber,null, false);
+                            favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],typeNumber,null, false, favourites.found);
                             //Zephy 19.11.07 +/
                         if (!offline)
                             //Zephy 19.11.07 +\ -pridan posledni parametr
-                            favourites.addEdit("_Poslední cache",response,listing[0][4],listing[0][5],typeNumber,null, false);                        
+                            favourites.addEdit("_Poslední cache",response,listing[0][4],listing[0][5],typeNumber,null, false, "");                        
                             //Zephy 19.11.07 +/
                         gui.getDisplay().setCurrent(gui.get_frmOverview());
                     }
