@@ -306,11 +306,11 @@ public class Http implements Runnable
                         gui.get_siNalezenoOver().setText(favourites.found);
                         if (refresh)
                             //Zephy 19.11.07 +\ -pridan posledni parametr
-                            favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],typeNumber,null, false, favourites.found);
+                            favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],typeNumber,null, false, favourites.found, "");
                             //Zephy 19.11.07 +/
                         if (!offline)
                             //Zephy 19.11.07 +\ -pridan posledni parametr
-                            favourites.addEdit("_Poslední cache",response,listing[0][4],listing[0][5],typeNumber,null, false, "");                        
+                            favourites.addEdit("_Poslední cache",response,listing[0][4],listing[0][5],typeNumber,null, false, "NE", "");                        
                             //Zephy 19.11.07 +/
                         gui.getDisplay().setCurrent(gui.get_frmOverview());
                     }
@@ -627,7 +627,12 @@ public class Http implements Runnable
     {
         try
         {
-            if (data.substring(0,3).equals("err"))
+            if (data.length() == 0)
+            {
+                gui.showAlert("Server geocaching.com vrátil neoèekávanou odpovìï",AlertType.ERROR,gui.get_lstMenu());
+                return false;
+            }
+            else if (data.substring(0,3).equals("err"))
             {
                 gui.showAlert("Špatnì nastavené nebo nedostupné GPRS spojení",AlertType.ERROR,gui.get_lstMenu());
                 return false;

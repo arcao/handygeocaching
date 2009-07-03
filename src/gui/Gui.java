@@ -415,7 +415,7 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert pre-action code here
                 gps.stop();
                 favourites.editId = -1;
-                favourites.addEdit("Výsledek prùmìrování","",siAverageLattitude.getText(),siAverageLongitude.getText(),"average",get_lstFavourites(), false, "NE");
+                favourites.addEdit("Výsledek prùmìrování","",siAverageLattitude.getText(),siAverageLongitude.getText(),"average",get_lstFavourites(), false, "NE", "");
                 // Do nothing//GEN-LINE:MVDCAAction391
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase391
@@ -633,7 +633,7 @@ public class Gui extends MIDlet implements CommandListener
                 favourites.addEdit(siName.getText(),
                         http.favouriteResponse,
                         siOverviewLattitude.getText(), siOverviewLongitude.getText(),
-                        http.typeNumber,get_frmOverview(), false, "NE");
+                        http.typeNumber,get_frmOverview(), false, "NE", "");
                 //Zephy oprava 22.12.07 +/
             } else if (command == cmdDownloadPatterns) {//GEN-LINE:MVDCACase255
                 // Insert pre-action code here
@@ -889,7 +889,7 @@ public class Gui extends MIDlet implements CommandListener
                             get_tfLongitude().setString("");                            
                             getDisplay().setCurrent(get_cvsSignal());
                             gps.start(Gps.GPS_SIGNAL);
-                            gps.setPreviousScreen(lstGPS);
+                            gps.setPreviousScreen(get_lstGPS());
                         }
                         else
                         {
@@ -937,7 +937,7 @@ public class Gui extends MIDlet implements CommandListener
                     get_frmAddGiven().setTitle("Získávám souøadnice...");
                     get_tfGivenName().setString("");
                     get_tfGivenDescription().setString("");
-                    getDisplay().setCurrent(frmAddGiven);
+                    getDisplay().setCurrent(get_frmAddGiven());
                     gps.start(Gps.COORDINATES_FAVOURITES);
                 }
                 else
@@ -980,7 +980,7 @@ public class Gui extends MIDlet implements CommandListener
                         getDisplay().setCurrent(get_cvsNavigation());
                         favourites.view(selected, false);
                         gps.start(Gps.NAVIGATION);
-                        gps.setPreviousScreen(lstFavourites);
+                        gps.setPreviousScreen(get_lstFavourites());
                     }
                 }
                 else
@@ -1003,7 +1003,7 @@ public class Gui extends MIDlet implements CommandListener
                     favourites.loadFavouritesToMap();
                     getDisplay().setCurrent(get_cvsMap());
                     gps.start(Gps.MAP);
-                    gps.setPreviousScreen(lstFavourites);
+                    gps.setPreviousScreen(get_lstFavourites());
                 }
                 else
                 {
@@ -1025,7 +1025,7 @@ public class Gui extends MIDlet implements CommandListener
                 int selected = firstCheckedFavourite();
                 if (selected != -1) {
                     get_siNazevKese().setText(favourites.getCacheName(selected));
-                    favourites.editId = selected;
+                    favourites.id = selected;
                     getDisplay().setCurrent(get_frmNalezeno());//GEN-LINE:MVDCAAction509
                 // Insert post-action code here
                 }
@@ -1073,7 +1073,7 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction279
                 // Insert post-action code here
-                favourites.addEdit(tfGivenName.getString(),tfGivenDescription.getString(),tfGivenLattitude.getString(),tfGivenLongitude.getString(),"waypoint",get_lstFavourites(), (cgGivenFormat.getSelectedIndex()==1), "NE");
+                favourites.addEdit(tfGivenName.getString(),tfGivenDescription.getString(),tfGivenLattitude.getString(),tfGivenLongitude.getString(),"waypoint",get_lstFavourites(), (cgGivenFormat.getSelectedIndex()==1), "NE", "");
                 /*
                  *Zephy 19.11.07 REM - pri editaci bodu a zadani chybnych souradnic byla prebita hlaska o chybne zadanych souradnicich a vlezlo se zpet do seznamu. Toto bylo presunuto do Favourites.java
                  */
@@ -1169,7 +1169,7 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert pre-action code here
                 favourites.editId = -1;
                 //Zephy oprava 22.12.07 - posledni parametr na false +\
-                favourites.addEdit(tfResultName.getString(),tfResultDescription.getString(),tfResultLattitude.getString(),tfResultLongitude.getString(),"multisolver_waypoint",get_lstFavourites(), false, "NE");
+                favourites.addEdit(tfResultName.getString(),tfResultDescription.getString(),tfResultLattitude.getString(),tfResultLongitude.getString(),"multisolver_waypoint",get_lstFavourites(), false, "NE", "");
                 //Zephy oprava 22.12.07 - posledni parametr na false +/
                 // Do nothing//GEN-LINE:MVDCAAction352
                 // Insert post-action code here
@@ -1257,7 +1257,7 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert post-action code here
             } else if (command == cmdNastavit) {//GEN-LINE:MVDCACase503
                 // Insert pre-action code here
-                favourites.setFound(favourites.editId, get_dfNalezeno().getDate(), get_lstFavourites());
+                favourites.setFound(favourites.id, get_dfNalezeno().getDate(), get_lstFavourites());
                 // Do nothing//GEN-LINE:MVDCAAction505
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase505
@@ -1295,9 +1295,9 @@ public class Gui extends MIDlet implements CommandListener
      */
     private void initialize() {//GEN-END:MVDInitBegin
         // Insert pre-init code here
-        //if (settings.vip)
-        //    getDisplay().setCurrent(get_lstMode());
-        //else
+        if (true) //settings.vip)
+            getDisplay().setCurrent(get_lstMode());
+        else
         getDisplay().setCurrent(get_ssAdvertisement());//GEN-LINE:MVDInitInit
         // Insert post-init code here
     }//GEN-LINE:MVDInitEnd

@@ -36,6 +36,7 @@ public class Favourites extends Database
     private IconLoader iconLoader;
     
     //ostatni promenne
+    public int id = -1;
     public int editId = -1;
     private String editType;
     public String found = "";
@@ -67,6 +68,7 @@ public class Favourites extends Database
     {
         try
         {
+            this.id = number;
             RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
             rc.rebuild();
             int id = 0;
@@ -85,12 +87,17 @@ public class Favourites extends Database
             } catch (Exception e) {
                 found = "NE";
             }
-            //nastaveni editId pro pripad refreshe v overview a nasledneho ulozeni do oblibenych
-            if (isCache(type)) //cache
-            {
-                editId = id;
-                editType = type;
+            try {
+                String poznamka = dis.readUTF();
+            } catch (Exception e) {
+                String poznamka = "";
             }
+            //nastaveni editId pro pripad refreshe v overview a nasledneho ulozeni do oblibenych
+            //if (isCache(type)) //cache
+            //{
+            editId = id;
+            editType = type;
+            //}
             //prima navigace
             if (!view)
             {
@@ -128,6 +135,7 @@ public class Favourites extends Database
     {
         try
         {
+            this.id = number;
             RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
             rc.rebuild();
             int id = 0;
@@ -143,6 +151,7 @@ public class Favourites extends Database
             String longitude = dis.readUTF();
             try {
                 dis.readUTF();
+                dis.readUTF();
             } catch (Exception e) {}
             lattitude = Utils.replaceString(Utils.replaceString(lattitude, "° ","d"),"N ","");
             longitude = Utils.replaceString(Utils.replaceString(longitude, "° ","d"),"E ","");
@@ -157,7 +166,7 @@ public class Favourites extends Database
     /**
      * Prida oblibenou polozku do databaze (editId=-1), nebo edituje zadany zaznam (editId>=0)
      */
-    public void addEdit(String name, String description, String lattitude, String longitude, String type, Displayable nextScreen, boolean DegMinSecFormat, String found)
+    public void addEdit(String name, String description, String lattitude, String longitude, String type, Displayable nextScreen, boolean DegMinSecFormat, String found, String poznamka)
     {
         try
         {
@@ -200,6 +209,7 @@ public class Favourites extends Database
                 dos.writeUTF(lattitude);
                 dos.writeUTF(longitude);
                 dos.writeUTF(found);
+                dos.writeUTF(poznamka);
                 byte[] bytes = buffer.toByteArray();
                 //posledni cache
                 if (name.equals("_Poslední cache"))
@@ -222,9 +232,13 @@ public class Favourites extends Database
                                 
                 
                 if (editId==-1) //pridani noveho zaznamu
-                    recordStore.addRecord(bytes, 0, bytes.length);
-                else //editace stavajiciho zaznamu
+                    this.id = recordStore.addRecord(bytes, 0, bytes.length) - 1;
+                else
+                {
+                    //editace stavajiciho zaznamu
+                    this.id = editId - 1;
                     recordStore.setRecord(editId, bytes, 0, bytes.length);
+                }
                 settings.saveCoordinates(lattitude, longitude);
                 viewAll();
                 
@@ -271,6 +285,7 @@ public class Favourites extends Database
     public void setFound(int number, Date found, Displayable nextScreen) {
         try
         {
+            this.id = number;
             RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
             rc.rebuild();
             int id = 0;
@@ -284,11 +299,15 @@ public class Favourites extends Database
             String description = dis.readUTF();
             String lattitude = dis.readUTF();
             String longitude = dis.readUTF();
-            dis.readUTF();
+            String poznamka = "";
+            try{
+                dis.readUTF();
+                poznamka = dis.readUTF();
+            } catch(Exception e) {}
             editId = id;
             editType = type;
             
-            addEdit(name, description, lattitude, longitude, type, nextScreen, false, Utils.formatDate(found));
+            addEdit(name, description, lattitude, longitude, type, nextScreen, false, Utils.formatDate(found), poznamka);
         }
         catch (Exception e)
         {
@@ -303,6 +322,8 @@ public class Favourites extends Database
     {
         try
         {
+            this.id = number;
+            
             RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
             rc.rebuild();
             int id = 0;
@@ -320,6 +341,11 @@ public class Favourites extends Database
                 found = dis.readUTF();
             } catch (Exception e) {
                 found = "NE";
+            }
+            try {
+                String poznamka = dis.readUTF();
+            } catch (Exception e) {
+                String poznamka = "";
             }
             editId = id;
             editType = type;
@@ -419,6 +445,7 @@ public class Favourites extends Database
                 double lattitude = Gps.convertLattitude(dis.readUTF());
                 double longitude = Gps.convertLongitude(dis.readUTF());
                 try {
+                    dis.readUTF();
                     dis.readUTF();
                 } catch (Exception e) {}
                 

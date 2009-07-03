@@ -2150,13 +2150,11 @@
         <Node id="frmSettings" location="1192,928" order=",$CommandAction32,$CommandAction1,,,,,,,,$Default,,,,,"/>
         <Node id="frmConnecting" location="184,208" order="$CommandAction11,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmAllLogs" location="4360,208" order="$CommandAction36,,,,,,,,,,$Default,,,,,"/>
-        <Node id="ssAdvertisement" location="432,928" order="$InternalCommandAction1,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmDebug" location="3712,208" order="$CommandAction10,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmKeyword" location="1792,208" order="$CommandAction39,$CommandAction40,,,,,,,,,$Default,,,,,"/>
         <Node id="lstKeyword" location="2432,208" order="$CommandAction41,$SelectCaseCommandAction17,,,,,,,,,$Default,,,,,"/>
         <Node id="lstSearch" location="1192,448" order="$SelectCaseCommandAction13,$SelectCaseCommandAction14,$SelectCaseCommandAction15,$CommandAction42,,,,,,,$Default,,,,,"/>
         <Node id="lstGPS" location="1192,1400" order="$SelectCaseCommandAction11,$SelectCaseCommandAction16,$CommandAction43,$SelectCaseCommandAction18,$SelectCaseCommandAction21,$SelectCaseCommandAction23,$SelectCaseCommandAction1,,,,$Default,,,,,"/>
-        <Node id="frmFavourite" location="3392,208" order="$CommandAction49,$CommandAction50,$CommandAction73,$CommandAction75,,,,,,,$Default,,,,,"/>
         <Node id="frmTrackingNumber" location="1464,1256" order="$CommandAction30,,$CommandAction58,,,,,,,,$Default,,,,,"/>
         <Node id="frmTrackable" location="3072,208" order="$CommandAction57,$CommandAction59,,,,,,,,,$Default,,,,,"/>
         <Node id="frmMultiSolver" location="1464,816" order="$CommandAction62,$CommandAction63,$CommandAction64,$CommandAction65,$CommandAction70,$CommandAction83,,,,,$Default,,,,,"/>
@@ -2169,10 +2167,13 @@
         <Node id="frmConnectionHelp" location="912,816" order="$CommandAction90,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmDebug1" location="6928,208" order="$CommandAction12,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmGpsSignalHelp" location="1472,208" order="$CommandAction8,,,,,,,,,,$Default,,,,,"/>
-        <Node id="lstFavourites" location="1192,1160" order="$CommandAction44,$CommandAction46,$CommandAction47,$CommandAction51,$CommandAction52,$CommandAction53,$CommandAction56,$CommandAction79,$CommandAction84,$CommandAction88,$Default,$CommandAction37,$CommandAction74,,,"/>
-        <Node id="frmAddGiven" location="1464,592" order="$CommandAction54,$CommandAction55,,,,,,,,,$Default,,,,,"/>
         <Node id="frmNalezeno" location="6280,208" order="$CommandAction31,$CommandAction60,,,,,,,,,$Default,,,,,"/>
+        <Node id="ssAdvertisement" location="432,928" order="$InternalCommandAction1,,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmAddGiven" location="1464,592" order="$CommandAction54,$CommandAction55,,,,,,,,,$Default,,,,,"/>
         <Node id="frmOverview" location="504,208" order="$CommandAction21,$CommandAction23,$CommandAction19,$CommandAction22,$CommandAction33,$CommandAction20,$CommandAction34,$CommandAction38,$CommandAction45,$CommandAction78,$Default,$CommandAction85,$CommandAction61,,,"/>
+        <Node id="frmFavourite" location="3392,208" order="$CommandAction49,$CommandAction50,$CommandAction73,$CommandAction75,,,,,,,$Default,,,,,"/>
+        <Node id="lstFavourites" location="1192,1160" order="$CommandAction44,$CommandAction46,$CommandAction47,$CommandAction51,$CommandAction52,$CommandAction53,$CommandAction56,$CommandAction79,$CommandAction84,$CommandAction88,$Default,$CommandAction37,$CommandAction74,,,"/>
+        <Link id="$StartPoint$ActionLink" path="200,904,392,904"/>
         <Link id="$CommandAction2$ActionLink" path="2152,200,2278,200,2278,262,47,262,47,904,120,904"/>
         <Link id="$CommandAction4$ActionLink" path="864,200,1040,200,1040,1376,1152,1376"/>
         <Link id="$SelectCaseCommandAction3$ActionLink" path="680,904,815,904,815,1016,872,1016"/>
@@ -2229,7 +2230,6 @@
         <Link id="$SelectCaseCommandAction23$ActionLink" path="1200,1328,1200,1232,1424,1232"/>
         <Link id="$CommandAction12$ActionLink" path="6968,200,7101,200,7101,1437,713,1437,713,1016,872,1016"/>
         <Link id="$CommandAction1$ActionLink" path="1232,888,1305,888,1305,850,815,850,815,1016,872,1016"/>
-        <Link id="$StartPoint$ActionLink" path="200,904,392,904"/>
         <Link id="$CommandAction31$ActionLink" path="6320,200,6455,200,6455,1461,1061,1461,1061,1136,1152,1136"/>
         <Link id="$CommandAction61$ActionLink" path="480,237,480,361,6086,361,6086,184,6240,184"/>
         <Link id="$CommandAction74$ActionLink" path="1168,1189,1168,1277,6213,184,6240,184"/>
