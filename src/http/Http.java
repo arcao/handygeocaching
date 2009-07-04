@@ -277,6 +277,10 @@ public class Http implements Runnable
                         if (offline)
                             gui.get_frmOverview().addCommand(gui.get_cmdNastavitNalez());
                         
+                        gui.get_frmOverview().removeCommand(gui.get_cmdPoznamka());
+                        if (offline)
+                            gui.get_frmOverview().addCommand(gui.get_cmdPoznamka());
+                        
                         //jsou pridavne waypointy?
                         gui.get_frmOverview().removeCommand(gui.get_cmdWaypoints());
                         if (listing[0][11].equals("1"))
@@ -304,6 +308,7 @@ public class Http implements Runnable
                             gui.get_frmOverview().addCommand(gui.get_cmdRefresh());
                         favouriteResponse = response;
                         gui.get_siNalezenoOver().setText(favourites.found);
+                        gui.get_siPoznamkaOver().setText(favourites.poznamka);
                         if (refresh)
                             //Zephy 19.11.07 +\ -pridan posledni parametr
                             favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],typeNumber,null, false, favourites.found, "");

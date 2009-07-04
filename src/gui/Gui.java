@@ -45,8 +45,7 @@ import utils.Utils;
  * logiku
  * @author David Vavra
  */
-public class Gui extends MIDlet implements CommandListener
-{
+public class Gui extends MIDlet implements CommandListener {
     //mody aplikace
     public boolean modeGPS = false;
     public boolean nearest = false;
@@ -77,8 +76,7 @@ public class Gui extends MIDlet implements CommandListener
     /***
      * Creates a new instance of Gui
      */
-    public Gui()
-    {
+    public Gui() {
         settings = new Settings(this);
         iconLoader = new IconLoader(this);
         favourites = new Favourites(this, settings, iconLoader);
@@ -94,23 +92,19 @@ public class Gui extends MIDlet implements CommandListener
     /**
      * Dodatecne nastavovani referenci
      */
-    public void setReference(Gps ref)
-    {
+    public void setReference(Gps ref) {
         gps = ref;
     }
     
-    public void setReference(GpsParser ref)
-    {
+    public void setReference(GpsParser ref) {
         gpsParser = ref;
     }
     
-    public void setReference(Bluetooth ref)
-    {
+    public void setReference(Bluetooth ref) {
         bluetooth = ref;
     }
     
-    public void setReference(Track ref)
-    {
+    public void setReference(Track ref) {
         track = ref;
     }
     
@@ -299,10 +293,13 @@ public class Gui extends MIDlet implements CommandListener
     private Command cmdNalezenoBack;
     private Command cmdNastavit;
     private Command cmdNastavitNalez;
-    private Command screenCommand1;
     private StringItem siNalezeno1;
-    private Command screenCommand2;
-    private Command screenCommand3;//GEN-END:MVDFields
+    private StringItem siSestaveni;
+    private TextBox tbPoznamka;
+    private Command cmdPoznamka;
+    private StringItem siPoznamka;
+    private Command screenCommand1;
+    private StringItem siPoznamkaOver;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -323,9 +320,7 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert pre-action code here
                 exitMIDlet();//GEN-LINE:MVDCAAction17
                 // Insert post-action code here
-            }
-            else if (command == lstDevices.SELECT_COMMAND)
-            {
+            } else if (command == lstDevices.SELECT_COMMAND) {
                 getDisplay().setCurrent(get_frmConnecting());
                 bluetooth.searchForServices();
             } else if (command == cmdBack) {//GEN-LINE:MVDCACase17
@@ -358,6 +353,7 @@ public class Gui extends MIDlet implements CommandListener
                         getDisplay().setCurrent(get_frmAbout());//GEN-LINE:MVDCAAction41
                         // Insert post-action code here
                         siVerze.setText(getAppProperty("MIDlet-Version")+"\n");
+                        get_siSestaveni().setText(getAppProperty("Build-Vendor")+"-"+getAppProperty("Build-Version")+"\n");
                         if (settings.vip)
                             siDonate.setText("Dìkuji moc za Váš pøíspìvek na vývoj aplikace! (è.úètu autora je 51-5385890237/0100)");
                         break;//GEN-BEGIN:MVDCACase41
@@ -436,12 +432,9 @@ public class Gui extends MIDlet implements CommandListener
                         {
                             // Do nothing//GEN-LINE:MVDCAAction30
                             searchBluetooth();
-                        }
-                        else
-                        {
+                        } else {
                             bluetooth = new Bluetooth(this, http, settings, favourites, true);
-                            if (bluetooth.isOn())
-                            {
+                            if (bluetooth.isOn()) {
                                 get_frmConnecting().append("Pøipojuji k poslednímu zaøízení...");
                                 getDisplay().setCurrent(get_frmConnecting());
                                 gpsParser = new GpsParser(this, http, settings, favourites, bluetooth, settings.lastDevice, GpsParser.BLUETOOTH);
@@ -483,26 +476,19 @@ public class Gui extends MIDlet implements CommandListener
         } else if (displayable == frmCoordinates) {
             if (command == cmdBack) {//GEN-END:MVDCACase423
                 // Insert pre-action code here
-                if (navigateToPoint)
-                {
+                if (navigateToPoint) {
                     getDisplay().setCurrent(get_lstGPS());
-                }
-                else
-                {
+                } else {
                     getDisplay().setCurrent(get_lstSearch());//GEN-LINE:MVDCAAction69
                 }
             } else if (command == cmdSend) {//GEN-LINE:MVDCACase69
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction68
                 // Insert post-action code here
-                if (navigateToPoint)
-                {
-                    if (gps.convertLattitude(get_tfLattitude().getString())==0 || gps.convertLongitude(get_tfLongitude().getString())==0)
-                    {
+                if (navigateToPoint) {
+                    if (gps.convertLattitude(get_tfLattitude().getString())==0 || gps.convertLongitude(get_tfLongitude().getString())==0) {
                         showAlert("Špatný formát souøadnic",AlertType.WARNING,get_frmCoordinates());
-                    }
-                    else
-                    {
+                    } else {
                         settings.saveCoordinates(get_tfLattitude().getString(), get_tfLongitude().getString());
                         getDisplay().setCurrent(get_cvsNavigation());
                         gps.setNavigationTarget(get_tfLattitude().getString(), get_tfLongitude().getString(),"Zadaný bod");
@@ -510,38 +496,26 @@ public class Gui extends MIDlet implements CommandListener
                         gps.setPreviousScreen(frmCoordinates);
                     }
                     
-                }
-                else
-                {
+                } else {
                     http.start(Http.NEAREST_CACHES, false);
                 }
             }//GEN-BEGIN:MVDCACase68
         } else if (displayable == lstNearestCaches) {
             if (command == cmdBack) {//GEN-END:MVDCACase68
                 // Insert pre-action code here
-                if (nearestFromWaypoint && !nearest)
-                {
+                if (nearestFromWaypoint && !nearest) {
                     getDisplay().setCurrent(get_frmOverview());
-                }
-                else if (nearestFromFavourite)
-                {
+                } else if (nearestFromFavourite) {
                     getDisplay().setCurrent(get_frmFavourite());
-                }
-                else
-                {
-                    if (modeGPS)
-                    {
+                } else {
+                    if (modeGPS) {
                         getDisplay().setCurrent(lstSearch);
-                    }
-                    else
-                    {
+                    } else {
                         getDisplay().setCurrent(get_frmCoordinates());//GEN-LINE:MVDCAAction73
                     }
                 }
                 // Insert post-action code here
-            }
-            else if (command == lstNearestCaches.SELECT_COMMAND)
-            {
+            } else if (command == lstNearestCaches.SELECT_COMMAND) {
                 http.waypoint = http.waypoints[lstNearestCaches.getSelectedIndex()];
                 http.start(Http.OVERVIEW, false);
             } else if (command == lstNearestCaches.SELECT_COMMAND) {//GEN-BEGIN:MVDCACase73
@@ -568,20 +542,13 @@ public class Gui extends MIDlet implements CommandListener
         } else if (displayable == frmOverview) {
             if (command == cmdBack) {//GEN-END:MVDCACase88
                 // Insert pre-action code here
-                if (nearest)
-                {
+                if (nearest) {
                     getDisplay().setCurrent(lstNearestCaches);
-                }
-                else if (fromFavourites)
-                {
+                } else if (fromFavourites) {
                     getDisplay().setCurrent(lstFavourites);
-                }
-                else if (keyword)
-                {
+                } else if (keyword) {
                     getDisplay().setCurrent(lstKeyword);
-                }
-                else
-                {
+                } else {
                     getDisplay().setCurrent(get_frmWaypoint());//GEN-LINE:MVDCAAction91
                 }// Insert post-action code here
             } else if (command == cmdWaypoints) {//GEN-LINE:MVDCACase91
@@ -606,16 +573,13 @@ public class Gui extends MIDlet implements CommandListener
                 http.start(Http.LOGS, false);
             } else if (command == cmdNavigate) {//GEN-LINE:MVDCACase107
                 // Insert pre-action code here
-                if (modeGPS)
-                {
+                if (modeGPS) {
                     // Do nothing//GEN-LINE:MVDCAAction168
                     getDisplay().setCurrent(get_cvsNavigation());
                     gps.setNavigationTarget(get_siOverviewLattitude().getText(), get_siOverviewLongitude().getText(), get_siName().getText());
                     gps.start(Gps.NAVIGATION);
                     gps.setPreviousScreen(frmOverview);
-                }
-                else
-                {
+                } else {
                     showAlert("Tato funkce je pøístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                 }
             } else if (command == cmdNext) {//GEN-LINE:MVDCACase168
@@ -629,7 +593,7 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction255
                 favourites.editId = -1;
-                //Zephy oprava 22.12.07 - posledni parametr na false +\                
+                //Zephy oprava 22.12.07 - posledni parametr na false +\
                 favourites.addEdit(siName.getText(),
                         http.favouriteResponse,
                         siOverviewLattitude.getText(), siOverviewLongitude.getText(),
@@ -689,9 +653,7 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_frmOverview());//GEN-LINE:MVDCAAction119
                 // Insert post-action code here
-            }
-            else
-            {
+            } else {
                 http.start(Http.ALL_LOGS, false);
             }//GEN-BEGIN:MVDCACase119
         } else if (displayable == frmAbout) {
@@ -711,11 +673,11 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction144
                 // Insert post-action code here
-                settings.save();                 
+                settings.save();
             } else if (command == backCommand2) {//GEN-LINE:MVDCACase144
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction478
-                 // Insert post-action code here
+                // Insert post-action code here
             }//GEN-BEGIN:MVDCACase478
         } else if (displayable == frmConnecting) {
             if (command == cmdBack) {//GEN-END:MVDCACase478
@@ -746,9 +708,7 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_frmKeyword());//GEN-LINE:MVDCAAction225
                 // Insert post-action code here
-            }
-            else if (command == lstKeyword.SELECT_COMMAND)
-            {
+            } else if (command == lstKeyword.SELECT_COMMAND) {
                 http.waypoint = http.waypoints[lstKeyword.getSelectedIndex()];
                 http.start(Http.OVERVIEW, false);
             } else if (command == lstKeyword.SELECT_COMMAND) {//GEN-BEGIN:MVDCACase225
@@ -781,14 +741,11 @@ public class Gui extends MIDlet implements CommandListener
                         nearestFromFavourite = false;
                         navigateToPoint = false;
                         keyword = false;
-                        if (!modeGPS)
-                        {
+                        if (!modeGPS) {
                             get_frmCoordinates().setTitle("Zadejte souøadnice:");
                             get_tfLattitude().setString(settings.lastLattitude);
                             get_tfLongitude().setString(settings.lastLongitude);
-                        }
-                        else
-                        {
+                        } else {
                             get_frmCoordinates().setTitle("Zadejte souøadnice:");
                             get_tfLattitude().setString("");
                             get_tfLongitude().setString("");
@@ -829,8 +786,7 @@ public class Gui extends MIDlet implements CommandListener
                 switch (get_lstGPS().getSelectedIndex()) {
                     case 4://GEN-END:MVDCACase243
                         // naviguj
-                        if (modeGPS)
-                        {
+                        if (modeGPS) {
                             // Do nothing
                             // Insert post-action code here
                             navigateToPoint = true;
@@ -838,9 +794,7 @@ public class Gui extends MIDlet implements CommandListener
                             getDisplay().setCurrent(get_frmCoordinates());
                             get_tfLattitude().setString(settings.lastLattitude);
                             get_tfLongitude().setString(settings.lastLongitude);
-                        }
-                        else
-                        {
+                        } else {
                             showAlert("Tato funkce je pøístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                         }
                         // Do nothing//GEN-LINE:MVDCAAction240
@@ -848,14 +802,11 @@ public class Gui extends MIDlet implements CommandListener
                         break;//GEN-BEGIN:MVDCACase240
                     case 3://GEN-END:MVDCACase240
                         // prumerovani
-                        if (modeGPS)
-                        {
+                        if (modeGPS) {
                             getDisplay().setCurrent(get_frmAveraging());
                             // Insert post-action code here
                             gps.start(Gps.AVERAGING);
-                        }
-                        else
-                        {
+                        } else {
                             showAlert("Tato funkce je pøístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                         }
                         // Do nothing//GEN-LINE:MVDCAAction242
@@ -883,22 +834,19 @@ public class Gui extends MIDlet implements CommandListener
                         // Insert pre-action code here
                         //Zephy 21.11.07 gpsstatus+\
                         // gps signal
-                        if (modeGPS)
-                        {
+                        if (modeGPS) {
                             get_tfLattitude().setString("");
-                            get_tfLongitude().setString("");                            
+                            get_tfLongitude().setString("");
                             getDisplay().setCurrent(get_cvsSignal());
                             gps.start(Gps.GPS_SIGNAL);
                             gps.setPreviousScreen(get_lstGPS());
-                        }
-                        else
-                        {
+                        } else {
                             //TMP+\
                             //getDisplay().setCurrent(get_cvsSignal());
-                            //gps.setPreviousScreen(lstGPS);                            
+                            //gps.setPreviousScreen(lstGPS);
                             //TMP-/
-                             
-                             showAlert("Tato funkce je pøístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
+                            
+                            showAlert("Tato funkce je pøístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                         }
                         //Zephy 21.11.07 gpsstatus+/
                         // Do nothing//GEN-LINE:MVDCAAction469
@@ -931,17 +879,14 @@ public class Gui extends MIDlet implements CommandListener
                 // Do nothing//GEN-LINE:MVDCAAction269
                 // Insert post-action code here
                 fromMultiSolver = false;
-                if (modeGPS)
-                {
+                if (modeGPS) {
                     favourites.editId = -1;
                     get_frmAddGiven().setTitle("Získávám souøadnice...");
                     get_tfGivenName().setString("");
                     get_tfGivenDescription().setString("");
                     getDisplay().setCurrent(get_frmAddGiven());
                     gps.start(Gps.COORDINATES_FAVOURITES);
-                }
-                else
-                {
+                } else {
                     showAlert("Tato funkce je pøístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                 }
             } else if (command == cmdDelete) {//GEN-LINE:MVDCACase269
@@ -970,11 +915,9 @@ public class Gui extends MIDlet implements CommandListener
                     favourites.edit(selected);
             } else if (command == cmdNavigate) {//GEN-LINE:MVDCACase285
                 // Insert pre-action code here
-                if (modeGPS)
-                {
+                if (modeGPS) {
                     int selected = firstCheckedFavourite();
-                    if (selected != -1)
-                    {
+                    if (selected != -1) {
                         navigateToFavourite = true;
                         navigateToPoint = false;
                         getDisplay().setCurrent(get_cvsNavigation());
@@ -982,15 +925,12 @@ public class Gui extends MIDlet implements CommandListener
                         gps.start(Gps.NAVIGATION);
                         gps.setPreviousScreen(get_lstFavourites());
                     }
-                }
-                else
-                {
+                } else {
                     showAlert("Tato funkce je pøístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                 }
                 // Do nothing//GEN-LINE:MVDCAAction390
                 // Insert post-action code here
             } else if (command == cmdMultiSolver) {//GEN-LINE:MVDCACase390
-                // Insert pre-action code here
                 fromMultiSolver = true;
                 multiSolver.viewAll();
                 getDisplay().setCurrent(get_frmMultiSolver());
@@ -998,15 +938,12 @@ public class Gui extends MIDlet implements CommandListener
                 // Insert post-action code here
             } else if (command == cmdMap) {//GEN-LINE:MVDCACase408
                 // Insert pre-action code here
-                if (modeGPS)
-                {
+                if (modeGPS) {
                     favourites.loadFavouritesToMap();
                     getDisplay().setCurrent(get_cvsMap());
                     gps.start(Gps.MAP);
                     gps.setPreviousScreen(get_lstFavourites());
-                }
-                else
-                {
+                } else {
                     showAlert("Tato funkce je pøístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                 }
                 // Do nothing//GEN-LINE:MVDCAAction420
@@ -1014,8 +951,7 @@ public class Gui extends MIDlet implements CommandListener
             } else if (command == cmdMapyCz) {//GEN-LINE:MVDCACase420
                 // Insert pre-action code here
                 int selected = firstCheckedFavourite();
-                if (selected != -1)
-                {
+                if (selected != -1) {
                     favourites.mapyCz(selected);
                 }
                 // Do nothing//GEN-LINE:MVDCAAction453
@@ -1027,28 +963,35 @@ public class Gui extends MIDlet implements CommandListener
                     get_siNazevKese().setText(favourites.getCacheName(selected));
                     favourites.id = selected;
                     getDisplay().setCurrent(get_frmNalezeno());//GEN-LINE:MVDCAAction509
+                    // Insert post-action code here
+                }
+            } else if (command == cmdPoznamka) {//GEN-LINE:MVDCACase509
+                // Insert pre-action code here
+                int selected = firstCheckedFavourite();
+                if (selected != -1) {
+                    get_tbPoznamka().setTitle("Poznámka pro "+favourites.getCacheName(selected));
+                    favourites.id = selected;
+                    get_tbPoznamka().setString(favourites.getPoznamka(favourites.id));
+                    getDisplay().setCurrent(get_tbPoznamka());//GEN-LINE:MVDCAAction521
                 // Insert post-action code here
                 }
-            }//GEN-BEGIN:MVDCACase509
+            }//GEN-BEGIN:MVDCACase521
         } else if (displayable == frmFavourite) {
-            if (command == cmdBack) {//GEN-END:MVDCACase509
+            if (command == cmdBack) {//GEN-END:MVDCACase521
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstFavourites());//GEN-LINE:MVDCAAction262
                 // Insert post-action code here
             } else if (command == cmdNavigate) {//GEN-LINE:MVDCACase262
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction263
-                if (modeGPS)
-                {
+                if (modeGPS) {
                     navigateToFavourite = true;
                     navigateToPoint = false;
                     getDisplay().setCurrent(get_cvsNavigation());
                     gps.setNavigationTarget(get_siFavouriteLattitude().getText(), get_siFavouriteLongitude().getText(), get_frmFavourite().getTitle());
                     gps.start(Gps.NAVIGATION);
                     gps.setPreviousScreen(frmFavourite);
-                }
-                else
-                {
+                } else {
                     showAlert("Tato funkce je pøístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                 }
             } else if (command == cmdNext) {//GEN-LINE:MVDCACase263
@@ -1063,9 +1006,15 @@ public class Gui extends MIDlet implements CommandListener
                 get_siNazevKese().setText(get_frmFavourite().getTitle());
                 getDisplay().setCurrent(get_frmNalezeno());//GEN-LINE:MVDCAAction513
                 // Insert post-action code here
-            }//GEN-BEGIN:MVDCACase513
+            } else if (command == cmdPoznamka) {//GEN-LINE:MVDCACase513
+                // Insert pre-action code here
+                get_tbPoznamka().setTitle("Poznámka pro "+favourites.getCacheName(favourites.id));
+                get_tbPoznamka().setString(favourites.getPoznamka(favourites.id));
+                getDisplay().setCurrent(get_tbPoznamka());//GEN-LINE:MVDCAAction524
+                // Insert post-action code here
+            }//GEN-BEGIN:MVDCACase524
         } else if (displayable == frmAddGiven) {
-            if (command == cmdBack) {//GEN-END:MVDCACase513
+            if (command == cmdBack) {//GEN-END:MVDCACase524
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstFavourites());//GEN-LINE:MVDCAAction280
                 // Insert post-action code here
@@ -1079,7 +1028,7 @@ public class Gui extends MIDlet implements CommandListener
                  */
                 if (favourites.editId != -1)
                     getDisplay().setCurrent(get_lstFavourites());
-                 
+                
             }//GEN-BEGIN:MVDCACase279
         } else if (displayable == frmTrackingNumber) {
             if (command == cmdBack) {//GEN-END:MVDCACase279
@@ -1190,9 +1139,7 @@ public class Gui extends MIDlet implements CommandListener
                 get_frmEditPattern().setTitle("Pøidat vzorec");
                 getDisplay().setCurrent(get_frmEditPattern());//GEN-LINE:MVDCAAction378
                 // Insert post-action code here
-            }
-            else if (command == lstPatterns.SELECT_COMMAND)
-            {
+            } else if (command == lstPatterns.SELECT_COMMAND) {
                 patterns.setActive();
                 getDisplay().setCurrent(get_frmMultiSolver());
                 
@@ -1247,7 +1194,7 @@ public class Gui extends MIDlet implements CommandListener
                 // Do nothing//GEN-LINE:MVDCAAction489
                 // Insert post-action code here
                 //Zephy 10.12.07 +\ +plus pridan navic cely frmGpsSignalHelp
-                 getDisplay().setCurrent(get_cvsSignal());
+                getDisplay().setCurrent(get_cvsSignal());
                 //Zephy 10.12.07 +/
             }//GEN-BEGIN:MVDCACase489
         } else if (displayable == frmNalezeno) {
@@ -1261,7 +1208,20 @@ public class Gui extends MIDlet implements CommandListener
                 // Do nothing//GEN-LINE:MVDCAAction505
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase505
-        }//GEN-END:MVDCACase505
+        } else if (displayable == tbPoznamka) {
+            if (command == cmdBack) {//GEN-END:MVDCACase505
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstFavourites());//GEN-LINE:MVDCAAction519
+                // Insert post-action code here
+            } else if (command == cmdSave) {//GEN-LINE:MVDCACase519
+                // Insert pre-action code here
+                favourites.setPoznamka(favourites.id, get_tbPoznamka().getString(), get_lstFavourites());
+                /*
+getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
+                // Insert post-action code here
+                 */
+            }//GEN-BEGIN:MVDCACase517
+        }//GEN-END:MVDCACase517
 // Insert global post-action code here
         
         
@@ -1298,7 +1258,7 @@ public class Gui extends MIDlet implements CommandListener
         if (true) //settings.vip)
             getDisplay().setCurrent(get_lstMode());
         else
-        getDisplay().setCurrent(get_ssAdvertisement());//GEN-LINE:MVDInitInit
+            getDisplay().setCurrent(get_ssAdvertisement());//GEN-LINE:MVDInitInit
         // Insert post-init code here
     }//GEN-LINE:MVDInitEnd
     
@@ -1306,7 +1266,7 @@ public class Gui extends MIDlet implements CommandListener
      * This method should return an instance of the display.
      */
     public Display getDisplay()//GEN-FIRST:MVDGetDisplay
-    {
+{
         return Display.getDisplay(this);
     }//GEN-LAST:MVDGetDisplay
     
@@ -1314,7 +1274,7 @@ public class Gui extends MIDlet implements CommandListener
      * This method should exit the midlet.
      */
     public void exitMIDlet()//GEN-FIRST:MVDExitMidlet
-    {
+{
         settings.close();
         favourites.close();
         multiSolver.close();
@@ -1691,7 +1651,8 @@ public class Gui extends MIDlet implements CommandListener
                 get_siNalezenoOver(),
                 get_siDifficulty(),
                 get_siWaypoint(),
-                get_siInventory()
+                get_siInventory(),
+                get_siPoznamkaOver()
             });
             frmOverview.addCommand(get_cmdBack());
             frmOverview.addCommand(get_cmdHint());
@@ -1716,7 +1677,7 @@ public class Gui extends MIDlet implements CommandListener
     public StringItem get_siName() {
         if (siName == null) {//GEN-END:MVDGetBegin94
             // Insert pre-init code here
-            siName = new StringItem("N\u00E1zev", "");//GEN-LINE:MVDGetInit94
+            siName = new StringItem("N\u00E1zev:", "");//GEN-LINE:MVDGetInit94
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd94
         return siName;
@@ -1728,7 +1689,7 @@ public class Gui extends MIDlet implements CommandListener
     public StringItem get_siAuthor() {
         if (siAuthor == null) {//GEN-END:MVDGetBegin95
             // Insert pre-init code here
-            siAuthor = new StringItem("Autor", "");//GEN-LINE:MVDGetInit95
+            siAuthor = new StringItem("Autor:", "");//GEN-LINE:MVDGetInit95
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd95
         return siAuthor;
@@ -1740,7 +1701,7 @@ public class Gui extends MIDlet implements CommandListener
     public StringItem get_siWaypoint() {
         if (siWaypoint == null) {//GEN-END:MVDGetBegin96
             // Insert pre-init code here
-            siWaypoint = new StringItem("Waypoint", "");//GEN-LINE:MVDGetInit96
+            siWaypoint = new StringItem("Waypoint:", "");//GEN-LINE:MVDGetInit96
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd96
         return siWaypoint;
@@ -1752,7 +1713,7 @@ public class Gui extends MIDlet implements CommandListener
     public StringItem get_siType() {
         if (siType == null) {//GEN-END:MVDGetBegin97
             // Insert pre-init code here
-            siType = new StringItem("Typ", "");//GEN-LINE:MVDGetInit97
+            siType = new StringItem("Typ:", "");//GEN-LINE:MVDGetInit97
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd97
         return siType;
@@ -1764,7 +1725,7 @@ public class Gui extends MIDlet implements CommandListener
     public StringItem get_siSize() {
         if (siSize == null) {//GEN-END:MVDGetBegin98
             // Insert pre-init code here
-            siSize = new StringItem("Velikost", "");//GEN-LINE:MVDGetInit98
+            siSize = new StringItem("Velikost:", "");//GEN-LINE:MVDGetInit98
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd98
         return siSize;
@@ -1777,7 +1738,7 @@ public class Gui extends MIDlet implements CommandListener
     public StringItem get_siDifficulty() {
         if (siDifficulty == null) {//GEN-END:MVDGetBegin100
             // Insert pre-init code here
-            siDifficulty = new StringItem("Obt\u00ED\u017Enost/Ter\u00E9n", "");//GEN-LINE:MVDGetInit100
+            siDifficulty = new StringItem("Obt\u00ED\u017Enost/Ter\u00E9n:", "");//GEN-LINE:MVDGetInit100
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd100
         return siDifficulty;
@@ -1789,7 +1750,7 @@ public class Gui extends MIDlet implements CommandListener
     public StringItem get_siInventory() {
         if (siInventory == null) {//GEN-END:MVDGetBegin101
             // Insert pre-init code here
-            siInventory = new StringItem("Invent\u00E1\u0159", "");//GEN-LINE:MVDGetInit101
+            siInventory = new StringItem("Invent\u00E1\u0159:", "");//GEN-LINE:MVDGetInit101
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd101
         return siInventory;
@@ -2010,6 +1971,7 @@ public class Gui extends MIDlet implements CommandListener
             // Insert pre-init code here
             frmAbout = new Form("Handy Geocaching", new Item[] {//GEN-BEGIN:MVDGetInit126
                 get_siVerze(),
+                get_siSestaveni(),
                 get_stringItem1(),
                 get_siDonate()
             });
@@ -2568,7 +2530,7 @@ public class Gui extends MIDlet implements CommandListener
     public StringItem get_siOverviewLattitude() {
         if (siOverviewLattitude == null) {//GEN-END:MVDGetBegin249
             // Insert pre-init code here
-            siOverviewLattitude = new StringItem("Sou\u0159adnice", "");//GEN-LINE:MVDGetInit249
+            siOverviewLattitude = new StringItem("Sou\u0159adnice:", "");//GEN-LINE:MVDGetInit249
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd249
         return siOverviewLattitude;
@@ -2605,6 +2567,7 @@ public class Gui extends MIDlet implements CommandListener
             lstFavourites.addCommand(get_cmdMap());
             lstFavourites.addCommand(get_cmdMapyCz());
             lstFavourites.addCommand(get_cmdNastavitNalez());
+            lstFavourites.addCommand(get_cmdPoznamka());
             lstFavourites.setCommandListener(this);
             lstFavourites.setSelectedFlags(new boolean[0]);//GEN-END:MVDGetInit251
             // Insert post-init code here
@@ -2658,12 +2621,14 @@ public class Gui extends MIDlet implements CommandListener
                 get_siFavouriteLattitude(),
                 get_siFavouriteLongitude(),
                 get_siDescription(),
-                get_siNalezeno1()
+                get_siNalezeno1(),
+                get_siPoznamka()
             });
             frmFavourite.addCommand(get_cmdBack());
             frmFavourite.addCommand(get_cmdNavigate());
             frmFavourite.addCommand(get_cmdNext());
             frmFavourite.addCommand(get_cmdNastavitNalez());
+            frmFavourite.addCommand(get_cmdPoznamka());
             frmFavourite.setCommandListener(this);//GEN-END:MVDGetInit261
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd261
@@ -3753,7 +3718,7 @@ public class Gui extends MIDlet implements CommandListener
         }//GEN-BEGIN:MVDGetEnd452
         return cmdMapyCz;
     }//GEN-END:MVDGetEnd452
-
+    
     /** This method returns instance for imgPdaGps component and should be called instead of accessing imgPdaGps field directly.//GEN-BEGIN:MVDGetBegin454
      * @return Instance for imgPdaGps component
      */
@@ -3765,12 +3730,12 @@ public class Gui extends MIDlet implements CommandListener
             } catch (java.io.IOException exception) {
                 exception.printStackTrace();
             }//GEN-END:MVDGetInit454
-            imgPdaGps = iconLoader.loadIcon("pdagps");            
+            imgPdaGps = iconLoader.loadIcon("pdagps");
 // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd454
         return imgPdaGps;
     }//GEN-END:MVDGetEnd454
-
+    
     /** This method returns instance for imgOther component and should be called instead of accessing imgOther field directly.//GEN-BEGIN:MVDGetBegin455
      * @return Instance for imgOther component
      */
@@ -3787,7 +3752,7 @@ public class Gui extends MIDlet implements CommandListener
         }//GEN-BEGIN:MVDGetEnd455
         return imgOther;
     }//GEN-END:MVDGetEnd455
-
+    
     /** This method returns instance for cgGivenFormat component and should be called instead of accessing cgGivenFormat field directly.//GEN-BEGIN:MVDGetBegin456
      * @return Instance for cgGivenFormat component
      */
@@ -3817,14 +3782,14 @@ public class Gui extends MIDlet implements CommandListener
     public Command get_backCommand2() {
         if (backCommand2 == null) {//GEN-END:MVDGetBegin466
             // Insert pre-init code here
-            backCommand2 = new Command("Storno", Command.CANCEL, 1); 
+            backCommand2 = new Command("Storno", Command.CANCEL, 1);
             /*
 backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
-            */
+             */
         }//GEN-BEGIN:MVDGetEnd466
         return backCommand2;
     }//GEN-END:MVDGetEnd466
-
+    
     /** This method returns instance for cmdBack1 component and should be called instead of accessing cmdBack1 field directly.//GEN-BEGIN:MVDGetBegin477
      * @return Instance for cmdBack1 component
      */
@@ -3836,7 +3801,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd477
         return cmdBack1;
     }//GEN-END:MVDGetEnd477
-
+    
     /** This method returns instance for frmGpsSignalHelp component and should be called instead of accessing frmGpsSignalHelp field directly.//GEN-BEGIN:MVDGetBegin479
      * @return Instance for frmGpsSignalHelp component
      */
@@ -3857,7 +3822,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd479
         return frmGpsSignalHelp;
     }//GEN-END:MVDGetEnd479
-
+    
     /** This method returns instance for siSouradnice component and should be called instead of accessing siSouradnice field directly.//GEN-BEGIN:MVDGetBegin480
      * @return Instance for siSouradnice component
      */
@@ -3869,7 +3834,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd480
         return siSouradnice;
     }//GEN-END:MVDGetEnd480
-
+    
     /** This method returns instance for siRychlost component and should be called instead of accessing siRychlost field directly.//GEN-BEGIN:MVDGetBegin482
      * @return Instance for siRychlost component
      */
@@ -3881,7 +3846,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd482
         return siRychlost;
     }//GEN-END:MVDGetEnd482
-
+    
     /** This method returns instance for siVyska component and should be called instead of accessing siVyska field directly.//GEN-BEGIN:MVDGetBegin483
      * @return Instance for siVyska component
      */
@@ -3893,7 +3858,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd483
         return siVyska;
     }//GEN-END:MVDGetEnd483
-
+    
     /** This method returns instance for siPresnost component and should be called instead of accessing siPresnost field directly.//GEN-BEGIN:MVDGetBegin484
      * @return Instance for siPresnost component
      */
@@ -3905,7 +3870,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd484
         return siPresnost;
     }//GEN-END:MVDGetEnd484
-
+    
     /** This method returns instance for siPravdepodobnost component and should be called instead of accessing siPravdepodobnost field directly.//GEN-BEGIN:MVDGetBegin485
      * @return Instance for siPravdepodobnost component
      */
@@ -3917,7 +3882,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd485
         return siPravdepodobnost;
     }//GEN-END:MVDGetEnd485
-
+    
     /** This method returns instance for siSat component and should be called instead of accessing siSat field directly.//GEN-BEGIN:MVDGetBegin486
      * @return Instance for siSat component
      */
@@ -3929,7 +3894,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd486
         return siSat;
     }//GEN-END:MVDGetEnd486
-   
+    
     /** This method returns instance for siNalezeno component and should be called instead of accessing siNalezeno field directly.//GEN-BEGIN:MVDGetBegin492
      * @return Instance for siNalezeno component
      */
@@ -3941,19 +3906,19 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd492
         return siNalezeno;
     }//GEN-END:MVDGetEnd492
-
+    
     /** This method returns instance for siNalezenoOver component and should be called instead of accessing siNalezenoOver field directly.//GEN-BEGIN:MVDGetBegin494
      * @return Instance for siNalezenoOver component
      */
     public StringItem get_siNalezenoOver() {
         if (siNalezenoOver == null) {//GEN-END:MVDGetBegin494
             // Insert pre-init code here
-            siNalezenoOver = new StringItem("Nalezeno", "");//GEN-LINE:MVDGetInit494
+            siNalezenoOver = new StringItem("Nalezeno:", "");//GEN-LINE:MVDGetInit494
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd494
         return siNalezenoOver;
     }//GEN-END:MVDGetEnd494
-
+    
     /** This method returns instance for frmNalezeno component and should be called instead of accessing frmNalezeno field directly.//GEN-BEGIN:MVDGetBegin495
      * @return Instance for frmNalezeno component
      */
@@ -3971,7 +3936,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd495
         return frmNalezeno;
     }//GEN-END:MVDGetEnd495
-
+    
     /** This method returns instance for siNazevKese component and should be called instead of accessing siNazevKese field directly.//GEN-BEGIN:MVDGetBegin496
      * @return Instance for siNazevKese component
      */
@@ -3983,7 +3948,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd496
         return siNazevKese;
     }//GEN-END:MVDGetEnd496
-
+    
     /** This method returns instance for dfNalezeno component and should be called instead of accessing dfNalezeno field directly.//GEN-BEGIN:MVDGetBegin497
      * @return Instance for dfNalezeno component
      */
@@ -4007,7 +3972,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd502
         return cmdNalezenoBack;
     }//GEN-END:MVDGetEnd502
-
+    
     /** This method returns instance for cmdNastavit component and should be called instead of accessing cmdNastavit field directly.//GEN-BEGIN:MVDGetBegin504
      * @return Instance for cmdNastavit component
      */
@@ -4019,7 +3984,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd504
         return cmdNastavit;
     }//GEN-END:MVDGetEnd504
-
+    
     /** This method returns instance for cmdNastavitNalez component and should be called instead of accessing cmdNastavitNalez field directly.//GEN-BEGIN:MVDGetBegin506
      * @return Instance for cmdNastavitNalez component
      */
@@ -4031,80 +3996,112 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd506
         return cmdNastavitNalez;
     }//GEN-END:MVDGetEnd506
-
-    /** This method returns instance for screenCommand1 component and should be called instead of accessing screenCommand1 field directly.//GEN-BEGIN:MVDGetBegin508
-     * @return Instance for screenCommand1 component
-     */
-    public Command get_screenCommand1() {
-        if (screenCommand1 == null) {//GEN-END:MVDGetBegin508
-            // Insert pre-init code here
-            screenCommand1 = new Command("Screen", Command.SCREEN, 1);//GEN-LINE:MVDGetInit508
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd508
-        return screenCommand1;
-    }//GEN-END:MVDGetEnd508
-
     /** This method returns instance for siNalezeno1 component and should be called instead of accessing siNalezeno1 field directly.//GEN-BEGIN:MVDGetBegin510
      * @return Instance for siNalezeno1 component
      */
     public StringItem get_siNalezeno1() {
         if (siNalezeno1 == null) {//GEN-END:MVDGetBegin510
             // Insert pre-init code here
-            siNalezeno1 = new StringItem("Nalezeno", "");//GEN-LINE:MVDGetInit510
+            siNalezeno1 = new StringItem("Nalezeno:", "");//GEN-LINE:MVDGetInit510
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd510
         return siNalezeno1;
     }//GEN-END:MVDGetEnd510
-
-    /** This method returns instance for screenCommand2 component and should be called instead of accessing screenCommand2 field directly.//GEN-BEGIN:MVDGetBegin511
-     * @return Instance for screenCommand2 component
+    
+    /** This method returns instance for siSestaveni component and should be called instead of accessing siSestaveni field directly.//GEN-BEGIN:MVDGetBegin514
+     * @return Instance for siSestaveni component
      */
-    public Command get_screenCommand2() {
-        if (screenCommand2 == null) {//GEN-END:MVDGetBegin511
+    public StringItem get_siSestaveni() {
+        if (siSestaveni == null) {//GEN-END:MVDGetBegin514
             // Insert pre-init code here
-            screenCommand2 = new Command("Screen", Command.SCREEN, 1);//GEN-LINE:MVDGetInit511
+            siSestaveni = new StringItem("Speci\u00E1ln\u00ED sestaven\u00ED:", "");//GEN-LINE:MVDGetInit514
             // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd511
-        return screenCommand2;
-    }//GEN-END:MVDGetEnd511
-
-    /** This method returns instance for screenCommand3 component and should be called instead of accessing screenCommand3 field directly.//GEN-BEGIN:MVDGetBegin512
-     * @return Instance for screenCommand3 component
+        }//GEN-BEGIN:MVDGetEnd514
+        return siSestaveni;
+    }//GEN-END:MVDGetEnd514
+    
+    /** This method returns instance for tbPoznamka component and should be called instead of accessing tbPoznamka field directly.//GEN-BEGIN:MVDGetBegin515
+     * @return Instance for tbPoznamka component
      */
-    public Command get_screenCommand3() {
-        if (screenCommand3 == null) {//GEN-END:MVDGetBegin512
+    public TextBox get_tbPoznamka() {
+        if (tbPoznamka == null) {//GEN-END:MVDGetBegin515
             // Insert pre-init code here
-            screenCommand3 = new Command("Screen", Command.SCREEN, 1);//GEN-LINE:MVDGetInit512
+            tbPoznamka = new TextBox("Pozn\u00E1mka pro ...", null, 120, TextField.ANY);//GEN-BEGIN:MVDGetInit515
+            tbPoznamka.addCommand(get_cmdSave());
+            tbPoznamka.addCommand(get_cmdBack());
+            tbPoznamka.setCommandListener(this);//GEN-END:MVDGetInit515
             // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd512
-        return screenCommand3;
-    }//GEN-END:MVDGetEnd512
-              
-    public Navigation get_cvsNavigation()
-    {
-        if (cvsNavigation == null)
-        {
+        }//GEN-BEGIN:MVDGetEnd515
+        return tbPoznamka;
+    }//GEN-END:MVDGetEnd515
+    
+    /** This method returns instance for cmdPoznamka component and should be called instead of accessing cmdPoznamka field directly.//GEN-BEGIN:MVDGetBegin520
+     * @return Instance for cmdPoznamka component
+     */
+    public Command get_cmdPoznamka() {
+        if (cmdPoznamka == null) {//GEN-END:MVDGetBegin520
+            // Insert pre-init code here
+            cmdPoznamka = new Command("Pozn\u00E1mka", Command.SCREEN, 10);//GEN-LINE:MVDGetInit520
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd520
+        return cmdPoznamka;
+    }//GEN-END:MVDGetEnd520
+
+    /** This method returns instance for siPoznamka component and should be called instead of accessing siPoznamka field directly.//GEN-BEGIN:MVDGetBegin522
+     * @return Instance for siPoznamka component
+     */
+    public StringItem get_siPoznamka() {
+        if (siPoznamka == null) {//GEN-END:MVDGetBegin522
+            // Insert pre-init code here
+            siPoznamka = new StringItem("Pozn\u00E1mka:", "");//GEN-LINE:MVDGetInit522
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd522
+        return siPoznamka;
+    }//GEN-END:MVDGetEnd522
+
+    /** This method returns instance for screenCommand1 component and should be called instead of accessing screenCommand1 field directly.//GEN-BEGIN:MVDGetBegin523
+     * @return Instance for screenCommand1 component
+     */
+    public Command get_screenCommand1() {
+        if (screenCommand1 == null) {//GEN-END:MVDGetBegin523
+            // Insert pre-init code here
+            screenCommand1 = new Command("Screen", Command.SCREEN, 1);//GEN-LINE:MVDGetInit523
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd523
+        return screenCommand1;
+    }//GEN-END:MVDGetEnd523
+
+    /** This method returns instance for siPoznamkaOver component and should be called instead of accessing siPoznamkaOver field directly.//GEN-BEGIN:MVDGetBegin525
+     * @return Instance for siPoznamkaOver component
+     */
+    public StringItem get_siPoznamkaOver() {
+        if (siPoznamkaOver == null) {//GEN-END:MVDGetBegin525
+            // Insert pre-init code here
+            siPoznamkaOver = new StringItem("Pozn\u00E1mka:", "");//GEN-LINE:MVDGetInit525
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd525
+        return siPoznamkaOver;
+    }//GEN-END:MVDGetEnd525
+    
+    public Navigation get_cvsNavigation() {
+        if (cvsNavigation == null) {
             cvsNavigation = new Navigation(this, gps, favourites);
             cvsNavigation.setFullScreenMode(true);
         }
         return cvsNavigation;
     }
     
-    public Map get_cvsMap()
-    {
-        if (cvsMap == null)
-        {
+    public Map get_cvsMap() {
+        if (cvsMap == null) {
             cvsMap = new Map(this, gps, iconLoader, track);
             cvsMap.setFullScreenMode(true);
         }
         return cvsMap;
     }
-
+    
     //Zephy 21.11.07 gpsstatus+\
-        public Signal get_cvsSignal()
-    {
-        if (cvsSignal == null)
-        {
+    public Signal get_cvsSignal() {
+        if (cvsSignal == null) {
             cvsSignal = new Signal(this, gps);
             cvsSignal.setFullScreenMode(true);
         }
@@ -4112,30 +4109,23 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
     }
     //Zephy 21.11.07 gpsstatus+/
     
-    public void startApp()
-    {
+    public void startApp() {
     }
     
-    public void pauseApp()
-    {
+    public void pauseApp() {
     }
     
-    public void destroyApp(boolean unconditional)
-    {
+    public void destroyApp(boolean unconditional) {
     }
     
     /**
      * Tato metoda se pouziva k zobrazovani vyjimek, ktere mohou v aplikaci nastat
      */
-    public void showError(String section, String errorMessage, String data)
-    {
+    public void showError(String section, String errorMessage, String data) {
         //vymazani chyb
-        if (data.equals("Chyba"))
-        {
+        if (data.equals("Chyba")) {
             get_tbError().setString("Problém s komunikaèním skriptem,opakujte akci.Pokud se tato chyba ukazuje poøád,máte nefunkèní GPRS.");
-        }
-        else
-        {
+        } else {
             get_tbError().setString("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" +
                     data +"'");
         }
@@ -4145,8 +4135,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
     /**
      * Tato metoda se pouziva k zobrazovani alertu v aplikaci
      */
-    public void showAlert(String text, AlertType type, Displayable next)
-    {
+    public void showAlert(String text, AlertType type, Displayable next) {
         String caption = "";
         if (type == AlertType.ALARM)
             caption = "Alarm";
@@ -4166,15 +4155,12 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
     /**
      * Tato funkce vrati cislo prvniho zaskrtnuteho policka listu typu multiple, pokud neni zaskrtnuty nic tak -1
      */
-    public int firstCheckedFavourite()
-    {
+    public int firstCheckedFavourite() {
         int selected = lstFavourites.getSelectedIndex();
         if (selected==-1) //vybere prvni zaskrtnuty policko
         {
-            for (int i=0;i<lstFavourites.size();i++)
-            {
-                if (lstFavourites.isSelected(i))
-                {
+            for (int i=0;i<lstFavourites.size();i++) {
+                if (lstFavourites.isSelected(i)) {
                     selected = i;
                     break;
                 }
@@ -4183,16 +4169,13 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         return selected;
     }
     
-    public void changeCmdInfoLabel(String label)
-    {
+    public void changeCmdInfoLabel(String label) {
         cmdInfo = new Command("Listing("+label+"kB)", Command.SCREEN, 3);
     }
     
-    public void searchBluetooth()
-    {
+    public void searchBluetooth() {
         bluetooth = new Bluetooth(this, http, settings, favourites, false);
-        if (bluetooth.isOn())
-        {
+        if (bluetooth.isOn()) {
             bluetooth.searchDevices();
         }
     }

@@ -40,6 +40,7 @@ public class Favourites extends Database
     public int editId = -1;
     private String editType;
     public String found = "";
+    public String poznamka = "";
     
     public Favourites(Gui ref, Settings ref2, IconLoader ref3)
     {
@@ -88,9 +89,9 @@ public class Favourites extends Database
                 found = "NE";
             }
             try {
-                String poznamka = dis.readUTF();
+                poznamka = dis.readUTF();
             } catch (Exception e) {
-                String poznamka = "";
+                poznamka = "";
             }
             //nastaveni editId pro pripad refreshe v overview a nasledneho ulozeni do oblibenych
             //if (isCache(type)) //cache
@@ -111,6 +112,7 @@ public class Favourites extends Database
                 gui.get_siFavouriteLongitude().setText(longitude);
                 gui.get_siDescription().setText(description);
                 gui.get_siNalezeno1().setText(found);
+                gui.get_siPoznamka().setText(poznamka);
                 if (isCache(type)) //cache
                 {
                     http.startOffline(Http.OVERVIEW, description);
@@ -314,6 +316,66 @@ public class Favourites extends Database
             gui.showError("setFound",e.toString(),"");
         }
     }
+    
+    public void setPoznamka(int number, String poznamka, Displayable nextScreen) {
+        try
+        {
+            this.id = number;
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
+            int id = 0;
+            for (int i = 0; i <= number; i++)
+            {
+                id = rc.nextRecordId();
+            }
+            DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
+            String name = dis.readUTF();
+            String type = dis.readUTF();
+            String description = dis.readUTF();
+            String lattitude = dis.readUTF();
+            String longitude = dis.readUTF();
+            String found = "NE";
+            try{
+                found = dis.readUTF();
+                dis.readUTF();
+            } catch(Exception e) {}
+            editId = id;
+            editType = type;
+            
+            addEdit(name, description, lattitude, longitude, type, nextScreen, false, found, poznamka);
+        }
+        catch (Exception e)
+        {
+            gui.showError("setPoznamka",e.toString(),"");
+        }
+    }
+    
+    public String getPoznamka(int number) {
+        try
+        {
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
+            int id = 0;
+            for (int i = 0; i <= number; i++)
+            {
+                id = rc.nextRecordId();
+            }
+            DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
+            dis.readUTF(); //name
+            dis.readUTF(); //type
+            dis.readUTF(); //description
+            dis.readUTF(); //lattitude
+            dis.readUTF(); //longitude
+            dis.readUTF(); //found
+            return dis.readUTF(); //poznamka
+        }
+        catch (Exception e)
+        {
+            gui.showError("getPoznamka",e.toString(),"");
+            return "";
+        }
+    }
+    
     
     /**
      * Zobrazi jednu konkretni oblibenou pro editaci
