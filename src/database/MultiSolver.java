@@ -51,12 +51,13 @@ public class MultiSolver extends Database
             rc.rebuild();
             int id;
             boolean edited = false;
+            String tfLetter = gui.get_tfLetter().getString().toUpperCase();
             for (int i = 0; i < rc.numRecords(); i++)
             {
                 id = rc.nextRecordId();
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
                 String letter = dis.readUTF();
-                if (letter.equals(gui.get_tfLetter().getString()))
+                if (letter.equals(tfLetter))
                 {
                     recordStore.setRecord(id, bytes, 0, bytes.length);
                     edited = true;

@@ -2189,6 +2189,7 @@
         <Node id="frmCoordinates" location="6608,208" order="$CommandAction14,$CommandAction15,,,,,,,,,$Default,,,,,"/>
         <Node id="lstNearestCaches" location="4040,208" order="$CommandAction16,$SelectCaseCommandAction4,,,,,,,,,$Default,,,,,"/>
         <Node id="frmWaypoint" location="5640,208" order="$CommandAction17,$CommandAction18,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmOverview" location="504,208" order="$CommandAction21,$CommandAction23,$CommandAction19,$CommandAction22,$CommandAction33,$CommandAction20,$CommandAction34,$CommandAction38,$CommandAction45,$CommandAction78,$Default,$CommandAction85,$CommandAction61,,,"/>
         <Node id="frmInfo" location="2752,208" order="$CommandAction24,$CommandAction13,$CommandAction82,,,,,,,,$Default,,,,,"/>
         <Node id="frmHint" location="4680,208" order="$CommandAction25,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmWaypoints" location="1144,208" order="$CommandAction3,$CommandAction48,,,,,,,,,$Default,,,,,"/>
@@ -2202,11 +2203,13 @@
         <Node id="lstKeyword" location="2432,208" order="$CommandAction41,$SelectCaseCommandAction17,,,,,,,,,$Default,,,,,"/>
         <Node id="lstSearch" location="1192,448" order="$SelectCaseCommandAction13,$SelectCaseCommandAction14,$SelectCaseCommandAction15,$CommandAction42,,,,,,,$Default,,,,,"/>
         <Node id="lstGPS" location="1192,1400" order="$SelectCaseCommandAction11,$SelectCaseCommandAction16,$CommandAction43,$SelectCaseCommandAction18,$SelectCaseCommandAction21,$SelectCaseCommandAction23,$SelectCaseCommandAction1,,,,$Default,,,,,"/>
+        <Node id="lstFavourites" location="1192,1160" order="$CommandAction44,$CommandAction46,$CommandAction47,$CommandAction51,$CommandAction52,$CommandAction53,$CommandAction56,$CommandAction79,$CommandAction84,$CommandAction88,$Default,$CommandAction37,$CommandAction74,$CommandAction94,,"/>
+        <Node id="frmFavourite" location="3392,208" order="$CommandAction49,$CommandAction50,$CommandAction73,$CommandAction75,$CommandAction95,,,,,,$Default,,,,,"/>
+        <Node id="frmAddGiven" location="1464,592" order="$CommandAction54,$CommandAction55,,,,,,,,,$Default,,,,,"/>
         <Node id="frmTrackingNumber" location="1464,1256" order="$CommandAction30,,$CommandAction58,,,,,,,,$Default,,,,,"/>
         <Node id="frmTrackable" location="3072,208" order="$CommandAction57,$CommandAction59,,,,,,,,,$Default,,,,,"/>
         <Node id="frmMultiSolver" location="1464,816" order="$CommandAction62,$CommandAction63,$CommandAction64,$CommandAction65,$CommandAction70,$CommandAction83,,,,,$Default,,,,,"/>
         <Node id="frmEditPattern" location="1944,928" order="$CommandAction67,$CommandAction68,,,,,,,,,$Default,,,,,"/>
-        <Node id="frmAddLetter" location="1696,1032" order="$CommandAction66,$CommandAction69,,,,,,,,,$Default,,,,,"/>
         <Node id="frmResult" location="5320,208" order="$CommandAction71,$CommandAction72,,,,,,,,,$Default,,,,,"/>
         <Node id="lstPatterns" location="1696,816" order="$CommandAction28,$CommandAction76,$CommandAction77,$SelectCaseCommandAction20,$CommandAction91,,,,,,$Default,,,,,"/>
         <Node id="tbError" location="5960,208" order="$CommandAction81,,,,,,,,,,$Default,,,,,"/>
@@ -2215,12 +2218,9 @@
         <Node id="frmDebug1" location="6928,208" order="$CommandAction12,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmGpsSignalHelp" location="1472,208" order="$CommandAction8,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmNalezeno" location="6280,208" order="$CommandAction31,$CommandAction60,,,,,,,,,$Default,,,,,"/>
-        <Node id="ssAdvertisement" location="432,928" order="$InternalCommandAction1,,,,,,,,,,$Default,,,,,"/>
-        <Node id="frmAddGiven" location="1464,592" order="$CommandAction54,$CommandAction55,,,,,,,,,$Default,,,,,"/>
-        <Node id="frmOverview" location="504,208" order="$CommandAction21,$CommandAction23,$CommandAction19,$CommandAction22,$CommandAction33,$CommandAction20,$CommandAction34,$CommandAction38,$CommandAction45,$CommandAction78,$Default,$CommandAction85,$CommandAction61,,,"/>
-        <Node id="frmFavourite" location="3392,208" order="$CommandAction49,$CommandAction50,$CommandAction73,$CommandAction75,$CommandAction95,,,,,,$Default,,,,,"/>
-        <Node id="lstFavourites" location="1192,1160" order="$CommandAction44,$CommandAction46,$CommandAction47,$CommandAction51,$CommandAction52,$CommandAction53,$CommandAction56,$CommandAction79,$CommandAction84,$CommandAction88,$Default,$CommandAction37,$CommandAction74,$CommandAction94,,"/>
         <Node id="tbPoznamka" location="1520,424" order="$CommandAction92,$CommandAction93,,,,,,,,,$Default,,,,,"/>
+        <Node id="ssAdvertisement" location="432,928" order="$InternalCommandAction1,,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmAddLetter" location="1696,1032" order="$CommandAction66,$CommandAction69,,,,,,,,,$Default,,,,,"/>
         <Link id="$StartPoint$ActionLink" path="200,904,392,904"/>
         <Link id="$CommandAction2$ActionLink" path="2152,200,2278,200,2278,262,47,262,47,904,120,904"/>
         <Link id="$CommandAction4$ActionLink" path="864,200,1040,200,1040,1376,1152,1376"/>

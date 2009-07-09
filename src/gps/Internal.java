@@ -96,10 +96,11 @@ public class Internal implements LocationListener
                 gpsParser.fix = true;
                 QualifiedCoordinates coordinates = location.getQualifiedCoordinates();
                 gpsParser.latitude = coordinates.getLatitude();
-                gpsParser.friendlyLattitude = ((gpsParser.latitude>0)?"N ":"S ")+Utils.replaceString(Coordinates.convert(coordinates.getLatitude(),Coordinates.DD_MM),":","° ");
+                String friendly = Coordinates.convert(Math.abs(coordinates.getLatitude()),Coordinates.DD_MM);
+                gpsParser.friendlyLattitude = ((gpsParser.latitude>0)?"N ":"S ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),2)+Utils.replaceString(friendly.substring(friendly.indexOf(':')),":","° ");
                 gpsParser.longitude = coordinates.getLongitude();
-                String friendly = Coordinates.convert(coordinates.getLongitude(),Coordinates.DD_MM);
-                gpsParser.friendlyLongitude = ((gpsParser.longitude>0)?"E ":"W ")+Utils.addZeros(friendly.substring(0,2),3)+Utils.replaceString(friendly.substring(2),":","° ");
+                friendly = Coordinates.convert(Math.abs(coordinates.getLongitude()),Coordinates.DD_MM);
+                gpsParser.friendlyLongitude = ((gpsParser.longitude>0)?"E ":"W ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),3)+Utils.replaceString(friendly.substring(friendly.indexOf(':')),":","° ");
                 gpsParser.altitude = Math.floor(coordinates.getAltitude());
                 gpsParser.accuracy = coordinates.getHorizontalAccuracy();
                 gpsParser.heading = location.getCourse();

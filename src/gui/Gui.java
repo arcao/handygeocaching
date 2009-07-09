@@ -1255,7 +1255,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
      */
     private void initialize() {//GEN-END:MVDInitBegin
         // Insert pre-init code here
-        if (true) //settings.vip)
+        if (settings.vip)
             getDisplay().setCurrent(get_lstMode());
         else
             getDisplay().setCurrent(get_ssAdvertisement());//GEN-LINE:MVDInitInit
