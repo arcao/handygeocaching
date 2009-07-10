@@ -120,21 +120,99 @@ public class Utils
         return sbuf.toString();
     }
     
+    public static String toUTF8(String input) {
+        StringBuffer sbuf = new StringBuffer();
+        int len = input.length();
+        for (int i = 0; i < len; i++)
+        {
+            int ch = input.charAt(i);
+            if (ch <= 0x007f)
+            {		// other ASCII
+                sbuf.append((char)ch);
+            }
+            else if (ch <= 0x07FF)
+            {		// non-ASCII <= 0x7FF
+                sbuf.append((char)(0xc0 | (ch >> 6)));
+                sbuf.append((char)(0x80 | (ch & 0x3F)));
+            }
+            else
+            {					// 0x7FF < ch <= 0xFFFF
+                sbuf.append((char)(0xe0 | (ch >> 12)));
+                sbuf.append((char)(0x80 | ((ch >> 6) & 0x3F)));
+                sbuf.append((char)(0x80 | (ch & 0x3F)));
+            }
+        }
+        return sbuf.toString();
+    }
+    
+    public static String fromUTF8(String input) {
+        StringBuffer sbuf = new StringBuffer();
+        int len = input.length();
+        int i = 0;
+        try 
+        {
+            while(i < len) {
+                int ch = input.charAt(i);
+                if (ch < 128)
+                {   // jeden znak
+                    sbuf.append((char)ch);
+                }
+                else if (ch >= 192 && ch <= 223)
+                {   // dva znaky
+                    ch = ((ch & 31) << 6) + (input.charAt(i + 1) & 63);
+                    i++;
+                    sbuf.append((char)ch);
+
+                }
+                else if (ch >= 224 && ch <= 239)
+                {   // tri znaky
+                    ch = ((ch & 15) << 12) + ((input.charAt(i + 1) & 63) << 6) + (input.charAt(i + 2) & 63);
+                    i++;
+                    i++;
+                    sbuf.append((char)ch);
+                }
+                else
+                {   // ctyri znaky
+                    ch = ((ch & 7) << 18) + ((input.charAt(i + 1) & 63) << 12) + ((input.charAt(i + 2) & 63) << 6) + (input.charAt(i + 3) & 63);
+                    i++;
+                    i++;
+                    i++;
+                    sbuf.append((char)ch);
+                }
+                i++;
+            }
+        }
+        catch (Exception e) {}
+        return sbuf.toString();
+    }
+    
+    public static String repairUTF8(String s) {
+        // v urcitych situacich je spatne dekodovano UTF-8, tady se to napravuje
+        s = replaceString(s, "??", "ž");
+        return s;
+    }
+    
     public static String sessionId(String name, String password)
     {
-        String sid = String.valueOf(name.length());
-        sid += "-"+String.valueOf(password.length());
-        for (int i=0;i<name.length();i++)
+        String utf8name = toUTF8(name);
+        String utf8password = toUTF8(password);
+        
+        System.out.println(utf8name);
+        System.out.println(utf8password);
+        
+        String sid = String.valueOf(utf8name.length());
+        sid += "-"+String.valueOf(utf8password.length());
+        for (int i=0;i<utf8name.length();i++)
         {
-            sid += "-"+String.valueOf(name.substring(i,i+1).hashCode());
+            sid += "-"+String.valueOf(utf8name.substring(i,i+1).hashCode());
         }
-        for (int i=0;i<password.length();i++)
+        for (int i=0;i<utf8password.length();i++)
         {
-            sid += "-"+String.valueOf(password.substring(i,i+1).hashCode());
+            sid += "-"+String.valueOf(utf8password.substring(i,i+1).hashCode());
         }
-        if (password.length()+name.length() < 20)
+        if (utf8password.length()+utf8name.length() < 20)
         {
-            for (int i=0;i<(20-(password.length()+name.length()));i++)
+            for (int i=0;i<(20-(utf8password.length()+utf8name.length()));i++)
             {
                 Random random = new Random();
                 sid += "-"+String.valueOf(randomNumber(0,255,random));

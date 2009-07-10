@@ -502,7 +502,7 @@ public class Http implements Runnable
             while ((onebyte = is.read()) != -1)
             {
                 os.write(onebyte);
-                if (x%10==0)
+                if (x%50==0)
                     gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
                 x++;
             }
@@ -521,6 +521,7 @@ public class Http implements Runnable
             bais = new ByteArrayInputStream(prd);
             dis = new DataInputStream(bais);
             String s = dis.readUTF();
+            //s = Utils.repairUTF8(s);
             gui.get_gaLoading().setValue(Gauge.INCREMENTAL_IDLE);
             //vraceni vystupnich dat
             return s;
