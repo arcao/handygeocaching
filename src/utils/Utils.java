@@ -334,6 +334,19 @@ public class Utils
     }
     
     /**
+     * Doplneni cisla nulami na konec na danou delku
+     */
+    public static String addZerosAfter(String s, int length)
+    {
+        String surfix = "";
+        for (int i=0;i<(length-s.length());i++)
+        {
+           surfix = surfix.concat("0");
+        }
+        return s+surfix;
+    }
+    
+    /**
      * Desifrovani/sifrovani podle sifry ROT13
      */
     public static String decypherText(String s)

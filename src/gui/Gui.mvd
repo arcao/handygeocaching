@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MVDData version="1.3">
-    <DesignDocument designVersion="MIDP-2" uidCounter="526">
+    <DesignDocument designVersion="MIDP-2" uidCounter="527">
         <DesignComponent id="$MobileDevice" typeid="MIDP:$MobileDevice" uid="0"/>
         <DesignComponent id="$StartPoint" typeid="MIDP:$StartPoint" uid="1">
             <Property name="targetDisplayable" value="ssAdvertisement"/>
@@ -2198,6 +2198,7 @@
         <Node id="frmSettings" location="1192,928" order=",$CommandAction32,$CommandAction1,,,,,,,,$Default,,,,,"/>
         <Node id="frmConnecting" location="184,208" order="$CommandAction11,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmAllLogs" location="4360,208" order="$CommandAction36,,,,,,,,,,$Default,,,,,"/>
+        <Node id="ssAdvertisement" location="432,928" order="$InternalCommandAction1,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmDebug" location="3712,208" order="$CommandAction10,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmKeyword" location="1792,208" order="$CommandAction39,$CommandAction40,,,,,,,,,$Default,,,,,"/>
         <Node id="lstKeyword" location="2432,208" order="$CommandAction41,$SelectCaseCommandAction17,,,,,,,,,$Default,,,,,"/>
@@ -2210,6 +2211,7 @@
         <Node id="frmTrackable" location="3072,208" order="$CommandAction57,$CommandAction59,,,,,,,,,$Default,,,,,"/>
         <Node id="frmMultiSolver" location="1464,816" order="$CommandAction62,$CommandAction63,$CommandAction64,$CommandAction65,$CommandAction70,$CommandAction83,,,,,$Default,,,,,"/>
         <Node id="frmEditPattern" location="1944,928" order="$CommandAction67,$CommandAction68,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmAddLetter" location="1696,1032" order="$CommandAction66,$CommandAction69,,,,,,,,,$Default,,,,,"/>
         <Node id="frmResult" location="5320,208" order="$CommandAction71,$CommandAction72,,,,,,,,,$Default,,,,,"/>
         <Node id="lstPatterns" location="1696,816" order="$CommandAction28,$CommandAction76,$CommandAction77,$SelectCaseCommandAction20,$CommandAction91,,,,,,$Default,,,,,"/>
         <Node id="tbError" location="5960,208" order="$CommandAction81,,,,,,,,,,$Default,,,,,"/>
@@ -2219,8 +2221,6 @@
         <Node id="frmGpsSignalHelp" location="1472,208" order="$CommandAction8,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmNalezeno" location="6280,208" order="$CommandAction31,$CommandAction60,,,,,,,,,$Default,,,,,"/>
         <Node id="tbPoznamka" location="1520,424" order="$CommandAction92,$CommandAction93,,,,,,,,,$Default,,,,,"/>
-        <Node id="ssAdvertisement" location="432,928" order="$InternalCommandAction1,,,,,,,,,,$Default,,,,,"/>
-        <Node id="frmAddLetter" location="1696,1032" order="$CommandAction66,$CommandAction69,,,,,,,,,$Default,,,,,"/>
         <Link id="$StartPoint$ActionLink" path="200,904,392,904"/>
         <Link id="$CommandAction2$ActionLink" path="2152,200,2278,200,2278,262,47,262,47,904,120,904"/>
         <Link id="$CommandAction4$ActionLink" path="864,200,1040,200,1040,1376,1152,1376"/>

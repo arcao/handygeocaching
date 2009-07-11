@@ -7,6 +7,7 @@
 
 package gps;
 
+import database.Settings;
 import gui.Gui;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.location.Coordinates;
@@ -27,14 +28,16 @@ public class Internal implements LocationListener
     //reference
     private Gui gui;
     private GpsParser gpsParser;
+    private Settings settings;
     
     //ostatni promenne
     LocationProvider provider;
     
-    public Internal(Gui ref, GpsParser ref2)
+    public Internal(Gui ref, GpsParser ref2, Settings ref3)
     {
         gui = ref;
         gpsParser = ref2;
+        settings = ref3;
         if (start())
         {
             gpsParser.connectionSuccessfull();
@@ -55,12 +58,45 @@ public class Internal implements LocationListener
             criteria.setSpeedAndCourseRequired(true);
             criteria.setCostAllowed(true);
             provider = LocationProvider.getInstance(criteria);
-            provider.setLocationListener(this,-1,-1,-1);
+            
             if (provider == null)
             {
-                gui.showAlert("Nepodaøilo se pøipojit k interní GPS (1)",AlertType.ERROR,gui.get_lstMode());
+                //+PB, 17.5.2008: fix pro Samsung SGH-i550, SGH-i560
+                // tyto telefony nemaji provider pro rychlost a smer 
+                // a pokud je pozadujete, provider neprijde!
+                gui.get_frmConnecting().append("Telefon je asi Samsung, že?\n");
+                criteria.setSpeedAndCourseRequired(false);
+                provider = LocationProvider.getInstance(criteria);
             }
-            else if (provider.getState()==LocationProvider.AVAILABLE)
+            
+            if( provider!=null )
+            {
+                //?PB: tohle se mi nelibi - u Siemens SXG75 vede na to, ze da souradnice tak
+                // jednou za minutu. chce to explicitne pozadat o sekundove tempo
+                // provider.setLocationListener(this,-1,-1,-1);
+                gui.get_frmConnecting().append("Našli jsme GPS pøijímaè\n");
+                //nekterym mobilum se tohle nastaveni nelibi, tak pridame i puvodni nastaveni
+                //napr moje Nokia N73 vyhodi IllegalArgumentException
+                try {
+                    provider.setLocationListener(this,1,1,1);
+                } catch (Exception e) {
+                    provider.setLocationListener(this,-1,-1,-1);
+                }
+                gui.get_frmConnecting().append("Pøijímaè zapnut\n");
+            }
+            else
+            {
+                gui.showAlert("Nepodaøilo se pøipojit k interní GPS (1)",AlertType.ERROR,gui.get_lstMode());
+                return false;
+            }
+            //-PB konec fixu   
+            
+            //?PB: tohle je ale blbost! Po spusteni bude mit provider stav
+               // TEMPORARILY_UNAVAILABLE 
+               // a to po nekolik desitek sekund, nez se chyti druzice...
+               // ! Navic v predesle variante kodu muze v tomto miste byt provider NULL!
+            // if( provider.getState()==LocationProvider.AVAILABLE)
+            if ( provider!=null && provider.getState()!=LocationProvider.OUT_OF_SERVICE)
             {
                 gui.get_frmConnecting().append("Pøipojeno\n");
                 return true;
@@ -68,8 +104,8 @@ public class Internal implements LocationListener
             else
             {
                 gui.showAlert("Nepodaøilo se pøipojit k interní GPS (2)",AlertType.ERROR,gui.get_lstMode());
+                return false;
             }
-            return false;
         }
         catch (LocationException ex)
         {
@@ -88,26 +124,31 @@ public class Internal implements LocationListener
      */
     public void locationUpdated(LocationProvider provider, Location location)
     {
+        if (location == null) return;
+        
         try
         {
-            gpsParser.nmeaCount++;
             if (location.isValid())
             {
-                gpsParser.fix = true;
                 QualifiedCoordinates coordinates = location.getQualifiedCoordinates();
+                if (coordinates.getHorizontalAccuracy() > 100) return; //zahazujeme velke nepresnosti
+                
+                gpsParser.nmeaCount++;
+                gpsParser.fix = true;
                 gpsParser.latitude = coordinates.getLatitude();
                 String friendly = Coordinates.convert(Math.abs(coordinates.getLatitude()),Coordinates.DD_MM);
-                gpsParser.friendlyLattitude = ((gpsParser.latitude>0)?"N ":"S ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),2)+Utils.replaceString(friendly.substring(friendly.indexOf(':')),":","° ");
+                gpsParser.friendlyLattitude = ((gpsParser.latitude>0)?"N ":"S ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),2)+Utils.replaceString(Utils.addZerosAfter(friendly.substring(friendly.indexOf(':')), 7),":","° ");
                 gpsParser.longitude = coordinates.getLongitude();
                 friendly = Coordinates.convert(Math.abs(coordinates.getLongitude()),Coordinates.DD_MM);
-                gpsParser.friendlyLongitude = ((gpsParser.longitude>0)?"E ":"W ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),3)+Utils.replaceString(friendly.substring(friendly.indexOf(':')),":","° ");
+                gpsParser.friendlyLongitude = ((gpsParser.longitude>0)?"E ":"W ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),3)+Utils.replaceString(Utils.addZerosAfter(friendly.substring(friendly.indexOf(':')), 7),":","° ");
                 gpsParser.altitude = Math.floor(coordinates.getAltitude());
                 gpsParser.accuracy = coordinates.getHorizontalAccuracy();
                 gpsParser.heading = location.getCourse();
-                gpsParser.speed = Math.floor(location.getSpeed() * 3.59999);
+                gpsParser.speed = Math.floor(location.getSpeed() * 3.6);
             }
             else
             {
+                gpsParser.nmeaCount++;
                 gpsParser.fix = false;
             }
         }

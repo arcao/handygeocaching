@@ -9,6 +9,7 @@
 
 package utils;
 
+import database.Settings;
 import gps.GpsParser;
 import gps.Internal;
 import gui.Gui;
@@ -25,10 +26,10 @@ public class References
     {
     }
     
-    public static Internal getInternal(Gui ref, GpsParser ref2)
+    public static Internal getInternal(Gui ref, GpsParser ref2, Settings ref3)
     {
        if (internal == null)
-           internal = new Internal(ref, ref2);
+           internal = new Internal(ref, ref2, ref3);
        return internal;
     }
     

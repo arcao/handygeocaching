@@ -76,7 +76,7 @@ public class GpsParser implements Runnable
         source = gpsSource;
         if (source == INTERNAL)
         {
-            internal = References.getInternal(gui, this);
+            internal = References.getInternal(gui, this, settings);
         }
     }
     

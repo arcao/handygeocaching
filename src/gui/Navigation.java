@@ -27,11 +27,11 @@ public class Navigation extends Canvas
     public String altitude = "";
     public String cacheName = "";
     public String accuracy = "";
-    public int angle = 0;
-    public int compass = 0;
+    public static int angle = 0;
+    public static int compass = 0;
     public String azimut = "";
     public String dateTime = "";
-    public Image[] arrows;
+    public Image[] arrows, numbers;
     private int image;
     private int transformation;
     private Image rotatedImage;
@@ -42,6 +42,20 @@ public class Navigation extends Canvas
     private Gps gps;
     private Favourites favourites;
     
+    private final double RHO = 180/Math.PI;
+    
+    private int cX;
+    private int cY;
+    
+    private int radius;
+
+    private boolean viewModeSmall = false;
+    private boolean smallRadius;
+    
+    private int TOP_MARGIN;
+    private int BOTTOM_MARGIN;
+
+    
     public Navigation(Gui ref, Gps ref2, Favourites ref3)
     {
         try
@@ -51,10 +65,27 @@ public class Navigation extends Canvas
             favourites = ref3;
             arrows = new Image[4];
             compassDirections = new String[4];
-            arrows[0] = Image.createImage("/sipka0.png");
+            /*arrows[0] = Image.createImage("/sipka0.png");
             arrows[1] = Image.createImage("/sipka225.png");
             arrows[2] = Image.createImage("/sipka45.png");
-            arrows[3] = Image.createImage("/sipka675.png");
+            arrows[3] = Image.createImage("/sipka675.png");*/
+            
+            numbers = new Image[12];
+            numbers[0] = Image.createImage("/images/compass/numberN.png");
+            numbers[1] = Image.createImage("/images/compass/number030.png");
+            numbers[2] = Image.createImage("/images/compass/number060.png");
+            numbers[3] = Image.createImage("/images/compass/numberE.png");
+            numbers[4] = Image.createImage("/images/compass/number120.png");
+            numbers[5] = Image.createImage("/images/compass/number150.png");
+            numbers[6] = Image.createImage("/images/compass/numberS.png");
+            numbers[7] = Image.createImage("/images/compass/number210.png");
+            numbers[8] = Image.createImage("/images/compass/number240.png");
+            numbers[9] = Image.createImage("/images/compass/numberW.png");
+            numbers[10] = Image.createImage("/images/compass/number300.png");
+            numbers[11] = Image.createImage("/images/compass/number330.png");
+            
+            calculateSizes();
+
         }
         catch (Exception e)
         {
@@ -80,140 +111,74 @@ public class Navigation extends Canvas
     {
         try
         {
+            calculateSizes();
             int width = getWidth();
             int height = getHeight();
             
-            //tvorba sipky
-            if (angle % 90 < 11)
-                image = 0;
-            else if (angle % 90 < 33)
-                image = 1;
-            else if (angle % 90 < 55)
-                image = 2;
-            else if (angle % 90 < 77)
-                image = 3;
-            else
-                image = 0;
+            //vymazeme obrazovku
+            g.setColor(0xffffff);
+            g.fillRect(0, 0, width, height);
             
-            if (angle>=0 && angle <77)
-                transformation = Sprite.TRANS_NONE;
-            else if (angle >=77 && angle<167)
-                transformation = Sprite.TRANS_ROT90;
-            else if (angle >=167 && angle<257)
-                transformation = Sprite.TRANS_ROT180;
-            else if (angle >=257 && angle<347)
-                transformation = Sprite.TRANS_ROT270;
-            else
-                transformation = Sprite.TRANS_NONE;
-            rotatedImage = Image.createImage(arrows[image],0,0,60,60,transformation);
+            //nastavime kompas a smer
+            setCompas(g);
+            setArrow(g);
             
-            
-            //tvorba kompasu
-            if (compass % 90 < 11)
-                compassMovement = 0;
-            else if (compass % 90 < 33)
-                compassMovement = 15;
-            else if (compass % 90 < 55)
-                compassMovement = 30;
-            else if (compass % 90 < 77)
-                compassMovement = -15;
-            else
-                compassMovement = 0;
-            
-            if (compass>0 && compass <=45)
-            {
-                compassDirections[0] = "S";
-                compassDirections[1] = "V";
-                compassDirections[2] = "J";
-                compassDirections[3] = "Z";
-            }
-            else if (compass >45 && compass<=135)
-            {
-                compassDirections[0] = "V";
-                compassDirections[1] = "J";
-                compassDirections[2] = "Z";
-                compassDirections[3] = "S";
-            }
-            else if (compass >135 && compass<=225)
-            {
-                compassDirections[0] = "J";
-                compassDirections[1] = "Z";
-                compassDirections[2] = "S";
-                compassDirections[3] = "V";
-            }
-            else if (compass >225 && compass<=315)
-            {
-                compassDirections[0] = "Z";
-                compassDirections[1] = "S";
-                compassDirections[2] = "V";
-                compassDirections[3] = "J";
-            }
-            else
-            {
-                compassDirections[0] = "S";
-                compassDirections[1] = "V";
-                compassDirections[2] = "J";
-                compassDirections[3] = "Z";
-            }
-            
-            //kresleni
+            int startY = cY + radius + 5;
+                    
+            //kresleni textu
             if (width<140) //male displeje
             {
                 //nadpis
-                g.setColor(0xffffff);
-                g.fillRect(0, 0, width, height);
-                g.setColor(0);
+                g.setColor(0,0,0); //black
                 g.setFont(gui.get_fntSmallBold());
-                g.drawString(cacheName,width/2,height/2-65, Graphics.TOP|Graphics.HCENTER);
-                //sipka
-                g.drawImage(rotatedImage,width/2,height/2-43,Graphics.TOP|Graphics.HCENTER);
-                //kompas
-                g.setColor(255,0,0);
-                g.setFont(gui.get_fntSmall());
-                g.drawString(compassDirections[0],width/2+compassMovement,height/2-53,Graphics.TOP|Graphics.HCENTER);
-                g.drawString(compassDirections[1],width/2+35,height/2+compassMovement-13,Graphics.TOP|Graphics.HCENTER);
-                g.drawString(compassDirections[2],width/2-compassMovement,height/2+17,Graphics.TOP|Graphics.HCENTER);
-                g.drawString(compassDirections[3],width/2-35,height/2-compassMovement-13,Graphics.TOP|Graphics.HCENTER);
-                //ostatni napisy
-                g.setColor(0);
-                g.setFont(gui.get_fntSmallBold());
-                g.drawString(distance,width/2,height/2-18,Graphics.TOP|Graphics.HCENTER);
-                g.setFont(gui.get_fntSmall());
-                g.drawString(" Az.:"+azimut+" "+accuracy,width/2,height/2+28,Graphics.TOP|Graphics.HCENTER);
-                g.drawString(speed+" "+satellites,width/2,height/2+39,Graphics.TOP|Graphics.HCENTER);
-                g.drawString(dateTime+" "+altitude,width/2,height/2+50,Graphics.TOP|Graphics.HCENTER);
-                g.drawString("Zpìt",3,height-17,Graphics.TOP|Graphics.LEFT);
-                g.drawString("Mapa", width-35,height-17,Graphics.TOP|Graphics.LEFT);
+                g.drawString(cacheName,width/2,1, Graphics.TOP|Graphics.HCENTER);
+                
+                if (viewModeSmall) {
+                    g.setColor(0);
+                    g.setFont(gui.get_fntSmallBold());
+                    g.drawString(distance,width/2,startY,Graphics.TOP|Graphics.HCENTER);
+                } else {
+                    //ostatni napisy
+                    g.setColor(0);
+                    g.setFont(gui.get_fntSmallBold());
+                    g.drawString(distance,width/2,startY,Graphics.TOP|Graphics.HCENTER);
+                    g.setFont(gui.get_fntSmall());
+                    g.drawString(" Az.:"+azimut+" "+accuracy,width/2,startY + 11,Graphics.TOP|Graphics.HCENTER);
+                    g.drawString(speed+" "+satellites,width/2,startY + 22,Graphics.TOP|Graphics.HCENTER);
+                    g.drawString(dateTime+" "+altitude,width/2,startY + 33,Graphics.TOP|Graphics.HCENTER);
+                }
+
+                //tlacitko zpet
+                g.drawString("Zpìt",3,height-BOTTOM_MARGIN,Graphics.TOP|Graphics.LEFT);
+                //tlacitko mapa
+                g.drawString("Mapa", width-35,height-BOTTOM_MARGIN,Graphics.TOP|Graphics.LEFT);
             }
             else //velke displeje
             {
                 //nadpis
-                g.setColor(0xffffff);
-                g.fillRect(0, 0, width, height);
-                g.setColor(0);
+                g.setColor(0,0,0); //black
                 g.setFont(gui.get_fntBold());
-                g.drawString(cacheName,width/2,height/2-89, Graphics.TOP|Graphics.HCENTER);
-                //sipka
-                g.drawImage(rotatedImage,width/2,height/2-63,Graphics.TOP|Graphics.HCENTER);
-                //kompas
-                g.setColor(255,0,0);
-                g.setFont(gui.get_fntSmall());
-                g.drawString(compassDirections[0],width/2+compassMovement,height/2-73,Graphics.TOP|Graphics.HCENTER);
-                g.drawString(compassDirections[1],width/2+35,height/2+compassMovement-33,Graphics.TOP|Graphics.HCENTER);
-                g.drawString(compassDirections[2],width/2-compassMovement,height/2-3,Graphics.TOP|Graphics.HCENTER);
-                g.drawString(compassDirections[3],width/2-35,height/2-compassMovement-33,Graphics.TOP|Graphics.HCENTER);
-                //ostatni napisy
-                g.setColor(0);
-                g.setFont(gui.get_fntBold());
-                g.drawString(distance,width/2,height/2+9,Graphics.TOP|Graphics.HCENTER);
-                g.setFont(gui.get_fntNormal());
-                g.drawString(" Azimut: "+azimut+" | "+accuracy,width/2,height/2+36,Graphics.TOP|Graphics.HCENTER);
-                g.drawString(speed+" | "+satellites,width/2,height/2+54,Graphics.TOP|Graphics.HCENTER);
-                g.drawString(dateTime+" | "+altitude,width/2,height/2+72,Graphics.TOP|Graphics.HCENTER);
-                g.setFont(gui.get_fntBold());
-                g.drawString("Zpìt",3,height-20,Graphics.TOP|Graphics.LEFT);
+                g.drawString(cacheName,width/2,1, Graphics.TOP|Graphics.HCENTER);
+                
+                if (viewModeSmall) {
+                    g.setColor(0);
+                    g.setFont(gui.get_fntBold());
+                    g.drawString(distance,width/2,startY,Graphics.TOP|Graphics.HCENTER);
+                } else {
+                    //ostatni napisy
+                    g.setColor(0);
+                    g.setFont(gui.get_fntBold());
+                    g.drawString(distance,width/2,startY,Graphics.TOP|Graphics.HCENTER);
+                    g.setFont(gui.get_fntNormal());
+                    g.drawString(" Azimut: "+azimut+" | "+accuracy,width/2,startY+18,Graphics.TOP|Graphics.HCENTER);
+                    g.drawString(speed+" | "+satellites,width/2,startY+36,Graphics.TOP|Graphics.HCENTER);
+                    g.drawString(dateTime+" | "+altitude,width/2,startY+54,Graphics.TOP|Graphics.HCENTER);
+                    g.setFont(gui.get_fntBold());
+                }
+                //tlacitko zpet
+                g.drawString("Zpìt",3,height-BOTTOM_MARGIN,Graphics.TOP|Graphics.LEFT);
                 //tlacitko mapa
-                g.drawString("Mapa", width-44,height-20,Graphics.TOP|Graphics.LEFT);
+                g.drawString("Mapa", width-44,height-BOTTOM_MARGIN,Graphics.TOP|Graphics.LEFT);
             }
         }
         catch (Exception e)
@@ -221,6 +186,114 @@ public class Navigation extends Canvas
             gui.showError("navigation paint", e.toString(), "");
         }
     }
+    
+    // angle in degres
+    private void setCompas(Graphics g) {
+        g.setColor(255,255,255); //white
+        g.fillArc(cX - radius, cY - radius, 2 * radius, 2 * radius, 0, 360);
+
+        g.setColor(0,0,0); //black
+        g.drawArc(cX - radius, cY - radius, 2 * radius, 2 * radius, 0, 360);
+
+        double a;
+        int x1, x2, y1, y2;
+        int lineLength = radius - 10;
+        int stringPosition = radius - 23;
+        if (smallRadius) {
+            lineLength = radius - 5;
+            stringPosition = radius - 18;
+        }
+
+        for (int i = 0; i < 36; i++) {
+            if (smallRadius && i % 3 != 0) {
+                continue;
+            }
+
+            a = (i * 10 - compass) / RHO;
+
+            double aSin = Math.sin(a);
+            double aCos = Math.cos(a);
+            x1 = (int) (aSin * lineLength);
+            y1 = (int) (aCos * lineLength);
+            x2 = (int) (aSin * radius);
+            y2 = (int) (aCos * radius);
+            g.drawLine(cX + x1, cY - y1, cX + x2, cY - y2);
+
+            int separator = 3;
+            if (smallRadius) {
+                separator = 9;
+            }
+
+            if (i % separator == 0) {
+                x1 = (int) (aSin * stringPosition);
+                y1 = (int) (aCos * stringPosition);
+
+
+                g.drawImage(numbers[i / 3], cX + x1, cY - y1, Graphics.VCENTER | Graphics.HCENTER);
+            }
+        }
+    }
+
+    private void setArrow(Graphics g) {
+        g.setColor(0, 0, 0); //white
+
+        double a;
+        int x1, x2, x3, x4, y1, y2, y3, y4;
+
+        a = angle / RHO;
+        x1 = (int) (Math.sin(a) * radius * 0.65);
+        y1 = (int) (Math.cos(a) * radius * 0.65);
+
+        a = (angle + 180) / RHO;
+        x2 = (int) (Math.sin(a) * (radius * 0.2));
+        y2 = (int) (Math.cos(a) * (radius * 0.2));
+
+        a = (angle + 140) / RHO;
+        x3 = (int) (Math.sin(a) * (radius * 0.5));
+        y3 = (int) (Math.cos(a) * (radius * 0.5));
+
+        a = (angle + 220) / RHO;
+        x4 = (int) (Math.sin(a) * (radius * 0.5));
+        y4 = (int) (Math.cos(a) * (radius * 0.5));
+
+        g.setColor(255,0,0); //red
+
+        g.drawLine(cX + x1, cY - y1, cX + x3, cY - y3);
+        g.drawLine(cX + x3, cY - y3, cX + x2, cY - y2);
+        g.drawLine(cX + x2, cY - y2, cX + x4, cY - y4);
+        g.drawLine(cX + x4, cY - y4, cX + x1, cY - y1);
+
+        g.fillTriangle(cX + x1, cY - y1, cX + x2, cY - y2, cX + x3, cY - y3);
+        g.fillTriangle(cX + x1, cY - y1, cX + x2, cY - y2, cX + x4, cY - y4);
+    }
+    
+    private void calculateSizes() {
+        int width = getWidth();
+        int height = getHeight();
+        cX = width / 2;
+        
+        TOP_MARGIN = (width < 140) ? 17 : 20;
+        BOTTOM_MARGIN = TOP_MARGIN;
+
+        if (viewModeSmall) {
+            cY = (height - ((width < 140) ? 11 : 18+10) - TOP_MARGIN - BOTTOM_MARGIN) / 2;
+            radius = Math.min(cX, cY) - 5;
+            cY = cY + TOP_MARGIN;
+        } else {
+            cY = (height - ((width < 140) ? 44 : 72+10) - TOP_MARGIN - BOTTOM_MARGIN) / 2;
+            radius = Math.min(cX, cY) - 5;
+            cY = cY + TOP_MARGIN;
+        }
+
+        if (radius < 50) {
+            smallRadius = true;
+        } else {
+            smallRadius = false;
+        }
+    }
+
+    
+   
     
     /**
      * Osetreni stisknuti leveho a praveho kontextoveho tlacitka
@@ -240,6 +313,12 @@ public class Navigation extends Canvas
             favourites.loadFavouritesToMap();
             gui.getDisplay().setCurrent(gui.get_cvsMap());
             gps.changeAction(Gps.MAP);
+        }
+        
+        if (keyCode == KEY_NUM5) {
+            viewModeSmall = !viewModeSmall;
+            calculateSizes();
+            repaint();
         }
     }
 }
