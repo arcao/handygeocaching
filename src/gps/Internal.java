@@ -54,9 +54,10 @@ public class Internal implements LocationListener
             gui.getDisplay().setCurrent(gui.get_frmConnecting());
             gui.get_frmConnecting().append("Pøipojuji...\n");
             Criteria criteria = new Criteria();
+            criteria.setPreferredResponseTime(1000);
             criteria.setAltitudeRequired(true);
             criteria.setSpeedAndCourseRequired(true);
-            criteria.setCostAllowed(true);
+            //criteria.setCostAllowed(true);
             provider = LocationProvider.getInstance(criteria);
             
             if (provider == null)
@@ -75,13 +76,7 @@ public class Internal implements LocationListener
                 // jednou za minutu. chce to explicitne pozadat o sekundove tempo
                 // provider.setLocationListener(this,-1,-1,-1);
                 gui.get_frmConnecting().append("Našli jsme GPS pøijímaè\n");
-                //nekterym mobilum se tohle nastaveni nelibi, tak pridame i puvodni nastaveni
-                //napr moje Nokia N73 vyhodi IllegalArgumentException
-                try {
-                    provider.setLocationListener(this,1,1,1);
-                } catch (Exception e) {
-                    provider.setLocationListener(this,-1,-1,-1);
-                }
+                provider.setLocationListener(this,3,1,1);
                 gui.get_frmConnecting().append("Pøijímaè zapnut\n");
             }
             else
@@ -130,6 +125,11 @@ public class Internal implements LocationListener
         {
             if (location.isValid())
             {
+                String nmea = location.getExtraInfo("application/X-jsr179-location-nmea");
+                if (nmea != null && nmea.length() > 0 && nmea.trim().startsWith("$GPGSV"))
+                    gpsParser.receiveNmea(nmea.trim());
+
+                
                 QualifiedCoordinates coordinates = location.getQualifiedCoordinates();
                 if (coordinates.getHorizontalAccuracy() > 100) return; //zahazujeme velke nepresnosti
                 
@@ -143,8 +143,14 @@ public class Internal implements LocationListener
                 gpsParser.friendlyLongitude = ((gpsParser.longitude>0)?"E ":"W ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),3)+Utils.replaceString(Utils.addZerosAfter(friendly.substring(friendly.indexOf(':')), 7),":","° ");
                 gpsParser.altitude = Math.floor(coordinates.getAltitude());
                 gpsParser.accuracy = coordinates.getHorizontalAccuracy();
-                gpsParser.heading = location.getCourse();
-                gpsParser.speed = Math.floor(location.getSpeed() * 3.6);
+                
+                double heading = location.getCourse();
+                if (!Double.isNaN(heading))
+                    gpsParser.heading = heading;
+                
+                double speed = location.getSpeed();
+                if (!Double.isNaN(speed))
+                    gpsParser.speed = Math.floor(speed * 3.6);
             }
             else
             {
