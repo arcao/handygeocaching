@@ -29,7 +29,8 @@ public class Gps implements Runnable
 {
     //kostanty
     private static final long BREAK = 1000; //refresh
-    private static final int MAXIMUM_SKIPS = 5; //maximalni pocet refreshu bez spojeni z modulem
+    private static final long BREAK_NAVI = 500; //refresh
+    private static final int MAXIMUM_SKIPS = 20; //maximalni pocet refreshu bez spojeni z modulem
     
     //mozne akce
     public static final int AVERAGING = 0;
@@ -350,7 +351,7 @@ public class Gps implements Runnable
             try
             {
                 if (thread != null)
-                    thread.sleep(BREAK);
+                    thread.sleep((action == NAVIGATION && gpsParser.source != GpsParser.INTERNAL)? BREAK_NAVI : BREAK);
             }
             catch (InterruptedException e)
             {
@@ -360,7 +361,7 @@ public class Gps implements Runnable
                 //rozsviceni displeje
                 if (settings.flashbackPeriod > 0)
                 {
-                    if (flashbackLightPause < settings.flashbackPeriod*2-1)
+                    if (flashbackLightPause < ((action == NAVIGATION && gpsParser.source != GpsParser.INTERNAL)? 2 * (settings.flashbackPeriod*2-1): settings.flashbackPeriod*2-1))
                     {
                         flashbackLightPause++;
                     }

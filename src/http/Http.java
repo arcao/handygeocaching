@@ -157,7 +157,7 @@ public class Http implements Runnable
             case LOGIN:
                 try
                 {
-                    response = downloadData("part=login&sessid="+Utils.sessionId(settings.name, settings.password)+"&version="+gui.getAppProperty("MIDlet-Version")+"&light=0");
+                    response = downloadData("part=login&sessid="+Utils.sessionId(settings.name, settings.password)+"&version="+gui.getAppProperty("MIDlet-Version")+"&light=0&build="+gui.getAppProperty("Build-Vendor")+"-"+gui.getAppProperty("Build-Version"));
                     if (checkData(response))
                     {
                         String[][] login = parseData(response);
@@ -205,6 +205,7 @@ public class Http implements Runnable
                         if (checkData(response))
                         {
                             String[][] nearestCaches = parseData(response);
+                            gui.get_lstNearestCaches().setTitle("Nejbližší cache");
                             gui.get_lstNearestCaches().deleteAll();
                             waypoints = new String[nearestCaches.length];
                             for (int i=0;i<nearestCaches.length;i++)
@@ -228,14 +229,15 @@ public class Http implements Runnable
                     if (checkData(response))
                     {
                         String[][] foundCaches = parseData(response);
-                        gui.get_lstKeyword().deleteAll();
+                        gui.get_lstNearestCaches().setTitle("Nalezené cache");
+                        gui.get_lstNearestCaches().deleteAll();
                         waypoints = new String[foundCaches.length];
                         for (int i=0;i<foundCaches.length;i++)
                         {
-                            gui.get_lstKeyword().append(foundCaches[i][0],iconLoader.loadIcon(foundCaches[i][1]));
+                            gui.get_lstNearestCaches().append(foundCaches[i][0],iconLoader.loadIcon(foundCaches[i][1]));
                             waypoints[i] = foundCaches[i][2];
                         }
-                        gui.getDisplay().setCurrent(gui.get_lstKeyword());
+                        gui.getDisplay().setCurrent(gui.get_lstNearestCaches());
                     }
                     
                 }
@@ -313,10 +315,12 @@ public class Http implements Runnable
                             //Zephy 19.11.07 +\ -pridan posledni parametr
                             favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],typeNumber,null, false, favourites.found, "");
                             //Zephy 19.11.07 +/
-                        if (!offline)
+                        if (!offline) {
+                            favourites.editId = -1;
                             //Zephy 19.11.07 +\ -pridan posledni parametr
                             favourites.addEdit("_Poslední cache",response,listing[0][4],listing[0][5],typeNumber,null, false, "NE", "");                        
                             //Zephy 19.11.07 +/
+                        }
                         gui.getDisplay().setCurrent(gui.get_frmOverview());
                     }
                 }
@@ -586,7 +590,7 @@ public class Http implements Runnable
     {
         boolean cachedAction = false;
         String cachedResponse = null;
-        if (action == OVERVIEW || action == DETAIL || action == HINT || action == WAYPOINTS || action == LOGS || action == ALL_LOGS)
+        if ((action == OVERVIEW || action == DETAIL || action == HINT || action == WAYPOINTS || action == LOGS || action == ALL_LOGS) && !refresh)
         {
             cachedAction = true;
             cachedResponse = cache.loadCachedResponse(data);

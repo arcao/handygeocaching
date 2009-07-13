@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MVDData version="1.3">
-    <DesignDocument designVersion="MIDP-2" uidCounter="527">
+    <DesignDocument designVersion="MIDP-2" uidCounter="528">
         <DesignComponent id="$MobileDevice" typeid="MIDP:$MobileDevice" uid="0"/>
         <DesignComponent id="$StartPoint" typeid="MIDP:$StartPoint" uid="1">
             <Property name="targetDisplayable" value="ssAdvertisement"/>
@@ -2128,7 +2128,7 @@
         </DesignComponent>
         <DesignComponent id="tbPoznamka" typeid="MIDP:javax.microedition.lcdui.TextBox" uid="515">
             <Property name="title" value="STRING:Pozn\u00E1mka pro ..."/>
-            <Property name="maxSize" value="120"/>
+            <Property name="maxSize" value="8192"/>
             <ContainerProperty name="commands">
                 <ContainerPropertyItem value="$CommandAction92"/>
                 <ContainerPropertyItem value="$CommandAction93"/>
@@ -2177,6 +2177,11 @@
             <Property name="label" value="STRING:Pozn\u00E1mka:"/>
             <Property name="text" value="STRING:"/>
             <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="fntLargeBold" typeid="MIDP:javax.microedition.lcdui.Font" uid="527">
+            <Property name="face" value="FACE_SYSTEM"/>
+            <Property name="style" value="1"/>
+            <Property name="size" value="SIZE_LARGE"/>
         </DesignComponent>
     </DesignDocument>
     <FlowDocument version="1.1">

@@ -150,7 +150,7 @@ public class Internal implements LocationListener
                 
                 double speed = location.getSpeed();
                 if (!Double.isNaN(speed))
-                    gpsParser.speed = Math.floor(speed * 3.6);
+                    gpsParser.speed = speed; // km/h nebo m/s? buh vi. Dle dokumentace m/s, dle implementace v telefonech km/h. :)
             }
             else
             {

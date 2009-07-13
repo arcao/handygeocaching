@@ -128,6 +128,8 @@ public class Favourites extends Database
         {
             gui.showError("viewFavourite",e.toString(),"");
         }
+        System.out.println("id:" + String.valueOf(id));
+        System.out.println("editId:" + String.valueOf(editId));
     }
     
     /**
@@ -172,6 +174,17 @@ public class Favourites extends Database
     {
         try
         {
+            //debug info
+            System.out.println("addEdit");
+            System.out.println("name: " + name);
+            System.out.println("desc: " + description);
+            System.out.println("lat: " + lattitude);
+            System.out.println("lon: " + longitude);
+            System.out.println("type: " + type);
+            System.out.println("degFormat: " + ((DegMinSecFormat) ? "true" : "false"));
+            System.out.println("found: " + found);
+            System.out.println("poznamka: " + poznamka);
+            
             //Zephy 19.11.07 +\
             lattitude = gps.convertLattitudeFormat(lattitude, DegMinSecFormat);
             longitude = gps.convertLongitudeFormat(longitude, DegMinSecFormat);
@@ -247,12 +260,12 @@ public class Favourites extends Database
                 
                 if (!name.equals("_Poslední cache") && editId==-1)
                 {
-                    gui.showAlert("Uloženo do oblíbených",AlertType.INFO,nextScreen);
+                    if (nextScreen != null) gui.showAlert("Uloženo do oblíbených",AlertType.INFO,nextScreen);
                 }
                 //Zephy 19.11.07 +\ -tohle doplneno aby se po skonceni editace preslo na seznam bodu
                 else
                 {
-                    gui.showAlert("Zmìny uloženy",AlertType.INFO,nextScreen);
+                    if (nextScreen != null) gui.showAlert("Zmìny uloženy",AlertType.INFO,nextScreen);
                 }
                 //Zephy 19.11.07 +/
             }
@@ -260,7 +273,10 @@ public class Favourites extends Database
         catch (Exception ex)
         {
             gui.showError("addFavourite",ex.toString(),"");
+            ex.printStackTrace();
         }
+        System.out.println("id:" + String.valueOf(id));
+        System.out.println("editId:" + String.valueOf(editId));
     }
     
     public String getCacheName(int number) {
@@ -432,6 +448,8 @@ public class Favourites extends Database
         {
             gui.showError("editFavourite",e.toString(),"");
         }
+        System.out.println("id:" + String.valueOf(id));
+        System.out.println("editId:" + String.valueOf(editId));
     }
     
     /**

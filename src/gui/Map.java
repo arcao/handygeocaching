@@ -33,7 +33,7 @@ public class Map extends Canvas implements Runnable
     public int screenHeight;
     //konstanty
     static final int STEP = 1; //urcuje rychlost posouvani mapy
-    static final int ZOOM_STEP = 1; //urcuje rychlost zoomovani
+    static final int ZOOM_STEP = 2; //urcuje rychlost zoomovani
     static final int KEY_DELAY = 10; //pauza mezi dvema stisknutimi klaves
     //ostatni promenne
     private Thread thread;
@@ -104,6 +104,7 @@ public class Map extends Canvas implements Runnable
     {
         try
         {
+            setFullScreenMode(true);
             //velikost platna
             screenWidth = getWidth();
             screenHeight = getHeight();
@@ -181,10 +182,10 @@ public class Map extends Canvas implements Runnable
             //tlacitko zpet
             g.setFont(gui.get_fntBold());
             g.setColor(0);
-            g.drawString("Zpìt",3,screenHeight-20,Graphics.TOP|Graphics.LEFT);
+            g.drawString("Zpìt",3,screenHeight, Graphics.BOTTOM|Graphics.LEFT);
             //tlacitko navigace
             if (gps.isNavigating())
-                g.drawString("Navigace", screenWidth-75,screenHeight-20,Graphics.TOP|Graphics.LEFT);
+                g.drawString("Navigace", screenWidth-3,screenHeight,Graphics.BOTTOM|Graphics.RIGHT);
         }
         catch (Exception e)
         {

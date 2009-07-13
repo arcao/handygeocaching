@@ -299,7 +299,8 @@ public class Gui extends MIDlet implements CommandListener {
     private Command cmdPoznamka;
     private StringItem siPoznamka;
     private Command screenCommand1;
-    private StringItem siPoznamkaOver;//GEN-END:MVDFields
+    private StringItem siPoznamkaOver;
+    private Font fntLargeBold;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -503,13 +504,15 @@ public class Gui extends MIDlet implements CommandListener {
         } else if (displayable == lstNearestCaches) {
             if (command == cmdBack) {//GEN-END:MVDCACase68
                 // Insert pre-action code here
-                if (nearestFromWaypoint && !nearest) {
+                if (nearestFromWaypoint && !nearest && !keyword) {
                     getDisplay().setCurrent(get_frmOverview());
+                } else if (nearestFromWaypoint && !nearest && keyword) {
+                    getDisplay().setCurrent(get_frmKeyword());
                 } else if (nearestFromFavourite) {
                     getDisplay().setCurrent(get_frmFavourite());
                 } else {
                     if (modeGPS) {
-                        getDisplay().setCurrent(lstSearch);
+                        getDisplay().setCurrent(get_lstSearch());
                     } else {
                         getDisplay().setCurrent(get_frmCoordinates());//GEN-LINE:MVDCAAction73
                     }
@@ -542,12 +545,10 @@ public class Gui extends MIDlet implements CommandListener {
         } else if (displayable == frmOverview) {
             if (command == cmdBack) {//GEN-END:MVDCACase88
                 // Insert pre-action code here
-                if (nearest) {
-                    getDisplay().setCurrent(lstNearestCaches);
+                if (nearest || keyword) {
+                    getDisplay().setCurrent(get_lstNearestCaches());
                 } else if (fromFavourites) {
-                    getDisplay().setCurrent(lstFavourites);
-                } else if (keyword) {
-                    getDisplay().setCurrent(lstKeyword);
+                    getDisplay().setCurrent(get_lstFavourites());
                 } else {
                     getDisplay().setCurrent(get_frmWaypoint());//GEN-LINE:MVDCAAction91
                 }// Insert post-action code here
@@ -4026,7 +4027,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
     public TextBox get_tbPoznamka() {
         if (tbPoznamka == null) {//GEN-END:MVDGetBegin515
             // Insert pre-init code here
-            tbPoznamka = new TextBox("Pozn\u00E1mka pro ...", null, 120, TextField.ANY);//GEN-BEGIN:MVDGetInit515
+            tbPoznamka = new TextBox("Pozn\u00E1mka pro ...", null, 8192, TextField.ANY);//GEN-BEGIN:MVDGetInit515
             tbPoznamka.addCommand(get_cmdSave());
             tbPoznamka.addCommand(get_cmdBack());
             tbPoznamka.setCommandListener(this);//GEN-END:MVDGetInit515
@@ -4082,6 +4083,18 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd525
         return siPoznamkaOver;
     }//GEN-END:MVDGetEnd525
+
+    /** This method returns instance for fntLargeBold component and should be called instead of accessing fntLargeBold field directly.//GEN-BEGIN:MVDGetBegin527
+     * @return Instance for fntLargeBold component
+     */
+    public Font get_fntLargeBold() {
+        if (fntLargeBold == null) {//GEN-END:MVDGetBegin527
+            // Insert pre-init code here
+            fntLargeBold = Font.getFont(Font.FACE_SYSTEM, 0x1, Font.SIZE_LARGE);//GEN-LINE:MVDGetInit527
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd527
+        return fntLargeBold;
+    }//GEN-END:MVDGetEnd527
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {
@@ -4129,6 +4142,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
             get_tbError().setString("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" +
                     data +"'");
         }
+        System.out.println(get_tbError().getString());
         getDisplay().setCurrent(get_tbError());
     }
     
@@ -4149,6 +4163,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
             caption = "Upozornìní";
         Alert alert = new Alert(caption,text,null,type);
         alert.setTimeout(Alert.FOREVER);
+        if (next == null) next = getDisplay().getCurrent();
         getDisplay().setCurrent(alert, next);
     }
     

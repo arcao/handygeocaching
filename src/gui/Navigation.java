@@ -31,12 +31,11 @@ public class Navigation extends Canvas
     public static int compass = 0;
     public String azimut = "";
     public String dateTime = "";
-    public Image[] arrows, numbers;
+    public Image[] numbers;
     private int image;
     private int transformation;
     private Image rotatedImage;
     private int compassMovement;
-    private String[] compassDirections;
     
     private Gui gui;
     private Gps gps;
@@ -54,6 +53,12 @@ public class Navigation extends Canvas
     
     private int TOP_MARGIN;
     private int BOTTOM_MARGIN;
+    
+    private int fntSmall;
+    private int fntSmallBold;
+    private int fntBold;
+    private int fntNormal;
+    private int fntLargeBold;
 
     
     public Navigation(Gui ref, Gps ref2, Favourites ref3)
@@ -63,13 +68,7 @@ public class Navigation extends Canvas
             gui = ref;
             gps = ref2;
             favourites = ref3;
-            arrows = new Image[4];
-            compassDirections = new String[4];
-            /*arrows[0] = Image.createImage("/sipka0.png");
-            arrows[1] = Image.createImage("/sipka225.png");
-            arrows[2] = Image.createImage("/sipka45.png");
-            arrows[3] = Image.createImage("/sipka675.png");*/
-            
+                                    
             numbers = new Image[12];
             numbers[0] = Image.createImage("/images/compass/numberN.png");
             numbers[1] = Image.createImage("/images/compass/number030.png");
@@ -111,6 +110,7 @@ public class Navigation extends Canvas
     {
         try
         {
+            setFullScreenMode(true);
             calculateSizes();
             int width = getWidth();
             int height = getHeight();
@@ -132,26 +132,27 @@ public class Navigation extends Canvas
                 g.setColor(0,0,0); //black
                 g.setFont(gui.get_fntSmallBold());
                 g.drawString(cacheName,width/2,1, Graphics.TOP|Graphics.HCENTER);
-                
+                                
                 if (viewModeSmall) {
                     g.setColor(0);
-                    g.setFont(gui.get_fntSmallBold());
+                    g.setFont(gui.get_fntBold());
                     g.drawString(distance,width/2,startY,Graphics.TOP|Graphics.HCENTER);
                 } else {
                     //ostatni napisy
                     g.setColor(0);
                     g.setFont(gui.get_fntSmallBold());
                     g.drawString(distance,width/2,startY,Graphics.TOP|Graphics.HCENTER);
+                    startY += fntSmallBold;
+                    
                     g.setFont(gui.get_fntSmall());
-                    g.drawString(" Az.:"+azimut+" "+accuracy,width/2,startY + 11,Graphics.TOP|Graphics.HCENTER);
-                    g.drawString(speed+" "+satellites,width/2,startY + 22,Graphics.TOP|Graphics.HCENTER);
-                    g.drawString(dateTime+" "+altitude,width/2,startY + 33,Graphics.TOP|Graphics.HCENTER);
+                    g.drawString(" Az:"+azimut+" "+accuracy,width/2,startY,Graphics.TOP|Graphics.HCENTER);
+                    startY += fntSmall;
+                    g.drawString(speed+" "+satellites,width/2,startY,Graphics.TOP|Graphics.HCENTER);
+                    startY += fntSmall;
+                    g.drawString(dateTime+" "+altitude,width/2,startY,Graphics.TOP|Graphics.HCENTER);
                 }
-
-                //tlacitko zpet
-                g.drawString("Zpìt",3,height-BOTTOM_MARGIN,Graphics.TOP|Graphics.LEFT);
-                //tlacitko mapa
-                g.drawString("Mapa", width-35,height-BOTTOM_MARGIN,Graphics.TOP|Graphics.LEFT);
+                
+                gui.get_fntSmallBold();
             }
             else //velke displeje
             {
@@ -162,24 +163,30 @@ public class Navigation extends Canvas
                 
                 if (viewModeSmall) {
                     g.setColor(0);
-                    g.setFont(gui.get_fntBold());
+                    g.setFont(gui.get_fntLargeBold());
                     g.drawString(distance,width/2,startY,Graphics.TOP|Graphics.HCENTER);
                 } else {
                     //ostatni napisy
                     g.setColor(0);
                     g.setFont(gui.get_fntBold());
                     g.drawString(distance,width/2,startY,Graphics.TOP|Graphics.HCENTER);
+                    startY += fntBold;
+                    
                     g.setFont(gui.get_fntNormal());
-                    g.drawString(" Azimut: "+azimut+" | "+accuracy,width/2,startY+18,Graphics.TOP|Graphics.HCENTER);
-                    g.drawString(speed+" | "+satellites,width/2,startY+36,Graphics.TOP|Graphics.HCENTER);
-                    g.drawString(dateTime+" | "+altitude,width/2,startY+54,Graphics.TOP|Graphics.HCENTER);
-                    g.setFont(gui.get_fntBold());
+                    g.drawString(" Azimut: "+azimut+" | "+accuracy,width/2,startY,Graphics.TOP|Graphics.HCENTER);
+                    startY += fntNormal;
+                    g.drawString(speed+" | "+satellites,width/2,startY,Graphics.TOP|Graphics.HCENTER);
+                    startY += fntNormal;
+                    g.drawString(dateTime+" | "+altitude,width/2,startY,Graphics.TOP|Graphics.HCENTER);
                 }
-                //tlacitko zpet
-                g.drawString("Zpìt",3,height-BOTTOM_MARGIN,Graphics.TOP|Graphics.LEFT);
-                //tlacitko mapa
-                g.drawString("Mapa", width-44,height-BOTTOM_MARGIN,Graphics.TOP|Graphics.LEFT);
+                
+                g.setFont(gui.get_fntBold());
             }
+            
+            //tlacitko zpet
+            g.drawString("Zpìt", 3, height, Graphics.BOTTOM|Graphics.LEFT);
+            //tlacitko mapa
+            g.drawString("Mapa", width - 3, height, Graphics.BOTTOM|Graphics.RIGHT);
         }
         catch (Exception e)
         {
@@ -272,15 +279,22 @@ public class Navigation extends Canvas
         int height = getHeight();
         cX = width / 2;
         
-        TOP_MARGIN = (width < 140) ? 17 : 20;
+        fntSmall = gui.get_fntSmall().getHeight();
+        fntSmallBold = gui.get_fntSmallBold().getHeight();
+        fntBold = gui.get_fntBold().getHeight();
+        fntNormal = gui.get_fntNormal().getHeight();
+        fntLargeBold = gui.get_fntLargeBold().getHeight();
+        
+        
+        TOP_MARGIN = (width < 140) ? fntSmallBold : fntBold;
         BOTTOM_MARGIN = TOP_MARGIN;
 
         if (viewModeSmall) {
-            cY = (height - ((width < 140) ? 11 : 18+10) - TOP_MARGIN - BOTTOM_MARGIN) / 2;
+            cY = (height - ((width < 140) ? fntBold : fntLargeBold) - TOP_MARGIN - BOTTOM_MARGIN) / 2;
             radius = Math.min(cX, cY) - 5;
             cY = cY + TOP_MARGIN;
         } else {
-            cY = (height - ((width < 140) ? 44 : 72+10) - TOP_MARGIN - BOTTOM_MARGIN) / 2;
+            cY = (height - ((width < 140) ? fntSmallBold + 3 * fntSmall: fntBold + 3 * fntNormal) - TOP_MARGIN - BOTTOM_MARGIN) / 2;
             radius = Math.min(cX, cY) - 5;
             cY = cY + TOP_MARGIN;
         }
