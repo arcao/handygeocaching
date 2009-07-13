@@ -252,12 +252,12 @@ public class GpsParser implements Runnable
                 exception = e.toString();
                 if (source == GPS_GATE)
                 {
-                    gui.showAlert("Program GPS Gate není spuštìn nebo správnì nastaven."+e.toString(),AlertType.ERROR,gui.get_lstMode());
+                    gui.showAlert("Program GPS Gate nenÃ­ spuÅ¡tÄ›n nebo sprÃ¡vnÄ› nastaven."+e.toString(),AlertType.ERROR,gui.get_lstMode());
                 }
                 else if (source == BLUETOOTH)
                 {
                     //nezdarilo se pripojit k poslednimu zarizeni - hledame jina zarizeni v dosahu
-                    gui.get_frmConnecting().append("\nPøipojení se nezdaøilo");
+                    gui.get_frmConnecting().append("\nPÅ™ipojenÃ­ se nezdaÅ™ilo");
                     gui.searchBluetooth();
                 }
                 close();
@@ -328,7 +328,7 @@ public class GpsParser implements Runnable
                 latitude = degree + ((double)minute+(double)fraction/10000)/60;
                 if (param[b].charAt(0) == 'S')
                     latitude =  -latitude;
-                friendlyLattitude = param[b].charAt(0)+" "+degree+"° "+minute+"."+friendlyFraction;
+                friendlyLattitude = param[b].charAt(0)+" "+degree+"Â° "+minute+"."+friendlyFraction;
             }
             if (param[c].length() > 9 && param[d].length() == 1)
             {
@@ -340,7 +340,7 @@ public class GpsParser implements Runnable
                 longitude = degree + ((double)minute+(double)fraction/10000)/60;
                 if (param[d].charAt(0) == 'W')
                     longitude =  -longitude;
-                friendlyLongitude = param[d].charAt(0)+" "+degree2+"° "+minute+"."+friendlyFraction;
+                friendlyLongitude = param[d].charAt(0)+" "+degree2+"Â° "+minute+"."+friendlyFraction;
             }
             if (param[e].length() > 5)
             {

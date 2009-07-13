@@ -188,8 +188,10 @@ public class Utils
     
     public static String repairUTF8(String s) {
         // v urcitych situacich je spatne dekodovano UTF-8, tady se to napravuje
-        s = replaceString(s, "??", "�");
-        return s;
+        String t = s;
+        t = replaceString(t, "Å¾", "ž");
+        t = replaceString(t, "Å¡", "š");
+        return t;
     }
     
     public static String sessionId(String name, String password)

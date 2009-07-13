@@ -1,7 +1,7 @@
 /*
  * Track.java
  *
- * Created on 17. øíjen 2007, 18:03
+ * Created on 17. Å™Ã­jen 2007, 18:03
  */
 
 package track;
@@ -11,7 +11,7 @@ import gui.Gui;
 import java.util.Vector;
 
 /**
- * Tato tøída uchovává prošlou trasu. Trasa se ukládá pøi navigaci a mapì.
+ * Tato tÅ™Ã­da uchovÃ¡vÃ¡ proÅ¡lou trasu. Trasa se uklÃ¡dÃ¡ pÅ™i navigaci a mapÄ›.
  * @author David Vavra
  */
 public class Track implements Runnable

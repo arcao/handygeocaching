@@ -1,7 +1,7 @@
 /*
  * Internal.java
  *
- * Created on 14. záøí 2007, 14:21
+ * Created on 14. zÃ¡Å™Ã­ 2007, 14:21
  *
  */
 
@@ -20,7 +20,7 @@ import javax.microedition.location.QualifiedCoordinates;
 import utils.Utils;
 
 /**
- * Tato tøída získává GPS data z interní GPS použitím Internal API
+ * Tato tÅ™Ã­da zÃ­skÃ¡vÃ¡ GPS data z internÃ­ GPS pouÅ¾itÃ­m Internal API
  * @author David Vavra
  */
 public class Internal implements LocationListener
@@ -52,7 +52,7 @@ public class Internal implements LocationListener
         try
         {
             gui.getDisplay().setCurrent(gui.get_frmConnecting());
-            gui.get_frmConnecting().append("Pøipojuji...\n");
+            gui.get_frmConnecting().append("PÅ™ipojuji...\n");
             Criteria criteria = new Criteria();
             criteria.setPreferredResponseTime(1000);
             criteria.setAltitudeRequired(true);
@@ -65,7 +65,7 @@ public class Internal implements LocationListener
                 //+PB, 17.5.2008: fix pro Samsung SGH-i550, SGH-i560
                 // tyto telefony nemaji provider pro rychlost a smer 
                 // a pokud je pozadujete, provider neprijde!
-                gui.get_frmConnecting().append("Telefon je asi Samsung, že?\n");
+                gui.get_frmConnecting().append("Telefon je asi Samsung, Å¾e?\n");
                 criteria.setSpeedAndCourseRequired(false);
                 provider = LocationProvider.getInstance(criteria);
             }
@@ -75,13 +75,13 @@ public class Internal implements LocationListener
                 //?PB: tohle se mi nelibi - u Siemens SXG75 vede na to, ze da souradnice tak
                 // jednou za minutu. chce to explicitne pozadat o sekundove tempo
                 // provider.setLocationListener(this,-1,-1,-1);
-                gui.get_frmConnecting().append("Našli jsme GPS pøijímaè\n");
+                gui.get_frmConnecting().append("NaÅ¡li jsme GPS pÅ™ijÃ­maÄ\n");
                 provider.setLocationListener(this,3,1,1);
-                gui.get_frmConnecting().append("Pøijímaè zapnut\n");
+                gui.get_frmConnecting().append("PÅ™ijÃ­maÄ zapnut\n");
             }
             else
             {
-                gui.showAlert("Nepodaøilo se pøipojit k interní GPS (1)",AlertType.ERROR,gui.get_lstMode());
+                gui.showAlert("NepodaÅ™ilo se pÅ™ipojit k internÃ­ GPS (1)",AlertType.ERROR,gui.get_lstMode());
                 return false;
             }
             //-PB konec fixu   
@@ -93,18 +93,18 @@ public class Internal implements LocationListener
             // if( provider.getState()==LocationProvider.AVAILABLE)
             if ( provider!=null && provider.getState()!=LocationProvider.OUT_OF_SERVICE)
             {
-                gui.get_frmConnecting().append("Pøipojeno\n");
+                gui.get_frmConnecting().append("PÅ™ipojeno\n");
                 return true;
             }
             else
             {
-                gui.showAlert("Nepodaøilo se pøipojit k interní GPS (2)",AlertType.ERROR,gui.get_lstMode());
+                gui.showAlert("NepodaÅ™ilo se pÅ™ipojit k internÃ­ GPS (2)",AlertType.ERROR,gui.get_lstMode());
                 return false;
             }
         }
         catch (LocationException ex)
         {
-            gui.showAlert("Nepodaøilo se pøipojit k interní GPS (3)",AlertType.ERROR,gui.get_lstMode());
+            gui.showAlert("NepodaÅ™ilo se pÅ™ipojit k internÃ­ GPS (3)",AlertType.ERROR,gui.get_lstMode());
             return false;
         }
         catch (Exception e)
@@ -137,10 +137,10 @@ public class Internal implements LocationListener
                 gpsParser.fix = true;
                 gpsParser.latitude = coordinates.getLatitude();
                 String friendly = Coordinates.convert(Math.abs(coordinates.getLatitude()),Coordinates.DD_MM);
-                gpsParser.friendlyLattitude = ((gpsParser.latitude>0)?"N ":"S ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),2)+Utils.replaceString(Utils.addZerosAfter(friendly.substring(friendly.indexOf(':')), 7),":","° ");
+                gpsParser.friendlyLattitude = ((gpsParser.latitude>0)?"N ":"S ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),2)+Utils.replaceString(Utils.addZerosAfter(friendly.substring(friendly.indexOf(':')), 7),":","Â° ");
                 gpsParser.longitude = coordinates.getLongitude();
                 friendly = Coordinates.convert(Math.abs(coordinates.getLongitude()),Coordinates.DD_MM);
-                gpsParser.friendlyLongitude = ((gpsParser.longitude>0)?"E ":"W ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),3)+Utils.replaceString(Utils.addZerosAfter(friendly.substring(friendly.indexOf(':')), 7),":","° ");
+                gpsParser.friendlyLongitude = ((gpsParser.longitude>0)?"E ":"W ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),3)+Utils.replaceString(Utils.addZerosAfter(friendly.substring(friendly.indexOf(':')), 7),":","Â° ");
                 gpsParser.altitude = Math.floor(coordinates.getAltitude());
                 gpsParser.accuracy = coordinates.getHorizontalAccuracy();
                 

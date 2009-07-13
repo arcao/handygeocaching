@@ -1,7 +1,7 @@
 /*
  * Cache.java
  *
- * Created on 4. èervenec 2007, 12:16
+ * Created on 4. Äervenec 2007, 12:16
  * 
  */
 

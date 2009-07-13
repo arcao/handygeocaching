@@ -1,7 +1,7 @@
 /*
  * Settings.java
  *
- * Created on 16. øíjen 2007, 21:11
+ * Created on 16. Å™Ã­jen 2007, 21:11
  *
  */
 
@@ -16,7 +16,7 @@ import java.io.EOFException;
 import javax.microedition.rms.RecordStore;
 
 /**
- * Tato tøída si pamatuje nastavení aplikace a umožòuje jeho správu
+ * Tato tÅ™Ã­da si pamatuje nastavenÃ­ aplikace a umoÅ¾Åˆuje jeho sprÃ¡vu
  * @author David Vavra
  */
 public class Settings
@@ -77,8 +77,8 @@ public class Settings
             name = "";
             password = "";
             filter = "111100";
-            lastLattitude = "N 50° 00.000";
-            lastLongitude = "E 014° 00.000";
+            lastLattitude = "N 50Â° 00.000";
+            lastLongitude = "E 014Â° 00.000";
             numberCaches = 10;
             flashbackPeriod = 4;
             lastDevice = "";
@@ -222,7 +222,7 @@ public class Settings
     {
         try
         {
-            vip = true;
+            vip = mode;
             store(false);
         }
         catch (Exception e)
@@ -238,9 +238,9 @@ public class Settings
     {
         try
         {
-            //vlozeni znaku °
-            lastLattitude = lat.substring(0,4)+"°"+lat.substring(5);
-            lastLongitude = lon.substring(0,5)+"°"+lon.substring(6);
+            //vlozeni znaku Â°
+            lastLattitude = lat.substring(0,4)+"Â°"+lat.substring(5);
+            lastLongitude = lon.substring(0,5)+"Â°"+lon.substring(6);
             
             store(false);
         }

@@ -1,7 +1,7 @@
 /*
  * MapItem.java
  *
- * Created on 11. záøí 2007, 17:42
+ * Created on 11. zÃ¡Å™Ã­ 2007, 17:42
  * 
  */
 

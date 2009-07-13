@@ -1,7 +1,7 @@
 /*
  * Favourites.java
  *
- * Created on 16. øíjen 2007, 21:18
+ * Created on 16. Å™Ã­jen 2007, 21:18
  *
  */
 
@@ -157,8 +157,8 @@ public class Favourites extends Database
                 dis.readUTF();
                 dis.readUTF();
             } catch (Exception e) {}
-            lattitude = Utils.replaceString(Utils.replaceString(lattitude, "° ","d"),"N ","");
-            longitude = Utils.replaceString(Utils.replaceString(longitude, "° ","d"),"E ","");
+            lattitude = Utils.replaceString(Utils.replaceString(lattitude, "Â° ","d"),"N ","");
+            longitude = Utils.replaceString(Utils.replaceString(longitude, "Â° ","d"),"E ","");
             gui.platformRequest("http://wap.mapy.cz/search?from=&query="+lattitude+"+"+longitude+"&mapType=ophoto&zoom=16");
         }
         catch (Exception e)
@@ -194,10 +194,10 @@ public class Favourites extends Database
             if (lattitude=="" | Gps.convertLattitude(lattitude)==0)
             {
                 if (gui.fromMultiSolver)
-                    gui.showAlert("Špatný formát první souøadnice",AlertType.WARNING,gui.get_frmResult());
+                    gui.showAlert("Å patnÃ½ formÃ¡t prvnÃ­ souÅ™adnice",AlertType.WARNING,gui.get_frmResult());
                 else
                 {
-                    gui.showAlert("Špatný formát první souøadnice",AlertType.WARNING,gui.get_frmAddGiven());
+                    gui.showAlert("Å patnÃ½ formÃ¡t prvnÃ­ souÅ™adnice",AlertType.WARNING,gui.get_frmAddGiven());
                 }
             }
             //Zephy 19.11.07 + pridan OR v podmince
@@ -205,15 +205,15 @@ public class Favourites extends Database
             {
                 
                 if (gui.fromMultiSolver)
-                    gui.showAlert("Špatný formát druhé souøadnice",AlertType.WARNING,gui.get_frmResult());
+                    gui.showAlert("Å patnÃ½ formÃ¡t druhÃ© souÅ™adnice",AlertType.WARNING,gui.get_frmResult());
                 else
-                    gui.showAlert("Špatný formát druhé souøadnice",AlertType.WARNING,gui.get_frmAddGiven());
+                    gui.showAlert("Å patnÃ½ formÃ¡t druhÃ© souÅ™adnice",AlertType.WARNING,gui.get_frmAddGiven());
             }
             else
             {
                 
                 if (name.equals(""))
-                    name = "Beze jména";
+                    name = "Beze jmÃ©na";
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                 DataOutputStream dos = new DataOutputStream(buffer);
                 dos.writeUTF(name);
@@ -227,7 +227,7 @@ public class Favourites extends Database
                 dos.writeUTF(poznamka);
                 byte[] bytes = buffer.toByteArray();
                 //posledni cache
-                if (name.equals("_Poslední cache"))
+                if (name.equals("_PoslednÃ­ cache"))
                 {                    
                     editId = -1;
                     RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
@@ -237,7 +237,7 @@ public class Favourites extends Database
                     {
                         id = rc.nextRecordId();
                         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
-                        if (dis.readUTF().equals("_Poslední cache"))
+                        if (dis.readUTF().equals("_PoslednÃ­ cache"))
                         {
                             editId = id;
                             break;
@@ -258,14 +258,14 @@ public class Favourites extends Database
                 viewAll();
                 
                 
-                if (!name.equals("_Poslední cache") && editId==-1)
+                if (!name.equals("_PoslednÃ­ cache") && editId==-1)
                 {
-                    if (nextScreen != null) gui.showAlert("Uloženo do oblíbených",AlertType.INFO,nextScreen);
+                    if (nextScreen != null) gui.showAlert("UloÅ¾eno do oblÃ­benÃ½ch",AlertType.INFO,nextScreen);
                 }
                 //Zephy 19.11.07 +\ -tohle doplneno aby se po skonceni editace preslo na seznam bodu
                 else
                 {
-                    if (nextScreen != null) gui.showAlert("Zmìny uloženy",AlertType.INFO,nextScreen);
+                    if (nextScreen != null) gui.showAlert("ZmÄ›ny uloÅ¾eny",AlertType.INFO,nextScreen);
                 }
                 //Zephy 19.11.07 +/
             }
@@ -431,7 +431,7 @@ public class Favourites extends Database
             //zobrazeni
             if (isCache(type))
             {
-                gui.showAlert("Cache není možné upravovat",AlertType.WARNING,gui.get_lstFavourites());
+                gui.showAlert("Cache nenÃ­ moÅ¾nÃ© upravovat",AlertType.WARNING,gui.get_lstFavourites());
             }
             else
             {
@@ -529,7 +529,7 @@ public class Favourites extends Database
                     dis.readUTF();
                 } catch (Exception e) {}
                 
-                if (!name.equals("_Poslední cache"))
+                if (!name.equals("_PoslednÃ­ cache"))
                     gui.get_cvsMap().addMapItem(lattitude,longitude,type,name);
             }
         }

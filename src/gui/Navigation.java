@@ -1,7 +1,7 @@
 /*
  * Navigation.java
  *
- * Created on 7. záøí 2007, 15:05
+ * Created on 7. zÃ¡Å™Ã­ 2007, 15:05
  *
  */
 
@@ -94,11 +94,11 @@ public class Navigation extends Canvas
         satellites = "5/11 sat.";
         speed = "330 km/h";
         altitude = "300 m.n.m";
-        cacheName = "Název keše";
+        cacheName = "NÃ¡zev keÅ¡e";
         angle = 270;
         compass = 275;
         PDOP = "PDOP:2.0";
-        azimut = "30°";
+        azimut = "30Â°";
         dateTime = "1.12 13:46";*/
         
     }
@@ -184,7 +184,7 @@ public class Navigation extends Canvas
             }
             
             //tlacitko zpet
-            g.drawString("Zpìt", 3, height, Graphics.BOTTOM|Graphics.LEFT);
+            g.drawString("ZpÄ›t", 3, height, Graphics.BOTTOM|Graphics.LEFT);
             //tlacitko mapa
             g.drawString("Mapa", width - 3, height, Graphics.BOTTOM|Graphics.RIGHT);
         }

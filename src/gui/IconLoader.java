@@ -1,7 +1,7 @@
 /*
  * IconLoader.java
  *
- * Created on 15. øíjen 2007, 18:19
+ * Created on 15. Å™Ã­jen 2007, 18:19
  */
 
 package gui;
@@ -12,7 +12,7 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 /**
- * Tato tøída primárnì zjišuje rozlišení obrazovky. To je potøeba pøi variabilním naèítání ikonek pro kadé rozlišení jinou.
+ * Tato tÅ™Ã­da primÃ¡rnÄ› zjiÅ¡Å¥uje rozliÅ¡enÃ­ obrazovky. To je potÅ™eba pÅ™i variabilnÃ­m naÄÃ­tÃ¡nÃ­ ikonek pro kaÅ¾dÃ© rozliÅ¡enÃ­ jinou.
  * @author David Vavra
  */
 public class IconLoader extends Canvas

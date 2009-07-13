@@ -1,7 +1,7 @@
 /*
  * MultiSolver.java
  *
- * Created on 17. øíjen 2007, 10:12
+ * Created on 17. Å™Ã­jen 2007, 10:12
  *
  */
 
@@ -106,8 +106,8 @@ public class MultiSolver extends Database
     {
         try
         {
-            gui.get_siLattitudePattern().setLabel("Aktuální vzorec");
-            gui.get_siLattitudePattern().setText("Není zvolen aktuální vzorec");
+            gui.get_siLattitudePattern().setLabel("AktuÃ¡lnÃ­ vzorec");
+            gui.get_siLattitudePattern().setText("NenÃ­ zvolen aktuÃ¡lnÃ­ vzorec");
             gui.get_siLongitudePattern().setText("");
             
             deleteAll();
@@ -126,9 +126,9 @@ public class MultiSolver extends Database
     {
         try
         {
-            if (gui.get_siLattitudePattern().getText().equals("Není zvolen aktuální vzorec"))
+            if (gui.get_siLattitudePattern().getText().equals("NenÃ­ zvolen aktuÃ¡lnÃ­ vzorec"))
             {
-                gui.showAlert("Musíte nejdøív zvolit jeden vzorec ze vzoreèkù.",AlertType.WARNING,gui.get_frmMultiSolver());
+                gui.showAlert("MusÃ­te nejdÅ™Ã­v zvolit jeden vzorec ze vzoreÄkÅ¯.",AlertType.WARNING,gui.get_frmMultiSolver());
             }
             else
             {
@@ -161,7 +161,7 @@ public class MultiSolver extends Database
                 }
                 if (!allReplaced)
                 {
-                    gui.showAlert("Písmeno '"+(lattitude+longitude).charAt(i)+"' nemá nastavenou hodnotu. Pøed vıpoètem musí mít všechna písmena svojí hodnotu.",AlertType.WARNING,gui.get_frmMultiSolver());
+                    gui.showAlert("PÃ­smeno '"+(lattitude+longitude).charAt(i)+"' nemÃ¡ nastavenou hodnotu. PÅ™ed vÃ½poÄtem musÃ­ mÃ­t vÅ¡echna pÃ­smena svojÃ­ hodnotu.",AlertType.WARNING,gui.get_frmMultiSolver());
                 }
                 else
                 {
@@ -187,7 +187,7 @@ public class MultiSolver extends Database
                             }
                             catch (Exception e)
                             {
-                                gui.showAlert("Není mono vypoèítat tento vıraz první souøadnice: "+expression+". Zkontrolujte, zda má vıraz správnı formát.",AlertType.ERROR,gui.get_frmEditPattern());
+                                gui.showAlert("NenÃ­ moÅ¾no vypoÄÃ­tat tento vÃ½raz prvnÃ­ souÅ™adnice: "+expression+". Zkontrolujte, zda mÃ¡ vÃ½raz sprÃ¡vnÃ½ formÃ¡t.",AlertType.ERROR,gui.get_frmEditPattern());
                                 computingError = true;
                                 break;
                             }
@@ -220,7 +220,7 @@ public class MultiSolver extends Database
                             }
                             catch (Exception e)
                             {
-                                gui.showAlert("Není mono vypoèítat tento vıraz druhé souøadnice: "+expression+". Zkontrolujte, zda má vıraz správnı formát.",AlertType.ERROR,gui.get_frmEditPattern());
+                                gui.showAlert("NenÃ­ moÅ¾no vypoÄÃ­tat tento vÃ½raz druhÃ© souÅ™adnice: "+expression+". Zkontrolujte, zda mÃ¡ vÃ½raz sprÃ¡vnÃ½ formÃ¡t.",AlertType.ERROR,gui.get_frmEditPattern());
                                 computingError = true;
                                 break;
                             }

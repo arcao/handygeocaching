@@ -1,7 +1,7 @@
 /**
  * Gui.java
  *
- * Created on 13. ˙nor 2007, 8:48
+ * Created on 13. √∫nor 2007, 8:48
  *
  */
 
@@ -356,7 +356,7 @@ public class Gui extends MIDlet implements CommandListener {
                         siVerze.setText(getAppProperty("MIDlet-Version")+"\n");
                         get_siSestaveni().setText(getAppProperty("Build-Vendor")+"-"+getAppProperty("Build-Version")+"\n");
                         if (settings.vip)
-                            siDonate.setText("DÏkuji moc za V·ö p¯ÌspÏvek na v˝voj aplikace! (Ë.˙Ëtu autora je 51-5385890237/0100)");
+                            siDonate.setText("Dƒõkuji moc za V√°≈° p≈ô√≠spƒõvek na v√Ωvoj aplikace! (ƒç.√∫ƒçtu autora je 51-5385890237/0100)");
                         break;//GEN-BEGIN:MVDCACase41
                     case 5://GEN-END:MVDCACase41
                         // Insert pre-action code here
@@ -412,7 +412,7 @@ public class Gui extends MIDlet implements CommandListener {
                 // Insert pre-action code here
                 gps.stop();
                 favourites.editId = -1;
-                favourites.addEdit("V˝sledek pr˘mÏrov·nÌ","",siAverageLattitude.getText(),siAverageLongitude.getText(),"average",get_lstFavourites(), false, "NE", "");
+                favourites.addEdit("V√Ωsledek pr≈Ømƒõrov√°n√≠","",siAverageLattitude.getText(),siAverageLongitude.getText(),"average",get_lstFavourites(), false, "NE", "");
                 // Do nothing//GEN-LINE:MVDCAAction391
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase391
@@ -436,7 +436,7 @@ public class Gui extends MIDlet implements CommandListener {
                         } else {
                             bluetooth = new Bluetooth(this, http, settings, favourites, true);
                             if (bluetooth.isOn()) {
-                                get_frmConnecting().append("P¯ipojuji k poslednÌmu za¯ÌzenÌ...");
+                                get_frmConnecting().append("P≈ôipojuji k posledn√≠mu za≈ô√≠zen√≠...");
                                 getDisplay().setCurrent(get_frmConnecting());
                                 gpsParser = new GpsParser(this, http, settings, favourites, bluetooth, settings.lastDevice, GpsParser.BLUETOOTH);
                                 bluetooth.setReference(gpsParser);
@@ -488,11 +488,11 @@ public class Gui extends MIDlet implements CommandListener {
                 // Insert post-action code here
                 if (navigateToPoint) {
                     if (gps.convertLattitude(get_tfLattitude().getString())==0 || gps.convertLongitude(get_tfLongitude().getString())==0) {
-                        showAlert("äpatn˝ form·t sou¯adnic",AlertType.WARNING,get_frmCoordinates());
+                        showAlert("≈†patn√Ω form√°t sou≈ôadnic",AlertType.WARNING,get_frmCoordinates());
                     } else {
                         settings.saveCoordinates(get_tfLattitude().getString(), get_tfLongitude().getString());
                         getDisplay().setCurrent(get_cvsNavigation());
-                        gps.setNavigationTarget(get_tfLattitude().getString(), get_tfLongitude().getString(),"Zadan˝ bod");
+                        gps.setNavigationTarget(get_tfLattitude().getString(), get_tfLongitude().getString(),"Zadan√Ω bod");
                         gps.start(Gps.NAVIGATION);
                         gps.setPreviousScreen(frmCoordinates);
                     }
@@ -581,7 +581,7 @@ public class Gui extends MIDlet implements CommandListener {
                     gps.start(Gps.NAVIGATION);
                     gps.setPreviousScreen(frmOverview);
                 } else {
-                    showAlert("Tato funkce je p¯Ìstupn· jenom v reûimu GPS",AlertType.WARNING,get_lstMode());
+                    showAlert("Tato funkce je p≈ô√≠stupn√° jenom v re≈æimu GPS",AlertType.WARNING,get_lstMode());
                 }
             } else if (command == cmdNext) {//GEN-LINE:MVDCACase168
                 // Insert pre-action code here
@@ -743,11 +743,11 @@ public class Gui extends MIDlet implements CommandListener {
                         navigateToPoint = false;
                         keyword = false;
                         if (!modeGPS) {
-                            get_frmCoordinates().setTitle("Zadejte sou¯adnice:");
+                            get_frmCoordinates().setTitle("Zadejte sou≈ôadnice:");
                             get_tfLattitude().setString(settings.lastLattitude);
                             get_tfLongitude().setString(settings.lastLongitude);
                         } else {
-                            get_frmCoordinates().setTitle("Zadejte sou¯adnice:");
+                            get_frmCoordinates().setTitle("Zadejte sou≈ôadnice:");
                             get_tfLattitude().setString("");
                             get_tfLongitude().setString("");
                             gps.start(Gps.CURRENT_POSITION);
@@ -796,7 +796,7 @@ public class Gui extends MIDlet implements CommandListener {
                             get_tfLattitude().setString(settings.lastLattitude);
                             get_tfLongitude().setString(settings.lastLongitude);
                         } else {
-                            showAlert("Tato funkce je p¯Ìstupn· jenom v reûimu GPS",AlertType.WARNING,get_lstMode());
+                            showAlert("Tato funkce je p≈ô√≠stupn√° jenom v re≈æimu GPS",AlertType.WARNING,get_lstMode());
                         }
                         // Do nothing//GEN-LINE:MVDCAAction240
                         // Insert post-action code here
@@ -808,7 +808,7 @@ public class Gui extends MIDlet implements CommandListener {
                             // Insert post-action code here
                             gps.start(Gps.AVERAGING);
                         } else {
-                            showAlert("Tato funkce je p¯Ìstupn· jenom v reûimu GPS",AlertType.WARNING,get_lstMode());
+                            showAlert("Tato funkce je p≈ô√≠stupn√° jenom v re≈æimu GPS",AlertType.WARNING,get_lstMode());
                         }
                         // Do nothing//GEN-LINE:MVDCAAction242
                         // Insert post-action code here
@@ -847,7 +847,7 @@ public class Gui extends MIDlet implements CommandListener {
                             //gps.setPreviousScreen(lstGPS);
                             //TMP-/
                             
-                            showAlert("Tato funkce je p¯Ìstupn· jenom v reûimu GPS",AlertType.WARNING,get_lstMode());
+                            showAlert("Tato funkce je p≈ô√≠stupn√° jenom v re≈æimu GPS",AlertType.WARNING,get_lstMode());
                         }
                         //Zephy 21.11.07 gpsstatus+/
                         // Do nothing//GEN-LINE:MVDCAAction469
@@ -882,13 +882,13 @@ public class Gui extends MIDlet implements CommandListener {
                 fromMultiSolver = false;
                 if (modeGPS) {
                     favourites.editId = -1;
-                    get_frmAddGiven().setTitle("ZÌsk·v·m sou¯adnice...");
+                    get_frmAddGiven().setTitle("Z√≠sk√°v√°m sou≈ôadnice...");
                     get_tfGivenName().setString("");
                     get_tfGivenDescription().setString("");
                     getDisplay().setCurrent(get_frmAddGiven());
                     gps.start(Gps.COORDINATES_FAVOURITES);
                 } else {
-                    showAlert("Tato funkce je p¯Ìstupn· jenom v reûimu GPS",AlertType.WARNING,get_lstMode());
+                    showAlert("Tato funkce je p≈ô√≠stupn√° jenom v re≈æimu GPS",AlertType.WARNING,get_lstMode());
                 }
             } else if (command == cmdDelete) {//GEN-LINE:MVDCACase269
                 // Insert pre-action code here
@@ -903,7 +903,7 @@ public class Gui extends MIDlet implements CommandListener {
                 get_tfGivenLongitude().setString(settings.lastLongitude);
                 get_tfGivenName().setString("");
                 get_tfGivenDescription().setString("");
-                get_frmAddGiven().setTitle("P¯idat bod");
+                get_frmAddGiven().setTitle("P≈ôidat bod");
                 
                 
                 getDisplay().setCurrent(get_frmAddGiven());//GEN-LINE:MVDCAAction270
@@ -927,7 +927,7 @@ public class Gui extends MIDlet implements CommandListener {
                         gps.setPreviousScreen(get_lstFavourites());
                     }
                 } else {
-                    showAlert("Tato funkce je p¯Ìstupn· jenom v reûimu GPS",AlertType.WARNING,get_lstMode());
+                    showAlert("Tato funkce je p≈ô√≠stupn√° jenom v re≈æimu GPS",AlertType.WARNING,get_lstMode());
                 }
                 // Do nothing//GEN-LINE:MVDCAAction390
                 // Insert post-action code here
@@ -945,7 +945,7 @@ public class Gui extends MIDlet implements CommandListener {
                     gps.start(Gps.MAP);
                     gps.setPreviousScreen(get_lstFavourites());
                 } else {
-                    showAlert("Tato funkce je p¯Ìstupn· jenom v reûimu GPS",AlertType.WARNING,get_lstMode());
+                    showAlert("Tato funkce je p≈ô√≠stupn√° jenom v re≈æimu GPS",AlertType.WARNING,get_lstMode());
                 }
                 // Do nothing//GEN-LINE:MVDCAAction420
                 // Insert post-action code here
@@ -970,7 +970,7 @@ public class Gui extends MIDlet implements CommandListener {
                 // Insert pre-action code here
                 int selected = firstCheckedFavourite();
                 if (selected != -1) {
-                    get_tbPoznamka().setTitle("Pozn·mka pro "+favourites.getCacheName(selected));
+                    get_tbPoznamka().setTitle("Pozn√°mka pro "+favourites.getCacheName(selected));
                     favourites.id = selected;
                     get_tbPoznamka().setString(favourites.getPoznamka(favourites.id));
                     getDisplay().setCurrent(get_tbPoznamka());//GEN-LINE:MVDCAAction521
@@ -993,7 +993,7 @@ public class Gui extends MIDlet implements CommandListener {
                     gps.start(Gps.NAVIGATION);
                     gps.setPreviousScreen(frmFavourite);
                 } else {
-                    showAlert("Tato funkce je p¯Ìstupn· jenom v reûimu GPS",AlertType.WARNING,get_lstMode());
+                    showAlert("Tato funkce je p≈ô√≠stupn√° jenom v re≈æimu GPS",AlertType.WARNING,get_lstMode());
                 }
             } else if (command == cmdNext) {//GEN-LINE:MVDCACase263
                 // Insert pre-action code here
@@ -1009,7 +1009,7 @@ public class Gui extends MIDlet implements CommandListener {
                 // Insert post-action code here
             } else if (command == cmdPoznamka) {//GEN-LINE:MVDCACase513
                 // Insert pre-action code here
-                get_tbPoznamka().setTitle("Pozn·mka pro "+favourites.getCacheName(favourites.id));
+                get_tbPoznamka().setTitle("Pozn√°mka pro "+favourites.getCacheName(favourites.id));
                 get_tbPoznamka().setString(favourites.getPoznamka(favourites.id));
                 getDisplay().setCurrent(get_tbPoznamka());//GEN-LINE:MVDCAAction524
                 // Insert post-action code here
@@ -1137,7 +1137,7 @@ public class Gui extends MIDlet implements CommandListener {
                 // Insert post-action code here
             } else if (command == cmdAddPattern) {//GEN-LINE:MVDCACase377
                 // Insert pre-action code here
-                get_frmEditPattern().setTitle("P¯idat vzorec");
+                get_frmEditPattern().setTitle("P≈ôidat vzorec");
                 getDisplay().setCurrent(get_frmEditPattern());//GEN-LINE:MVDCAAction378
                 // Insert post-action code here
             } else if (command == lstPatterns.SELECT_COMMAND) {
@@ -4137,7 +4137,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
     public void showError(String section, String errorMessage, String data) {
         //vymazani chyb
         if (data.equals("Chyba")) {
-            get_tbError().setString("ProblÈm s komunikaËnÌm skriptem,opakujte akci.Pokud se tato chyba ukazuje po¯·d,m·te nefunkËnÌ GPRS.");
+            get_tbError().setString("Probl√©m s komunikaƒçn√≠m skriptem,opakujte akci.Pokud se tato chyba ukazuje po≈ô√°d,m√°te nefunkƒçn√≠ GPRS.");
         } else {
             get_tbError().setString("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" +
                     data +"'");
@@ -4160,7 +4160,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         else if (type == AlertType.INFO)
             caption = "Info";
         else if (type==AlertType.WARNING)
-            caption = "UpozornÏnÌ";
+            caption = "Upozornƒõn√≠";
         Alert alert = new Alert(caption,text,null,type);
         alert.setTimeout(Alert.FOREVER);
         if (next == null) next = getDisplay().getCurrent();

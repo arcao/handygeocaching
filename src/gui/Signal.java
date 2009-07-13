@@ -60,8 +60,8 @@ public class Signal extends Canvas
         speed = "330 km/h";
         altitude = "300 m.n.m";
 
-        latitude = "N 49° 58.2386";
-        longitude = "E 016° 58.0063";
+        latitude = "N 49Â° 58.2386";
+        longitude = "E 016Â° 58.0063";
         pdop = "2.5";
         vdop = "4.0";
         hdop = "6.0";
@@ -116,15 +116,15 @@ public class Signal extends Canvas
             
             g.setFont(gui.get_fntSmall());
             g.drawString("Rychl: "+speed, 7, 9 + (2 * nVyskaRadku), Graphics.TOP|Graphics.LEFT);
-            g.drawString("Výška: "+altitude, (width * 1/2)+5, 9 + (2 * nVyskaRadku), Graphics.TOP|Graphics.LEFT);
+            g.drawString("VÃ½Å¡ka: "+altitude, (width * 1/2)+5, 9 + (2 * nVyskaRadku), Graphics.TOP|Graphics.LEFT);
 
             g.drawString("PDOP: "+pdop,7 , height - 107, Graphics.TOP|Graphics.LEFT);            
             g.drawString("HDOP: "+hdop,(width * 1/3)+7, height - 107, Graphics.TOP|Graphics.LEFT);            
             g.drawString("VDOP: "+vdop,(width * 2/3)+7, height - 107, Graphics.TOP|Graphics.LEFT);            
 
-            g.drawString("Nápovìda", 7, height - nVyskaRadku - 4,Graphics.TOP|Graphics.LEFT);
+            g.drawString("NÃ¡povÄ›da", 7, height - nVyskaRadku - 4,Graphics.TOP|Graphics.LEFT);
             g.drawString("Sat: " + satellitescount, width/2, height - nVyskaRadku - 4, Graphics.TOP|Graphics.HCENTER);
-            g.drawString("Zpìt", width-35, height - nVyskaRadku - 4, Graphics.TOP|Graphics.LEFT);
+            g.drawString("ZpÄ›t", width-35, height - nVyskaRadku - 4, Graphics.TOP|Graphics.LEFT);
             //tajne menu
             if (ZobrazitDetailSatelitu)
             {

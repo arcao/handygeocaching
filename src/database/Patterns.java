@@ -1,7 +1,7 @@
 /*
  * Patterns.java
  *
- * Created on 17. øíjen 2007, 10:29
+ * Created on 17. Å™Ã­jen 2007, 10:29
  *
  */
 
@@ -152,7 +152,7 @@ public class Patterns extends Database
                 byte[] bytes = buffer.toByteArray();
                 recordStore.addRecord(bytes, 0, bytes.length);
             }
-            gui.showAlert("Vzoreèky byly úspìšnì uloeny do MultiSolveru",AlertType.INFO,gui.get_frmOverview());
+            gui.showAlert("VzoreÄky byly ÃºspÄ›Å¡nÄ› uloÅ¾eny do MultiSolveru",AlertType.INFO,gui.get_frmOverview());
         }
         catch (Exception ex)
         {

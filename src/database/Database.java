@@ -1,7 +1,7 @@
 /*
  * Database.java
  *
- * Created on 17. øíjen 2007, 9:45
+ * Created on 17. Å™Ã­jen 2007, 9:45
  *
  */
 
@@ -15,7 +15,7 @@ import javax.microedition.rms.RecordFilter;
 import javax.microedition.rms.RecordStore;
 
 /**
- * Tato tøída je pouze abstraktní - dìdí od ní jednotlivé databáze
+ * Tato tÅ™Ã­da je pouze abstraktnÃ­ - dÄ›dÃ­ od nÃ­ jednotlivÃ© databÃ¡ze
  * @author David Vavra
  */
 abstract class Database implements RecordFilter, RecordComparator
@@ -59,7 +59,7 @@ abstract class Database implements RecordFilter, RecordComparator
      */
 
     /**
-     * Zobrazí všechny poloky databázi - konkrétnì implementují potomci
+     * ZobrazÃ­ vÅ¡echny poloÅ¾ky databÃ¡zi - konkrÃ©tnÄ› implementujÃ­ potomci
      */
     public void viewAll()
     {
@@ -101,21 +101,21 @@ abstract class Database implements RecordFilter, RecordComparator
             DataInputStream dis2 = new DataInputStream(new ByteArrayInputStream(rec2));
             String s1 = dis1.readUTF();
             String s2 = dis2.readUTF();
-            // porovnání jmen z prvního a druhého záznamu
+            // porovnÃ¡nÃ­ jmen z prvnÃ­ho a druhÃ©ho zÃ¡znamu
             int i = s1.compareTo(s2);
             if (i == 0)
             {
-                // jména jsou stejná
+                // jmÃ©na jsou stejnÃ¡
                 return RecordComparator.EQUIVALENT;
             }
             else if (i < 0)
             {
-                // první jméno je dríve ne druhé
+                // prvnÃ­ jmÃ©no je drÃ­ve neÅ¾ druhÃ©
                 return RecordComparator.PRECEDES;
             }
             else
             {
-                // první jméno je pozdìji ne druhé
+                // prvnÃ­ jmÃ©no je pozdÄ›ji neÅ¾ druhÃ©
                 return RecordComparator.FOLLOWS;
             }
         }

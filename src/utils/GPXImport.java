@@ -1,7 +1,7 @@
 /*
  * Import.java
  *
- * Created on 4. èervenec 2009, 10:28
+ * Created on 4. Äervenec 2009, 10:28
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

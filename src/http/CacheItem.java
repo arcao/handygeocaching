@@ -1,7 +1,7 @@
 /*
  * CacheItem.java
  *
- * Created on 17. øíjen 2007, 12:18
+ * Created on 17. Å™Ã­jen 2007, 12:18
  *
  */
 

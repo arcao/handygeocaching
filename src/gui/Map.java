@@ -26,7 +26,7 @@ public class Map extends Canvas implements Runnable
     public double latitude = 49.91216; //pozice uzivatele
     public double longitude = 14.22126;  //pozice uzivatele
     public int heading = 0; //kam nam uzivatel miri?
-    public String fixMessage = "NenÌ GPS sign·l";
+    public String fixMessage = "Nen√≠ GPS sign√°l";
     //ostatni promenne
     Vector mapItems;
     public int screenWidth;
@@ -115,7 +115,7 @@ public class Map extends Canvas implements Runnable
                 g.fillRect(0, 0, screenWidth, screenHeight);
                 g.setColor(0);
                 g.setFont(gui.get_fntNormal());
-                g.drawString("NaËÌt·m mapu",screenWidth/2,screenHeight/2,Graphics.TOP|Graphics.HCENTER);
+                g.drawString("Naƒç√≠t√°m mapu",screenWidth/2,screenHeight/2,Graphics.TOP|Graphics.HCENTER);
                 firstPaint = false;
             }
             else if (fixMessage.equals(""))
@@ -182,7 +182,7 @@ public class Map extends Canvas implements Runnable
             //tlacitko zpet
             g.setFont(gui.get_fntBold());
             g.setColor(0);
-            g.drawString("ZpÏt",3,screenHeight, Graphics.BOTTOM|Graphics.LEFT);
+            g.drawString("Zpƒõt",3,screenHeight, Graphics.BOTTOM|Graphics.LEFT);
             //tlacitko navigace
             if (gps.isNavigating())
                 g.drawString("Navigace", screenWidth-3,screenHeight,Graphics.BOTTOM|Graphics.RIGHT);
