@@ -141,8 +141,11 @@ public class Internal implements LocationListener
                 gpsParser.longitude = coordinates.getLongitude();
                 friendly = Coordinates.convert(Math.abs(coordinates.getLongitude()),Coordinates.DD_MM);
                 gpsParser.friendlyLongitude = ((gpsParser.longitude>0)?"E ":"W ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),3)+Utils.replaceString(Utils.addZerosAfter(friendly.substring(friendly.indexOf(':')), 7),":","° ");
-                gpsParser.altitude = Math.floor(coordinates.getAltitude());
                 gpsParser.accuracy = coordinates.getHorizontalAccuracy();
+                
+                double altitude = Math.floor(coordinates.getAltitude());
+                if (!Double.isNaN(altitude))
+                    gpsParser.altitude = altitude;
                 
                 double heading = location.getCourse();
                 if (!Double.isNaN(heading))

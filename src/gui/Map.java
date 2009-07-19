@@ -6,6 +6,7 @@ import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import track.Track;
+import utils.ImageCache;
 
 /**
  * Tato trida reprezentuje navigacni obrazovku, zobrazuje sipku a dalsi udaje
@@ -32,7 +33,7 @@ public class Map extends Canvas implements Runnable
     public int screenWidth;
     public int screenHeight;
     //konstanty
-    static final int STEP = 1; //urcuje rychlost posouvani mapy
+    static final int STEP = 2; //urcuje rychlost posouvani mapy
     static final int ZOOM_STEP = 2; //urcuje rychlost zoomovani
     static final int KEY_DELAY = 10; //pauza mezi dvema stisknutimi klaves
     //ostatni promenne
@@ -108,12 +109,14 @@ public class Map extends Canvas implements Runnable
             //velikost platna
             screenWidth = getWidth();
             screenHeight = getHeight();
+            
+            g.setColor((gui.nightMode) ? 0x0 : 0xffffff); //pozadi
+            g.fillRect(0, 0, screenWidth, screenHeight);
+            g.setColor((gui.nightMode) ? 0xffffff : 0x0); //text
+            
             if (firstPaint)
             {
                 //loading
-                g.setColor(0xffffff);
-                g.fillRect(0, 0, screenWidth, screenHeight);
-                g.setColor(0);
                 g.setFont(gui.get_fntNormal());
                 g.drawString("Načítám mapu",screenWidth/2,screenHeight/2,Graphics.TOP|Graphics.HCENTER);
                 firstPaint = false;
@@ -121,68 +124,74 @@ public class Map extends Canvas implements Runnable
             else if (fixMessage.equals(""))
             {
                 int pixelsPerKm = (int)Math.ceil((double)zoom/2 * Math.sqrt((double)zoom/10));
-                //kresleni mapy
-                g.setColor(0xffffff);
-                g.fillRect(0, 0, screenWidth, screenHeight);
+                double getKmPerLonAtLatLatitude = getKmPerLonAtLat(latitude);
+
                 //vykresleni tracku
                 track.reset();
+                
+                g.setColor((gui.nightMode) ? 0xffff00 : 0x0000ff); //usla cara
+                
                 double line[];
                 while ((line = track.nextLine())!=null)
                 {
-                    int x1 = (int)(getKmPerLonAtLat(latitude)*(line[0]-longitude)*pixelsPerKm);
+                    int x1 = (int)(getKmPerLonAtLatLatitude*(line[0]-longitude)*pixelsPerKm);
                     int y1 = (int)(getKmPerLat()*(latitude-line[1])*pixelsPerKm);
-                    int x2 = (int)(getKmPerLonAtLat(latitude)*(line[2]-longitude)*pixelsPerKm);
+                    int x2 = (int)(getKmPerLonAtLatLatitude*(line[2]-longitude)*pixelsPerKm);
                     int y2 = (int)(getKmPerLat()*(latitude-line[3])*pixelsPerKm);
-                    g.setColor(0,0,255);
                     g.drawLine(screenWidth/2+x1+x,screenHeight/2+y1+y,screenWidth/2+x2+x,screenHeight/2+y2+y);
                 }
+                
                 //vykresleni navigacni cary
                 if (gps.isNavigating())
                 {
-                    int xx = (int)(getKmPerLonAtLat(latitude)*(gps.getNavigationLongitude()-longitude)*pixelsPerKm);
+                    int xx = (int)(getKmPerLonAtLatLatitude*(gps.getNavigationLongitude()-longitude)*pixelsPerKm);
                     int yy = (int)(getKmPerLat()*(latitude-gps.getNavigationLatitude())*pixelsPerKm);
-                    g.setColor(255,0,0);
+                    g.setColor((gui.nightMode) ? 0xffffff : 0x0); //navigacni cara
                     g.setStrokeStyle(Graphics.DOTTED);
                     g.drawLine(screenWidth/2+x,screenHeight/2+y,screenWidth/2+xx+x,screenHeight/2+yy+y);
                     g.setStrokeStyle(Graphics.SOLID);
                 }
                 //kresleni jednotlivych bodu
-                for (int i=0;i<mapItems.size();i++)
+                int mapItemsSize = mapItems.size();
+                g.setColor((gui.nightMode) ? 0xffffff : 0x0); //font
+                g.setFont(gui.get_fntSmall());
+                
+                for (int i=0;i<mapItemsSize;i++)
                 {
                     MapItem mapItem = (MapItem)mapItems.elementAt(i);
-                    int item_x = (int)(getKmPerLonAtLat(latitude)*(mapItem.longitude-longitude)*pixelsPerKm);
+                    int item_x = (int)(getKmPerLonAtLatLatitude*(mapItem.longitude-longitude)*pixelsPerKm);
                     int item_y = (int)(getKmPerLat()*(latitude-mapItem.latitude)*pixelsPerKm);
                     int halfIcon = iconLoader.getIconSize()/2;
-                    g.drawImage(Image.createImage(iconLoader.loadIcon(mapItem.icon)),screenWidth/2+item_x-halfIcon+x,screenHeight/2+item_y-halfIcon+y,Graphics.TOP|Graphics.LEFT);
-                    g.setFont(gui.get_fntSmall());
-                    g.setColor(0);
+                    
+                    g.drawImage(iconLoader.loadIcon(mapItem.icon),screenWidth/2+item_x-halfIcon+x,screenHeight/2+item_y-halfIcon+y,Graphics.TOP|Graphics.LEFT);
                     g.drawString(mapItem.name,screenWidth/2+item_x+halfIcon+2+x,screenHeight/2+item_y-halfIcon+y,Graphics.TOP|Graphics.LEFT);
                 }
+                
                 //vykresleni pozice uzivatele
-                g.setColor(0);
                 g.drawArc(screenWidth/2-15+x, screenHeight/2-15+y, 30, 30, 0, 360);
                 g.drawLine(screenWidth/2-15+x,screenHeight/2+y,screenWidth/2+15+x,screenHeight/2+y);
                 g.drawLine(screenWidth/2+x,screenHeight/2-15+y,screenWidth/2+x,screenHeight/2+15+y);
+                
                 //vykresleni headingu
                 double radHeading = Math.toRadians(heading);
                 int xheading = (int)(screenWidth/2 + x + 15*Math.cos(radHeading-Math.PI/2));
                 int yheading = (int)(screenHeight/2 + y + 15*Math.sin(radHeading-Math.PI/2));
-                g.setColor(255,0,0);
+                g.setColor((gui.nightMode) ? 0x00ffff : 0xff0000); //uhel
                 g.fillArc(xheading-4,yheading-4,8,8,0,360);
+                
+                g.setColor((gui.nightMode) ? 0xffffff : 0x0); //text
             }
             else
             {
                 //neni signal
-                g.setColor(0xffffff);
-                g.fillRect(0, 0, screenWidth, screenHeight);
-                g.setColor(0);
                 g.setFont(gui.get_fntNormal());
                 g.drawString(fixMessage,screenWidth/2,screenHeight/2,Graphics.TOP|Graphics.HCENTER);
             }
+
             //tlacitko zpet
             g.setFont(gui.get_fntBold());
-            g.setColor(0);
             g.drawString("Zpět",3,screenHeight, Graphics.BOTTOM|Graphics.LEFT);
+            
             //tlacitko navigace
             if (gps.isNavigating())
                 g.drawString("Navigace", screenWidth-3,screenHeight,Graphics.BOTTOM|Graphics.RIGHT);
@@ -199,15 +208,20 @@ public class Map extends Canvas implements Runnable
     public void keyPressed(int key)
     {
         keyCode = key;
+        if (keyCode == KEY_NUM0) 
+        {
+            gui.nightMode = !gui.nightMode;
+            repaint();
+        }
         //leve kontextove tlacitko
-        if (keyCode == -6 || keyCode == -21 || keyCode == -20 || keyCode == 105 || keyCode == 21 || keyCode == -202 || keyCode == 113)
+        else if (keyCode == -6 || keyCode == -21 || keyCode == -20 || keyCode == 105 || keyCode == 21 || keyCode == -202 || keyCode == 113)
         {
             gps.stop();
             gui.getDisplay().setCurrent(gps.getPreviousScreen());
             thread = null;
         }
         //prave kontextove tlacitko
-        if (gps.isNavigating() && (keyCode == -7 || keyCode == 112 || keyCode == 111))
+        else if (gps.isNavigating() && (keyCode == -7 || keyCode == 112 || keyCode == 111))
         {
             gui.getDisplay().setCurrent(gui.get_cvsNavigation());
             gps.changeAction(Gps.NAVIGATION);

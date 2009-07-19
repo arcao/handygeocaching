@@ -309,11 +309,16 @@ public class Http implements Runnable
                         if (offline)
                             gui.get_frmOverview().addCommand(gui.get_cmdRefresh());
                         favouriteResponse = response;
-                        gui.get_siNalezenoOver().setText(favourites.found);
-                        gui.get_siPoznamkaOver().setText(favourites.poznamka);
+                        if (offline) {
+                            gui.get_siNalezenoOver().setText(favourites.found);
+                            gui.get_siPoznamkaOver().setText(favourites.poznamka);
+                        } else {
+                            gui.get_siNalezenoOver().setText("");
+                            gui.get_siPoznamkaOver().setText("");
+                        }
                         if (refresh)
                             //Zephy 19.11.07 +\ -pridan posledni parametr
-                            favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],typeNumber,null, false, favourites.found, "");
+                            favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],typeNumber,null, false, (offline) ? favourites.found : "", (offline) ? favourites.poznamka : "");
                             //Zephy 19.11.07 +/
                         if (!offline) {
                             favourites.editId = -1;
@@ -335,7 +340,12 @@ public class Http implements Runnable
                     response = downloadData("part=info&cookie="+cookie+"&waypoint="+waypoint);
                     if (checkData(response))
                     {
-                        gui.get_siContent().setText(response);
+                        gui.get_frmInfo().deleteAll();
+                        gui.get_frmInfo().append(gui.get_siBegin());
+                        gui.get_frmInfo().append(response);
+                        gui.get_frmInfo().append(gui.get_siEnd());
+                        //limitace Javy na telefonech SE? nasledujici radka ulozi jen par vet.
+                        //gui.get_siContent().setText(response);
                         gui.getDisplay().setCurrent(gui.get_frmInfo());
                     }
                 }

@@ -10,6 +10,7 @@ import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import utils.ImageCache;
 
 /**
  * Tato třída primárně zjišťuje rozlišení obrazovky. To je potřeba při variabilním načítání ikonek pro každé rozlišení jinou.
@@ -52,7 +53,7 @@ public class IconLoader extends Canvas
         Image img = null;
         try
         {
-            img = Image.createImage("/icons"+iconSize+"/"+name+".png");
+            img = ImageCache.get("/icons"+iconSize+"/"+name+".png");
         }
         catch (Exception e)
         {

@@ -7,6 +7,7 @@
 
 package gui;
 
+import utils.OpenFileBrowser;
 import database.Favourites;
 import database.MultiSolver;
 import database.Patterns;
@@ -59,6 +60,7 @@ public class Gui extends MIDlet implements CommandListener {
     public boolean fromTrackables = false;
     public boolean fromMultiSolver = false;
     public boolean gpsGate = false;
+    public boolean nightMode = false;
     
     //reference na jednotlive moduly
     private Gps gps = null;
@@ -300,7 +302,8 @@ public class Gui extends MIDlet implements CommandListener {
     private StringItem siPoznamka;
     private Command screenCommand1;
     private StringItem siPoznamkaOver;
-    private Font fntLargeBold;//GEN-END:MVDFields
+    private Font fntLargeBold;
+    private org.netbeans.microedition.lcdui.SimpleTableModel simpleTableModel1;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -444,7 +447,7 @@ public class Gui extends MIDlet implements CommandListener {
                             }
                         }
                         break;//GEN-BEGIN:MVDCACase30
-                    case 3://GEN-END:MVDCACase30
+                    case 4://GEN-END:MVDCACase30
                         // Insert pre-action code here
                         
                         getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction32
@@ -468,8 +471,17 @@ public class Gui extends MIDlet implements CommandListener {
                         // Do nothing//GEN-LINE:MVDCAAction422
                         // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase422
+                    case 3://GEN-END:MVDCACase422
+                        // Insert pre-action code here
+                        // Do nothing//GEN-LINE:MVDCAAction541
+                        // Insert post-action code here
+                        modeGPS = true;
+                        gpsGate = false;
+                        gpsParser = new GpsParser(this, http, settings, favourites, bluetooth, "comm:AT5;baudrate=9600", GpsParser.GPS_HGE_100);
+                        gpsParser.open();
+                        break;//GEN-BEGIN:MVDCACase541
                 }
-            } else if (command == cmdHint) {//GEN-END:MVDCACase422
+            } else if (command == cmdHint) {//GEN-END:MVDCACase541
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_frmConnectionHelp());//GEN-LINE:MVDCAAction423
                 // Insert post-action code here
@@ -506,7 +518,7 @@ public class Gui extends MIDlet implements CommandListener {
                 // Insert pre-action code here
                 if (nearestFromWaypoint && !nearest && !keyword) {
                     getDisplay().setCurrent(get_frmOverview());
-                } else if (nearestFromWaypoint && !nearest && keyword) {
+                } else if (!nearestFromFavourite && !nearest && keyword) {
                     getDisplay().setCurrent(get_frmKeyword());
                 } else if (nearestFromFavourite) {
                     getDisplay().setCurrent(get_frmFavourite());
@@ -614,6 +626,7 @@ public class Gui extends MIDlet implements CommandListener {
             } else if (command == cmdNastavitNalez) {//GEN-LINE:MVDCACase410
                 // Insert pre-action code here
                 get_siNazevKese().setText(get_siName().getText());
+                get_dfNalezeno().setDate(new Date());
                 getDisplay().setCurrent(get_frmNalezeno());//GEN-LINE:MVDCAAction507
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase507
@@ -776,8 +789,24 @@ public class Gui extends MIDlet implements CommandListener {
                         // Do nothing//GEN-LINE:MVDCAAction233
                         // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase233
+                    case 3://GEN-END:MVDCACase233
+                        // Insert pre-action code here
+                        // nejblizsi kese
+                        nearest = true;
+                        nearestFromWaypoint = false;
+                        nearestFromFavourite = false;
+                        navigateToPoint = false;
+                        keyword = false;
+                        get_frmCoordinates().setTitle("Zadejte souřadnice:");
+                        get_tfLattitude().setString(settings.lastLattitude);
+                        get_tfLongitude().setString(settings.lastLongitude);
+
+                        getDisplay().setCurrent(get_frmCoordinates());
+                        // Do nothing//GEN-LINE:MVDCAAction539
+                        // Insert post-action code here
+                        break;//GEN-BEGIN:MVDCACase539
                 }
-            } else if (command == cmdBack) {//GEN-END:MVDCACase233
+            } else if (command == cmdBack) {//GEN-END:MVDCACase539
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction243
                 // Insert post-action code here
@@ -963,6 +992,7 @@ public class Gui extends MIDlet implements CommandListener {
                 if (selected != -1) {
                     get_siNazevKese().setText(favourites.getCacheName(selected));
                     favourites.id = selected;
+                    get_dfNalezeno().setDate(new Date());
                     getDisplay().setCurrent(get_frmNalezeno());//GEN-LINE:MVDCAAction509
                     // Insert post-action code here
                 }
@@ -1005,6 +1035,7 @@ public class Gui extends MIDlet implements CommandListener {
             } else if (command == cmdNastavitNalez) {//GEN-LINE:MVDCACase360
                 // Insert pre-action code here
                 get_siNazevKese().setText(get_frmFavourite().getTitle());
+                get_dfNalezeno().setDate(new Date());
                 getDisplay().setCurrent(get_frmNalezeno());//GEN-LINE:MVDCAAction513
                 // Insert post-action code here
             } else if (command == cmdPoznamka) {//GEN-LINE:MVDCACase513
@@ -1458,17 +1489,20 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 "Bluetooth GPS",
                 "Intern\u00ED GPS",
                 "PDA GPS",
+                "SonyEricsson HGE-100",
                 "Bez GPS"
             }, new Image[] {
                 get_imgBluetooth(),
                 get_imgGps(),
                 get_imgPdaGps(),
+                get_imgGps(),
                 get_imgNoGps()
             });
             lstMode.addCommand(get_cmdExit());
             lstMode.addCommand(get_cmdHint());
             lstMode.setCommandListener(this);
             lstMode.setSelectedFlags(new boolean[] {
+                false,
                 false,
                 false,
                 false,
@@ -2453,17 +2487,20 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         if (lstSearch == null) {//GEN-END:MVDGetBegin226
             // Insert pre-init code here
             lstSearch = new List("Vyhled\u00E1v\u00E1n\u00ED", Choice.IMPLICIT, new String[] {//GEN-BEGIN:MVDGetInit226
-                "Nejbli\u017E\u0161\u00ED",
-                "Waypoint",
-                "Kl\u00ED\u010Dov\u00E9 slovo"
+                "Nejbli\u017E\u0161\u00ED dle GPS",
+                "GC k\u00F3d",
+                "Kl\u00ED\u010Dov\u00E9 slovo",
+                "Sou\u0159adnice"
             }, new Image[] {
-                get_imgNearest(),
+                get_imgGps(),
                 get_imgWaypoint(),
-                get_imgKeyword()
+                get_imgKeyword(),
+                get_imgNearest()
             });
             lstSearch.addCommand(get_cmdBack());
             lstSearch.setCommandListener(this);
             lstSearch.setSelectedFlags(new boolean[] {
+                false,
                 false,
                 false,
                 false
@@ -3992,7 +4029,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
     public Command get_cmdNastavitNalez() {
         if (cmdNastavitNalez == null) {//GEN-END:MVDGetBegin506
             // Insert pre-init code here
-            cmdNastavitNalez = new Command("Nastavit Nalez", Command.SCREEN, 10);//GEN-LINE:MVDGetInit506
+            cmdNastavitNalez = new Command("Nastavit n\u00E1lez", Command.SCREEN, 10);//GEN-LINE:MVDGetInit506
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd506
         return cmdNastavitNalez;
@@ -4095,6 +4132,25 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd527
         return fntLargeBold;
     }//GEN-END:MVDGetEnd527
+    /** This method returns instance for simpleTableModel1 component and should be called instead of accessing simpleTableModel1 field directly.//GEN-BEGIN:MVDGetBegin533
+     * @return Instance for simpleTableModel1 component
+     */
+    public org.netbeans.microedition.lcdui.SimpleTableModel get_simpleTableModel1() {
+        if (simpleTableModel1 == null) {//GEN-END:MVDGetBegin533
+            // Insert pre-init code here
+            simpleTableModel1 = new org.netbeans.microedition.lcdui.SimpleTableModel();//GEN-BEGIN:MVDGetInit533
+            simpleTableModel1.setValues(new String[][] {
+                new String[] {
+                    "13",
+                    "ST",
+                    null,
+                },
+            });
+            simpleTableModel1.setColumnNames(null);//GEN-END:MVDGetInit533
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd533
+        return simpleTableModel1;
+    }//GEN-END:MVDGetEnd533
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {

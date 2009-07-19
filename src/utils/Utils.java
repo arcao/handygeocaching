@@ -388,8 +388,14 @@ public class Utils
         c.setTime(date);
         StringBuffer sb = new StringBuffer();
         sb.append(c.get(Calendar.DATE)).append(".").append(c.get(Calendar.MONTH) + 1).append(". ");
-        sb.append(c.get(Calendar.HOUR_OF_DAY)).append(":").append(c.get(Calendar.MINUTE));
+        sb.append(nulaNula(c.get(Calendar.HOUR_OF_DAY))).append(":").append(nulaNula(c.get(Calendar.MINUTE)));
 
         return sb.toString();
+    }
+    
+    public static String nulaNula(int v) {
+        if (v < 10)
+            return "0"+Integer.toString(v, 10);
+        return Integer.toString(v);
     }
 }

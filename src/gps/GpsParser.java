@@ -6,6 +6,7 @@ import gui.Gui;
 import http.Http;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Hashtable;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
@@ -57,6 +58,7 @@ public class GpsParser implements Runnable
     public static final int BLUETOOTH = 0;
     public static final int GPS_GATE = 1;
     public static final int INTERNAL = 2;
+    public static final int GPS_HGE_100 = 2;
     public int source;
     
     private Thread thread;
@@ -240,19 +242,25 @@ public class GpsParser implements Runnable
         
         StreamConnection streamConnection = null;
         InputStream inputStream = null;
+        OutputStream outputStream = null;
         try
         {
             try
             {
                 streamConnection = (StreamConnection)Connector.open(communicationURL);
                 inputStream = streamConnection.openInputStream();
+                outputStream = streamConnection.openOutputStream();
             }
             catch (Exception e)
             {
                 exception = e.toString();
                 if (source == GPS_GATE)
                 {
-                    gui.showAlert("Program GPS Gate není spuštěn nebo správně nastaven."+e.toString(),AlertType.ERROR,gui.get_lstMode());
+                    gui.showAlert("Program GPS Gate není spuštěn nebo správně nastaven. "+e.toString(),AlertType.ERROR,gui.get_lstMode());
+                }
+                else if (source == GPS_HGE_100)
+                {
+                    gui.showAlert("Nepovedlo se připohit k HGE-100. "+e.toString(),AlertType.ERROR,gui.get_lstMode());
                 }
                 else if (source == BLUETOOTH)
                 {
@@ -269,6 +277,10 @@ public class GpsParser implements Runnable
                 connectionSuccessfull();
             }
             
+            if (source == GPS_HGE_100) {
+                outputStream.write("$STA\r\n".getBytes()); // Tell HGE-100 to start transmitting NMEA data
+            }
+            
             //cteni dat
             ByteArrayOutputStream byteArrayOutputStream = null;
             while (thread != null)
@@ -282,7 +294,7 @@ public class GpsParser implements Runnable
                     if (inputStream != null)
                         while ( (ch = inputStream.read()) != '\n')
                         {
-                        byteArrayOutputStream.write(ch);
+                            byteArrayOutputStream.write(ch);
                         }
                     byteArrayOutputStream.flush();
                     byte[] b = byteArrayOutputStream.toByteArray();
@@ -297,8 +309,14 @@ public class GpsParser implements Runnable
                 }
             }
             
+            if (source == GPS_HGE_100 && outputStream != null) {
+                outputStream.write("$STO\r\n".getBytes()); // Tell HGE-100 to stop transmitting NMEA data
+            }
+            
             if (inputStream != null)
                 inputStream.close();
+            if (outputStream != null)
+                outputStream.close();
             if (streamConnection != null)
                 streamConnection.close();
         }
