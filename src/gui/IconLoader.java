@@ -48,12 +48,20 @@ public class IconLoader extends Canvas
     /**
      * Tato metoda zajisti dynamicke loadovani ikon podle rozliseni telefonu
      */
-    public Image loadIcon(String name)
+    public Image loadIcon(String name) {
+        return loadIcon(name, true);
+    }
+    
+    public Image loadIcon(String name, boolean sizable)
     {
         Image img = null;
         try
         {
-            img = ImageCache.get("/icons"+iconSize+"/"+name+".png");
+            if (sizable) {
+                img = ImageCache.get("/icons"+iconSize+"/"+name+".png");
+            } else {
+                img = ImageCache.get("/images/"+name+".png");
+            }
         }
         catch (Exception e)
         {

@@ -42,4 +42,8 @@ public class ImageCache {
             return null;
         }
     }
+    
+    public static Image createImage(String fileName) {
+        return get(fileName);
+    }
 }

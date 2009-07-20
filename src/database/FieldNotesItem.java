@@ -16,6 +16,7 @@ import java.io.DataOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import javax.microedition.rms.RecordStore;
 import utils.Utils;
 
 /**
@@ -29,9 +30,11 @@ public class FieldNotesItem {
     private long date;
     private int type;
     private String text;
+    private RecordStore recordStore;
         
     /** Creates a new instance of FieldNotesItem */
-    public FieldNotesItem(int id, byte[] data) {
+    public FieldNotesItem(int id, RecordStore recordStore, byte[] data) {
+        this.recordStore = recordStore;
         this.id = id;
         gcCode = "";
         name = "";
@@ -57,7 +60,20 @@ public class FieldNotesItem {
         }
     }
     
-    public byte[] toData() {
+    public void save() {
+        try {
+            byte[] data = toData();
+            if (id == -1) {
+                id = recordStore.addRecord(data, 0, data.length);
+            } else {
+                recordStore.setRecord(id, data, 0, data.length);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private byte[] toData() {
         try {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(buffer);

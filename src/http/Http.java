@@ -1,6 +1,7 @@
 package http;
 
 import database.Favourites;
+import database.FieldNotes;
 import database.Patterns;
 import database.Settings;
 import gps.Gps;
@@ -30,6 +31,7 @@ public class Http implements Runnable
     
     //adresa skriptu
     private static final String url = "http://handygeocaching.sluzba.cz/handy31.php";
+    private static final String arcao_url = "http://testweb/gc/api.php";
     
     //mozne akce
     public static final int LOGIN = 0;
@@ -44,6 +46,7 @@ public class Http implements Runnable
     public static final int KEYWORD = 9;
     public static final int TRACKABLE = 19;
     public static final int PATTERNS = 11;
+    public static final int FIELD_NOTES = 12;
     
     //reference na ostatni moduly
     private Gui gui;
@@ -481,6 +484,20 @@ public class Http implements Runnable
                     gui.showError("patterns",e.toString(),response);
                 }
                 break;
+            case FIELD_NOTES:
+                try
+                {
+                    response = downloadData("action=fieldnotes&cookie="+cookie+"&fieldnotes="+Utils.urlUTF8Encode(FieldNotes.getInstance().getFieldNotes()), true);
+                    if (checkData(response))
+                    {
+                        gui.showAlert("Field notes úspěšně odeslány.",AlertType.INFO,gui.get_frmLoading());
+                    }
+                }
+                catch (Exception e)
+                {
+                    gui.showError("patterns",e.toString(),response);
+                }
+                break;
                 
         }
     }
@@ -596,7 +613,11 @@ public class Http implements Runnable
     /**
      * Zjednodusovaci metoda a rozhodovani, zda se data budou nacitat z kese nebo ne
      */
-    public String downloadData(String data)
+    public String downloadData(String data) {
+        return downloadData(data, false);
+    }
+    
+    public String downloadData(String data, boolean useArcaoUrl)
     {
         boolean cachedAction = false;
         String cachedResponse = null;
@@ -613,7 +634,7 @@ public class Http implements Runnable
                 gui.get_siMessage().setText("Přihlašování k serveru geocaching.com...");
             else
                 gui.get_siMessage().setText("Připojování k serveru a stahování dat...");
-            String adress = url + "?" + data;
+            String adress = ((useArcaoUrl) ? arcao_url : url) + "?" + data;
             String returns = "";
             System.out.println(adress);
             returns = connect(adress);

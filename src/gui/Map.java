@@ -41,6 +41,9 @@ public class Map extends Canvas implements Runnable
     private int keyCode;
     private boolean firstPaint;
     
+    private int lastDragX = -1;
+    private int lastDragY = -1;
+    
     public Map(Gui ref, Gps ref2, IconLoader ref3, Track ref4)
     {
         try
@@ -192,6 +195,9 @@ public class Map extends Canvas implements Runnable
             g.setFont(gui.get_fntBold());
             g.drawString("Zpět",3,screenHeight, Graphics.BOTTOM|Graphics.LEFT);
             
+            if (hasPointerEvents())
+                g.drawString("Noční",screenWidth/2,screenHeight, Graphics.BOTTOM|Graphics.HCENTER);
+            
             //tlacitko navigace
             if (gps.isNavigating())
                 g.drawString("Navigace", screenWidth-3,screenHeight,Graphics.BOTTOM|Graphics.RIGHT);
@@ -241,6 +247,38 @@ public class Map extends Canvas implements Runnable
     public void keyReleased(int keyCode)
     {
         thread = null;
+    }
+
+    protected void pointerPressed(int x, int y) {
+        int BORDER = 10;
+        
+        lastDragX = x;
+        lastDragY = y;
+        
+        int width = gui.get_fntBold().stringWidth("Noční") + 2*BORDER;
+        int height = gui.get_fntBold().getHeight() + BORDER;
+        
+        int widthHalf = (getWidth() - width) / 2;
+        
+        if (y > getHeight() - height && y < getHeight() &&
+            x > widthHalf && x < widthHalf + width) {
+            gui.nightMode = !gui.nightMode;
+            repaint();
+        }
+    }
+    
+    protected void pointerDragged(int x, int y) {
+        int changeX = x - lastDragX;
+        int changeY = y - lastDragY;
+        
+        lastDragX = x;
+        lastDragY = y;
+
+        
+        this.x += changeX;
+        this.y += changeY;
+        
+        repaint();
     }
     
     

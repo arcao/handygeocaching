@@ -7,6 +7,8 @@
 
 package gui;
 
+import database.FieldNotes;
+import database.FieldNotesItem;
 import utils.OpenFileBrowser;
 import database.Favourites;
 import database.MultiSolver;
@@ -303,7 +305,10 @@ public class Gui extends MIDlet implements CommandListener {
     private Command screenCommand1;
     private StringItem siPoznamkaOver;
     private Font fntLargeBold;
-    private org.netbeans.microedition.lcdui.SimpleTableModel simpleTableModel1;//GEN-END:MVDFields
+    private org.netbeans.microedition.lcdui.SimpleTableModel simpleTableModel1;
+    private List lstFieldNotes;
+    private Command okCommand1;
+    private Command okCommand2;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -352,7 +357,7 @@ public class Gui extends MIDlet implements CommandListener {
                         getDisplay().setCurrent(get_lstSearch());//GEN-LINE:MVDCAAction37
                         
                         break;//GEN-BEGIN:MVDCACase37
-                    case 4://GEN-END:MVDCACase37
+                    case 5://GEN-END:MVDCACase37
                         // Insert pre-action code here
                         getDisplay().setCurrent(get_frmAbout());//GEN-LINE:MVDCAAction41
                         // Insert post-action code here
@@ -361,7 +366,7 @@ public class Gui extends MIDlet implements CommandListener {
                         if (settings.vip)
                             siDonate.setText("Děkuji moc za Váš příspěvek na vývoj aplikace! (č.účtu autora je 51-5385890237/0100)");
                         break;//GEN-BEGIN:MVDCACase41
-                    case 5://GEN-END:MVDCACase41
+                    case 6://GEN-END:MVDCACase41
                         // Insert pre-action code here
                         exitMIDlet();//GEN-LINE:MVDCAAction115
                         // Insert post-action code here
@@ -389,10 +394,19 @@ public class Gui extends MIDlet implements CommandListener {
                         getDisplay().setCurrent(get_lstGPS());//GEN-LINE:MVDCAAction236
                         // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase236
+                    case 4://GEN-END:MVDCACase236
+                        // Insert pre-action code here
+                        get_lstFieldNotes().deleteAll();
+                        FieldNotesItem[] items = FieldNotes.getInstance().getAll();
+                        for(int i=0; i < items.length; i++)
+                            get_lstFieldNotes().append(items[i].toString(), iconLoader.loadIcon(FieldNotes.getIconName(items[i].getType()), false));
+                        getDisplay().setCurrent(get_lstFieldNotes());//GEN-LINE:MVDCAAction548
+                        // Insert post-action code here
+                        break;//GEN-BEGIN:MVDCACase548
                 }
             }
         } else if (displayable == frmAveraging) {
-            if (command == cmdBack) {//GEN-END:MVDCACase236
+            if (command == cmdBack) {//GEN-END:MVDCACase548
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstGPS());//GEN-LINE:MVDCAAction22
                 // Insert post-action code here
@@ -1253,7 +1267,13 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 // Insert post-action code here
                  */
             }//GEN-BEGIN:MVDCACase517
-        }//GEN-END:MVDCACase517
+        } else if (displayable == lstFieldNotes) {
+            if (command == cmdBack) {//GEN-END:MVDCACase517
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction546
+                // Insert post-action code here
+            }//GEN-BEGIN:MVDCACase546
+        }//GEN-END:MVDCACase546
 // Insert global post-action code here
         
         
@@ -1333,6 +1353,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 "Obl\u00EDben\u00E9",
                 "Dal\u0161\u00ED funkce",
                 "Nastaven\u00ED",
+                "Field notes",
                 "O aplikaci",
                 "Konec"
             }, new Image[] {
@@ -1340,11 +1361,13 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 get_imgFavourites(),
                 get_imgOther(),
                 get_imgSettings(),
+                get_imgKeyword(),
                 get_imgAbout(),
                 get_imgExit()
             });
             lstMenu.setCommandListener(this);
             lstMenu.setSelectedFlags(new boolean[] {
+                false,
                 false,
                 false,
                 false,
@@ -4151,6 +4174,47 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd533
         return simpleTableModel1;
     }//GEN-END:MVDGetEnd533
+
+    /** This method returns instance for lstFieldNotes component and should be called instead of accessing lstFieldNotes field directly.//GEN-BEGIN:MVDGetBegin542
+     * @return Instance for lstFieldNotes component
+     */
+    public List get_lstFieldNotes() {
+        if (lstFieldNotes == null) {//GEN-END:MVDGetBegin542
+            // Insert pre-init code here
+            lstFieldNotes = new List("Field notes", Choice.MULTIPLE, new String[0], new Image[0]);//GEN-BEGIN:MVDGetInit542
+            lstFieldNotes.addCommand(get_cmdBack());
+            lstFieldNotes.setCommandListener(this);
+            lstFieldNotes.setSelectedFlags(new boolean[0]);
+            lstFieldNotes.setSelectCommand(null);
+            lstFieldNotes.setFitPolicy(Choice.TEXT_WRAP_ON);//GEN-END:MVDGetInit542
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd542
+        return lstFieldNotes;
+    }//GEN-END:MVDGetEnd542
+
+    /** This method returns instance for okCommand1 component and should be called instead of accessing okCommand1 field directly.//GEN-BEGIN:MVDGetBegin544
+     * @return Instance for okCommand1 component
+     */
+    public Command get_okCommand1() {
+        if (okCommand1 == null) {//GEN-END:MVDGetBegin544
+            // Insert pre-init code here
+            okCommand1 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit544
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd544
+        return okCommand1;
+    }//GEN-END:MVDGetEnd544
+
+    /** This method returns instance for okCommand2 component and should be called instead of accessing okCommand2 field directly.//GEN-BEGIN:MVDGetBegin545
+     * @return Instance for okCommand2 component
+     */
+    public Command get_okCommand2() {
+        if (okCommand2 == null) {//GEN-END:MVDGetBegin545
+            // Insert pre-init code here
+            okCommand2 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit545
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd545
+        return okCommand2;
+    }//GEN-END:MVDGetEnd545
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {
