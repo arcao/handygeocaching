@@ -2285,7 +2285,8 @@
         <DesignComponent id="tfFNGcCode" typeid="MIDP:javax.microedition.lcdui.TextField" uid="557">
             <Property name="label" value="STRING:K\u00F3d ke\u0161e:"/>
             <Property name="string" value="STRING:...GC12345..."/>
-            <Property name="maxSize" value="120"/>
+            <Property name="maxSize" value="10"/>
+            <Property name="constraints" value="524288"/>
             <ContainerProperty name="commands"/>
         </DesignComponent>
         <DesignComponent id="cgFNType" typeid="MIDP:javax.microedition.lcdui.ChoiceGroup" uid="558">
@@ -2332,7 +2333,7 @@
         </DesignComponent>
         <DesignComponent id="tfFNText" typeid="MIDP:javax.microedition.lcdui.TextField" uid="565">
             <Property name="label" value="STRING:Text:"/>
-            <Property name="maxSize" value="240"/>
+            <Property name="maxSize" value="4096"/>
             <ContainerProperty name="commands"/>
         </DesignComponent>
         <DesignComponent id="$CommandAction99" typeid="MIDP:CommandAction" uid="567">

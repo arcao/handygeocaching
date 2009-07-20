@@ -4407,7 +4407,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
     public TextField get_tfFNGcCode() {
         if (tfFNGcCode == null) {//GEN-END:MVDGetBegin557
             // Insert pre-init code here
-            tfFNGcCode = new TextField("K\u00F3d ke\u0161e:", "...GC12345...", 120, TextField.ANY);//GEN-LINE:MVDGetInit557
+            tfFNGcCode = new TextField("K\u00F3d ke\u0161e:", "...GC12345...", 10, TextField.ANY | TextField.NON_PREDICTIVE);//GEN-LINE:MVDGetInit557
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd557
         return tfFNGcCode;
@@ -4462,7 +4462,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
     public TextField get_tfFNText() {
         if (tfFNText == null) {//GEN-END:MVDGetBegin565
             // Insert pre-init code here
-            tfFNText = new TextField("Text:", null, 240, TextField.ANY);//GEN-LINE:MVDGetInit565
+            tfFNText = new TextField("Text:", null, 4096, TextField.ANY);//GEN-LINE:MVDGetInit565
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd565
         return tfFNText;
