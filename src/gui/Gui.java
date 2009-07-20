@@ -9,6 +9,8 @@ package gui;
 
 import database.FieldNotes;
 import database.FieldNotesItem;
+import java.util.Calendar;
+import javax.microedition.lcdui.ItemStateListener;
 import utils.OpenFileBrowser;
 import database.Favourites;
 import database.MultiSolver;
@@ -48,7 +50,7 @@ import utils.Utils;
  * logiku
  * @author David Vavra
  */
-public class Gui extends MIDlet implements CommandListener {
+public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     //mody aplikace
     public boolean modeGPS = false;
     public boolean nearest = false;
@@ -61,6 +63,8 @@ public class Gui extends MIDlet implements CommandListener {
     public boolean fromFavourites = false;
     public boolean fromTrackables = false;
     public boolean fromMultiSolver = false;
+    public boolean fromFieldNotes = false;
+    public boolean fromPreview = false;
     public boolean gpsGate = false;
     public boolean nightMode = false;
     
@@ -71,11 +75,13 @@ public class Gui extends MIDlet implements CommandListener {
     private Favourites favourites;
     private MultiSolver multiSolver;
     private Patterns patterns;
-    private Http http;
+    public Http http;
     private GpsParser gpsParser;
     private IconLoader iconLoader;
     private Track track;
     private References references;
+    
+    private FieldNotesItem fieldNoteItem = null;
     
     /***
      * Creates a new instance of Gui
@@ -296,19 +302,24 @@ public class Gui extends MIDlet implements CommandListener {
     private DateField dfNalezeno;
     private Command cmdNalezenoBack;
     private Command cmdNastavit;
-    private Command cmdNastavitNalez;
+    private Command cmdAddFieldNotes;
     private StringItem siNalezeno1;
     private StringItem siSestaveni;
     private TextBox tbPoznamka;
     private Command cmdPoznamka;
     private StringItem siPoznamka;
-    private Command screenCommand1;
+    private Command cmdAdd;
     private StringItem siPoznamkaOver;
     private Font fntLargeBold;
-    private org.netbeans.microedition.lcdui.SimpleTableModel simpleTableModel1;
     private List lstFieldNotes;
-    private Command okCommand1;
-    private Command okCommand2;//GEN-END:MVDFields
+    private Image imgFieldNotes;
+    private Form frmFieldNote;
+    private StringItem siFNGcCode;
+    private TextField tfFNGcCode;
+    private ChoiceGroup cgFNType;
+    private DateField dtFNDate;
+    private TextField tfFNText;
+    private Command cmdPostFieldNotes;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -354,6 +365,8 @@ public class Gui extends MIDlet implements CommandListener {
                     case 0://GEN-END:MVDCACase198
                         fromFavourites = false;
                         fromTrackables = false;
+                        fromPreview = false;
+                        fromFieldNotes = false;
                         getDisplay().setCurrent(get_lstSearch());//GEN-LINE:MVDCAAction37
                         
                         break;//GEN-BEGIN:MVDCACase37
@@ -380,6 +393,8 @@ public class Gui extends MIDlet implements CommandListener {
                     case 1://GEN-END:MVDCACase139
                         // Insert pre-action code here
                         fromFavourites = true;
+                        fromPreview = false;
+                        fromFieldNotes = false;
                         nearest = false;
                         nearestFromWaypoint = false;
                         navigateToPoint = false;
@@ -396,6 +411,10 @@ public class Gui extends MIDlet implements CommandListener {
                         break;//GEN-BEGIN:MVDCACase236
                     case 4://GEN-END:MVDCACase236
                         // Insert pre-action code here
+                        fromFavourites = false;
+                        fromFieldNotes = true;
+                        fromPreview = false;
+                        
                         get_lstFieldNotes().deleteAll();
                         FieldNotesItem[] items = FieldNotes.getInstance().getAll();
                         for(int i=0; i < items.length; i++)
@@ -571,6 +590,7 @@ public class Gui extends MIDlet implements CommandListener {
         } else if (displayable == frmOverview) {
             if (command == cmdBack) {//GEN-END:MVDCACase88
                 // Insert pre-action code here
+                fromPreview = false;
                 if (nearest || keyword) {
                     getDisplay().setCurrent(get_lstNearestCaches());
                 } else if (fromFavourites) {
@@ -637,11 +657,27 @@ public class Gui extends MIDlet implements CommandListener {
                 http.start(Http.OVERVIEW, true);
                 // Do nothing//GEN-LINE:MVDCAAction410
                 // Insert post-action code here
-            } else if (command == cmdNastavitNalez) {//GEN-LINE:MVDCACase410
+            } else if (command == cmdAddFieldNotes) {//GEN-LINE:MVDCACase410
                 // Insert pre-action code here
-                get_siNazevKese().setText(get_siName().getText());
-                get_dfNalezeno().setDate(new Date());
-                getDisplay().setCurrent(get_frmNalezeno());//GEN-LINE:MVDCAAction507
+                fieldNoteItem = FieldNotes.getInstance().create();
+                fieldNoteItem.setGcCode(get_siWaypoint().getText());
+                fieldNoteItem.setName(get_siName().getText());
+
+                get_siFNGcCode().setText(fieldNoteItem.getGcCode());
+                get_tfFNGcCode().setString(fieldNoteItem.getGcCode());
+                get_cgFNType().setSelectedIndex(fieldNoteItem.getType(), true);
+                get_dtFNDate().setDate(fieldNoteItem.getDate());
+                get_tfFNText().setString(fieldNoteItem.getText());
+
+                get_frmFieldNote().deleteAll();
+                get_frmFieldNote().append(get_siFNGcCode());
+                get_frmFieldNote().append(get_cgFNType());
+                get_frmFieldNote().append(get_dtFNDate());
+                get_frmFieldNote().append(get_tfFNText());
+                
+                get_frmFieldNote().setTitle("FN: " + fieldNoteItem.getName());
+
+                getDisplay().setCurrent(get_frmFieldNote());//GEN-LINE:MVDCAAction507
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase507
         } else if (displayable == frmInfo) {
@@ -1000,15 +1036,36 @@ public class Gui extends MIDlet implements CommandListener {
                 }
                 // Do nothing//GEN-LINE:MVDCAAction453
                 // Insert post-action code here
-            } else if (command == cmdNastavitNalez) {//GEN-LINE:MVDCACase453
+            } else if (command == cmdAddFieldNotes) {//GEN-LINE:MVDCACase453
                 // Insert pre-action code here
                 int selected = firstCheckedFavourite();
                 if (selected != -1) {
-                    get_siNazevKese().setText(favourites.getCacheName(selected));
-                    favourites.id = selected;
-                    get_dfNalezeno().setDate(new Date());
-                    getDisplay().setCurrent(get_frmNalezeno());//GEN-LINE:MVDCAAction509
+                    String[] parts = favourites.getCacheParts(selected);
+                    
+                    if (parts.length != 0) {
+                        fieldNoteItem = FieldNotes.getInstance().create();
+                        fieldNoteItem.setGcCode(parts[7]);
+                        fieldNoteItem.setName(parts[0]);
+
+                        get_siFNGcCode().setText(fieldNoteItem.getGcCode());
+                        get_tfFNGcCode().setString(fieldNoteItem.getGcCode());
+                        get_cgFNType().setSelectedIndex(fieldNoteItem.getType(), true);
+                        get_dtFNDate().setDate(fieldNoteItem.getDate());
+                        get_tfFNText().setString(fieldNoteItem.getText());
+
+                        get_frmFieldNote().deleteAll();
+                        get_frmFieldNote().append(get_siFNGcCode());
+                        get_frmFieldNote().append(get_cgFNType());
+                        get_frmFieldNote().append(get_dtFNDate());
+                        get_frmFieldNote().append(get_tfFNText());
+                        
+                        get_frmFieldNote().setTitle("FN: " + fieldNoteItem.getName());
+
+                        getDisplay().setCurrent(get_frmFieldNote());//GEN-LINE:MVDCAAction509
                     // Insert post-action code here
+                    } else {
+                        showAlert("Field note lze vytvořit pouze u keše. Pokud znáte GC kód, vytvořte field note v části Hlavní menu -> Field Notes -> Přidat.", AlertType.ERROR, null);
+                    }
                 }
             } else if (command == cmdPoznamka) {//GEN-LINE:MVDCACase509
                 // Insert pre-action code here
@@ -1046,11 +1103,11 @@ public class Gui extends MIDlet implements CommandListener {
                 http.start(Http.NEXT_NEAREST, false);
                 // Do nothing//GEN-LINE:MVDCAAction360
                 // Insert post-action code here
-            } else if (command == cmdNastavitNalez) {//GEN-LINE:MVDCACase360
+            } else if (command == cmdAddFieldNotes) {//GEN-LINE:MVDCACase360
                 // Insert pre-action code here
                 get_siNazevKese().setText(get_frmFavourite().getTitle());
                 get_dfNalezeno().setDate(new Date());
-                getDisplay().setCurrent(get_frmNalezeno());//GEN-LINE:MVDCAAction513
+                getDisplay().setCurrent(get_frmFieldNote());//GEN-LINE:MVDCAAction513
                 // Insert post-action code here
             } else if (command == cmdPoznamka) {//GEN-LINE:MVDCACase513
                 // Insert pre-action code here
@@ -1272,8 +1329,122 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction546
                 // Insert post-action code here
-            }//GEN-BEGIN:MVDCACase546
-        }//GEN-END:MVDCACase546
+            } else if (command == cmdDeleteAll) {//GEN-LINE:MVDCACase546
+                // Insert pre-action code here
+                FieldNotes.getInstance().deleteAll();
+                get_lstFieldNotes().deleteAll();
+                // Do nothing//GEN-LINE:MVDCAAction573
+                // Insert post-action code here
+            } else if (command == cmdDelete) {//GEN-LINE:MVDCACase573
+                // Insert pre-action code here
+                int ids[] = FieldNotes.getInstance().getAllIds();
+                for (int i = 0; i < ids.length; i++) {
+                    if (get_lstFieldNotes().isSelected(i)) {
+                        FieldNotes.getInstance().deleteById(ids[i]);
+                    }
+                }
+                
+                get_lstFieldNotes().deleteAll();
+                FieldNotesItem[] items = FieldNotes.getInstance().getAll();
+                for(int i=0; i < items.length; i++)
+                    get_lstFieldNotes().append(items[i].toString(), iconLoader.loadIcon(FieldNotes.getIconName(items[i].getType()), false));
+                // Do nothing//GEN-LINE:MVDCAAction571
+                // Insert post-action code here
+            } else if (command == cmdPostFieldNotes) {//GEN-LINE:MVDCACase571
+                // Insert pre-action code here
+                http.start(Http.FIELD_NOTES, true);
+                // Do nothing//GEN-LINE:MVDCAAction575
+                // Insert post-action code here
+            } else if (command == cmdEdit) {//GEN-LINE:MVDCACase575
+                // Insert pre-action code here
+                int selection = firstChecked(get_lstFieldNotes());
+                if (selection != -1) {
+                    fieldNoteItem = FieldNotes.getInstance().getByIndex(selection);
+                    
+                    get_siFNGcCode().setText(fieldNoteItem.getGcCode());
+                    get_tfFNGcCode().setString(fieldNoteItem.getGcCode());
+                    get_cgFNType().setSelectedIndex(fieldNoteItem.getType(), true);
+                    get_dtFNDate().setDate(fieldNoteItem.getDate());
+                    get_tfFNText().setString(fieldNoteItem.getText());
+
+                    get_frmFieldNote().deleteAll();
+                    get_frmFieldNote().append(get_tfFNGcCode());
+                    get_frmFieldNote().append(get_cgFNType());
+                    get_frmFieldNote().append(get_dtFNDate());
+                    get_frmFieldNote().append(get_tfFNText());
+                    
+                    getDisplay().setCurrent(get_frmFieldNote());//GEN-LINE:MVDCAAction569
+                // Insert post-action code here
+                }
+            } else if (command == cmdAdd) {//GEN-LINE:MVDCACase569
+                // Insert pre-action code here
+                fieldNoteItem = FieldNotes.getInstance().create();
+                get_siFNGcCode().setText(fieldNoteItem.getGcCode());
+                get_tfFNGcCode().setString(fieldNoteItem.getGcCode());
+                get_cgFNType().setSelectedIndex(fieldNoteItem.getType(), true);
+                get_dtFNDate().setDate(fieldNoteItem.getDate());
+                get_tfFNText().setString(fieldNoteItem.getText());
+                
+                get_frmFieldNote().deleteAll();
+                get_frmFieldNote().append(get_tfFNGcCode());
+                get_frmFieldNote().append(get_cgFNType());
+                get_frmFieldNote().append(get_dtFNDate());
+                get_frmFieldNote().append(get_tfFNText());
+                
+                getDisplay().setCurrent(get_frmFieldNote());//GEN-LINE:MVDCAAction567
+                // Insert post-action code here
+            }//GEN-BEGIN:MVDCACase567
+        } else if (displayable == frmFieldNote) {
+            if (command == cmdBack) {//GEN-END:MVDCACase567
+                // Insert pre-action code here
+                // Do nothing//GEN-LINE:MVDCAAction552
+                // Insert post-action code here
+                if (fromPreview) {
+                    getDisplay().setCurrent(get_frmOverview()); 
+                } else if (fromFieldNotes) {
+                    getDisplay().setCurrent(get_lstFieldNotes()); 
+                } else if (fromFavourites) {
+                    getDisplay().setCurrent(get_lstFavourites()); 
+                } else {
+                    getDisplay().setCurrent(get_lstMenu()); 
+                }
+            } else if (command == cmdSave) {//GEN-LINE:MVDCACase552
+                // Insert pre-action code here
+                if (fromFieldNotes) {
+                    fieldNoteItem.setGcCode(get_tfFNGcCode().getString());
+                } else {
+                    fieldNoteItem.setGcCode(get_siFNGcCode().getText());
+                }
+                fieldNoteItem.setType(get_cgFNType().getSelectedIndex());
+                fieldNoteItem.setDate(get_dtFNDate().getDate());
+                fieldNoteItem.setText(get_tfFNText().getString());
+                
+                fieldNoteItem.save();
+                
+                if (fromFavourites && fieldNoteItem.getType() == FieldNotes.TYPE_FOUND_IT) {
+                    favourites.setFound(favourites.id, fieldNoteItem.getDate(), null);
+                }
+                // Do nothing//GEN-LINE:MVDCAAction554
+                // Insert post-action code here
+                Displayable fRet = null;
+                if (fromPreview) {
+                    fRet = get_frmOverview(); 
+                } else if (fromFieldNotes) {
+                    fRet = get_lstFieldNotes();
+                    
+                    get_lstFieldNotes().deleteAll();
+                    FieldNotesItem[] items = FieldNotes.getInstance().getAll();
+                    for(int i=0; i < items.length; i++)
+                       get_lstFieldNotes().append(items[i].toString(), iconLoader.loadIcon(FieldNotes.getIconName(items[i].getType()), false));
+                } else if (fromFavourites) {
+                    fRet = get_lstFavourites(); 
+                } else {
+                    fRet = get_lstMenu(); 
+                }
+                
+                showAlert("Field note uloženo.", AlertType.INFO, fRet);
+            }//GEN-BEGIN:MVDCACase554
+        }//GEN-END:MVDCACase554
 // Insert global post-action code here
         
         
@@ -1361,7 +1532,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 get_imgFavourites(),
                 get_imgOther(),
                 get_imgSettings(),
-                get_imgKeyword(),
+                get_imgFieldNotes(),
                 get_imgAbout(),
                 get_imgExit()
             });
@@ -1722,7 +1893,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             frmOverview.addCommand(get_cmdFavourite());
             frmOverview.addCommand(get_cmdDownloadPatterns());
             frmOverview.addCommand(get_cmdRefresh());
-            frmOverview.addCommand(get_cmdNastavitNalez());
+            frmOverview.addCommand(get_cmdAddFieldNotes());
             frmOverview.setCommandListener(this);//GEN-END:MVDGetInit90
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd90
@@ -2627,7 +2798,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             lstFavourites.addCommand(get_cmdMultiSolver());
             lstFavourites.addCommand(get_cmdMap());
             lstFavourites.addCommand(get_cmdMapyCz());
-            lstFavourites.addCommand(get_cmdNastavitNalez());
+            lstFavourites.addCommand(get_cmdAddFieldNotes());
             lstFavourites.addCommand(get_cmdPoznamka());
             lstFavourites.setCommandListener(this);
             lstFavourites.setSelectedFlags(new boolean[0]);//GEN-END:MVDGetInit251
@@ -2688,7 +2859,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             frmFavourite.addCommand(get_cmdBack());
             frmFavourite.addCommand(get_cmdNavigate());
             frmFavourite.addCommand(get_cmdNext());
-            frmFavourite.addCommand(get_cmdNastavitNalez());
+            frmFavourite.addCommand(get_cmdAddFieldNotes());
             frmFavourite.addCommand(get_cmdPoznamka());
             frmFavourite.setCommandListener(this);//GEN-END:MVDGetInit261
             // Insert post-init code here
@@ -4046,16 +4217,16 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         return cmdNastavit;
     }//GEN-END:MVDGetEnd504
     
-    /** This method returns instance for cmdNastavitNalez component and should be called instead of accessing cmdNastavitNalez field directly.//GEN-BEGIN:MVDGetBegin506
-     * @return Instance for cmdNastavitNalez component
+    /** This method returns instance for cmdAddFieldNotes component and should be called instead of accessing cmdAddFieldNotes field directly.//GEN-BEGIN:MVDGetBegin506
+     * @return Instance for cmdAddFieldNotes component
      */
-    public Command get_cmdNastavitNalez() {
-        if (cmdNastavitNalez == null) {//GEN-END:MVDGetBegin506
+    public Command get_cmdAddFieldNotes() {
+        if (cmdAddFieldNotes == null) {//GEN-END:MVDGetBegin506
             // Insert pre-init code here
-            cmdNastavitNalez = new Command("Nastavit n\u00E1lez", Command.SCREEN, 10);//GEN-LINE:MVDGetInit506
+            cmdAddFieldNotes = new Command("P\u0159idat field note", Command.SCREEN, 10);//GEN-LINE:MVDGetInit506
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd506
-        return cmdNastavitNalez;
+        return cmdAddFieldNotes;
     }//GEN-END:MVDGetEnd506
     /** This method returns instance for siNalezeno1 component and should be called instead of accessing siNalezeno1 field directly.//GEN-BEGIN:MVDGetBegin510
      * @return Instance for siNalezeno1 component
@@ -4120,16 +4291,16 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         return siPoznamka;
     }//GEN-END:MVDGetEnd522
 
-    /** This method returns instance for screenCommand1 component and should be called instead of accessing screenCommand1 field directly.//GEN-BEGIN:MVDGetBegin523
-     * @return Instance for screenCommand1 component
+    /** This method returns instance for cmdAdd component and should be called instead of accessing cmdAdd field directly.//GEN-BEGIN:MVDGetBegin523
+     * @return Instance for cmdAdd component
      */
-    public Command get_screenCommand1() {
-        if (screenCommand1 == null) {//GEN-END:MVDGetBegin523
+    public Command get_cmdAdd() {
+        if (cmdAdd == null) {//GEN-END:MVDGetBegin523
             // Insert pre-init code here
-            screenCommand1 = new Command("Screen", Command.SCREEN, 1);//GEN-LINE:MVDGetInit523
+            cmdAdd = new Command("P\u0159idat", Command.SCREEN, 1);//GEN-LINE:MVDGetInit523
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd523
-        return screenCommand1;
+        return cmdAdd;
     }//GEN-END:MVDGetEnd523
 
     /** This method returns instance for siPoznamkaOver component and should be called instead of accessing siPoznamkaOver field directly.//GEN-BEGIN:MVDGetBegin525
@@ -4155,25 +4326,6 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd527
         return fntLargeBold;
     }//GEN-END:MVDGetEnd527
-    /** This method returns instance for simpleTableModel1 component and should be called instead of accessing simpleTableModel1 field directly.//GEN-BEGIN:MVDGetBegin533
-     * @return Instance for simpleTableModel1 component
-     */
-    public org.netbeans.microedition.lcdui.SimpleTableModel get_simpleTableModel1() {
-        if (simpleTableModel1 == null) {//GEN-END:MVDGetBegin533
-            // Insert pre-init code here
-            simpleTableModel1 = new org.netbeans.microedition.lcdui.SimpleTableModel();//GEN-BEGIN:MVDGetInit533
-            simpleTableModel1.setValues(new String[][] {
-                new String[] {
-                    "13",
-                    "ST",
-                    null,
-                },
-            });
-            simpleTableModel1.setColumnNames(null);//GEN-END:MVDGetInit533
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd533
-        return simpleTableModel1;
-    }//GEN-END:MVDGetEnd533
 
     /** This method returns instance for lstFieldNotes component and should be called instead of accessing lstFieldNotes field directly.//GEN-BEGIN:MVDGetBegin542
      * @return Instance for lstFieldNotes component
@@ -4183,6 +4335,11 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
             // Insert pre-init code here
             lstFieldNotes = new List("Field notes", Choice.MULTIPLE, new String[0], new Image[0]);//GEN-BEGIN:MVDGetInit542
             lstFieldNotes.addCommand(get_cmdBack());
+            lstFieldNotes.addCommand(get_cmdAdd());
+            lstFieldNotes.addCommand(get_cmdEdit());
+            lstFieldNotes.addCommand(get_cmdDelete());
+            lstFieldNotes.addCommand(get_cmdDeleteAll());
+            lstFieldNotes.addCommand(get_cmdPostFieldNotes());
             lstFieldNotes.setCommandListener(this);
             lstFieldNotes.setSelectedFlags(new boolean[0]);
             lstFieldNotes.setSelectCommand(null);
@@ -4191,30 +4348,137 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd542
         return lstFieldNotes;
     }//GEN-END:MVDGetEnd542
-
-    /** This method returns instance for okCommand1 component and should be called instead of accessing okCommand1 field directly.//GEN-BEGIN:MVDGetBegin544
-     * @return Instance for okCommand1 component
+ 
+    /** This method returns instance for imgFieldNotes component and should be called instead of accessing imgFieldNotes field directly.//GEN-BEGIN:MVDGetBegin549
+     * @return Instance for imgFieldNotes component
      */
-    public Command get_okCommand1() {
-        if (okCommand1 == null) {//GEN-END:MVDGetBegin544
+    public Image get_imgFieldNotes() {
+        if (imgFieldNotes == null) {//GEN-END:MVDGetBegin549
             // Insert pre-init code here
-            okCommand1 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit544
+            try {//GEN-BEGIN:MVDGetInit549
+                imgFieldNotes = Image.createImage("/dummyIcon.png");
+            } catch (java.io.IOException exception) {
+                exception.printStackTrace();
+            }//GEN-END:MVDGetInit549
             // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd544
-        return okCommand1;
-    }//GEN-END:MVDGetEnd544
+            imgFieldNotes = iconLoader.loadIcon("gc_event");
+        }//GEN-BEGIN:MVDGetEnd549
+        return imgFieldNotes;
+    }//GEN-END:MVDGetEnd549
 
-    /** This method returns instance for okCommand2 component and should be called instead of accessing okCommand2 field directly.//GEN-BEGIN:MVDGetBegin545
-     * @return Instance for okCommand2 component
+    /** This method returns instance for frmFieldNote component and should be called instead of accessing frmFieldNote field directly.//GEN-BEGIN:MVDGetBegin550
+     * @return Instance for frmFieldNote component
      */
-    public Command get_okCommand2() {
-        if (okCommand2 == null) {//GEN-END:MVDGetBegin545
+    public Form get_frmFieldNote() {
+        if (frmFieldNote == null) {//GEN-END:MVDGetBegin550
             // Insert pre-init code here
-            okCommand2 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit545
+            frmFieldNote = new Form("Field notes", new Item[] {//GEN-BEGIN:MVDGetInit550
+                get_siFNGcCode(),
+                get_tfFNGcCode(),
+                get_cgFNType(),
+                get_dtFNDate(),
+                get_tfFNText()
+            });
+            frmFieldNote.addCommand(get_cmdBack());
+            frmFieldNote.addCommand(get_cmdSave());
+            frmFieldNote.setCommandListener(this);//GEN-END:MVDGetInit550
             // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd545
-        return okCommand2;
-    }//GEN-END:MVDGetEnd545
+            frmFieldNote.setItemStateListener(this);
+        }//GEN-BEGIN:MVDGetEnd550
+        return frmFieldNote;
+    }//GEN-END:MVDGetEnd550
+ 
+
+    /** This method returns instance for siFNGcCode component and should be called instead of accessing siFNGcCode field directly.//GEN-BEGIN:MVDGetBegin556
+     * @return Instance for siFNGcCode component
+     */
+    public StringItem get_siFNGcCode() {
+        if (siFNGcCode == null) {//GEN-END:MVDGetBegin556
+            // Insert pre-init code here
+            siFNGcCode = new StringItem("K\u00F3d ke\u0161e:", "...GC12345...");//GEN-LINE:MVDGetInit556
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd556
+        return siFNGcCode;
+    }//GEN-END:MVDGetEnd556
+
+    /** This method returns instance for tfFNGcCode component and should be called instead of accessing tfFNGcCode field directly.//GEN-BEGIN:MVDGetBegin557
+     * @return Instance for tfFNGcCode component
+     */
+    public TextField get_tfFNGcCode() {
+        if (tfFNGcCode == null) {//GEN-END:MVDGetBegin557
+            // Insert pre-init code here
+            tfFNGcCode = new TextField("K\u00F3d ke\u0161e:", "...GC12345...", 120, TextField.ANY);//GEN-LINE:MVDGetInit557
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd557
+        return tfFNGcCode;
+    }//GEN-END:MVDGetEnd557
+
+    /** This method returns instance for cgFNType component and should be called instead of accessing cgFNType field directly.//GEN-BEGIN:MVDGetBegin558
+     * @return Instance for cgFNType component
+     */
+    public ChoiceGroup get_cgFNType() {
+        if (cgFNType == null) {//GEN-END:MVDGetBegin558
+            // Insert pre-init code here
+            cgFNType = new ChoiceGroup("Typ z\u00E1pisu:", Choice.POPUP, new String[] {//GEN-BEGIN:MVDGetInit558
+                "Found it",
+                "Didn\'t find it",
+                "Write note",
+                "Needs archived",
+                "Needs maintenance"
+            }, new Image[] {
+                null,
+                null,
+                null,
+                null,
+                null
+            });
+            cgFNType.setSelectedFlags(new boolean[] {
+                false,
+                false,
+                false,
+                false,
+                false
+            });//GEN-END:MVDGetInit558
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd558
+        return cgFNType;
+    }//GEN-END:MVDGetEnd558
+
+    /** This method returns instance for dtFNDate component and should be called instead of accessing dtFNDate field directly.//GEN-BEGIN:MVDGetBegin564
+     * @return Instance for dtFNDate component
+     */
+    public DateField get_dtFNDate() {
+        if (dtFNDate == null) {//GEN-END:MVDGetBegin564
+            // Insert pre-init code here
+            dtFNDate = new DateField("Datum:", DateField.DATE_TIME);//GEN-LINE:MVDGetInit564
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd564
+        return dtFNDate;
+    }//GEN-END:MVDGetEnd564
+
+    /** This method returns instance for tfFNText component and should be called instead of accessing tfFNText field directly.//GEN-BEGIN:MVDGetBegin565
+     * @return Instance for tfFNText component
+     */
+    public TextField get_tfFNText() {
+        if (tfFNText == null) {//GEN-END:MVDGetBegin565
+            // Insert pre-init code here
+            tfFNText = new TextField("Text:", null, 240, TextField.ANY);//GEN-LINE:MVDGetInit565
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd565
+        return tfFNText;
+    }//GEN-END:MVDGetEnd565
+
+    /** This method returns instance for cmdPostFieldNotes component and should be called instead of accessing cmdPostFieldNotes field directly.//GEN-BEGIN:MVDGetBegin574
+     * @return Instance for cmdPostFieldNotes component
+     */
+    public Command get_cmdPostFieldNotes() {
+        if (cmdPostFieldNotes == null) {//GEN-END:MVDGetBegin574
+            // Insert pre-init code here
+            cmdPostFieldNotes = new Command("Odeslat na GC.com", Command.SCREEN, 20);//GEN-LINE:MVDGetInit574
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd574
+        return cmdPostFieldNotes;
+    }//GEN-END:MVDGetEnd574
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {
@@ -4304,6 +4568,20 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         return selected;
     }
     
+    public int firstChecked(List list) {
+        int selected = list.getSelectedIndex();
+        if (selected==-1) //vybere prvni zaskrtnuty policko
+        {
+            for (int i=0;i<list.size();i++) {
+                if (list.isSelected(i)) {
+                    selected = i;
+                    break;
+                }
+            }
+        }
+        return selected;
+    }
+    
     public void changeCmdInfoLabel(String label) {
         cmdInfo = new Command("Listing("+label+"kB)", Command.SCREEN, 3);
     }
@@ -4314,5 +4592,23 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
             bluetooth.searchDevices();
         }
     }
-    
+
+    public void itemStateChanged(Item item) {
+        if (item == get_dtFNDate()) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(get_dtFNDate().getDate());
+            String time = new StringBuffer()
+                            .append(Utils.nulaNula(c.get(Calendar.HOUR_OF_DAY)))
+                            .append(':')
+                            .append(Utils.nulaNula(c.get(Calendar.MINUTE)))
+                            .toString();
+            String text = get_tfFNText().getString();
+            if (text.length() == 0) {
+                get_tfFNText().setString(time);
+            } else if (text.length() >= 5 && text.charAt(2) == ':') {
+                text = time + text.substring(5);
+                get_tfFNText().setString(text);
+            }
+        }
+    }
 }

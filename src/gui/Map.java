@@ -33,9 +33,9 @@ public class Map extends Canvas implements Runnable
     public int screenWidth;
     public int screenHeight;
     //konstanty
-    static final int STEP = 2; //urcuje rychlost posouvani mapy
-    static final int ZOOM_STEP = 2; //urcuje rychlost zoomovani
-    static final int KEY_DELAY = 10; //pauza mezi dvema stisknutimi klaves
+    static final int STEP = 1; //urcuje rychlost posouvani mapy
+    static final int ZOOM_STEP = 1; //urcuje rychlost zoomovani
+    static final int KEY_DELAY = 20; //pauza mezi dvema stisknutimi klaves
     //ostatni promenne
     private Thread thread;
     private int keyCode;
@@ -190,6 +190,29 @@ public class Map extends Canvas implements Runnable
                 g.setFont(gui.get_fntNormal());
                 g.drawString(fixMessage,screenWidth/2,screenHeight/2,Graphics.TOP|Graphics.HCENTER);
             }
+            
+            // vykresleni zomovacich tlacitek
+            
+            if (hasPointerEvents()) {
+                g.setColor((gui.nightMode) ? 0x333333 : 0xcccccc); //pozadi tlacitek
+                g.fillRect(0, 0, 30, 30);
+                g.fillRect(screenWidth - 30, 0, screenWidth, 30);
+
+                g.setColor((gui.nightMode) ? 0xffffff : 0x0); //text
+                g.drawLine(0, 30, 30, 30);
+                g.drawLine(30, 30, 30, 0);
+                
+                g.drawLine(screenWidth - 30, 30, screenWidth, 30);
+                g.drawLine(screenWidth - 30, 30, screenWidth - 30, 0);
+                
+                //plus
+                g.drawLine(5, 30/2, 30 - 5, 30/2);
+                g.drawLine(30/2, 5, 30/2, 30-5);
+                
+                //minus
+                g.drawLine(screenWidth - 30 + 5, 30/2, screenWidth - 5, 30/2);
+            }
+            
 
             //tlacitko zpet
             g.setFont(gui.get_fntBold());
@@ -251,6 +274,7 @@ public class Map extends Canvas implements Runnable
 
     protected void pointerPressed(int x, int y) {
         int BORDER = 10;
+        int ZOOM_BUTTON = 30 + BORDER;
         
         lastDragX = x;
         lastDragY = y;
@@ -264,16 +288,41 @@ public class Map extends Canvas implements Runnable
             x > widthHalf && x < widthHalf + width) {
             gui.nightMode = !gui.nightMode;
             repaint();
-        }
+        } else if (x < ZOOM_BUTTON && y < ZOOM_BUTTON) {
+            keyCode = Canvas.KEY_STAR;
+            thread = new Thread(this);
+            thread.start();
+        } else if (x > getWidth() - ZOOM_BUTTON && y < ZOOM_BUTTON) {
+            keyCode = Canvas.KEY_POUND;
+            thread = new Thread(this);
+            thread.start();
+        }   
+    }
+
+    protected void pointerReleased(int x, int y) {
+        thread = null;
     }
     
     protected void pointerDragged(int x, int y) {
+        int BORDER = 10;
+        int ZOOM_BUTTON = 30 + BORDER;
+        
+        int width = gui.get_fntBold().stringWidth("Noční") + 2*BORDER;
+        int height = gui.get_fntBold().getHeight() + BORDER;
+        
+        int widthHalf = (getWidth() - width) / 2;
+        
         int changeX = x - lastDragX;
         int changeY = y - lastDragY;
         
         lastDragX = x;
         lastDragY = y;
-
+        
+        if ((y > getHeight() - height && y < getHeight() && x > widthHalf && x < widthHalf + width) ||
+            (x < ZOOM_BUTTON && y < ZOOM_BUTTON) ||
+            (x > getWidth() - ZOOM_BUTTON && y < ZOOM_BUTTON)) {
+            return;
+        }   
         
         this.x += changeX;
         this.y += changeY;

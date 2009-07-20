@@ -38,9 +38,16 @@ public class FieldNotesItem {
         this.id = id;
         gcCode = "";
         name = "";
-        date = 0;
+        date = new Date().getTime();
         type = 0;
-        text = "";
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date(date));
+        
+        text = new StringBuffer()
+               .append(nulaNula(c.get(Calendar.HOUR_OF_DAY)))
+               .append(':')
+               .append(nulaNula(c.get(Calendar.MINUTE)))
+               .toString();;
 
         if (data != null && data.length > 0) {
             try {
@@ -118,8 +125,8 @@ public class FieldNotesItem {
         
         StringBuffer sb = new StringBuffer();
         sb.append(c.get(Calendar.YEAR)).append('-');
-        sb.append(nulaNula(c.get(Calendar.MONTH))).append('-');
-        sb.append(nulaNula(c.get(Calendar.DAY_OF_MONTH))).append('-').append('T');
+        sb.append(nulaNula(c.get(Calendar.MONTH) + 1)).append('-');
+        sb.append(nulaNula(c.get(Calendar.DAY_OF_MONTH))).append('T');
         sb.append(nulaNula(c.get(Calendar.HOUR_OF_DAY))).append(':');
         sb.append(nulaNula(c.get(Calendar.MINUTE))).append('Z');
         
@@ -139,7 +146,7 @@ public class FieldNotesItem {
     }
     
     public void setGcCode(String gcCode) {
-        this.gcCode = gcCode;
+        this.gcCode = gcCode.toUpperCase();
     }
     
     public String getName() {

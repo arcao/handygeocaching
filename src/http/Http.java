@@ -31,7 +31,8 @@ public class Http implements Runnable
     
     //adresa skriptu
     private static final String url = "http://handygeocaching.sluzba.cz/handy31.php";
-    private static final String arcao_url = "http://testweb/gc/api.php";
+    //private static final String arcao_url = "http://testweb/gc/api.php";
+    private static final String arcao_url = "http://hgservice.arcao.com/api.php";
     
     //mozne akce
     public static final int LOGIN = 0;
@@ -252,6 +253,8 @@ public class Http implements Runnable
             case OVERVIEW:
                 try
                 {
+                    gui.fromPreview = true;
+                    
                     if (!offline)
                         response = downloadData("part=overview&cookie="+cookie+"&waypoint="+waypoint);
                     if (checkData(response))
@@ -277,11 +280,7 @@ public class Http implements Runnable
                             gui.get_frmOverview().setTitle(listing[0][9]);
                         }
                         typeNumber = listing[0][10];
-                        
-                        gui.get_frmOverview().removeCommand(gui.get_cmdNastavitNalez());
-                        if (offline)
-                            gui.get_frmOverview().addCommand(gui.get_cmdNastavitNalez());
-                        
+                                               
                         gui.get_frmOverview().removeCommand(gui.get_cmdPoznamka());
                         if (offline)
                             gui.get_frmOverview().addCommand(gui.get_cmdPoznamka());
@@ -490,7 +489,7 @@ public class Http implements Runnable
                     response = downloadData("action=fieldnotes&cookie="+cookie+"&fieldnotes="+Utils.urlUTF8Encode(FieldNotes.getInstance().getFieldNotes()), true);
                     if (checkData(response))
                     {
-                        gui.showAlert("Field notes úspěšně odeslány.",AlertType.INFO,gui.get_frmLoading());
+                        gui.showAlert("Nahráno " + response + " nových Field notes na GC.com.",AlertType.INFO,gui.get_lstFieldNotes());
                     }
                 }
                 catch (Exception e)
@@ -673,7 +672,7 @@ public class Http implements Runnable
                 gui.showAlert("Server geocaching.com vrátil neočekávanou odpověď",AlertType.ERROR,gui.get_lstMenu());
                 return false;
             }
-            else if (data.substring(0,3).equals("err"))
+            else if (data.length() >= 3 && data.substring(0,3).equals("err"))
             {
                 gui.showAlert("Špatně nastavené nebo nedostupné GPRS spojení",AlertType.ERROR,gui.get_lstMenu());
                 return false;
@@ -733,6 +732,11 @@ public class Http implements Runnable
             else if (data.equals("ERR_PM_ONLY"))
             {
                 gui.showAlert("Tato cache je přístupná jenom Premium Memberům",AlertType.WARNING,gui.get_lstSearch());
+                return false;
+            }
+            else if (data.equals("ERR_FIELD_NOTES_FAILED")) 
+            {
+                gui.showAlert("Nepovedlo se odeslat Field notes.",AlertType.ERROR,gui.get_lstFieldNotes());
                 return false;
             }
             else

@@ -507,6 +507,38 @@ public class Favourites extends Database
     }
     
     /**
+     * Vraci pole informaci o kesi.
+     * Pole: name, author, type, size, latitude, longitude, difficulty(x/x), GC_num, inventory, disabled/archived, typeCode(gc_xxx), hasWaypoints(0/1), hasHints(0/1), isMultiSolverSupported(0/1), listingSize(KB)
+     */
+    public String[] getCacheParts(int index) {
+        try {
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
+            int id = 0;
+            for (int i = 0; i <= index; i++)
+            {
+                id = rc.nextRecordId();
+            }
+            DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
+            dis.readUTF(); //name
+            String type = dis.readUTF(); //type
+            String description = dis.readUTF();
+            
+            if (!isCache(type))
+                return new String[0];
+            
+            String[][] data =gui.http.parseData(description);
+            if (data.length == 0 || data[0].length == 0)
+                return new String[0];
+            
+            return data[0];
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new String[0];
+        }
+    }
+    
+    /**
      * Nahraje vsechny oblibene do mapy
      */
     public void loadFavouritesToMap()

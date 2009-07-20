@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MVDData version="1.3">
-    <DesignDocument designVersion="MIDP-2" uidCounter="549">
+    <DesignDocument designVersion="MIDP-2" uidCounter="577">
         <DesignComponent id="$MobileDevice" typeid="MIDP:$MobileDevice" uid="0"/>
         <DesignComponent id="$StartPoint" typeid="MIDP:$StartPoint" uid="1">
             <Property name="targetDisplayable" value="ssAdvertisement"/>
@@ -2096,21 +2096,21 @@
             <Property name="actionSource" value="cmdNastavit"/>
             <Property name="actionOrigin" value="frmNalezeno"/>
         </DesignComponent>
-        <DesignComponent id="cmdNastavitNalez" typeid="MIDP:javax.microedition.lcdui.Command" uid="506">
-            <Property name="label" value="STRING:Nastavit n\u00E1lez"/>
+        <DesignComponent id="cmdAddFieldNotes" typeid="MIDP:javax.microedition.lcdui.Command" uid="506">
+            <Property name="label" value="STRING:P\u0159idat field note"/>
             <Property name="priority" value="10"/>
             <Property name="type" value="SCREEN"/>
         </DesignComponent>
         <DesignComponent id="$CommandAction61" typeid="MIDP:CommandAction" uid="507">
-            <Property name="targetDisplayable" value="frmNalezeno"/>
+            <Property name="targetDisplayable" value="frmFieldNote"/>
             <Property name="targetForwardDisplayable" value="frmOverview"/>
-            <Property name="actionSource" value="cmdNastavitNalez"/>
+            <Property name="actionSource" value="cmdAddFieldNotes"/>
             <Property name="actionOrigin" value="frmOverview"/>
         </DesignComponent>
         <DesignComponent id="$CommandAction74" typeid="MIDP:CommandAction" uid="509">
-            <Property name="targetDisplayable" value="frmNalezeno"/>
+            <Property name="targetDisplayable" value="frmFieldNote"/>
             <Property name="targetForwardDisplayable" value="lstFavourites"/>
-            <Property name="actionSource" value="cmdNastavitNalez"/>
+            <Property name="actionSource" value="cmdAddFieldNotes"/>
             <Property name="actionOrigin" value="lstFavourites"/>
         </DesignComponent>
         <DesignComponent id="siNalezeno1" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="510">
@@ -2119,9 +2119,9 @@
             <ContainerProperty name="commands"/>
         </DesignComponent>
         <DesignComponent id="$CommandAction75" typeid="MIDP:CommandAction" uid="513">
-            <Property name="targetDisplayable" value="frmNalezeno"/>
+            <Property name="targetDisplayable" value="frmFieldNote"/>
             <Property name="targetForwardDisplayable" value="frmFavourite"/>
-            <Property name="actionSource" value="cmdNastavitNalez"/>
+            <Property name="actionSource" value="cmdAddFieldNotes"/>
             <Property name="actionOrigin" value="frmFavourite"/>
         </DesignComponent>
         <DesignComponent id="siSestaveni" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="514">
@@ -2165,8 +2165,8 @@
             <Property name="text" value="STRING:"/>
             <ContainerProperty name="commands"/>
         </DesignComponent>
-        <DesignComponent id="screenCommand1" typeid="MIDP:javax.microedition.lcdui.Command" uid="523">
-            <Property name="label" value="STRING:Screen"/>
+        <DesignComponent id="cmdAdd" typeid="MIDP:javax.microedition.lcdui.Command" uid="523">
+            <Property name="label" value="STRING:P\u0159idat"/>
             <Property name="priority" value="1"/>
             <Property name="type" value="SCREEN"/>
         </DesignComponent>
@@ -2185,10 +2185,6 @@
             <Property name="face" value="FACE_SYSTEM"/>
             <Property name="style" value="1"/>
             <Property name="size" value="SIZE_LARGE"/>
-        </DesignComponent>
-        <DesignComponent id="simpleTableModel1" typeid="MIDP-2:org.netbeans.microedition.lcdui.SimpleTableModel" uid="533">
-            <Property name="values" value="1,13,3,2,13,2,ST,,,"/>
-            <Property name="columnNames"/>
         </DesignComponent>
         <DesignComponent id="Midp2ListElementDC25" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="538">
             <Property name="string" value="STRING:Sou\u0159adnice"/>
@@ -2221,6 +2217,11 @@
             <Property name="indexBasedSwitch" value="true"/>
             <ContainerProperty name="commands">
                 <ContainerPropertyItem value="$CommandAction96"/>
+                <ContainerPropertyItem value="$CommandAction99"/>
+                <ContainerPropertyItem value="$CommandAction100"/>
+                <ContainerPropertyItem value="$CommandAction101"/>
+                <ContainerPropertyItem value="$CommandAction102"/>
+                <ContainerPropertyItem value="$CommandAction103"/>
             </ContainerProperty>
             <ContainerProperty name="elements"/>
         </DesignComponent>
@@ -2230,16 +2231,6 @@
             <Property name="actionOrigin" value="lstFieldNotes"/>
             <Property name="selectCommand"/>
         </DesignComponent>
-        <DesignComponent id="okCommand1" typeid="MIDP:javax.microedition.lcdui.Command" uid="544">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
-        </DesignComponent>
-        <DesignComponent id="okCommand2" typeid="MIDP:javax.microedition.lcdui.Command" uid="545">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
-        </DesignComponent>
         <DesignComponent id="$CommandAction96" typeid="MIDP:CommandAction" uid="546">
             <Property name="targetDisplayable" value="lstMenu"/>
             <Property name="targetForwardDisplayable" value="lstFieldNotes"/>
@@ -2248,7 +2239,7 @@
         </DesignComponent>
         <DesignComponent id="Midp2ListElementDC24" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ListElementDC" uid="547">
             <Property name="string" value="STRING:Field notes"/>
-            <Property name="image" value="imgKeyword"/>
+            <Property name="image" value="imgFieldNotes"/>
             <Property name="selected" value="false"/>
             <Property name="commandAction" value="$SelectCaseCommandAction24"/>
         </DesignComponent>
@@ -2256,6 +2247,128 @@
             <Property name="targetDisplayable" value="lstFieldNotes"/>
             <Property name="targetForwardDisplayable" value="lstMenu"/>
             <Property name="actionHolder" value="Midp2ListElementDC24"/>
+        </DesignComponent>
+        <DesignComponent id="imgFieldNotes" typeid="MIDP:javax.microedition.lcdui.Image" uid="549">
+            <Property name="imageResourcePath" value="/dummyIcon.png"/>
+        </DesignComponent>
+        <DesignComponent id="frmFieldNote" typeid="MIDP:javax.microedition.lcdui.Form" uid="550">
+            <Property name="title" value="STRING:Field notes"/>
+            <ContainerProperty name="commands">
+                <ContainerPropertyItem value="$CommandAction97"/>
+                <ContainerPropertyItem value="$CommandAction98"/>
+            </ContainerProperty>
+            <ContainerProperty name="items">
+                <ContainerPropertyItem value="siFNGcCode"/>
+                <ContainerPropertyItem value="tfFNGcCode"/>
+                <ContainerPropertyItem value="cgFNType"/>
+                <ContainerPropertyItem value="dtFNDate"/>
+                <ContainerPropertyItem value="tfFNText"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction97" typeid="MIDP:CommandAction" uid="552">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdBack"/>
+            <Property name="actionOrigin" value="frmFieldNote"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction98" typeid="MIDP:CommandAction" uid="554">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdSave"/>
+            <Property name="actionOrigin" value="frmFieldNote"/>
+        </DesignComponent>
+        <DesignComponent id="siFNGcCode" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="556">
+            <Property name="label" value="STRING:K\u00F3d ke\u0161e:"/>
+            <Property name="text" value="STRING:...GC12345..."/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfFNGcCode" typeid="MIDP:javax.microedition.lcdui.TextField" uid="557">
+            <Property name="label" value="STRING:K\u00F3d ke\u0161e:"/>
+            <Property name="string" value="STRING:...GC12345..."/>
+            <Property name="maxSize" value="120"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="cgFNType" typeid="MIDP:javax.microedition.lcdui.ChoiceGroup" uid="558">
+            <Property name="label" value="STRING:Typ z\u00E1pisu:"/>
+            <Property name="choiceType" value="POPUP"/>
+            <ContainerProperty name="commands"/>
+            <ContainerProperty name="elements">
+                <ContainerPropertyItem value="Midp2ChoiceElementDC13"/>
+                <ContainerPropertyItem value="Midp2ChoiceElementDC10"/>
+                <ContainerPropertyItem value="Midp2ChoiceElementDC12"/>
+                <ContainerPropertyItem value="Midp2ChoiceElementDC11"/>
+                <ContainerPropertyItem value="Midp2ChoiceElementDC14"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC10" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="559">
+            <Property name="string" value="STRING:Didn\'t find it"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC11" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="560">
+            <Property name="string" value="STRING:Needs archived"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC12" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="561">
+            <Property name="string" value="STRING:Write note"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC13" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="562">
+            <Property name="string" value="STRING:Found it"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC14" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="563">
+            <Property name="string" value="STRING:Needs maintenance"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="dtFNDate" typeid="MIDP:javax.microedition.lcdui.DateField" uid="564">
+            <Property name="label" value="STRING:Datum:"/>
+            <Property name="inputMode" value="DATE_TIME"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="tfFNText" typeid="MIDP:javax.microedition.lcdui.TextField" uid="565">
+            <Property name="label" value="STRING:Text:"/>
+            <Property name="maxSize" value="240"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction99" typeid="MIDP:CommandAction" uid="567">
+            <Property name="targetDisplayable" value="frmFieldNote"/>
+            <Property name="targetForwardDisplayable" value="lstFieldNotes"/>
+            <Property name="actionSource" value="cmdAdd"/>
+            <Property name="actionOrigin" value="lstFieldNotes"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction100" typeid="MIDP:CommandAction" uid="569">
+            <Property name="targetDisplayable" value="frmFieldNote"/>
+            <Property name="targetForwardDisplayable" value="lstFieldNotes"/>
+            <Property name="actionSource" value="cmdEdit"/>
+            <Property name="actionOrigin" value="lstFieldNotes"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction101" typeid="MIDP:CommandAction" uid="571">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdDelete"/>
+            <Property name="actionOrigin" value="lstFieldNotes"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction102" typeid="MIDP:CommandAction" uid="573">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdDeleteAll"/>
+            <Property name="actionOrigin" value="lstFieldNotes"/>
+        </DesignComponent>
+        <DesignComponent id="cmdPostFieldNotes" typeid="MIDP:javax.microedition.lcdui.Command" uid="574">
+            <Property name="label" value="STRING:Odeslat na GC.com"/>
+            <Property name="priority" value="20"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction103" typeid="MIDP:CommandAction" uid="575">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdPostFieldNotes"/>
+            <Property name="actionOrigin" value="lstFieldNotes"/>
         </DesignComponent>
     </DesignDocument>
     <FlowDocument version="1.1">
@@ -2300,7 +2413,8 @@
         <Node id="frmGpsSignalHelp" location="4360,208" order="$CommandAction8,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmNalezeno" location="1480,1072" order="$CommandAction31,$CommandAction60,,,,,,,,,$Default,,,,,"/>
         <Node id="tbPoznamka" location="1480,632" order="$CommandAction92,$CommandAction93,,,,,,,,,$Default,,,,,"/>
-        <Node id="lstFieldNotes" location="912,1528" order="$CommandAction96,,,,,,,,,,$Default,,,,,"/>
+        <Node id="lstFieldNotes" location="912,1528" order="$CommandAction96,$CommandAction99,$CommandAction100,$CommandAction101,$CommandAction102,$CommandAction103,,,,,$Default,,,,,"/>
+        <Node id="frmFieldNote" location="408,312" order="$CommandAction97,$CommandAction98,,,,,,,,,$Default,,,,,"/>
         <Link id="$StartPoint$ActionLink" path="200,1160,392,1160"/>
         <Link id="$CommandAction2$ActionLink" path="2152,200,2305,200,2305,672,47,672,47,1160,120,1160"/>
         <Link id="$CommandAction4$ActionLink" path="3112,200,3232,200,3232,1627,1141,1627,1141,1800,1160,1800"/>
@@ -2312,12 +2426,12 @@
         <Link id="$CommandAction15$ActionLink" path="5040,184,5167,184,5167,664,975,664,975,512,1160,512"/>
         <Link id="$CommandAction16$ActionLink" path="4720,200,4860,200,4860,184,4960,184"/>
         <Link id="$CommandAction17$ActionLink" path="6968,200,7016,200,7016,356,1140,356,1140,512,1160,512"/>
-        <Link id="$CommandAction19$ActionLink" path="3432,168,3577,168,3577,60,6778,60,6778,184,6888,184"/>
-        <Link id="$CommandAction24$ActionLink" path="864,200,1006,200,1006,92,3232,92,3232,184,3352,184"/>
-        <Link id="$CommandAction25$ActionLink" path="1512,200,1643,200,1643,128,3232,128,3232,184,3352,184"/>
+        <Link id="$CommandAction19$ActionLink" path="3432,168,3633,168,3633,286,6822,286,6822,184,6888,184"/>
+        <Link id="$CommandAction24$ActionLink" path="864,200,1006,200,1006,286,3250,286,3250,184,3352,184"/>
+        <Link id="$CommandAction25$ActionLink" path="1512,200,1643,200,1643,286,3250,286,3250,184,3352,184"/>
         <Link id="$SelectCaseCommandAction8$ActionLink" path="952,1288,1047,1288,1047,1398,47,1398,47,1160,120,1160"/>
-        <Link id="$CommandAction3$ActionLink" path="2792,200,2942,200,2942,92,3232,92,3232,184,3352,184"/>
-        <Link id="$CommandAction26$ActionLink" path="6000,200,6150,200,6150,337,3250,337,3250,184,3352,184"/>
+        <Link id="$CommandAction3$ActionLink" path="2792,200,2942,200,2942,286,3250,286,3250,184,3352,184"/>
+        <Link id="$CommandAction26$ActionLink" path="6000,200,6150,200,6150,348,3250,348,3250,184,3352,184"/>
         <Link id="$CommandAction27$ActionLink" path="1240,848,1304,848,1304,1337,713,1337,713,1272,872,1272"/>
         <Link id="$CommandAction29$ActionLink" path="6320,200,6455,200,6455,1337,713,1337,713,1272,872,1272"/>
         <Link id="$SelectCaseCommandAction9$ActionLink" path="904,1224,904,1147,1051,1147,1051,1160,1160,1160"/>
@@ -2326,16 +2440,15 @@
         <Link id="$CommandAction36$ActionLink" path="5680,200,5813,200,5813,184,5920,184"/>
         <Link id="$InternalCommandAction1$ActionLink" path="472,1176,562,1176,562,1160,600,1160"/>
         <Link id="$CommandAction10$ActionLink" path="1832,200,1888,200,1888,1337,713,1337,713,1272,872,1272"/>
-        <Link id="$SelectCaseCommandAction12$ActionLink" path="936,1224,936,1133,1034,1133,1034,1480,1160,1480"/>
         <Link id="$CommandAction39$ActionLink" path="3752,200,3887,200,3887,356,1140,356,1140,512,1160,512"/>
         <Link id="$CommandAction41$ActionLink" path="4080,200,4216,200,4216,100,3614,100,3614,184,3672,184"/>
         <Link id="$SelectCaseCommandAction6$ActionLink" path="952,1256,1040,1256,1040,1800,1160,1800"/>
         <Link id="$CommandAction42$ActionLink" path="1240,480,1347,480,1347,1337,713,1337,713,1272,872,1272"/>
         <Link id="$CommandAction43$ActionLink" path="1240,1784,1377,1784,1377,1337,713,1337,713,1272,872,1272"/>
-        <Link id="$CommandAction44$ActionLink" path="1240,1496,1377,1496,1377,1337,713,1337,713,1272,872,1272"/>
-        <Link id="$CommandAction49$ActionLink" path="5360,200,5476,200,5476,1346,1069,1346,1069,1480,1160,1480"/>
-        <Link id="$CommandAction52$ActionLink" path="1224,1432,1224,1236,1389,1236,1389,824,1440,824"/>
-        <Link id="$CommandAction55$ActionLink" path="1520,824,1606,824,1606,1325,1073,1325,1073,1480,1160,1480"/>
+        <Link id="$CommandAction44$ActionLink" path="1240,1496,1327,1496,1327,1338,713,1338,713,1272,872,1272"/>
+        <Link id="$CommandAction49$ActionLink" path="5360,200,5484,200,5484,338,1075,338,1075,1480,1160,1480"/>
+        <Link id="$CommandAction52$ActionLink" path="1224,1432,1224,1236,1334,1236,1334,824,1440,824"/>
+        <Link id="$CommandAction55$ActionLink" path="1520,824,1606,824,1606,1325,1075,1325,1075,1480,1160,1480"/>
         <Link id="$CommandAction30$ActionLink" path="1520,1728,1575,1728,1575,1861,1141,1861,1141,1800,1160,1800"/>
         <Link id="$CommandAction57$ActionLink" path="1184,200,1357,200,1357,1712,1440,1712"/>
         <Link id="$CommandAction62$ActionLink" path="1520,1280,1628,1280,1628,1627,1141,1627,1141,1800,1160,1800"/>
@@ -2358,16 +2471,19 @@
         <Link id="$SelectCaseCommandAction23$ActionLink" path="1208,1752,1208,1661,1324,1661,1324,1712,1440,1712"/>
         <Link id="$CommandAction12$ActionLink" path="224,200,299,200,299,1272,872,1272"/>
         <Link id="$CommandAction1$ActionLink" path="1240,1144,1304,1144,1304,1337,713,1337,713,1272,872,1272"/>
-        <Link id="$CommandAction31$ActionLink" path="1520,1064,1606,1064,1606,1325,1073,1325,1073,1480,1160,1480"/>
-        <Link id="$CommandAction61$ActionLink" path="3368,237,3368,718,1408,718,1408,1048,1440,1048"/>
-        <Link id="$CommandAction74$ActionLink" path="1176,1533,1176,1620,1327,1620,1327,1048,1440,1048"/>
-        <Link id="$CommandAction75$ActionLink" path="5360,152,5512,152,5512,718,1408,718,1408,1048,1440,1048"/>
-        <Link id="$CommandAction92$ActionLink" path="1520,624,1606,624,1606,1346,1079,1346,1079,1480,1160,1480"/>
-        <Link id="$CommandAction93$ActionLink" path="1520,608,1606,608,1606,1325,1073,1325,1073,1480,1160,1480"/>
-        <Link id="$CommandAction94$ActionLink" path="1192,1533,1192,1641,1398,1641,1398,608,1440,608"/>
-        <Link id="$CommandAction95$ActionLink" path="5344,136,5344,45,1374,45,1374,608,1440,608"/>
-        <Link id="$CommandAction96$ActionLink" path="952,1520,1011,1520,1011,1444,854,1444,854,1272,872,1272"/>
-        <Link id="$SelectCaseCommandAction24$ActionLink" path="952,1272,1053,1272,1053,1429,843,1429,843,1504,872,1504"/>
+        <Link id="$CommandAction31$ActionLink" path="1520,1064,1606,1064,1606,1325,1075,1325,1075,1480,1160,1480"/>
+        <Link id="$CommandAction61$ActionLink" path="3368,237,3368,375,323,375,323,288,368,288"/>
+        <Link id="$CommandAction74$ActionLink" path="1176,1533,1176,1651,316,1651,316,288,368,288"/>
+        <Link id="$CommandAction75$ActionLink" path="5360,152,5467,152,5467,375,323,375,323,288,368,288"/>
+        <Link id="$CommandAction92$ActionLink" path="1520,624,1606,624,1606,1325,1075,1325,1075,1480,1160,1480"/>
+        <Link id="$CommandAction93$ActionLink" path="1520,608,1606,608,1606,1325,1075,1325,1075,1480,1160,1480"/>
+        <Link id="$CommandAction94$ActionLink" path="1192,1533,1192,1671,1389,1671,1389,608,1440,608"/>
+        <Link id="$CommandAction95$ActionLink" path="5344,136,5344,45,1384,45,1384,608,1440,608"/>
+        <Link id="$CommandAction96$ActionLink" path="952,1520,1018,1520,1018,1338,713,1338,713,1272,872,1272"/>
+        <Link id="$CommandAction99$ActionLink" path="952,1504,1009,1504,341,288,368,288"/>
+        <Link id="$CommandAction100$ActionLink" path="952,1488,1009,1488,341,288,368,288"/>
+        <Link id="$SelectCaseCommandAction12$ActionLink" path="936,1224,936,1154,1033,1154,1033,1480,1160,1480"/>
+        <Link id="$SelectCaseCommandAction24$ActionLink" path="952,1272,1053,1272,1053,1676,843,1676,843,1504,872,1504"/>
     </FlowDocument>
     <ScreenDesigner version="1.0">
         <CustomScreenSize height="128" width="128"/>

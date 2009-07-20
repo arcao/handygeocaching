@@ -85,8 +85,43 @@ public class FieldNotes implements RecordFilter, RecordComparator {
         }
     }
     
+    public void deleteAll() {
+        try {
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
+            int numRecords = rc.numRecords();
+            int[] recordIds = new int[numRecords];
+            for (int i = 0; i < numRecords; i++)
+            {
+                recordIds[i] = rc.nextRecordId();
+            }
+            for (int i = 0; i < numRecords; i++)
+            {
+                recordStore.deleteRecord(recordIds[i]);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public FieldNotesItem getById(int id) {
         try {
+            return new FieldNotesItem(id, recordStore, recordStore.getRecord(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public FieldNotesItem getByIndex(int index) {
+        try {
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
+
+            int id = 0;
+            for (int i = 0; i <= index; i++)
+                id = rc.nextRecordId();
+            
             return new FieldNotesItem(id, recordStore, recordStore.getRecord(id));
         } catch (Exception e) {
             e.printStackTrace();
@@ -113,6 +148,25 @@ public class FieldNotes implements RecordFilter, RecordComparator {
             return new String[0];
         }
     }
+    
+    public int[] getAllIds() {
+        try {
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
+
+            int[] items = new int[rc.numRecords()];
+            for (int i = 0; i < rc.numRecords(); i++)
+            {
+                items[i] = rc.nextRecordId();
+            }
+            
+            return items;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new int[0];
+        }
+    }
+    
     public FieldNotesItem[] getAll() {
         try {
             RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
@@ -178,7 +232,7 @@ public class FieldNotes implements RecordFilter, RecordComparator {
             case TYPE_NEEDS_ARCHIVED:
                 return "needs_archived";
             case TYPE_NEEDS_MAINTENANCE:
-                return "needs_maintenance";
+                return "needs_maintanance";
             default:
                 return "found_it";
         }
