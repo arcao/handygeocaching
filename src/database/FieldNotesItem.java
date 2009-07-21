@@ -36,7 +36,7 @@ public class FieldNotesItem {
     public FieldNotesItem(int id, RecordStore recordStore, byte[] data) {
         this.recordStore = recordStore;
         this.id = id;
-        gcCode = "";
+        gcCode = "GC";
         name = "";
         date = new Date().getTime();
         type = 0;

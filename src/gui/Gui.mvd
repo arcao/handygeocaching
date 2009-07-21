@@ -2279,13 +2279,13 @@
         </DesignComponent>
         <DesignComponent id="siFNGcCode" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="556">
             <Property name="label" value="STRING:K\u00F3d ke\u0161e:"/>
-            <Property name="text" value="STRING:...GC12345..."/>
+            <Property name="text" value="STRING:GC12345"/>
             <ContainerProperty name="commands"/>
         </DesignComponent>
         <DesignComponent id="tfFNGcCode" typeid="MIDP:javax.microedition.lcdui.TextField" uid="557">
             <Property name="label" value="STRING:K\u00F3d ke\u0161e:"/>
-            <Property name="string" value="STRING:...GC12345..."/>
-            <Property name="maxSize" value="10"/>
+            <Property name="string" value="STRING:GC12345"/>
+            <Property name="maxSize" value="120"/>
             <Property name="constraints" value="524288"/>
             <ContainerProperty name="commands"/>
         </DesignComponent>

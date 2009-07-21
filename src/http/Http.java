@@ -31,8 +31,8 @@ public class Http implements Runnable
     
     //adresa skriptu
     private static final String url = "http://handygeocaching.sluzba.cz/handy31.php";
-    //private static final String arcao_url = "http://testweb/gc/api.php";
-    private static final String arcao_url = "http://hgservice.arcao.com/api.php";
+    private static final String arcao_url = "http://testweb/gc/api.php";
+    //private static final String arcao_url = "http://hgservice.arcao.com/api.php";
     
     //mozne akce
     public static final int LOGIN = 0;

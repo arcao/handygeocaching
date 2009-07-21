@@ -510,6 +510,8 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                         // Insert post-action code here
                         modeGPS = true;
                         gpsGate = false;
+                        get_frmConnecting().append("Připojuji se k Sony Ericssson HGE-100...");
+                        getDisplay().setCurrent(get_frmConnecting());
                         gpsParser = new GpsParser(this, http, settings, favourites, bluetooth, "comm:AT5;baudrate=9600", GpsParser.GPS_HGE_100);
                         gpsParser.open();
                         break;//GEN-BEGIN:MVDCACase541
@@ -4395,7 +4397,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
     public StringItem get_siFNGcCode() {
         if (siFNGcCode == null) {//GEN-END:MVDGetBegin556
             // Insert pre-init code here
-            siFNGcCode = new StringItem("K\u00F3d ke\u0161e:", "...GC12345...");//GEN-LINE:MVDGetInit556
+            siFNGcCode = new StringItem("K\u00F3d ke\u0161e:", "GC12345");//GEN-LINE:MVDGetInit556
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd556
         return siFNGcCode;
@@ -4407,7 +4409,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
     public TextField get_tfFNGcCode() {
         if (tfFNGcCode == null) {//GEN-END:MVDGetBegin557
             // Insert pre-init code here
-            tfFNGcCode = new TextField("K\u00F3d ke\u0161e:", "...GC12345...", 10, TextField.ANY | TextField.NON_PREDICTIVE);//GEN-LINE:MVDGetInit557
+            tfFNGcCode = new TextField("K\u00F3d ke\u0161e:", "GC12345", 120, TextField.ANY | TextField.NON_PREDICTIVE);//GEN-LINE:MVDGetInit557
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd557
         return tfFNGcCode;

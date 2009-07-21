@@ -58,7 +58,7 @@ public class GpsParser implements Runnable
     public static final int BLUETOOTH = 0;
     public static final int GPS_GATE = 1;
     public static final int INTERNAL = 2;
-    public static final int GPS_HGE_100 = 2;
+    public static final int GPS_HGE_100 = 3;
     public int source;
     
     private Thread thread;
@@ -260,7 +260,7 @@ public class GpsParser implements Runnable
                 }
                 else if (source == GPS_HGE_100)
                 {
-                    gui.showAlert("Nepovedlo se připohit k HGE-100. "+e.toString(),AlertType.ERROR,gui.get_lstMode());
+                    gui.showAlert("Nepovedlo se připojit k HGE-100. "+e.toString(),AlertType.ERROR,gui.get_lstMode());
                 }
                 else if (source == BLUETOOTH)
                 {
@@ -306,6 +306,7 @@ public class GpsParser implements Runnable
                 catch (Exception ex)
                 {
                     exception = ex.toString();
+                    gui.showAlert("Někde se něco posralo s GPS: " + exception, AlertType.ERROR, null);
                 }
             }
             

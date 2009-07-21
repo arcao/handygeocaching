@@ -372,7 +372,7 @@ public class Gps implements Runnable
                     }
                 }
                 //detekce preruseneho spojeni
-                if (gpsParser.getNmeaCount() == lastNmeaCount && (gpsParser.source == GpsParser.BLUETOOTH))
+                if (gpsParser.getNmeaCount() == lastNmeaCount && (gpsParser.source == GpsParser.BLUETOOTH || gpsParser.source == GpsParser.GPS_HGE_100))
                 {
                     skips++;
                     if (skips>MAXIMUM_SKIPS)
