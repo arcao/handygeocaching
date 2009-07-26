@@ -30,6 +30,8 @@ public class FieldNotes implements RecordFilter, RecordComparator {
     public static final int TYPE_NEEDS_ARCHIVED = 3;
     public static final int TYPE_NEEDS_MAINTENANCE = 4;
     
+    private static String RECORD_STORE_FILENAME = "FieldNotes";
+    
     private static FieldNotes instance = null;
     
     private RecordStore recordStore = null;
@@ -37,7 +39,7 @@ public class FieldNotes implements RecordFilter, RecordComparator {
     /** Creates a new instance of FieldNotes */
     private FieldNotes() {
         try {
-            recordStore = RecordStore.openRecordStore("FieldNotes", true);
+            recordStore = RecordStore.openRecordStore(RECORD_STORE_FILENAME, true);
         } catch (RecordStoreException ex) {
             ex.printStackTrace();
         }
@@ -87,18 +89,9 @@ public class FieldNotes implements RecordFilter, RecordComparator {
     
     public void deleteAll() {
         try {
-            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
-            rc.rebuild();
-            int numRecords = rc.numRecords();
-            int[] recordIds = new int[numRecords];
-            for (int i = 0; i < numRecords; i++)
-            {
-                recordIds[i] = rc.nextRecordId();
-            }
-            for (int i = 0; i < numRecords; i++)
-            {
-                recordStore.deleteRecord(recordIds[i]);
-            }
+            recordStore.closeRecordStore();
+            recordStore.deleteRecordStore(RECORD_STORE_FILENAME);
+            recordStore = RecordStore.openRecordStore(RECORD_STORE_FILENAME, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -223,7 +216,7 @@ public class FieldNotes implements RecordFilter, RecordComparator {
         }
     }
     
-    public static String getIconName(int type) {
+    public static String getTypeIconName(int type) {
         switch(type) {
             case TYPE_DIDN_T_FIND_IT:
                 return "didn_t_find";
@@ -237,6 +230,21 @@ public class FieldNotes implements RecordFilter, RecordComparator {
                 return "found_it";
         }
     }
+    
+    public static String getTypeAbbr(int type) {
+        switch(type) {
+            case TYPE_DIDN_T_FIND_IT:
+                return "DNF";
+            case TYPE_WRITE_NOTE:
+                return "W";
+            case TYPE_NEEDS_ARCHIVED:
+                return "ARCH";
+            case TYPE_NEEDS_MAINTENANCE:
+                return "MAIN";
+            default:
+                return "F";
+        }
+    }
 
     public boolean matches(byte[] b) {
         return true;
@@ -244,29 +252,34 @@ public class FieldNotes implements RecordFilter, RecordComparator {
 
     public int compare(byte[] rec1, byte[] rec2) {
         try {
-            FieldNotesItem fni1 = new FieldNotesItem(-1, recordStore, rec1);
-            FieldNotesItem fni2 = new FieldNotesItem(-1, recordStore, rec2);
+            DataInputStream dis1 = new DataInputStream(new ByteArrayInputStream(rec1));
+            DataInputStream dis2 = new DataInputStream(new ByteArrayInputStream(rec2));
+
+            String gcCode1 = dis1.readUTF();
+            dis1.readUTF(); //name
+            long date1 = dis1.readLong();
+            int type1 = dis1.readInt();
             
-            long i = fni1.getDate().getTime() - fni2.getDate().getTime();
+            String gcCode2 = dis2.readUTF();
+            dis2.readUTF(); //name
+            long date2 = dis2.readLong();
+            int type2 = dis2.readInt();
+            
+            long i = date1 - date2;
+            if (i != 0)
+                return compareResult(i);
+            i = gcCode1.compareTo(gcCode2);
+            if (i != 0)
+                return compareResult(i);
+            i = type1 - type2;
             if (i != 0)
                 return compareResult(i);
             
-            i = fni1.getGcCode().compareTo(fni2.getGcCode());
-            if (i != 0)
-                return compareResult(i);
-            
-            i = fni1.getType() - fni2.getType();
-            if (i != 0)
-                return compareResult(i);
-            
-            i = fni1.getText().compareTo(fni2.getText());
-            if (i != 0)
-                return compareResult(i);
-            
+            return RecordComparator.EQUIVALENT;   
         } catch (Exception e) {
             e.printStackTrace();
+            return RecordComparator.EQUIVALENT;
         }
-        return RecordComparator.EQUIVALENT;
     }
     
     private int compareResult(long i) {
@@ -278,5 +291,4 @@ public class FieldNotes implements RecordFilter, RecordComparator {
             return RecordComparator.FOLLOWS;
         }
     }
-    
 }

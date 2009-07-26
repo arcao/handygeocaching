@@ -80,6 +80,7 @@ abstract class Database implements RecordFilter, RecordComparator
         }
         catch (Exception ex)
         {
+            ex.printStackTrace();
             gui.showError("deleteAll "+databaseName,ex.toString(),"");
         }
     }

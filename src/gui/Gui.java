@@ -11,6 +11,7 @@ import database.FieldNotes;
 import database.FieldNotesItem;
 import java.util.Calendar;
 import javax.microedition.lcdui.ItemStateListener;
+import utils.GPXImport;
 import utils.OpenFileBrowser;
 import database.Favourites;
 import database.MultiSolver;
@@ -172,7 +173,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private StringItem stringItem3;
     private TextField tfName;
     private TextField tfPassword;
-    private ChoiceGroup cgOtherSettings;
+    private ChoiceGroup cgCacheFilter;
     private Form frmConnecting;
     private Command cmdNavigate;
     private StringItem stringItem6;
@@ -286,8 +287,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Image imgPdaGps;
     private Image imgOther;
     private ChoiceGroup cgGivenFormat;
-    private Command backCommand2;
-    private Command cmdBack1;
     private Form frmGpsSignalHelp;
     private StringItem siSouradnice;
     private StringItem siRychlost;
@@ -300,7 +299,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Form frmNalezeno;
     private StringItem siNazevKese;
     private DateField dfNalezeno;
-    private Command cmdNalezenoBack;
     private Command cmdNastavit;
     private Command cmdAddFieldNotes;
     private StringItem siNalezeno1;
@@ -319,12 +317,18 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private ChoiceGroup cgFNType;
     private DateField dtFNDate;
     private TextField tfFNText;
-    private Command cmdPostFieldNotes;//GEN-END:MVDFields
+    private Command cmdPostFieldNotes;
+    private ChoiceGroup cgFieldNotes;
+    private Command cmdSetFound;
+    private Command cmdImportGPX;
+    private Gauge gaLoadingIndicator;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
     private Signal cvsSignal;
     //Zephy 21.11.07 gpsstatus+/
+    private OpenFileBrowser openFileBrowser = null;
+    private GPXImport gpxImportForm = null;
 //GEN-LINE:MVDMethods
     
     
@@ -400,9 +404,11 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                         navigateToPoint = false;
                         keyword = false;
                         fromTrackables = false;
-                        favourites.viewAll();
-                        getDisplay().setCurrent(get_lstFavourites());//GEN-LINE:MVDCAAction214
+                        /*
+getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                         // Insert post-action code here
+                        */
+                        favourites.viewAll();
                         break;//GEN-BEGIN:MVDCACase214
                     case 2://GEN-END:MVDCACase214
                         // Insert pre-action code here
@@ -418,7 +424,9 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                         get_lstFieldNotes().deleteAll();
                         FieldNotesItem[] items = FieldNotes.getInstance().getAll();
                         for(int i=0; i < items.length; i++)
-                            get_lstFieldNotes().append(items[i].toString(), iconLoader.loadIcon(FieldNotes.getIconName(items[i].getType()), false));
+                            get_lstFieldNotes().append(items[i].toString(!settings.iconsInFieldNotes, settings.nameInFieldNotesFirst), (settings.iconsInFieldNotes)? iconLoader.loadIcon(FieldNotes.getTypeIconName(items[i].getType()), false) : null);
+                        //for(int i=0; i < get_lstFieldNotes().size(); i++)
+                        //    get_lstFieldNotes().setFont(i, get_fntSmall());
                         getDisplay().setCurrent(get_lstFieldNotes());//GEN-LINE:MVDCAAction548
                         // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase548
@@ -448,7 +456,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                 // Insert pre-action code here
                 gps.stop();
                 favourites.editId = -1;
-                favourites.addEdit("Výsledek průměrování","",siAverageLattitude.getText(),siAverageLongitude.getText(),"average",get_lstFavourites(), false, "NE", "");
+                favourites.addEdit("Výsledek průměrování","",siAverageLattitude.getText(),siAverageLongitude.getText(),"average",get_lstFavourites(), false, "NE", "", true, true, true);
                 // Do nothing//GEN-LINE:MVDCAAction391
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase391
@@ -596,7 +604,8 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                 if (nearest || keyword) {
                     getDisplay().setCurrent(get_lstNearestCaches());
                 } else if (fromFavourites) {
-                    getDisplay().setCurrent(get_lstFavourites());
+                    favourites.viewAll();
+                    //getDisplay().setCurrent(get_lstFavourites());
                 } else {
                     getDisplay().setCurrent(get_frmWaypoint());//GEN-LINE:MVDCAAction91
                 }// Insert post-action code here
@@ -646,7 +655,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                 favourites.addEdit(siName.getText(),
                         http.favouriteResponse,
                         siOverviewLattitude.getText(), siOverviewLongitude.getText(),
-                        http.typeNumber,get_frmOverview(), false, "NE", "");
+                        http.typeNumber,get_frmOverview(), false, "NE", "", false, true, true);
                 //Zephy oprava 22.12.07 +/
             } else if (command == cmdDownloadPatterns) {//GEN-LINE:MVDCACase255
                 // Insert pre-action code here
@@ -681,9 +690,15 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
 
                 getDisplay().setCurrent(get_frmFieldNote());//GEN-LINE:MVDCAAction507
                 // Insert post-action code here
-            }//GEN-BEGIN:MVDCACase507
+            } else if (command == cmdPoznamka) {//GEN-LINE:MVDCACase507
+                // Insert pre-action code here
+                get_tbPoznamka().setTitle("Poznámka pro "+get_siName().getText());
+                get_tbPoznamka().setString(favourites.getPoznamka(favourites.id));
+                getDisplay().setCurrent(get_tbPoznamka());//GEN-LINE:MVDCAAction589
+                // Insert post-action code here
+            }//GEN-BEGIN:MVDCACase589
         } else if (displayable == frmInfo) {
-            if (command == cmdBack) {//GEN-END:MVDCACase507
+            if (command == cmdBack) {//GEN-END:MVDCACase589
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_frmOverview());//GEN-LINE:MVDCAAction111
                 // Insert post-action code here
@@ -740,7 +755,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction144
                 // Insert post-action code here
                 settings.save();
-            } else if (command == backCommand2) {//GEN-LINE:MVDCACase144
+            } else if (command == cmdBack) {//GEN-LINE:MVDCACase144
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction478
                 // Insert post-action code here
@@ -1079,9 +1094,15 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                     getDisplay().setCurrent(get_tbPoznamka());//GEN-LINE:MVDCAAction521
                 // Insert post-action code here
                 }
-            }//GEN-BEGIN:MVDCACase521
+            } else if (command == cmdImportGPX) {//GEN-LINE:MVDCACase521
+                // Insert pre-action code here
+                // Do nothing//GEN-LINE:MVDCAAction587
+                // Insert post-action code here
+                openFileBrowser = new OpenFileBrowser(getDisplay(), this);
+                openFileBrowser.open(null);
+            }//GEN-BEGIN:MVDCACase587
         } else if (displayable == frmFavourite) {
-            if (command == cmdBack) {//GEN-END:MVDCACase521
+            if (command == cmdBack) {//GEN-END:MVDCACase587
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstFavourites());//GEN-LINE:MVDCAAction262
                 // Insert post-action code here
@@ -1105,35 +1126,36 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                 http.start(Http.NEXT_NEAREST, false);
                 // Do nothing//GEN-LINE:MVDCAAction360
                 // Insert post-action code here
-            } else if (command == cmdAddFieldNotes) {//GEN-LINE:MVDCACase360
-                // Insert pre-action code here
-                get_siNazevKese().setText(get_frmFavourite().getTitle());
-                get_dfNalezeno().setDate(new Date());
-                getDisplay().setCurrent(get_frmFieldNote());//GEN-LINE:MVDCAAction513
-                // Insert post-action code here
-            } else if (command == cmdPoznamka) {//GEN-LINE:MVDCACase513
+            } else if (command == cmdPoznamka) {//GEN-LINE:MVDCACase360
                 // Insert pre-action code here
                 get_tbPoznamka().setTitle("Poznámka pro "+favourites.getCacheName(favourites.id));
                 get_tbPoznamka().setString(favourites.getPoznamka(favourites.id));
                 getDisplay().setCurrent(get_tbPoznamka());//GEN-LINE:MVDCAAction524
                 // Insert post-action code here
-            }//GEN-BEGIN:MVDCACase524
-        } else if (displayable == frmAddGiven) {
-            if (command == cmdBack) {//GEN-END:MVDCACase524
+            } else if (command == cmdSetFound) {//GEN-LINE:MVDCACase524
                 // Insert pre-action code here
-                getDisplay().setCurrent(get_lstFavourites());//GEN-LINE:MVDCAAction280
+                get_siNazevKese().setText(get_frmFavourite().getTitle());
+                get_dfNalezeno().setDate(new Date());
+                getDisplay().setCurrent(get_frmNalezeno());//GEN-LINE:MVDCAAction585
                 // Insert post-action code here
+            }//GEN-BEGIN:MVDCACase585
+        } else if (displayable == frmAddGiven) {
+            if (command == cmdBack) {//GEN-END:MVDCACase585
+                // Insert pre-action code here
+                favourites.viewAll();
+                /*
+getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction280
+                // Insert post-action code here
+                 */
             } else if (command == cmdSave) {//GEN-LINE:MVDCACase280
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction279
                 // Insert post-action code here
-                favourites.addEdit(tfGivenName.getString(),tfGivenDescription.getString(),tfGivenLattitude.getString(),tfGivenLongitude.getString(),"waypoint",get_lstFavourites(), (cgGivenFormat.getSelectedIndex()==1), "NE", "");
+                favourites.addEdit(tfGivenName.getString(),tfGivenDescription.getString(),tfGivenLattitude.getString(),tfGivenLongitude.getString(),"waypoint",get_lstFavourites(), (cgGivenFormat.getSelectedIndex()==1), "NE", "", false, true, true);
                 /*
                  *Zephy 19.11.07 REM - pri editaci bodu a zadani chybnych souradnic byla prebita hlaska o chybne zadanych souradnicich a vlezlo se zpet do seznamu. Toto bylo presunuto do Favourites.java
                  */
-                if (favourites.editId != -1)
-                    getDisplay().setCurrent(get_lstFavourites());
-                
+                favourites.viewAll();
             }//GEN-BEGIN:MVDCACase279
         } else if (displayable == frmTrackingNumber) {
             if (command == cmdBack) {//GEN-END:MVDCACase279
@@ -1185,7 +1207,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                 keyword = false;
                 fromTrackables = false;
                 favourites.viewAll();
-                getDisplay().setCurrent(get_lstFavourites());
+                //getDisplay().setCurrent(get_lstFavourites());
                 // Do nothing//GEN-LINE:MVDCAAction406
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase406
@@ -1223,7 +1245,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                 // Insert pre-action code here
                 favourites.editId = -1;
                 //Zephy oprava 22.12.07 - posledni parametr na false +\
-                favourites.addEdit(tfResultName.getString(),tfResultDescription.getString(),tfResultLattitude.getString(),tfResultLongitude.getString(),"multisolver_waypoint",get_lstFavourites(), false, "NE", "");
+                favourites.addEdit(tfResultName.getString(),tfResultDescription.getString(),tfResultLattitude.getString(),tfResultLongitude.getString(),"multisolver_waypoint",get_lstFavourites(), false, "NE", "", true, true, true);
                 //Zephy oprava 22.12.07 - posledni parametr na false +/
                 // Do nothing//GEN-LINE:MVDCAAction352
                 // Insert post-action code here
@@ -1303,7 +1325,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                 //Zephy 10.12.07 +/
             }//GEN-BEGIN:MVDCACase489
         } else if (displayable == frmNalezeno) {
-            if (command == cmdNalezenoBack) {//GEN-END:MVDCACase489
+            if (command == cmdBack) {//GEN-END:MVDCACase489
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstFavourites());//GEN-LINE:MVDCAAction503
                 // Insert post-action code here
@@ -1349,7 +1371,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 get_lstFieldNotes().deleteAll();
                 FieldNotesItem[] items = FieldNotes.getInstance().getAll();
                 for(int i=0; i < items.length; i++)
-                    get_lstFieldNotes().append(items[i].toString(), iconLoader.loadIcon(FieldNotes.getIconName(items[i].getType()), false));
+                    get_lstFieldNotes().append(items[i].toString(!settings.iconsInFieldNotes, settings.nameInFieldNotesFirst), (settings.iconsInFieldNotes)? iconLoader.loadIcon(FieldNotes.getTypeIconName(items[i].getType()), false) : null);
                 // Do nothing//GEN-LINE:MVDCAAction571
                 // Insert post-action code here
             } else if (command == cmdPostFieldNotes) {//GEN-LINE:MVDCACase571
@@ -1370,10 +1392,18 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                     get_tfFNText().setString(fieldNoteItem.getText());
 
                     get_frmFieldNote().deleteAll();
-                    get_frmFieldNote().append(get_tfFNGcCode());
+                    if (fieldNoteItem.getName().length() > 0) {
+                        get_frmFieldNote().append(get_siFNGcCode());
+                    } else {
+                        get_frmFieldNote().append(get_tfFNGcCode());
+                    }
                     get_frmFieldNote().append(get_cgFNType());
                     get_frmFieldNote().append(get_dtFNDate());
                     get_frmFieldNote().append(get_tfFNText());
+                    get_frmFieldNote().setTitle("Upravit field note");
+                    
+                    if (fieldNoteItem.getName().length() > 0)
+                        get_frmFieldNote().setTitle("FN: "+fieldNoteItem.getName());
                     
                     getDisplay().setCurrent(get_frmFieldNote());//GEN-LINE:MVDCAAction569
                 // Insert post-action code here
@@ -1392,6 +1422,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 get_frmFieldNote().append(get_cgFNType());
                 get_frmFieldNote().append(get_dtFNDate());
                 get_frmFieldNote().append(get_tfFNText());
+                get_frmFieldNote().setTitle("Přidat field note");
                 
                 getDisplay().setCurrent(get_frmFieldNote());//GEN-LINE:MVDCAAction567
                 // Insert post-action code here
@@ -1437,7 +1468,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                     get_lstFieldNotes().deleteAll();
                     FieldNotesItem[] items = FieldNotes.getInstance().getAll();
                     for(int i=0; i < items.length; i++)
-                       get_lstFieldNotes().append(items[i].toString(), iconLoader.loadIcon(FieldNotes.getIconName(items[i].getType()), false));
+                       get_lstFieldNotes().append(items[i].toString(!settings.iconsInFieldNotes, settings.nameInFieldNotesFirst), (settings.iconsInFieldNotes)? iconLoader.loadIcon(FieldNotes.getTypeIconName(items[i].getType()), false) : null);
                 } else if (fromFavourites) {
                     fRet = get_lstFavourites(); 
                 } else {
@@ -1449,6 +1480,18 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         }//GEN-END:MVDCACase554
 // Insert global post-action code here
         
+        if (displayable == openFileBrowser && openFileBrowser != null) {
+            if (command == OpenFileBrowser.OK) {
+                gpxImportForm = new GPXImport(favourites, getDisplay());
+                gpxImportForm.setListener(this);
+                gpxImportForm.parse(openFileBrowser.getFileName());
+                openFileBrowser = null;
+            }
+        } else if (displayable == gpxImportForm && gpxImportForm != null) {
+            if (command == GPXImport.CANCEL || command == GPXImport.SUCCESS) {
+                favourites.viewAll();
+            }
+        }
         
 }//GEN-LINE:MVDCAEnd
     
@@ -1896,6 +1939,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             frmOverview.addCommand(get_cmdDownloadPatterns());
             frmOverview.addCommand(get_cmdRefresh());
             frmOverview.addCommand(get_cmdAddFieldNotes());
+            frmOverview.addCommand(get_cmdPoznamka());
             frmOverview.setCommandListener(this);//GEN-END:MVDGetInit90
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd90
@@ -2280,13 +2324,14 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 get_stringItem3(),
                 get_tfName(),
                 get_tfPassword(),
-                get_cgOtherSettings(),
+                get_cgCacheFilter(),
                 get_tfNumberCaches(),
+                get_cgFieldNotes(),
                 get_tfBackLight(),
                 get_stringItem10()
             });
             frmSettings.addCommand(get_cmdSave());
-            frmSettings.addCommand(get_backCommand2());
+            frmSettings.addCommand(get_cmdBack());
             frmSettings.setCommandListener(this);//GEN-END:MVDGetInit141
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd141
@@ -2341,13 +2386,13 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         return tfPassword;
     }//GEN-END:MVDGetEnd147
     
-    /** This method returns instance for cgOtherSettings component and should be called instead of accessing cgOtherSettings field directly.//GEN-BEGIN:MVDGetBegin148
-     * @return Instance for cgOtherSettings component
+    /** This method returns instance for cgCacheFilter component and should be called instead of accessing cgCacheFilter field directly.//GEN-BEGIN:MVDGetBegin148
+     * @return Instance for cgCacheFilter component
      */
-    public ChoiceGroup get_cgOtherSettings() {
-        if (cgOtherSettings == null) {//GEN-END:MVDGetBegin148
+    public ChoiceGroup get_cgCacheFilter() {
+        if (cgCacheFilter == null) {//GEN-END:MVDGetBegin148
             // Insert pre-init code here
-            cgOtherSettings = new ChoiceGroup("Nejbli\u017E\u0161\u00ED cache:", Choice.MULTIPLE, new String[] {//GEN-BEGIN:MVDGetInit148
+            cgCacheFilter = new ChoiceGroup("Nejbli\u017E\u0161\u00ED cache:", Choice.MULTIPLE, new String[] {//GEN-BEGIN:MVDGetInit148
                 "Traditional",
                 "Multi",
                 "Mystery",
@@ -2362,7 +2407,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 null,
                 null
             });
-            cgOtherSettings.setSelectedFlags(new boolean[] {
+            cgCacheFilter.setSelectedFlags(new boolean[] {
                 false,
                 false,
                 false,
@@ -2372,7 +2417,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             });//GEN-END:MVDGetInit148
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd148
-        return cgOtherSettings;
+        return cgCacheFilter;
     }//GEN-END:MVDGetEnd148
     
     
@@ -2802,6 +2847,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             lstFavourites.addCommand(get_cmdMapyCz());
             lstFavourites.addCommand(get_cmdAddFieldNotes());
             lstFavourites.addCommand(get_cmdPoznamka());
+            lstFavourites.addCommand(get_cmdImportGPX());
             lstFavourites.setCommandListener(this);
             lstFavourites.setSelectedFlags(new boolean[0]);//GEN-END:MVDGetInit251
             // Insert post-init code here
@@ -2861,8 +2907,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             frmFavourite.addCommand(get_cmdBack());
             frmFavourite.addCommand(get_cmdNavigate());
             frmFavourite.addCommand(get_cmdNext());
-            frmFavourite.addCommand(get_cmdAddFieldNotes());
             frmFavourite.addCommand(get_cmdPoznamka());
+            frmFavourite.addCommand(get_cmdSetFound());
             frmFavourite.setCommandListener(this);//GEN-END:MVDGetInit261
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd261
@@ -3536,7 +3582,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public StringItem get_stringItem10() {
         if (stringItem10 == null) {//GEN-END:MVDGetBegin362
             // Insert pre-init code here
-            stringItem10 = new StringItem("", "Frekvence rozsvicov\u00E1n\u00ED displeje p\u0159i navigaci v sekund\u00E1ch.0=vypne blik\u00E1n\u00ED.");//GEN-LINE:MVDGetInit362
+            stringItem10 = new StringItem("", "Frekvence rozsvicov\u00E1n\u00ED displeje p\u0159i navigaci v sekund\u00E1ch.0=vypne blik\u00E1n\u00ED.\n ");//GEN-LINE:MVDGetInit362
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd362
         return stringItem10;
@@ -4010,31 +4056,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         return cgGivenFormat;
     }//GEN-END:MVDGetEnd456
     
-    /** This method returns instance for backCommand2 component and should be called instead of accessing backCommand2 field directly.//GEN-BEGIN:MVDGetBegin466
-     * @return Instance for backCommand2 component
-     */
-    public Command get_backCommand2() {
-        if (backCommand2 == null) {//GEN-END:MVDGetBegin466
-            // Insert pre-init code here
-            backCommand2 = new Command("Storno", Command.CANCEL, 1);
-            /*
-backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
-             */
-        }//GEN-BEGIN:MVDGetEnd466
-        return backCommand2;
-    }//GEN-END:MVDGetEnd466
     
-    /** This method returns instance for cmdBack1 component and should be called instead of accessing cmdBack1 field directly.//GEN-BEGIN:MVDGetBegin477
-     * @return Instance for cmdBack1 component
-     */
-    public Command get_cmdBack1() {
-        if (cmdBack1 == null) {//GEN-END:MVDGetBegin477
-            // Insert pre-init code here
-            cmdBack1 = new Command("Cancel", Command.CANCEL, 1);//GEN-LINE:MVDGetInit477
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd477
-        return cmdBack1;
-    }//GEN-END:MVDGetEnd477
     
     /** This method returns instance for frmGpsSignalHelp component and should be called instead of accessing frmGpsSignalHelp field directly.//GEN-BEGIN:MVDGetBegin479
      * @return Instance for frmGpsSignalHelp component
@@ -4163,7 +4185,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
                 get_siNazevKese(),
                 get_dfNalezeno()
             });
-            frmNalezeno.addCommand(get_cmdNalezenoBack());
+            frmNalezeno.addCommand(get_cmdBack());
             frmNalezeno.addCommand(get_cmdNastavit());
             frmNalezeno.setCommandListener(this);//GEN-END:MVDGetInit495
             // Insert post-init code here
@@ -4195,17 +4217,6 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd497
         return dfNalezeno;
     }//GEN-END:MVDGetEnd497
-    /** This method returns instance for cmdNalezenoBack component and should be called instead of accessing cmdNalezenoBack field directly.//GEN-BEGIN:MVDGetBegin502
-     * @return Instance for cmdNalezenoBack component
-     */
-    public Command get_cmdNalezenoBack() {
-        if (cmdNalezenoBack == null) {//GEN-END:MVDGetBegin502
-            // Insert pre-init code here
-            cmdNalezenoBack = new Command("Zp\u011Bt", Command.BACK, 1);//GEN-LINE:MVDGetInit502
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd502
-        return cmdNalezenoBack;
-    }//GEN-END:MVDGetEnd502
     
     /** This method returns instance for cmdNastavit component and should be called instead of accessing cmdNastavit field directly.//GEN-BEGIN:MVDGetBegin504
      * @return Instance for cmdNastavit component
@@ -4345,8 +4356,9 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
             lstFieldNotes.setCommandListener(this);
             lstFieldNotes.setSelectedFlags(new boolean[0]);
             lstFieldNotes.setSelectCommand(null);
-            lstFieldNotes.setFitPolicy(Choice.TEXT_WRAP_ON);//GEN-END:MVDGetInit542
+            lstFieldNotes.setFitPolicy(Choice.TEXT_WRAP_DEFAULT);//GEN-END:MVDGetInit542
             // Insert post-init code here
+            lstFieldNotes.setFitPolicy((settings.wrappedFieldNotesList)? Choice.TEXT_WRAP_ON : Choice.TEXT_WRAP_OFF);
         }//GEN-BEGIN:MVDGetEnd542
         return lstFieldNotes;
     }//GEN-END:MVDGetEnd542
@@ -4481,6 +4493,69 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
         }//GEN-BEGIN:MVDGetEnd574
         return cmdPostFieldNotes;
     }//GEN-END:MVDGetEnd574
+
+    /** This method returns instance for cgFieldNotes component and should be called instead of accessing cgFieldNotes field directly.//GEN-BEGIN:MVDGetBegin577
+     * @return Instance for cgFieldNotes component
+     */
+    public ChoiceGroup get_cgFieldNotes() {
+        if (cgFieldNotes == null) {//GEN-END:MVDGetBegin577
+            // Insert pre-init code here
+            cgFieldNotes = new ChoiceGroup("Nastaven\u00ED Field notes:", Choice.MULTIPLE, new String[] {//GEN-BEGIN:MVDGetInit577
+                "Inkrem. Field notes",
+                "Ikonky ve Field notes",
+                "Nejprve n\u00E1zev ke\u0161e",
+                "Zalamovat text"
+            }, new Image[] {
+                null,
+                null,
+                null,
+                null
+            });
+            cgFieldNotes.setSelectedFlags(new boolean[] {
+                false,
+                false,
+                false,
+                false
+            });//GEN-END:MVDGetInit577
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd577
+        return cgFieldNotes;
+    }//GEN-END:MVDGetEnd577
+    /** This method returns instance for cmdSetFound component and should be called instead of accessing cmdSetFound field directly.//GEN-BEGIN:MVDGetBegin584
+     * @return Instance for cmdSetFound component
+     */
+    public Command get_cmdSetFound() {
+        if (cmdSetFound == null) {//GEN-END:MVDGetBegin584
+            // Insert pre-init code here
+            cmdSetFound = new Command("Nastavit n\u00E1lez", Command.SCREEN, 10);//GEN-LINE:MVDGetInit584
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd584
+        return cmdSetFound;
+    }//GEN-END:MVDGetEnd584
+
+    /** This method returns instance for cmdImportGPX component and should be called instead of accessing cmdImportGPX field directly.//GEN-BEGIN:MVDGetBegin586
+     * @return Instance for cmdImportGPX component
+     */
+    public Command get_cmdImportGPX() {
+        if (cmdImportGPX == null) {//GEN-END:MVDGetBegin586
+            // Insert pre-init code here
+            cmdImportGPX = new Command("Importovat z GPX...", Command.SCREEN, 11);//GEN-LINE:MVDGetInit586
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd586
+        return cmdImportGPX;
+    }//GEN-END:MVDGetEnd586
+    /** This method returns instance for gaLoadingIndicator component and should be called instead of accessing gaLoadingIndicator field directly.//GEN-BEGIN:MVDGetBegin596
+     * @return Instance for gaLoadingIndicator component
+     */
+    public Gauge get_gaLoadingIndicator() {
+        if (gaLoadingIndicator == null) {//GEN-END:MVDGetBegin596
+            // Insert pre-init code here
+            gaLoadingIndicator = new Gauge(null, false, 100, 50);//GEN-LINE:MVDGetInit596
+            // Insert post-init code here
+            gaLoadingIndicator.setMaxValue(Gauge.CONTINUOUS_RUNNING);
+        }//GEN-BEGIN:MVDGetEnd596
+        return gaLoadingIndicator;
+    }//GEN-END:MVDGetEnd596
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {
@@ -4526,7 +4601,7 @@ backCommand2 = new Command ("Back", Command.BACK, 1);//GEN-LINE:MVDGetInit466
             get_tbError().setString("Problém s komunikačním skriptem,opakujte akci.Pokud se tato chyba ukazuje pořád,máte nefunkční GPRS.");
         } else {
             get_tbError().setString("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" +
-                    data +"'");
+                    "'");
         }
         System.out.println(get_tbError().getString());
         getDisplay().setCurrent(get_tbError());

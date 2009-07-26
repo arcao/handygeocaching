@@ -282,31 +282,28 @@ public class GpsParser implements Runnable
             }
             
             //cteni dat
-            ByteArrayOutputStream byteArrayOutputStream = null;
+            //ByteArrayOutputStream byteArrayOutputStream = null;
+            StringBuffer sb = new StringBuffer();
             while (thread != null)
             {
                 try
                 {
-                    String s;
-                    byteArrayOutputStream = new ByteArrayOutputStream();
+                    sb.setLength(0);
+                    
                     int ch = 0;
                     //cteni dat
                     if (inputStream != null)
                         while ( (ch = inputStream.read()) != '\n')
                         {
-                            byteArrayOutputStream.write(ch);
+                            sb.append((char)ch);
                         }
-                    byteArrayOutputStream.flush();
-                    byte[] b = byteArrayOutputStream.toByteArray();
-                    s = new String(b);
-                    nmea = s;
-                    receiveNmea(s);
-                    byteArrayOutputStream.close();
+                    nmea = sb.toString();
+                    receiveNmea(nmea);
                 }
                 catch (Exception ex)
                 {
                     exception = ex.toString();
-                    gui.showAlert("Někde se něco posralo s GPS: " + exception, AlertType.ERROR, null);
+                    //gui.showAlert("Někde se něco posralo s GPS: " + exception, AlertType.ERROR, null);
                 }
             }
             

@@ -27,7 +27,7 @@ public class FieldNotesItem {
     private int id;
     private String gcCode;
     private String name;
-    private long date;
+    private Date date;
     private int type;
     private String text;
     private RecordStore recordStore;
@@ -38,24 +38,25 @@ public class FieldNotesItem {
         this.id = id;
         gcCode = "GC";
         name = "";
-        date = new Date().getTime();
+        date = new Date();
         type = 0;
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date(date));
+        if (id == -1) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
         
-        text = new StringBuffer()
-               .append(nulaNula(c.get(Calendar.HOUR_OF_DAY)))
-               .append(':')
-               .append(nulaNula(c.get(Calendar.MINUTE)))
-               .toString();;
-
+            text = new StringBuffer()
+                   .append(nulaNula(c.get(Calendar.HOUR_OF_DAY)))
+                   .append(':')
+                   .append(nulaNula(c.get(Calendar.MINUTE)))
+                   .toString();;
+        }
         if (data != null && data.length > 0) {
             try {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
 
                 gcCode = dis.readUTF();
                 name = dis.readUTF();
-                date = dis.readLong();
+                date.setTime(dis.readLong());
                 type = dis.readInt();
                 text = dis.readUTF();
 
@@ -87,7 +88,7 @@ public class FieldNotesItem {
 
             dos.writeUTF(gcCode);
             dos.writeUTF(name);
-            dos.writeLong(date);
+            dos.writeLong(date.getTime());
             dos.writeInt(type);
             dos.writeUTF(text);
 
@@ -97,32 +98,44 @@ public class FieldNotesItem {
             return new byte[0];
         }
     }
-    
+
     public String toString() {
-        return new StringBuffer()
-        .append(Utils.formatDate(getDate()))
-        .append(' ')
-        .append('[').append(gcCode).append(']')
-        .append(' ')
-        .append(name)
-        .toString();
+        return toString(false, false);
+    }  
+   
+    public String toString(boolean withType, boolean nameFirst) {
+        StringBuffer sb =new StringBuffer();
+        
+        if (withType) {
+            sb.append('(');
+            sb.append(FieldNotes.getTypeAbbr(type));
+            sb.append(") ");
+        }
+        
+        sb.append(Utils.formatDate(getDate()));
+        sb.append(' ');
+        if (nameFirst && name.length() > 0) {
+            sb.append(name);
+            sb.append(' ').append('[').append(gcCode).append(']');
+        } else {
+            sb.append('[').append(gcCode).append(']');
+            sb.append(' ').append(name);
+        }
+        return sb.toString();
     }
-    
+       
     public int getId() {
         return id;
     }
     
     public Date getDate() {
-        if (date == 0)
-            return new Date();
-        return new Date(date);
+        return date;
     }
     
     public String getDateZuluString() {
-        Calendar c = Calendar.getInstance();
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         c.setTime(getDate());
-        c.setTimeZone(TimeZone.getTimeZone("GMT"));
-        
+                
         StringBuffer sb = new StringBuffer();
         sb.append(c.get(Calendar.YEAR)).append('-');
         sb.append(nulaNula(c.get(Calendar.MONTH) + 1)).append('-');
@@ -134,11 +147,11 @@ public class FieldNotesItem {
     }
     
     public void setDate(Date date) {
-        this.date = date.getTime();
+        this.date = date;
     }
     
     public void setDate(Calendar calendar) {
-        date = calendar.getTime().getTime();
+        date = calendar.getTime();
     }
     
     public String getGcCode() {

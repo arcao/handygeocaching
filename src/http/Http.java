@@ -31,8 +31,8 @@ public class Http implements Runnable
     
     //adresa skriptu
     private static final String url = "http://handygeocaching.sluzba.cz/handy31.php";
-    private static final String arcao_url = "http://testweb/gc/api.php";
-    //private static final String arcao_url = "http://hgservice.arcao.com/api.php";
+    //private static final String arcao_url = "http://testweb/gc/api.php";
+    private static final String arcao_url = "http://hgservice.arcao.com/api.php";
     
     //mozne akce
     public static final int LOGIN = 0;
@@ -320,12 +320,12 @@ public class Http implements Runnable
                         }
                         if (refresh)
                             //Zephy 19.11.07 +\ -pridan posledni parametr
-                            favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],typeNumber,null, false, (offline) ? favourites.found : "", (offline) ? favourites.poznamka : "");
+                            favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],typeNumber,null, false, (offline) ? favourites.found : "", (offline) ? favourites.poznamka : "", false, true, true);
                             //Zephy 19.11.07 +/
                         if (!offline) {
                             favourites.editId = -1;
                             //Zephy 19.11.07 +\ -pridan posledni parametr
-                            favourites.addEdit("_Poslední cache",response,listing[0][4],listing[0][5],typeNumber,null, false, "NE", "");                        
+                            favourites.addEdit("_Poslední cache",response,listing[0][4],listing[0][5],typeNumber,null, false, "NE", "",false, true, true);                        
                             //Zephy 19.11.07 +/
                         }
                         gui.getDisplay().setCurrent(gui.get_frmOverview());
@@ -486,7 +486,7 @@ public class Http implements Runnable
             case FIELD_NOTES:
                 try
                 {
-                    response = downloadData("action=fieldnotes&cookie="+cookie+"&fieldnotes="+Utils.urlUTF8Encode(FieldNotes.getInstance().getFieldNotes()), true);
+                    response = downloadData("action=fieldnotes&cookie="+cookie+"&fieldnotes="+Utils.urlUTF8Encode(FieldNotes.getInstance().getFieldNotes())+"&incremental="+((settings.incrementalFieldNotes)?"1":"0"), true);
                     if (checkData(response))
                     {
                         gui.showAlert("Nahráno " + response + " nových Field notes na GC.com.",AlertType.INFO,gui.get_lstFieldNotes());
@@ -494,7 +494,7 @@ public class Http implements Runnable
                 }
                 catch (Exception e)
                 {
-                    gui.showError("patterns",e.toString(),response);
+                    gui.showError("field_notes",e.toString(),response);
                 }
                 break;
                 
@@ -669,12 +669,12 @@ public class Http implements Runnable
         {
             if (data.length() == 0)
             {
-                gui.showAlert("Server geocaching.com vrátil neočekávanou odpověď",AlertType.ERROR,gui.get_lstMenu());
+                gui.showAlert("Vypršel časový limit spojení. Server geocaching.com neodpovídá. Zkuste to za chvilku znovu.",AlertType.ERROR,gui.get_lstMenu());
                 return false;
             }
             else if (data.length() >= 3 && data.substring(0,3).equals("err"))
             {
-                gui.showAlert("Špatně nastavené nebo nedostupné GPRS spojení",AlertType.ERROR,gui.get_lstMenu());
+                gui.showAlert("Špatně nastavené nebo nedostupné GPRS spojení: " + data,AlertType.ERROR,gui.get_lstMenu());
                 return false;
             }
             else if (data.equals("MUST_ALLOW"))

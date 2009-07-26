@@ -36,7 +36,7 @@ public class OpenFileBrowser extends List implements CommandListener
     }
 
     
-    public OpenFileBrowser(CommandListener listener, Display display) {
+    public OpenFileBrowser(Display display, CommandListener listener) {
         super("", List.IMPLICIT);
         
         this.listener = listener;
@@ -72,7 +72,7 @@ public class OpenFileBrowser extends List implements CommandListener
                     display.setCurrent(backScreen);
                 list();
             } else {  
-                fileName = "file://localhost/" + currDirName + currFile;
+                fileName = "file:///" + currDirName + currFile;
                 if (nextScreen != null)
                     display.setCurrent(nextScreen);
                 if (listener != null)
@@ -159,5 +159,25 @@ public class OpenFileBrowser extends List implements CommandListener
             currDirName = currDirName + fileName; 
         }  
         return true;
+    }
+    
+    public Object getTag() {
+        return tag;
+    }
+    
+    public void setTag(Object tag) {
+        this.tag = tag;
+    }
+    
+    public Displayable getBackScreen() {
+        return backScreen;
+    }
+    
+    public Displayable getNextScreen() {
+        return nextScreen;
+    }
+    
+    public String getFileName() {
+        return fileName;
     }
 }   

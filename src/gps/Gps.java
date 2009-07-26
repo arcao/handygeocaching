@@ -595,7 +595,7 @@ public class Gps implements Runnable
         catch (Exception e)
         {
             System.out.println(e.toString());
-            return 0;
+            return Double.NaN;
         }
     }
     
@@ -634,7 +634,7 @@ public class Gps implements Runnable
         catch (Exception e)
         {
             System.out.println(e.toString());
-            return 0;
+            return Double.NaN;
         }
     }
     
