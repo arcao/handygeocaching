@@ -21,7 +21,7 @@ import javax.microedition.rms.RecordStoreNotOpenException;
 
 /**
  *
- * @author Administrator
+ * @author Arcao
  */
 public class FieldNotes implements RecordFilter, RecordComparator {
     public static final int TYPE_FOUND_IT = 0;
@@ -34,7 +34,7 @@ public class FieldNotes implements RecordFilter, RecordComparator {
     
     private static FieldNotes instance = null;
     
-    private RecordStore recordStore = null;
+    protected RecordStore recordStore = null;
     
     /** Creates a new instance of FieldNotes */
     private FieldNotes() {
@@ -289,6 +289,33 @@ public class FieldNotes implements RecordFilter, RecordComparator {
             return RecordComparator.PRECEDES;
         } else {
             return RecordComparator.FOLLOWS;
+        }
+    }
+    
+    public int usedSize() {
+        try {
+            return recordStore.getSize();
+        } catch (RecordStoreNotOpenException ex) {
+            ex.printStackTrace();
+            return 0;
+        }
+    }
+    
+    public int totalSize() {
+        try {
+            return recordStore.getSize() + recordStore.getSizeAvailable();
+        } catch (RecordStoreNotOpenException ex) {
+            ex.printStackTrace();
+            return 0;
+        }
+    }
+    
+    public int count() {
+        try {
+            return recordStore.getNumRecords();
+        } catch (RecordStoreNotOpenException ex) {
+            ex.printStackTrace();
+            return 0;
         }
     }
 }

@@ -10,6 +10,7 @@
 package utils;
 
 import database.Favourites;
+import http.Http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,12 +45,15 @@ public class GPXImport extends Form implements CommandListener {
 
     private boolean trucking;
     
+    private Http http;
+    
     /** Creates a new instance of Import */
-    public GPXImport(Favourites favourites, Display display) {
+    public GPXImport(Favourites favourites, Display display, Http http) {
         super("Import z GPX");
         
         this.favourites = favourites;
         this.display = display;
+        this.http = http;
         
         append("Importuji z GPX...");
         append(new Gauge("", false, Gauge.INDEFINITE, Gauge.CONTINUOUS_RUNNING));
@@ -101,6 +105,8 @@ public class GPXImport extends Form implements CommandListener {
         parser.require(XmlPullParser.START_TAG, null, "gpx");
         //System.out.println("gpx tag found");
         
+        String parts[][] = new String[1][15];
+        
         trucking = true;
         int count = 0;
         while (trucking) {
@@ -112,11 +118,15 @@ public class GPXImport extends Form implements CommandListener {
                     //System.out.println("wpt tag found");
                     String difficulty = "";
                     String terrain = "";
-                    String parts[][] = new String[1][15];
+                    String comment = "";
+                    String WayPointName = "";
+                    String hint = "";
+                    String listing = "";
                     for (int i=0; i < parts[0].length; i++)
                         parts[0][i] = "";
                     
                     parts[0][10] = "waypoint";
+                    parts[0][14] = "0";
                     
                     //for (int i=0; i<parser.getAttributeCount(); i++) {
                     //    System.out.println("{"+parser.getAttributeNamespace(i)+"}"+parser.getAttributeName(i)+"="+parser.getAttributeValue(i));
@@ -133,12 +143,16 @@ public class GPXImport extends Form implements CommandListener {
                                 if (parser.getName().equals("name")) {
                                     parser.next();
                                     parts[0][7] = parser.getText(); //gcCode
+                                    WayPointName = parser.getText();
                                 } else if (parser.getName().equals("type")) {
                                     parser.next();
                                     parts[0][10] = convertGPXTypeToTypeID(parser.getText()); //typeIconID gc_xxx
-                                } else if (parser.getName().equals("text")) {
+                                } else if (parser.getName().equals("desc")) {
                                     parser.next();
-                                    parts[0][0] = parser.getText(); //cache name / waypoint name
+                                    comment = (comment.length() > 0) ? parser.getText() + "\r\n" + comment : parser.getText(); //comment
+                                } else if (parser.getName().equals("cmt")) {
+                                    parser.next();
+                                    comment+= (comment.length() > 0) ? "\r\n" + parser.getText() : parser.getText(); //comment
                                 }
                             } else {
                                 if (parser.getName().equals("cache")) {
@@ -171,11 +185,18 @@ public class GPXImport extends Form implements CommandListener {
                                     terrain = parser.getText(); //terrain
                                 } else if (parser.getName().equals("long_description")) {
                                     parser.next();
-                                    parts[0][14] = Integer.toString(parser.getText().length() / 1024);
-                                    parts[0][13] = (parser.getText().indexOf("<!--Handy") != -1) ? "1":"0";
+                                    listing = parser.getText();
+                                    parts[0][14] = Integer.toString(listing.length() / 1024);
+                                    parts[0][13] = (listing.indexOf("<!--Handy") != -1) ? "1":"0";
                                 } else if (parser.getName().equals("encoded_hints")) {
                                     parser.next();
-                                    parts[0][14] = (parser.getText().length() > 0) ? "1":"0";
+                                    hint = parser.getText();
+                                    
+                                    parts[0][12] = (hint.length() > 0) ? "1":"0";
+                                    //comment+= ((comment.length() > 0) ? "\r\n" : "") + parser.getText();
+                                } else if (parser.getName().equals("logs")) {
+                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("logs") || !parser.getNamespace().equals(GROUNDSPEAK_NS))
+                                        parser.next();
                                 }
                             }
                         }
@@ -187,13 +208,17 @@ public class GPXImport extends Form implements CommandListener {
                     //System.out.println("adding cache");
                     //System.out.println(parts[0][10].equals("waypoint"));
                     
+                    favourites.editId = -1;
+                    
                     if (parts[0][10].equals("waypoint")) {
-                        favourites.editId = -1;
-                        favourites.addEdit(parts[0][0], "", parts[0][4], parts[0][5], parts[0][10], null, false, "", "", false, false, false);
+                        favourites.addEdit(WayPointName, "", parts[0][4], parts[0][5], parts[0][10], null, false, "", comment, false, false, false);
                     } else {
-                        favourites.addEdit(parts[0][0], Favourites.cachePartsToDesc(parts), parts[0][4], parts[0][5], parts[0][10], null, false, "", "", false, false, false);
+                        favourites.addEdit(parts[0][0], Favourites.cachePartsToDesc(parts), parts[0][4], parts[0][5], parts[0][10], null, false, "", comment, false, false, false);
+                        http.getHintCache().add(parts[0][7], hint);
+                        http.getListingCache().add(parts[0][7], listing);
                     }
                     count++;
+                    
                     if (count % 10 == 0)
                         siImportCacheCount.setText(Integer.toString(count));
                 } else {

@@ -2,6 +2,7 @@ package http;
 
 import database.Favourites;
 import database.FieldNotes;
+import database.OfflineCache;
 import database.Patterns;
 import database.Settings;
 import gps.Gps;
@@ -13,6 +14,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
@@ -57,6 +59,8 @@ public class Http implements Runnable
     private Cache cache;
     private IconLoader iconLoader;
     private Patterns patterns;
+    private OfflineCache hintCache;
+    private OfflineCache listingCache;
     
     private Thread t;
     
@@ -81,8 +85,18 @@ public class Http implements Runnable
         iconLoader = ref4;
         patterns = ref5;
         cache = new Cache();
+        hintCache = new OfflineCache("hints");
+        listingCache = new OfflineCache("listings");
     }
-    
+
+    public OfflineCache getHintCache() {
+        return hintCache;
+    }   
+
+    public OfflineCache getListingCache() {
+        return listingCache;
+    }
+       
     /***
      * Dodatecne pridani reference
      **/
@@ -115,7 +129,14 @@ public class Http implements Runnable
             action = NEAREST_CACHES;
         }
         
-        if (!gui.logged) //nezalogovan => zalogovat
+        boolean inOfflineCache = false;
+        if (action == HINT && hintCache.has(waypoint))
+            inOfflineCache = true;
+        
+        if (action == DETAIL && listingCache.has(waypoint))
+            inOfflineCache = true;
+        
+        if (!inOfflineCache && !gui.logged ) //nezalogovan => zalogovat
         {
             if (settings.name.equals("") && settings.password.equals(""))
             {
@@ -161,7 +182,7 @@ public class Http implements Runnable
             case LOGIN:
                 try
                 {
-                    response = downloadData("part=login&sessid="+Utils.sessionId(settings.name, settings.password)+"&version="+gui.getAppProperty("MIDlet-Version")+"&light=0&build="+gui.getAppProperty("Build-Vendor")+"-"+gui.getAppProperty("Build-Version"));
+                    response = downloadData("part=login&sessid="+Utils.sessionId(settings.name, settings.password)+"&version="+gui.getAppProperty("MIDlet-Version")+"&light=0&build="+gui.getAppProperty("Build-Vendor")+"-"+gui.getAppProperty("Build-Version"), false, false);
                     if (checkData(response))
                     {
                         String[][] login = parseData(response);
@@ -194,7 +215,7 @@ public class Http implements Runnable
                     //zadane souradnice
                     coordinates = "lattitude="+gps.convertLattitude(gui.get_tfLattitude().getString())+"&longitude="+gps.convertLongitude(gui.get_tfLongitude().getString());
                     //spatny format souradnic
-                    if (gps.convertLattitude(gui.get_tfLattitude().getString())==0 || gps.convertLongitude(gui.get_tfLongitude().getString())==0)
+                    if (gps.convertLattitude(gui.get_tfLattitude().getString())==Double.NaN || gps.convertLongitude(gui.get_tfLongitude().getString())==Double.NaN)
                     {
                         rightCoordFormat = false;
                         gui.showAlert("Špatný formát souřadnic",AlertType.WARNING,gui.get_frmCoordinates());
@@ -205,7 +226,7 @@ public class Http implements Runnable
                     }
                     if (rightCoordFormat)
                     {
-                        response = downloadData("part=nearest&cookie="+cookie+"&"+coordinates+"&filter="+settings.filter+"&numberCaches="+settings.numberCaches);
+                        response = downloadData("part=nearest&"+coordinates+"&filter="+settings.filter+"&numberCaches="+settings.numberCaches);
                         if (checkData(response))
                         {
                             String[][] nearestCaches = parseData(response);
@@ -229,7 +250,7 @@ public class Http implements Runnable
             case KEYWORD:
                 try
                 {
-                    response = downloadData("part=keyword&cookie="+cookie+"&keyword="+Utils.urlUTF8Encode(gui.get_tfKeyword().getString())+"&numberCaches="+settings.numberCaches);
+                    response = downloadData("part=keyword&keyword="+Utils.urlUTF8Encode(gui.get_tfKeyword().getString())+"&numberCaches="+settings.numberCaches);
                     if (checkData(response))
                     {
                         String[][] foundCaches = parseData(response);
@@ -256,7 +277,7 @@ public class Http implements Runnable
                     gui.fromPreview = true;
                     
                     if (!offline)
-                        response = downloadData("part=overview&cookie="+cookie+"&waypoint="+waypoint);
+                        response = downloadData("part=overview&waypoint="+waypoint);
                     if (checkData(response))
                     {
                         String[][] listing = parseData(response);
@@ -339,7 +360,7 @@ public class Http implements Runnable
             case DETAIL:
                 try
                 {
-                    response = downloadData("part=info&cookie="+cookie+"&waypoint="+waypoint);
+                    response = downloadData("part=info&waypoint="+waypoint);
                     if (checkData(response))
                     {
                         gui.get_frmInfo().deleteAll();
@@ -359,7 +380,7 @@ public class Http implements Runnable
             case HINT:
                 try
                 {
-                    response = downloadData("part=hint&cookie="+cookie+"&waypoint="+waypoint);
+                    response = downloadData("part=hint&waypoint="+waypoint);
                     if (checkData(response))
                     {
                         gui.get_frmHint().deleteAll();
@@ -375,7 +396,7 @@ public class Http implements Runnable
             case WAYPOINTS:
                 try
                 {
-                    response = downloadData("part=waypoints&cookie="+cookie+"&waypoint="+waypoint);
+                    response = downloadData("part=waypoints&waypoint="+waypoint);
                     if (checkData(response))
                     {
                         String[][] waypoints = parseData(response);
@@ -396,7 +417,7 @@ public class Http implements Runnable
             case LOGS:
                 try
                 {
-                    response = downloadData("part=logs&cookie="+cookie+"&waypoint="+waypoint);
+                    response = downloadData("part=logs&waypoint="+waypoint);
                     if (checkData(response))
                     {
                         String[][] logs = parseData(response);
@@ -429,7 +450,7 @@ public class Http implements Runnable
             case ALL_LOGS:
                 try
                 {
-                    response = downloadData("part=alllogs&cookie="+cookie+"&guideline="+guideline);
+                    response = downloadData("part=alllogs&guideline="+guideline);
                     if (checkData(response))
                     {
                         String[][] logs = parseData(response);
@@ -449,7 +470,7 @@ public class Http implements Runnable
             case TRACKABLE: 
                 try
                 {
-                    response = downloadData("part=trackable&cookie="+cookie+"&trnumber="+gui.get_tfTrackingNumber().getString());
+                    response = downloadData("part=trackable&trnumber="+gui.get_tfTrackingNumber().getString());
                     if (checkData(response))
                     {
                         String[][] trackable = parseData(response);
@@ -471,7 +492,7 @@ public class Http implements Runnable
             case PATTERNS:
                 try
                 {
-                    response = downloadData("part=patterns&cookie="+cookie+"&waypoint="+waypoint);
+                    response = downloadData("part=patterns&waypoint="+waypoint);
                     if (checkData(response))
                     {
                         String[][] patternsArray = parseData(response);
@@ -486,7 +507,7 @@ public class Http implements Runnable
             case FIELD_NOTES:
                 try
                 {
-                    response = downloadData("action=fieldnotes&cookie="+cookie+"&fieldnotes="+Utils.urlUTF8Encode(FieldNotes.getInstance().getFieldNotes())+"&incremental="+((settings.incrementalFieldNotes)?"1":"0"), true);
+                    response = downloadData("action=fieldnotes&fieldnotes="+Utils.urlUTF8Encode(FieldNotes.getInstance().getFieldNotes())+"&incremental="+((settings.incrementalFieldNotes)?"1":"0"), true, true);
                     if (checkData(response))
                     {
                         gui.showAlert("Nahráno " + response + " nových Field notes na GC.com.",AlertType.INFO,gui.get_lstFieldNotes());
@@ -506,51 +527,38 @@ public class Http implements Runnable
      */
     public String connect(String url)
     {
-        HttpConnection c = null;
+        InputStreamReader reader = null;
         InputStream is = null;
-        ByteArrayOutputStream baos = null;
-        ByteArrayOutputStream baos2 = null;
-        DataOutputStream dos = null;
-        ByteArrayInputStream bais = null;
-        DataInputStream dis = null;
+        HttpConnection c = null;
         try
         {
             // Vytvoreni http spojeni
             c = (HttpConnection) Connector.open(url);
+            
             // Nastaveni pristupove metody
             c.setRequestMethod(HttpConnection.GET);
+
             // Otevreni vstupniho proudu
             gui.get_gaLoading().setValue(Gauge.CONTINUOUS_RUNNING);
+            if (c.getResponseCode() != 200)
+                throw new Exception("TIMEOUT");
             is = c.openInputStream();
+            reader = new InputStreamReader(is, "UTF-8");
             gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
             
-            //nacteni dat byte po bytu
-            baos2 = new ByteArrayOutputStream();
-            DataOutputStream os = new DataOutputStream(baos2);
-            int onebyte;
+            int ch;
             int x = 0;
-            while ((onebyte = is.read()) != -1)
+            StringBuffer sb = new StringBuffer();
+            
+            while ((ch = reader.read()) != -1)
             {
-                os.write(onebyte);
+                sb.append((char) ch);
                 if (x%50==0)
                     gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
                 x++;
             }
-            byte[] polebytu = baos2.toByteArray();
-            os.close();
-            baos2.close();
-            
-            //nacteni delky a vstupu do vystupniho proudu - uprava na upravene UTF-8
-            baos = new ByteArrayOutputStream();
-            dos = new DataOutputStream(baos);
-            dos.writeShort(polebytu.length);
-            for(int i=0;i<polebytu.length;i++) dos.write(polebytu[i]);
-            
-            //ziskani stringu z vystupniho proudu
-            byte[] prd = baos.toByteArray();
-            bais = new ByteArrayInputStream(prd);
-            dis = new DataInputStream(bais);
-            String s = dis.readUTF();
+
+            String s = sb.toString();
             s = Utils.repairUTF8(s);
             gui.get_gaLoading().setValue(Gauge.INCREMENTAL_IDLE);
             //vraceni vystupnich dat
@@ -572,6 +580,10 @@ public class Http implements Runnable
             try
             {
                 //zavreni spojeni i v pripade vyjimky
+                if (reader != null)
+                {
+                    reader.close();
+                }
                 if (is != null)
                 {
                     is.close();
@@ -579,26 +591,6 @@ public class Http implements Runnable
                 if (c != null)
                 {
                     c.close();
-                }
-                if (baos != null)
-                {
-                    baos.close();
-                }
-                if (baos2 != null)
-                {
-                    baos2.close();
-                }
-                if (dos != null)
-                {
-                    dos.close();
-                }
-                if (bais != null)
-                {
-                    bais.close();
-                }
-                if (dis != null)
-                {
-                    dis.close();
                 }
             }
             catch (IOException ex)
@@ -613,17 +605,23 @@ public class Http implements Runnable
      * Zjednodusovaci metoda a rozhodovani, zda se data budou nacitat z kese nebo ne
      */
     public String downloadData(String data) {
-        return downloadData(data, false);
+        return downloadData(data, false, true);
     }
-    
-    public String downloadData(String data, boolean useArcaoUrl)
+        
+    public String downloadData(String data, boolean useArcaoUrl, boolean addCookie)
     {
         boolean cachedAction = false;
         String cachedResponse = null;
-        if ((action == OVERVIEW || action == DETAIL || action == HINT || action == WAYPOINTS || action == LOGS || action == ALL_LOGS) && !refresh)
+        if ((action == OVERVIEW || action == WAYPOINTS || action == LOGS || action == ALL_LOGS) && !refresh)
         {
             cachedAction = true;
             cachedResponse = cache.loadCachedResponse(data);
+        } else if (action == HINT) {
+            cachedAction = true;
+            cachedResponse = hintCache.get(waypoint);
+        } else if (action == DETAIL) {
+            cachedAction = true;
+            cachedResponse = listingCache.get(waypoint);
         }
         
         if (cachedResponse == null) //odpoved neni v kesi, stahujeme z netu
@@ -634,6 +632,7 @@ public class Http implements Runnable
             else
                 gui.get_siMessage().setText("Připojování k serveru a stahování dat...");
             String adress = ((useArcaoUrl) ? arcao_url : url) + "?" + data;
+            if (addCookie) adress+= "&cookie="+cookie;
             String returns = "";
             System.out.println(adress);
             returns = connect(adress);
@@ -650,8 +649,14 @@ public class Http implements Runnable
                 returns = connect(adress);
             }
             System.out.println(returns);
-            if (cachedAction)
+                                   
+            if (cachedAction && action == HINT)
+                hintCache.add(waypoint, returns);
+            else if (cachedAction && action == DETAIL)
+                listingCache.add(waypoint, returns);
+            else if (cachedAction)
                 cache.addCachedResponse(data, returns);
+            
             return returns;
         }
         else //nacitame z kese
@@ -667,7 +672,7 @@ public class Http implements Runnable
     {
         try
         {
-            if (data.length() == 0)
+            if (data.equals("err:TIMEOUT"))
             {
                 gui.showAlert("Vypršel časový limit spojení. Server geocaching.com neodpovídá. Zkuste to za chvilku znovu.",AlertType.ERROR,gui.get_lstMenu());
                 return false;

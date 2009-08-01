@@ -22,11 +22,13 @@ import javax.microedition.lcdui.Gauge;
 public class LoadingForm extends Form {
     private Display display;
     private Displayable next;    
+    private Alert nextAlert;
     private boolean isSetFinish;
     
     /** Creates a new instance of LoadingForm */
-    public LoadingForm(Display display, String title, String message, Displayable next) {
+    public LoadingForm(Display display, String title, String message, Displayable next, Alert nextAlert) {
         super(title);
+        this.nextAlert = nextAlert;
         this.display = display;
         this.next = next;
         
@@ -42,8 +44,12 @@ public class LoadingForm extends Form {
             setFinish();
             return;
         }
-        if (this.display.getCurrent() instanceof Alert) {
-            this.display.setCurrent((Alert) this.display.getCurrent(), this);
+        
+        if (nextAlert != null) {
+            this.display.setCurrent(nextAlert, this);
+        } else if (this.display.getCurrent() instanceof Alert) {
+            nextAlert = (Alert) this.display.getCurrent();
+            this.display.setCurrent(nextAlert, this);
         } else {
             this.display.setCurrent(this);
         }
@@ -53,8 +59,8 @@ public class LoadingForm extends Form {
     public void setFinish() {
         System.out.println("finish");
         isSetFinish = true;
-        if (this.display.getCurrent() instanceof Alert) {
-            this.display.setCurrent((Alert) this.display.getCurrent(), next);
+        if (nextAlert != null && nextAlert.isShown()) {
+            this.display.setCurrent(nextAlert, next);
         } else {
             this.display.setCurrent(next);
         }

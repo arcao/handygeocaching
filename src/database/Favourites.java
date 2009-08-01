@@ -19,6 +19,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import javax.microedition.apdu.APDUConnection;
+import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.rms.RecordEnumeration;
@@ -72,6 +73,8 @@ public class Favourites extends Database
     public void deleteAll() {
         revalidate();
         super.deleteAll();
+        http.getHintCache().deleteAll();
+        http.getListingCache().deleteAll();
     }
 
 
@@ -185,6 +188,7 @@ public class Favourites extends Database
     
     public void addEdit(String name, String description, String lattitude, String longitude, String type, Displayable nextScreen, boolean DegMinSecFormat, String found, String poznamka, boolean refreshView, boolean needRevalidate, boolean saveLastUse)
     {
+        Alert alert = null;
         try
         {
             //debug info
@@ -207,10 +211,10 @@ public class Favourites extends Database
             if (lattitude=="" | Gps.convertLattitude(lattitude)==Double.NaN)
             {
                 if (gui.fromMultiSolver)
-                    gui.showAlert("Špatný formát první souřadnice",AlertType.WARNING,gui.get_frmResult());
+                    alert = gui.showAlert("Špatný formát první souřadnice",AlertType.WARNING,gui.get_frmResult());
                 else
                 {
-                    gui.showAlert("Špatný formát první souřadnice",AlertType.WARNING,gui.get_frmAddGiven());
+                    alert = gui.showAlert("Špatný formát první souřadnice",AlertType.WARNING,gui.get_frmAddGiven());
                 }
             }
             //Zephy 19.11.07 + pridan OR v podmince
@@ -218,9 +222,9 @@ public class Favourites extends Database
             {
                 
                 if (gui.fromMultiSolver)
-                    gui.showAlert("Špatný formát druhé souřadnice",AlertType.WARNING,gui.get_frmResult());
+                    alert = gui.showAlert("Špatný formát druhé souřadnice",AlertType.WARNING,gui.get_frmResult());
                 else
-                    gui.showAlert("Špatný formát druhé souřadnice",AlertType.WARNING,gui.get_frmAddGiven());
+                    alert = gui.showAlert("Špatný formát druhé souřadnice",AlertType.WARNING,gui.get_frmAddGiven());
             }
             else
             {
@@ -274,17 +278,17 @@ public class Favourites extends Database
                 
                 if (!name.equals("_Poslední cache") && editId==-1)
                 {
-                    if (nextScreen != null) gui.showAlert("Uloženo do oblíbených",AlertType.INFO,nextScreen);
+                    if (nextScreen != null) alert = gui.showAlert("Uloženo do oblíbených",AlertType.INFO,nextScreen);
                 }
                 //Zephy 19.11.07 +\ -tohle doplneno aby se po skonceni editace preslo na seznam bodu
                 else
                 {
-                    if (nextScreen != null) gui.showAlert("Změny uloženy",AlertType.INFO,nextScreen);
+                    if (nextScreen != null) alert = gui.showAlert("Změny uloženy",AlertType.INFO,nextScreen);
                 }
                 //Zephy 19.11.07 +/
                 
                 if (refreshView)
-                    viewAll();
+                    viewAll(alert);
             }
         }
         catch (Exception ex)
@@ -483,6 +487,11 @@ public class Favourites extends Database
             {
                 if (gui.get_lstFavourites().isSelected(i))
                 {
+                    String[] parts = getCachePartsID(recordIds[i]);
+                    if (parts.length > 0) {
+                        http.getHintCache().delete(parts[7]); //delete hint
+                        http.getListingCache().delete(parts[7]); //delete listing
+                    }
                     recordStore.deleteRecord(recordIds[i]);
                     needRevalidate = true;
                 }
@@ -502,14 +511,18 @@ public class Favourites extends Database
     /**
      * Vypise seznam oblibenych bodu
      */
-    public void viewAll()
+    public void viewAll() {
+        viewAll(null);
+    }
+    
+    public void viewAll(Alert alert)
     {
         if (!needUpdateViewAll) {
             gui.getDisplay().setCurrent(gui.get_lstFavourites());
             return;
         }
         needUpdateViewAll = false;
-        final LoadingForm lForm = new LoadingForm(gui.getDisplay(), "Načítám..", "Načítám seznam keší...", gui.get_lstFavourites());
+        final LoadingForm lForm = new LoadingForm(gui.getDisplay(), "Načítám..", "Načítám seznam keší...", gui.get_lstFavourites(), alert);
         
         try
         {
@@ -556,6 +569,14 @@ public class Favourites extends Database
             {
                 id = rc.nextRecordId();
             }
+            return getCachePartsID(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new String[0];
+        }
+    }
+    public String[] getCachePartsID(int id) {
+        try {
             DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
             dis.readUTF(); //name
             String type = dis.readUTF(); //type
@@ -637,6 +658,7 @@ public class Favourites extends Database
                 byte[] bytes = buffer.toByteArray();
                 recordStore.addRecord(bytes, 0, bytes.length);
             }
+            revalidate();
             viewAll();
         }
         catch (Exception e)
@@ -674,5 +696,4 @@ public class Favourites extends Database
             recordEnumeration.destroy();
         recordEnumeration = null;
     }
-    
 }

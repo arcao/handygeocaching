@@ -13,6 +13,7 @@ import java.io.DataInputStream;
 import javax.microedition.rms.RecordComparator;
 import javax.microedition.rms.RecordFilter;
 import javax.microedition.rms.RecordStore;
+import javax.microedition.rms.RecordStoreNotOpenException;
 
 /**
  * Tato třída je pouze abstraktní - dědí od ní jednotlivé databáze
@@ -103,7 +104,7 @@ abstract class Database implements RecordFilter, RecordComparator
             String s1 = dis1.readUTF();
             String s2 = dis2.readUTF();
             // porovnání jmen z prvního a druhého záznamu
-            int i = s1.compareTo(s2);
+            int i = s1.toLowerCase().compareTo(s2.toLowerCase());
             if (i == 0)
             {
                 // jména jsou stejná
@@ -127,4 +128,30 @@ abstract class Database implements RecordFilter, RecordComparator
         }
     }
     
+    public int usedSize() {
+        try {
+            return recordStore.getSize();
+        } catch (RecordStoreNotOpenException ex) {
+            ex.printStackTrace();
+            return 0;
+        }
+    }
+    
+    public int totalSize() {
+        try {
+            return recordStore.getSize() + recordStore.getSizeAvailable();
+        } catch (RecordStoreNotOpenException ex) {
+            ex.printStackTrace();
+            return 0;
+        }
+    }
+    
+    public int count() {
+        try {
+            return recordStore.getNumRecords();
+        } catch (RecordStoreNotOpenException ex) {
+            ex.printStackTrace();
+            return 0;
+        }
+    }
 }

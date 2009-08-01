@@ -588,6 +588,10 @@ public class Gps implements Runnable
                 throw new Exception("lattitude neni N nebo S");
             }
             
+            if (!lat.substring(4,6).equals("° ") && !lat.substring(4,6).equals("  ")) {
+                throw new Exception("spatny format stupnu u lattitude ");
+            }
+            
             double lattitudeDegrees = direction * (Integer.parseInt(lat.substring(2,4))+Double.parseDouble(lat.substring(6,12))/60);
             
             return lattitudeDegrees;
@@ -619,8 +623,13 @@ public class Gps implements Runnable
             {
                 throw new Exception("longitude neni W nebo E");
             }
+            
+            if (!lon.substring(4,6).equals("° ") && !lon.substring(4,6).equals("  ") && !lon.substring(5,7).equals("° ") && !lon.substring(5,7).equals("  ")) {
+                throw new Exception("spatny format stupnu u longitude");
+            }
+            
             double longitudeDegrees;
-            if (lon.length() == 12)
+            if (lon.substring(4,6).equals("° ") || lon.substring(4,6).equals("  "))
             {
                 longitudeDegrees = direction * (Integer.parseInt(lon.substring(2,4))+Double.parseDouble(lon.substring(6,12))/60);
             }

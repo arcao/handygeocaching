@@ -21,7 +21,7 @@ import utils.Utils;
 
 /**
  *
- * @author Administrator
+ * @author Arcao
  */
 public class FieldNotesItem {
     private int id;

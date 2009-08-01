@@ -321,7 +321,14 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private ChoiceGroup cgFieldNotes;
     private Command cmdSetFound;
     private Command cmdImportGPX;
-    private Gauge gaLoadingIndicator;//GEN-END:MVDFields
+    private Gauge gaLoadingIndicator;
+    private Command cmdMemoryInfo;
+    private Form frmMemoryInfo;
+    private StringItem siHeapSize;
+    private StringItem siRMSFavourities;
+    private StringItem siRMSHint;
+    private StringItem siRMSFieldNotes;
+    private StringItem siRMSListing;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -742,9 +749,14 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction129
                 // Insert post-action code here
-            }//GEN-BEGIN:MVDCACase129
+            } else if (command == cmdMemoryInfo) {//GEN-LINE:MVDCACase129
+                // Insert pre-action code here
+                fillMemoryInfoForm();
+                getDisplay().setCurrent(get_frmMemoryInfo());//GEN-LINE:MVDCAAction602
+                // Insert post-action code here
+            }//GEN-BEGIN:MVDCACase602
         } else if (displayable == frmLoading) {
-            if (command == cmdStop) {//GEN-END:MVDCACase129
+            if (command == cmdStop) {//GEN-END:MVDCACase602
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction136
                 // Insert post-action code here
@@ -1477,12 +1489,18 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 
                 showAlert("Field note uloženo.", AlertType.INFO, fRet);
             }//GEN-BEGIN:MVDCACase554
-        }//GEN-END:MVDCACase554
+        } else if (displayable == frmMemoryInfo) {
+            if (command == cmdBack) {//GEN-END:MVDCACase554
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_frmAbout());//GEN-LINE:MVDCAAction605
+                // Insert post-action code here
+            }//GEN-BEGIN:MVDCACase605
+        }//GEN-END:MVDCACase605
 // Insert global post-action code here
         
         if (displayable == openFileBrowser && openFileBrowser != null) {
             if (command == OpenFileBrowser.OK) {
-                gpxImportForm = new GPXImport(favourites, getDisplay());
+                gpxImportForm = new GPXImport(favourites, getDisplay(), http);
                 gpxImportForm.setListener(this);
                 gpxImportForm.parse(openFileBrowser.getFileName());
                 openFileBrowser = null;
@@ -2251,6 +2269,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 get_siDonate()
             });
             frmAbout.addCommand(get_cmdBack());
+            frmAbout.addCommand(get_cmdMemoryInfo());
             frmAbout.setCommandListener(this);//GEN-END:MVDGetInit126
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd126
@@ -4556,6 +4575,98 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         }//GEN-BEGIN:MVDGetEnd596
         return gaLoadingIndicator;
     }//GEN-END:MVDGetEnd596
+
+    /** This method returns instance for cmdMemoryInfo component and should be called instead of accessing cmdMemoryInfo field directly.//GEN-BEGIN:MVDGetBegin601
+     * @return Instance for cmdMemoryInfo component
+     */
+    public Command get_cmdMemoryInfo() {
+        if (cmdMemoryInfo == null) {//GEN-END:MVDGetBegin601
+            // Insert pre-init code here
+            cmdMemoryInfo = new Command("Informace o pam\u011Bti", Command.SCREEN, 1);//GEN-LINE:MVDGetInit601
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd601
+        return cmdMemoryInfo;
+    }//GEN-END:MVDGetEnd601
+
+    /** This method returns instance for frmMemoryInfo component and should be called instead of accessing frmMemoryInfo field directly.//GEN-BEGIN:MVDGetBegin603
+     * @return Instance for frmMemoryInfo component
+     */
+    public Form get_frmMemoryInfo() {
+        if (frmMemoryInfo == null) {//GEN-END:MVDGetBegin603
+            // Insert pre-init code here
+            frmMemoryInfo = new Form("Informace o pam\u011Bti", new Item[] {//GEN-BEGIN:MVDGetInit603
+                get_siHeapSize(),
+                get_siRMSFavourities(),
+                get_siRMSHint(),
+                get_siRMSListing(),
+                get_siRMSFieldNotes()
+            });
+            frmMemoryInfo.addCommand(get_cmdBack());
+            frmMemoryInfo.setCommandListener(this);//GEN-END:MVDGetInit603
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd603
+        return frmMemoryInfo;
+    }//GEN-END:MVDGetEnd603
+
+    /** This method returns instance for siHeapSize component and should be called instead of accessing siHeapSize field directly.//GEN-BEGIN:MVDGetBegin606
+     * @return Instance for siHeapSize component
+     */
+    public StringItem get_siHeapSize() {
+        if (siHeapSize == null) {//GEN-END:MVDGetBegin606
+            // Insert pre-init code here
+            siHeapSize = new StringItem("Pam\u011B\u0165 (KB):", "0/0");//GEN-LINE:MVDGetInit606
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd606
+        return siHeapSize;
+    }//GEN-END:MVDGetEnd606
+
+    /** This method returns instance for siRMSFavourities component and should be called instead of accessing siRMSFavourities field directly.//GEN-BEGIN:MVDGetBegin607
+     * @return Instance for siRMSFavourities component
+     */
+    public StringItem get_siRMSFavourities() {
+        if (siRMSFavourities == null) {//GEN-END:MVDGetBegin607
+            // Insert pre-init code here
+            siRMSFavourities = new StringItem("RMS obl\u00EDben\u00E9 (KB):", "0/0");//GEN-LINE:MVDGetInit607
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd607
+        return siRMSFavourities;
+    }//GEN-END:MVDGetEnd607
+
+    /** This method returns instance for siRMSHint component and should be called instead of accessing siRMSHint field directly.//GEN-BEGIN:MVDGetBegin608
+     * @return Instance for siRMSHint component
+     */
+    public StringItem get_siRMSHint() {
+        if (siRMSHint == null) {//GEN-END:MVDGetBegin608
+            // Insert pre-init code here
+            siRMSHint = new StringItem("RMS n\u00E1pov\u011Bda - hint (KB):", "0/0");//GEN-LINE:MVDGetInit608
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd608
+        return siRMSHint;
+    }//GEN-END:MVDGetEnd608
+
+    /** This method returns instance for siRMSFieldNotes component and should be called instead of accessing siRMSFieldNotes field directly.//GEN-BEGIN:MVDGetBegin609
+     * @return Instance for siRMSFieldNotes component
+     */
+    public StringItem get_siRMSFieldNotes() {
+        if (siRMSFieldNotes == null) {//GEN-END:MVDGetBegin609
+            // Insert pre-init code here
+            siRMSFieldNotes = new StringItem("RMS Field notes (KB):", "0/0");//GEN-LINE:MVDGetInit609
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd609
+        return siRMSFieldNotes;
+    }//GEN-END:MVDGetEnd609
+
+    /** This method returns instance for siRMSListing component and should be called instead of accessing siRMSListing field directly.//GEN-BEGIN:MVDGetBegin610
+     * @return Instance for siRMSListing component
+     */
+    public StringItem get_siRMSListing() {
+        if (siRMSListing == null) {//GEN-END:MVDGetBegin610
+            // Insert pre-init code here
+            siRMSListing = new StringItem("RMS listing (KB):", "0/0");//GEN-LINE:MVDGetInit610
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd610
+        return siRMSListing;
+    }//GEN-END:MVDGetEnd610
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {
@@ -4610,7 +4721,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     /**
      * Tato metoda se pouziva k zobrazovani alertu v aplikaci
      */
-    public void showAlert(String text, AlertType type, Displayable next) {
+    public Alert showAlert(String text, AlertType type, Displayable next) {
         String caption = "";
         if (type == AlertType.ALARM)
             caption = "Alarm";
@@ -4626,6 +4737,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         alert.setTimeout(Alert.FOREVER);
         if (next == null) next = getDisplay().getCurrent();
         getDisplay().setCurrent(alert, next);
+        return alert;
     }
     
     /**
@@ -4687,5 +4799,13 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 get_tfFNText().setString(text);
             }
         }
+    }
+    
+    private void fillMemoryInfoForm() {
+        get_siHeapSize().setText((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 + "/" + Runtime.getRuntime().totalMemory() / 1024);
+        get_siRMSFavourities().setText(favourites.usedSize() / 1024 + "/" + favourites.totalSize() / 1024 + " (" + favourites.count() + ")");
+        get_siRMSHint().setText(http.getHintCache().usedSize() / 1024 + "/" + http.getHintCache().totalSize() / 1024 + " (" + http.getHintCache().count() + ")");
+        get_siRMSListing().setText(http.getListingCache().usedSize() / 1024 + "/" + http.getListingCache().totalSize() / 1024 + " (" + http.getListingCache().count() + ")");
+        get_siRMSFieldNotes().setText(FieldNotes.getInstance().usedSize() / 1024 + "/" + FieldNotes.getInstance().totalSize() / 1024 + " (" + FieldNotes.getInstance().count() + ")");
     }
 }
