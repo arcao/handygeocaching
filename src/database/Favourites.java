@@ -169,8 +169,10 @@ public class Favourites extends Database
             String lattitude = dis.readUTF();
             String longitude = dis.readUTF();
             
-            lattitude = Utils.replaceString(Utils.replaceString(lattitude, "° ","d"),"N ","");
-            longitude = Utils.replaceString(Utils.replaceString(longitude, "° ","d"),"E ","");
+            //lattitude = Utils.replaceString(Utils.replaceString(lattitude, "° ","d"),"N ","");
+            //longitude = Utils.replaceString(Utils.replaceString(longitude, "° ","d"),"E ","");
+            lattitude = Double.toString(Gps.convertLattitude(lattitude));
+            longitude = Double.toString(Gps.convertLongitude(longitude));
             gui.platformRequest("http://wap.mapy.cz/search?from=&query="+lattitude+"+"+longitude+"&mapType=ophoto&zoom=16");
         }
         catch (Exception e)

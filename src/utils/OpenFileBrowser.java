@@ -72,7 +72,7 @@ public class OpenFileBrowser extends List implements CommandListener
                     display.setCurrent(backScreen);
                 list();
             } else {  
-                fileName = "file:///" + currDirName + currFile;
+                fileName = "file://localhost/" + currDirName + currFile;
                 if (nextScreen != null)
                     display.setCurrent(nextScreen);
                 if (listener != null)
@@ -103,28 +103,33 @@ public class OpenFileBrowser extends List implements CommandListener
                     deleteAll();
                     if (MEGA_ROOT.equals(currDirName)) {
                         e = FileSystemRegistry.listRoots();
-                    } else {
-                        System.out.println("connector");
-                        System.out.println("path: " + "file:///" + currDirName);
-                        if (currDir == null) {
-                            currDir = (FileConnection)Connector.open("file:///" + currDirName, Connector.READ);
-                        } else {
-                            currDir.setFileConnection("file:///" + currDirName);
+                        while (e.hasMoreElements()) {
+                            append((String)e.nextElement(),null);
                         }
-                        e = currDir.list();
+                    } else {
+                        currDir = (FileConnection)Connector.open("file://localhost/" + currDirName, Connector.READ);
                         append(UP_DIRECTORY,null);
-                    }  
-                    while (e.hasMoreElements()) {
-                        System.out.println("list");
-                        String fileName = (String)e.nextElement();
-                        System.out.println("fileName:"+fileName+" char_at:"+fileName.charAt(fileName.length()-1));
+                        
+                        e = currDir.list();
+                        while (e.hasMoreElements()) {
+                            fileName = (String) e.nextElement();
+                            if (fileName.charAt(fileName.length()-1) == SEP)
+                                append(fileName,null);  
+                        }
 
-                        if (fileName.charAt(fileName.length()-1) == SEP) {
-                            append(fileName,null);  
-                        } else {  
-                            System.out.println("h4");  
-                            append(fileName,null);  
-                        }  
+                        e = currDir.list();
+                        while (e.hasMoreElements()) {
+                            fileName = (String) e.nextElement();
+                            if (fileName.charAt(fileName.length()-1) == SEP)
+                                append(fileName,null);  
+                        }
+                        
+                        e = currDir.list("*.gpx", true);
+                        while (e.hasMoreElements()) {
+                            fileName = (String) e.nextElement();
+                            if (fileName.charAt(fileName.length()-1) != SEP)
+                                append(fileName,null);
+                        }
                     }
                     if (currDir != null) {
                         currDir.close();
