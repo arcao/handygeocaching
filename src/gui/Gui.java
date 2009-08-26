@@ -1014,7 +1014,6 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 dialog.setActionNoDisplayable(lstFavourites);
                 dialog.setActionYes(new Runnable() {
                     public void run() {
-                        getDisplay().setCurrent(lstFavourites);
                         favourites.delete();
                     }
                 });
@@ -1309,8 +1308,16 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction280
                 }
             } else if (command == cmdDelete) {//GEN-END:MVDCACase384
                 // Insert pre-action code here
-                patterns.delete();
-                patterns.viewAll();
+                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat položku?", "Opravdu chcete smazat tuto položku?");
+                dialog.setActionNoDisplayable(lstPatterns);
+                dialog.setActionYes(new Runnable() {
+                    public void run() {
+                        patterns.delete();
+                        patterns.viewAll();
+                    }
+                });
+                dialog.setActionYesDisplayable(lstPatterns);
+                dialog.show();
                 // Do nothing//GEN-LINE:MVDCAAction427
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase427
@@ -1383,23 +1390,40 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 // Insert post-action code here
             } else if (command == cmdDeleteAll) {//GEN-LINE:MVDCACase546
                 // Insert pre-action code here
-                FieldNotes.getInstance().deleteAll();
-                get_lstFieldNotes().deleteAll();
+                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat všechny položky?", "Opravdu chcete smazat všechny položky?");
+                dialog.setActionNoDisplayable(lstFieldNotes);
+                dialog.setActionYes(new Runnable() {
+                    public void run() {
+                        FieldNotes.getInstance().deleteAll();
+                        get_lstFieldNotes().deleteAll();
+                    }
+                });
+                dialog.setActionYesDisplayable(lstFieldNotes);
+                dialog.show();
                 // Do nothing//GEN-LINE:MVDCAAction573
                 // Insert post-action code here
             } else if (command == cmdDelete) {//GEN-LINE:MVDCACase573
                 // Insert pre-action code here
-                int ids[] = FieldNotes.getInstance().getAllIds();
-                for (int i = 0; i < ids.length; i++) {
-                    if (get_lstFieldNotes().isSelected(i)) {
-                        FieldNotes.getInstance().deleteById(ids[i]);
+                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat položky?", "Opravdu chcete smazat zvolené položky?");
+                dialog.setActionNoDisplayable(lstFieldNotes);
+                dialog.setActionYes(new Runnable() {
+                    public void run() {
+
+                    int ids[] = FieldNotes.getInstance().getAllIds();
+                    for (int i = 0; i < ids.length; i++) {
+                        if (get_lstFieldNotes().isSelected(i)) {
+                            FieldNotes.getInstance().deleteById(ids[i]);
+                        }
                     }
-                }
-                
-                get_lstFieldNotes().deleteAll();
-                FieldNotesItem[] items = FieldNotes.getInstance().getAll();
-                for(int i=0; i < items.length; i++)
-                    get_lstFieldNotes().append(items[i].toString(!settings.iconsInFieldNotes, settings.nameInFieldNotesFirst), (settings.iconsInFieldNotes)? iconLoader.loadIcon(FieldNotes.getTypeIconName(items[i].getType()), false) : null);
+
+                    get_lstFieldNotes().deleteAll();
+                    FieldNotesItem[] items = FieldNotes.getInstance().getAll();
+                    for(int i=0; i < items.length; i++)
+                        get_lstFieldNotes().append(items[i].toString(!settings.iconsInFieldNotes, settings.nameInFieldNotesFirst), (settings.iconsInFieldNotes)? iconLoader.loadIcon(FieldNotes.getTypeIconName(items[i].getType()), false) : null);
+                    }
+                });
+                dialog.setActionYesDisplayable(lstFavourites);
+                dialog.show();
                 // Do nothing//GEN-LINE:MVDCAAction571
                 // Insert post-action code here
             } else if (command == cmdPostFieldNotes) {//GEN-LINE:MVDCACase571
