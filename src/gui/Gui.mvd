@@ -9,6 +9,7 @@
         <DesignComponent id="lstDevices" typeid="MIDP:javax.microedition.lcdui.List" uid="3">
             <Property name="title" value="STRING:Vyberte GPS modul:"/>
             <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="fitPolicy" value="TEXT_WRAP_OFF"/>
             <Property name="selectCommandAction" value="$SelectCommandAction1"/>
             <Property name="indexBasedSwitch" value="true"/>
             <ContainerProperty name="commands">
@@ -27,6 +28,7 @@
         <DesignComponent id="lstMenu" typeid="MIDP:javax.microedition.lcdui.List" uid="5">
             <Property name="title" value="STRING:Handy Geocaching"/>
             <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="fitPolicy" value="TEXT_WRAP_OFF"/>
             <Property name="selectCommandAction" value="$SelectCommandAction2"/>
             <Property name="indexBasedSwitch" value="true"/>
             <ContainerProperty name="commands"/>
@@ -128,6 +130,7 @@
         <DesignComponent id="lstMode" typeid="MIDP:javax.microedition.lcdui.List" uid="27">
             <Property name="title" value="STRING:Zvolte m\u00F3d:"/>
             <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="fitPolicy" value="TEXT_WRAP_OFF"/>
             <Property name="selectCommandAction" value="$SelectCommandAction3"/>
             <Property name="indexBasedSwitch" value="true"/>
             <ContainerProperty name="commands">
@@ -858,6 +861,7 @@
         <DesignComponent id="lstSearch" typeid="MIDP:javax.microedition.lcdui.List" uid="226">
             <Property name="title" value="STRING:Vyhled\u00E1v\u00E1n\u00ED"/>
             <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="fitPolicy" value="TEXT_WRAP_OFF"/>
             <Property name="selectCommandAction" value="$SelectCommandAction6"/>
             <Property name="indexBasedSwitch" value="true"/>
             <ContainerProperty name="commands">
@@ -925,6 +929,7 @@
         <DesignComponent id="lstGPS" typeid="MIDP:javax.microedition.lcdui.List" uid="237">
             <Property name="title" value="STRING:Dal\u0161\u00ED funkce"/>
             <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="fitPolicy" value="TEXT_WRAP_OFF"/>
             <Property name="selectCommandAction" value="$SelectCommandAction7"/>
             <Property name="indexBasedSwitch" value="true"/>
             <ContainerProperty name="commands">
@@ -1011,6 +1016,7 @@
         <DesignComponent id="lstFavourites" typeid="MIDP:javax.microedition.lcdui.List" uid="251">
             <Property name="title" value="STRING:Obl\u00EDben\u00E9"/>
             <Property name="choiceType" value="MULTIPLE"/>
+            <Property name="fitPolicy" value="TEXT_WRAP_OFF"/>
             <Property name="selectCommandAction" value="$SelectCommandAction8"/>
             <Property name="indexBasedSwitch" value="true"/>
             <ContainerProperty name="commands">
@@ -1612,6 +1618,7 @@
         <DesignComponent id="lstPatterns" typeid="MIDP:javax.microedition.lcdui.List" uid="375">
             <Property name="title" value="STRING:Vzore\u010Dky"/>
             <Property name="choiceType" value="IMPLICIT"/>
+            <Property name="fitPolicy" value="TEXT_WRAP_OFF"/>
             <Property name="selectCommandAction" value="$SelectCommandAction9"/>
             <Property name="indexBasedSwitch" value="true"/>
             <ContainerProperty name="commands">

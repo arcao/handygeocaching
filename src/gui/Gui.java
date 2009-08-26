@@ -1648,7 +1648,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 false,
                 false,
                 false
-            });//GEN-END:MVDGetInit5
+            });
+            lstMenu.setFitPolicy(Choice.TEXT_WRAP_OFF);//GEN-END:MVDGetInit5
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd5
         return lstMenu;
@@ -1804,7 +1805,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 false,
                 false,
                 false
-            });//GEN-END:MVDGetInit27
+            });
+            lstMode.setFitPolicy(Choice.TEXT_WRAP_OFF);//GEN-END:MVDGetInit27
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd27
         return lstMode;
@@ -2682,7 +2684,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             lstDevices.addCommand(get_cmdExit());
             lstDevices.addCommand(get_cmdBack());
             lstDevices.setCommandListener(this);
-            lstDevices.setSelectedFlags(new boolean[] {false});//GEN-END:MVDGetInit3
+            lstDevices.setSelectedFlags(new boolean[] {false});
+            lstDevices.setFitPolicy(Choice.TEXT_WRAP_OFF);//GEN-END:MVDGetInit3
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd3
         return lstDevices;
@@ -2804,7 +2807,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 false,
                 false,
                 false
-            });//GEN-END:MVDGetInit226
+            });
+            lstSearch.setFitPolicy(Choice.TEXT_WRAP_OFF);//GEN-END:MVDGetInit226
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd226
         return lstSearch;
@@ -2856,7 +2860,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 false,
                 false,
                 false
-            });//GEN-END:MVDGetInit237
+            });
+            lstGPS.setFitPolicy(Choice.TEXT_WRAP_OFF);//GEN-END:MVDGetInit237
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd237
         return lstGPS;
@@ -2908,7 +2913,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             lstFavourites.addCommand(get_cmdPoznamka());
             lstFavourites.addCommand(get_cmdImportGPX());
             lstFavourites.setCommandListener(this);
-            lstFavourites.setSelectedFlags(new boolean[0]);//GEN-END:MVDGetInit251
+            lstFavourites.setSelectedFlags(new boolean[0]);
+            lstFavourites.setFitPolicy(Choice.TEXT_WRAP_OFF);//GEN-END:MVDGetInit251
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd251
         return lstFavourites;
@@ -3703,7 +3709,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             lstPatterns.addCommand(get_cmdEditPattern());
             lstPatterns.addCommand(get_cmdDelete());
             lstPatterns.setCommandListener(this);
-            lstPatterns.setSelectedFlags(new boolean[] {false});//GEN-END:MVDGetInit375
+            lstPatterns.setSelectedFlags(new boolean[] {false});
+            lstPatterns.setFitPolicy(Choice.TEXT_WRAP_OFF);//GEN-END:MVDGetInit375
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd375
         return lstPatterns;
