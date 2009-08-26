@@ -1,5 +1,6 @@
 package utils;
 
+import gui.LoadingForm;
 import java.util.*;  
 import java.io.*;  
 import javax.microedition.io.*;  
@@ -95,7 +96,10 @@ public class OpenFileBrowser extends List implements CommandListener
         }  
     }
      
-    private void list() {  
+    private void list() {
+        final LoadingForm lForm = new LoadingForm(display, "Načítám..", "Načítám seznam souborů...", this, null);
+        lForm.show();
+        
         new Thread(new Runnable() {
             public void run() {
                 Enumeration e;
@@ -138,6 +142,7 @@ public class OpenFileBrowser extends List implements CommandListener
                 } catch (IOException ioe) {  
                     System.out.println(ioe);  
                 }
+                lForm.setFinish();
             }  
         }).start();
     }
