@@ -525,14 +525,15 @@ public class Favourites extends Database
         }
         needUpdateViewAll = false;
         final LoadingForm lForm = new LoadingForm(gui.getDisplay(), "Načítám..", "Načítám seznam keší...", gui.get_lstFavourites(), alert);
+        lForm.show();
         
         try
         {
             Thread t = new Thread(new Runnable() {
                 public void run() {
                     try {
-                        if (recordStore.getNumRecords() != 0)
-                            lForm.show();
+                        //if (recordStore.getNumRecords() != 0)
+                        //    lForm.show();
                         
                         gui.get_lstFavourites().deleteAll();
                         RecordEnumeration rc = getRecordEnumeration();

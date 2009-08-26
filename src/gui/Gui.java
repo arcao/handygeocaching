@@ -11,6 +11,7 @@ import database.FieldNotes;
 import database.FieldNotesItem;
 import java.util.Calendar;
 import javax.microedition.lcdui.ItemStateListener;
+import utils.ConfirmDialog;
 import utils.GPXImport;
 import utils.OpenFileBrowser;
 import database.Favourites;
@@ -975,7 +976,14 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
             } else if (command == cmdDeleteAll) {//GEN-LINE:MVDCACase253
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction257
-                favourites.deleteAll();
+                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat všechny položky?", "Opravdu chcete smazat všechny položky?");
+                dialog.setActionNoDisplayable(lstFavourites);
+                dialog.setActionYes(new Runnable() {
+                    public void run() {
+                        favourites.deleteAll();
+                    }
+                });
+                dialog.show();
             } else if (command == cmdSelect) {//GEN-LINE:MVDCACase257
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction259
@@ -1002,7 +1010,15 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction272
                 // Insert post-action code here
-                favourites.delete();
+                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat položky?", "Opravdu chcete smazat zvolené položky?");
+                dialog.setActionNoDisplayable(lstFavourites);
+                dialog.setActionYes(new Runnable() {
+                    public void run() {
+                        getDisplay().setCurrent(lstFavourites);
+                        favourites.delete();
+                    }
+                });
+                dialog.show();
             } else if (command == cmdAddGiven) {//GEN-LINE:MVDCACase272
                 // Insert pre-action code here
                 fromMultiSolver = false;
@@ -4714,7 +4730,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             get_tbError().setString("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" +
                     "'");
         }
-        System.out.println(get_tbError().getString());
+        //System.out.println(get_tbError().getString());
         getDisplay().setCurrent(get_tbError());
     }
     
@@ -4735,6 +4751,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             caption = "Upozornění";
         Alert alert = new Alert(caption,text,null,type);
         alert.setTimeout(Alert.FOREVER);
+        if (type == AlertType.INFO)
+            alert.setTimeout(800);
         if (next == null) next = getDisplay().getCurrent();
         getDisplay().setCurrent(alert, next);
         return alert;

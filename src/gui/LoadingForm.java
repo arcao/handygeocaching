@@ -47,9 +47,6 @@ public class LoadingForm extends Form {
         
         if (nextAlert != null) {
             this.display.setCurrent(nextAlert, this);
-        } else if (this.display.getCurrent() instanceof Alert) {
-            nextAlert = (Alert) this.display.getCurrent();
-            this.display.setCurrent(nextAlert, this);
         } else {
             this.display.setCurrent(this);
         }
