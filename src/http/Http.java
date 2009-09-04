@@ -22,6 +22,8 @@ import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Gauge;
 import javax.microedition.lcdui.StringItem;
+import utils.ConfirmDialog;
+import utils.StringTokenizer;
 import utils.Utils;
 
 /***
@@ -50,6 +52,7 @@ public class Http implements Runnable
     public static final int TRACKABLE = 19;
     public static final int PATTERNS = 11;
     public static final int FIELD_NOTES = 12;
+    public static final int DOWNLOAD_ALL_CACHES = 13;
     
     //reference na ostatni moduly
     private Gui gui;
@@ -71,7 +74,9 @@ public class Http implements Runnable
     private boolean previousRefresh; //minuly refresh ukladany kvuli logovani
     private boolean offline; //offline mod - data se nacitaji z pameti
     public String[] waypoints; //waypointy v nalezenych kesich
+    private String[][] foundCaches; //nalezene kese - [0]=nazev kese, [1]=typ kese, [3]=GC_ID
     public String waypoint; //zvoleny waypoint
+    public String waypointCacheName; //nayev kese zvoleneho waypointu
     public String typeNumber; //cislo obrazku typu - pouziva se pri ukladani do oblibenych
     public String response; //odpoved HTTP, vyuziva se hlavne pri ukladani do cache
     public String favouriteResponse; //odpoved HTTP, vyuziva se pri ukladani do oblibenych
@@ -226,17 +231,17 @@ public class Http implements Runnable
                     }
                     if (rightCoordFormat)
                     {
-                        response = downloadData("part=nearest&"+coordinates+"&filter="+settings.filter+"&numberCaches="+settings.numberCaches);
+                        response = downloadData("part=nearest&"+coordinates+"&filter="+settings.filter+"&numberCaches="+settings.numberCaches, false, true, "Stahuji seznam nejbližších keší...");
                         if (checkData(response))
                         {
-                            String[][] nearestCaches = parseData(response);
-                            gui.get_lstNearestCaches().setTitle("Nejbližší cache");
+                            foundCaches = parseData(response);
+                            gui.get_lstNearestCaches().setTitle("Nejbližší keše");
                             gui.get_lstNearestCaches().deleteAll();
-                            waypoints = new String[nearestCaches.length];
-                            for (int i=0;i<nearestCaches.length;i++)
+                            waypoints = new String[foundCaches.length];
+                            for (int i=0;i<foundCaches.length;i++)
                             {
-                                gui.get_lstNearestCaches().append(nearestCaches[i][0],iconLoader.loadIcon(nearestCaches[i][1]));
-                                waypoints[i] = nearestCaches[i][2];
+                                gui.get_lstNearestCaches().append(foundCaches[i][0],iconLoader.loadIcon(foundCaches[i][1]));
+                                waypoints[i] = foundCaches[i][2];
                             }
                             gui.getDisplay().setCurrent(gui.get_lstNearestCaches());
                         }
@@ -250,11 +255,11 @@ public class Http implements Runnable
             case KEYWORD:
                 try
                 {
-                    response = downloadData("part=keyword&keyword="+Utils.urlUTF8Encode(gui.get_tfKeyword().getString())+"&numberCaches="+settings.numberCaches);
+                    response = downloadData("part=keyword&keyword="+Utils.urlUTF8Encode(gui.get_tfKeyword().getString())+"&numberCaches="+settings.numberCaches, false, true, "Stahuji seznam keší...");
                     if (checkData(response))
                     {
-                        String[][] foundCaches = parseData(response);
-                        gui.get_lstNearestCaches().setTitle("Nalezené cache");
+                        foundCaches = parseData(response);
+                        gui.get_lstNearestCaches().setTitle("Nalezené keše");
                         gui.get_lstNearestCaches().deleteAll();
                         waypoints = new String[foundCaches.length];
                         for (int i=0;i<foundCaches.length;i++)
@@ -277,7 +282,7 @@ public class Http implements Runnable
                     gui.fromPreview = true;
                     
                     if (!offline)
-                        response = downloadData("part=overview&waypoint="+waypoint);
+                        response = downloadData("part=overview&waypoint="+waypoint, false, true, "Stahuji informace o keši" + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         String[][] listing = parseData(response);
@@ -293,7 +298,7 @@ public class Http implements Runnable
                         gui.get_siInventory().setText(listing[0][8]);
                         if (listing[0][9].equals(""))
                         {
-                            gui.get_frmOverview().setTitle("Přehled cache");
+                            gui.get_frmOverview().setTitle("Detaily keše");
                         }
                         else
                         {
@@ -321,7 +326,7 @@ public class Http implements Runnable
                         if (listing[0][13].equals("1"))
                         {
                             gui.get_frmOverview().addCommand(gui.get_cmdDownloadPatterns());
-                            gui.get_siInventory().setText(gui.get_siInventory().getText()+"\n"+"Tato cache umožnuje stažení vzorečků do MultiSolveru!");
+                            gui.get_siInventory().setText(gui.get_siInventory().getText()+"\n"+"Tato keš umožnuje stažení vzorečků do MultiSolveru!");
                         }    
                         //nastaveni kB podrobnosti
                         gui.get_frmOverview().removeCommand(gui.get_cmdInfo());
@@ -357,10 +362,27 @@ public class Http implements Runnable
                     gui.showError("overview",e.toString(),response);
                 }
                 break;
+            case DOWNLOAD_ALL_CACHES:
+                for (int i = 0; i < waypoints.length; i++) {
+                    response = downloadData("part=overview&waypoint="+waypoints[i],false, true, "Stahuji keš " + foundCaches[i][0] + "...");
+                    if (checkData(response))
+                    {
+                        String[][] listing = parseData(response);
+                        favourites.editId = -1;
+                        favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],listing[0][10],null, false, "", "", false, false, false);
+                    }
+                    else 
+                    {
+                        break;
+                    }
+                }
+                favourites.revalidate();
+                gui.showAlert("Keše byly přidány do oblíbených.", AlertType.INFO, gui.get_lstNearestCaches());
+                break;
             case DETAIL:
                 try
                 {
-                    response = downloadData("part=info&waypoint="+waypoint);
+                    response = downloadData("part=info&waypoint="+waypoint, false, true, "Stahuji listing keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         gui.get_frmInfo().deleteAll();
@@ -380,7 +402,7 @@ public class Http implements Runnable
             case HINT:
                 try
                 {
-                    response = downloadData("part=hint&waypoint="+waypoint);
+                    response = downloadData("part=hint&waypoint="+waypoint, false, true, "Stahuji nápovědu keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         gui.get_frmHint().deleteAll();
@@ -396,7 +418,7 @@ public class Http implements Runnable
             case WAYPOINTS:
                 try
                 {
-                    response = downloadData("part=waypoints&waypoint="+waypoint);
+                    response = downloadData("part=waypoints&waypoint="+waypoint, false, true, "Stahuji waypointy keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         String[][] waypoints = parseData(response);
@@ -417,7 +439,7 @@ public class Http implements Runnable
             case LOGS:
                 try
                 {
-                    response = downloadData("part=logs&waypoint="+waypoint);
+                    response = downloadData("part=logs&waypoint="+waypoint, false, true, "Stahuji logy keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         String[][] logs = parseData(response);
@@ -450,7 +472,7 @@ public class Http implements Runnable
             case ALL_LOGS:
                 try
                 {
-                    response = downloadData("part=alllogs&guideline="+guideline);
+                    response = downloadData("part=alllogs&guideline="+guideline, false, true, "Stahuji všechny logy keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         String[][] logs = parseData(response);
@@ -470,7 +492,7 @@ public class Http implements Runnable
             case TRACKABLE: 
                 try
                 {
-                    response = downloadData("part=trackable&trnumber="+gui.get_tfTrackingNumber().getString());
+                    response = downloadData("part=trackable&trnumber="+gui.get_tfTrackingNumber().getString(), false, true, "Hledám informace o předmětu...");
                     if (checkData(response))
                     {
                         String[][] trackable = parseData(response);
@@ -492,7 +514,7 @@ public class Http implements Runnable
             case PATTERNS:
                 try
                 {
-                    response = downloadData("part=patterns&waypoint="+waypoint);
+                    response = downloadData("part=patterns&waypoint="+waypoint, false, true, "Stahuji vzorečky keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         String[][] patternsArray = parseData(response);
@@ -507,7 +529,7 @@ public class Http implements Runnable
             case FIELD_NOTES:
                 try
                 {
-                    response = downloadData("action=fieldnotes&fieldnotes="+Utils.urlUTF8Encode(FieldNotes.getInstance().getFieldNotes())+"&incremental="+((settings.incrementalFieldNotes)?"1":"0"), true, true);
+                    response = downloadData("action=fieldnotes&fieldnotes="+Utils.urlUTF8Encode(FieldNotes.getInstance().getFieldNotes())+"&incremental="+((settings.incrementalFieldNotes)?"1":"0"), true, true, "Nahrávám Field notes na GC.com...");
                     if (checkData(response))
                     {
                         gui.showAlert("Nahráno " + response + " nových Field notes na GC.com.",AlertType.INFO,gui.get_lstFieldNotes());
@@ -605,14 +627,18 @@ public class Http implements Runnable
      * Zjednodusovaci metoda a rozhodovani, zda se data budou nacitat z kese nebo ne
      */
     public String downloadData(String data) {
-        return downloadData(data, false, true);
+        return downloadData(data, false, true, null);
+    }
+    
+    public String downloadData(String data, boolean useArcaoUrl, boolean addCookie) {
+        return downloadData(data, useArcaoUrl, addCookie, null);
     }
         
-    public String downloadData(String data, boolean useArcaoUrl, boolean addCookie)
+    public String downloadData(String data, boolean useArcaoUrl, boolean addCookie, String message)
     {
         boolean cachedAction = false;
         String cachedResponse = null;
-        if ((action == OVERVIEW || action == WAYPOINTS || action == LOGS || action == ALL_LOGS) && !refresh)
+        if ((action == OVERVIEW || action == DOWNLOAD_ALL_CACHES || action == WAYPOINTS || action == LOGS || action == ALL_LOGS) && !refresh)
         {
             cachedAction = true;
             cachedResponse = cache.loadCachedResponse(data);
@@ -627,7 +653,9 @@ public class Http implements Runnable
         if (cachedResponse == null) //odpoved neni v kesi, stahujeme z netu
         {
             gui.getDisplay().setCurrent(gui.get_frmLoading());
-            if (action == LOGIN)
+            if (message != null)                
+                gui.get_siMessage().setText(message);
+            else if (action == LOGIN)
                 gui.get_siMessage().setText("Přihlašování k serveru geocaching.com...");
             else
                 gui.get_siMessage().setText("Připojování k serveru a stahování dat...");
@@ -711,12 +739,12 @@ public class Http implements Runnable
             }
             else if (data.equals("NO_WAYPOINTS"))
             {
-                gui.showAlert("Tato cache nemá žádné přídavné waypointy",AlertType.INFO,gui.get_frmOverview());
+                gui.showAlert("Tato keš nemá žádné přídavné waypointy",AlertType.INFO,gui.get_frmOverview());
                 return false;
             }
             else if (data.equals("NO_HINT"))
             {
-                gui.showAlert("Tato cache nemá nápovědu",AlertType.INFO,gui.get_frmOverview());
+                gui.showAlert("Tato keš nemá nápovědu",AlertType.INFO,gui.get_frmOverview());
                 return false;
             }
             else if (data.equals("PARSING_ERROR"))
@@ -736,7 +764,7 @@ public class Http implements Runnable
             }
             else if (data.equals("ERR_PM_ONLY"))
             {
-                gui.showAlert("Tato cache je přístupná jenom Premium Memberům",AlertType.WARNING,gui.get_lstSearch());
+                gui.showAlert("Tato keš je přístupná jenom Premium Memberům",AlertType.WARNING,gui.get_lstSearch());
                 return false;
             }
             else if (data.equals("ERR_FIELD_NOTES_FAILED")) 

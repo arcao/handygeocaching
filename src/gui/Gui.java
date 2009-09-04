@@ -329,7 +329,8 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private StringItem siRMSFavourities;
     private StringItem siRMSHint;
     private StringItem siRMSFieldNotes;
-    private StringItem siRMSListing;//GEN-END:MVDFields
+    private StringItem siRMSListing;
+    private Command cmdDownloadAll;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -583,6 +584,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert post-action code here
             } else if (command == lstNearestCaches.SELECT_COMMAND) {
                 http.waypoint = http.waypoints[lstNearestCaches.getSelectedIndex()];
+                http.waypointCacheName = lstNearestCaches.getString(lstNearestCaches.getSelectedIndex());
                 http.start(Http.OVERVIEW, false);
             } else if (command == lstNearestCaches.SELECT_COMMAND) {//GEN-BEGIN:MVDCACase73
                 switch (get_lstNearestCaches().getSelectedIndex()) {
@@ -592,9 +594,14 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                         // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase314
                 }
-            }
+            } else if (command == cmdDownloadAll) {//GEN-END:MVDCACase314
+                // Insert pre-action code here
+                http.start(Http.DOWNLOAD_ALL_CACHES, false);
+                // Do nothing//GEN-LINE:MVDCAAction612
+                // Insert post-action code here
+            }//GEN-BEGIN:MVDCACase612
         } else if (displayable == frmWaypoint) {
-            if (command == cmdBack) {//GEN-END:MVDCACase314
+            if (command == cmdBack) {//GEN-END:MVDCACase612
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstSearch());//GEN-LINE:MVDCAAction87
                 // Insert post-action code here
@@ -603,6 +610,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Do nothing//GEN-LINE:MVDCAAction88
                 // Insert post-action code here
                 http.waypoint = tfWaypoint.getString();
+                http.waypointCacheName = http.waypoint;
                 http.start(Http.OVERVIEW, false);
             }//GEN-BEGIN:MVDCACase88
         } else if (displayable == frmOverview) {
@@ -621,21 +629,25 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction109
                 // Insert post-action code here
+                http.waypointCacheName = get_siName().getText();
                 http.start(Http.WAYPOINTS, false);
             } else if (command == cmdInfo) {//GEN-LINE:MVDCACase109
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction105
                 // Insert post-action code here
+                http.waypointCacheName = get_siName().getText();
                 http.start(Http.DETAIL, false);
             } else if (command == cmdHint) {//GEN-LINE:MVDCACase105
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction103
                 // Insert post-action code here
+                http.waypointCacheName = get_siName().getText();
                 http.start(Http.HINT, false);
             } else if (command == cmdLogs) {//GEN-LINE:MVDCACase103
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction107
                 // Insert post-action code here
+                http.waypointCacheName = get_siName().getText();
                 http.start(Http.LOGS, false);
             } else if (command == cmdNavigate) {//GEN-LINE:MVDCACase107
                 // Insert pre-action code here
@@ -669,10 +681,12 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction388
                 // Insert post-action code here
+                http.waypointCacheName = get_siName().getText();
                 http.start(Http.PATTERNS, false);
             } else if (command == cmdRefresh) {//GEN-LINE:MVDCACase388
                 // Insert pre-action code here
                 http.waypoint = get_siWaypoint().getText();
+                http.waypointCacheName = get_siName().getText();
                 http.start(Http.OVERVIEW, true);
                 // Do nothing//GEN-LINE:MVDCAAction410
                 // Insert post-action code here
@@ -804,6 +818,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert post-action code here
             } else if (command == lstKeyword.SELECT_COMMAND) {
                 http.waypoint = http.waypoints[lstKeyword.getSelectedIndex()];
+                http.waypointCacheName = lstKeyword.getString(lstKeyword.getSelectedIndex());
                 http.start(Http.OVERVIEW, false);
             } else if (command == lstKeyword.SELECT_COMMAND) {//GEN-BEGIN:MVDCACase225
                 switch (get_lstKeyword().getSelectedIndex()) {
@@ -1928,8 +1943,9 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public List get_lstNearestCaches() {
         if (lstNearestCaches == null) {//GEN-END:MVDGetBegin71
             // Insert pre-init code here
-            lstNearestCaches = new List("Nejbli\u017E\u0161\u00ED cache", Choice.IMPLICIT, new String[] {"\u017D\u00E1dn\u00E1 data"}, new Image[] {null});//GEN-BEGIN:MVDGetInit71
+            lstNearestCaches = new List("Nejbli\u017E\u0161\u00ED ke\u0161e", Choice.IMPLICIT, new String[] {"\u017D\u00E1dn\u00E1 data"}, new Image[] {null});//GEN-BEGIN:MVDGetInit71
             lstNearestCaches.addCommand(get_cmdBack());
+            lstNearestCaches.addCommand(get_cmdDownloadAll());
             lstNearestCaches.setCommandListener(this);
             lstNearestCaches.setSelectedFlags(new boolean[] {false});
             lstNearestCaches.setFitPolicy(Choice.TEXT_WRAP_ON);//GEN-END:MVDGetInit71
@@ -1975,7 +1991,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public Form get_frmOverview() {
         if (frmOverview == null) {//GEN-END:MVDGetBegin90
             // Insert pre-init code here
-            frmOverview = new Form("Detaily cache", new Item[] {//GEN-BEGIN:MVDGetInit90
+            frmOverview = new Form("Detaily ke\u0161e", new Item[] {//GEN-BEGIN:MVDGetInit90
                 get_siName(),
                 get_siAuthor(),
                 get_siType(),
@@ -2145,7 +2161,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public Form get_frmInfo() {
         if (frmInfo == null) {//GEN-END:MVDGetBegin110
             // Insert pre-init code here
-            frmInfo = new Form("Podrobnosti", new Item[] {//GEN-BEGIN:MVDGetInit110
+            frmInfo = new Form("Listing ke\u0161e", new Item[] {//GEN-BEGIN:MVDGetInit110
                 get_siBegin(),
                 get_siContent(),
                 get_siEnd()
@@ -2453,7 +2469,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public ChoiceGroup get_cgCacheFilter() {
         if (cgCacheFilter == null) {//GEN-END:MVDGetBegin148
             // Insert pre-init code here
-            cgCacheFilter = new ChoiceGroup("Nejbli\u017E\u0161\u00ED cache:", Choice.MULTIPLE, new String[] {//GEN-BEGIN:MVDGetInit148
+            cgCacheFilter = new ChoiceGroup("Nejbli\u017E\u0161\u00ED ke\u0161e:", Choice.MULTIPLE, new String[] {//GEN-BEGIN:MVDGetInit148
                 "Traditional",
                 "Multi",
                 "Mystery",
@@ -2734,7 +2750,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public TextField get_tfNumberCaches() {
         if (tfNumberCaches == null) {//GEN-END:MVDGetBegin218
             // Insert pre-init code here
-            tfNumberCaches = new TextField("Po\u010Det ke\u0161\u00ED:", "10", 120, TextField.NUMERIC);//GEN-LINE:MVDGetInit218
+            tfNumberCaches = new TextField("Po\u010Det ke\u0161\u00ED p\u0159i hled\u00E1n\u00ED:", "10", 120, TextField.NUMERIC);//GEN-LINE:MVDGetInit218
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd218
         return tfNumberCaches;
@@ -2773,7 +2789,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public List get_lstKeyword() {
         if (lstKeyword == null) {//GEN-END:MVDGetBegin223
             // Insert pre-init code here
-            lstKeyword = new List("Nalezen\u00E9 cache:", Choice.IMPLICIT, new String[] {"\u017D\u00E1dn\u00E1 data"}, new Image[] {null});//GEN-BEGIN:MVDGetInit223
+            lstKeyword = new List("Nalezen\u00E9 ke\u0161e:", Choice.IMPLICIT, new String[] {"\u017D\u00E1dn\u00E1 data"}, new Image[] {null});//GEN-BEGIN:MVDGetInit223
             lstKeyword.addCommand(get_cmdBack());
             lstKeyword.setCommandListener(this);
             lstKeyword.setSelectedFlags(new boolean[] {false});
@@ -4302,7 +4318,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public Command get_cmdAddFieldNotes() {
         if (cmdAddFieldNotes == null) {//GEN-END:MVDGetBegin506
             // Insert pre-init code here
-            cmdAddFieldNotes = new Command("P\u0159idat field note", Command.SCREEN, 10);//GEN-LINE:MVDGetInit506
+            cmdAddFieldNotes = new Command("+Field note", Command.SCREEN, 10);//GEN-LINE:MVDGetInit506
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd506
         return cmdAddFieldNotes;
@@ -4714,6 +4730,18 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         }//GEN-BEGIN:MVDGetEnd610
         return siRMSListing;
     }//GEN-END:MVDGetEnd610
+
+    /** This method returns instance for cmdDownloadAll component and should be called instead of accessing cmdDownloadAll field directly.//GEN-BEGIN:MVDGetBegin611
+     * @return Instance for cmdDownloadAll component
+     */
+    public Command get_cmdDownloadAll() {
+        if (cmdDownloadAll == null) {//GEN-END:MVDGetBegin611
+            // Insert pre-init code here
+            cmdDownloadAll = new Command("St\u00E1hnout v\u0161e", Command.ITEM, 1);//GEN-LINE:MVDGetInit611
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd611
+        return cmdDownloadAll;
+    }//GEN-END:MVDGetEnd611
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {

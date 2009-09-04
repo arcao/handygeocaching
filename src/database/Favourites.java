@@ -246,7 +246,7 @@ public class Favourites extends Database
                 dos.writeUTF(poznamka);
                 byte[] bytes = buffer.toByteArray();
                 //posledni cache
-                if (name.equals("_Poslední cache"))
+                if (name.equals("_Poslední cache") || name.equals("_Poslední keš"))
                 {                    
                     editId = -1;
                     RecordEnumeration rc = getRecordEnumeration();
@@ -255,7 +255,8 @@ public class Favourites extends Database
                     {
                         id = rc.nextRecordId();
                         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
-                        if (dis.readUTF().equals("_Poslední cache"))
+                        String recordName = dis.readUTF();
+                        if (recordName.equals("_Poslední cache") || recordName.equals("_Poslední keš"))
                         {
                             editId = id;
                             break;
@@ -278,7 +279,7 @@ public class Favourites extends Database
                 if (saveLastUse)
                     settings.saveCoordinates(lattitude, longitude);
                 
-                if (!name.equals("_Poslední cache") && editId==-1)
+                if (!name.equals("_Poslední cache") && !name.equals("_Poslední keš") && editId==-1)
                 {
                     if (nextScreen != null) alert = gui.showAlert("Uloženo do oblíbených",AlertType.INFO,nextScreen);
                 }
@@ -449,7 +450,7 @@ public class Favourites extends Database
             //zobrazeni
             if (isCache(type))
             {
-                gui.showAlert("Cache není možné upravovat",AlertType.WARNING,gui.get_lstFavourites());
+                gui.showAlert("Keš není možné upravovat",AlertType.WARNING,gui.get_lstFavourites());
             }
             else
             {
@@ -548,7 +549,6 @@ public class Favourites extends Database
                         }
                     } catch (Exception e) {}
                     lForm.setFinish();
-
                 }
             });
             t.start();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MVDData version="1.3">
-    <DesignDocument designVersion="MIDP-2" uidCounter="611">
+    <DesignDocument designVersion="MIDP-2" uidCounter="613">
         <DesignComponent id="$MobileDevice" typeid="MIDP:$MobileDevice" uid="0"/>
         <DesignComponent id="$StartPoint" typeid="MIDP:$StartPoint" uid="1">
             <Property name="targetDisplayable" value="ssAdvertisement"/>
@@ -268,13 +268,14 @@
             <Property name="actionOrigin" value="frmCoordinates"/>
         </DesignComponent>
         <DesignComponent id="lstNearestCaches" typeid="MIDP:javax.microedition.lcdui.List" uid="71">
-            <Property name="title" value="STRING:Nejbli\u017E\u0161\u00ED cache"/>
+            <Property name="title" value="STRING:Nejbli\u017E\u0161\u00ED ke\u0161e"/>
             <Property name="choiceType" value="IMPLICIT"/>
             <Property name="fitPolicy" value="TEXT_WRAP_ON"/>
             <Property name="selectCommandAction" value="$SelectCommandAction4"/>
             <Property name="indexBasedSwitch" value="true"/>
             <ContainerProperty name="commands">
                 <ContainerPropertyItem value="$CommandAction16"/>
+                <ContainerPropertyItem value="$CommandAction108"/>
             </ContainerProperty>
             <ContainerProperty name="elements">
                 <ContainerPropertyItem value="Midp2ListElementDC4"/>
@@ -320,7 +321,7 @@
             <Property name="actionOrigin" value="frmWaypoint"/>
         </DesignComponent>
         <DesignComponent id="frmOverview" typeid="MIDP:javax.microedition.lcdui.Form" uid="90">
-            <Property name="title" value="STRING:Detaily cache"/>
+            <Property name="title" value="STRING:Detaily ke\u0161e"/>
             <ContainerProperty name="commands">
                 <ContainerPropertyItem value="$CommandAction19"/>
                 <ContainerPropertyItem value="$CommandAction20"/>
@@ -436,7 +437,7 @@
             <Property name="actionOrigin" value="frmOverview"/>
         </DesignComponent>
         <DesignComponent id="frmInfo" typeid="MIDP:javax.microedition.lcdui.Form" uid="110">
-            <Property name="title" value="STRING:Podrobnosti"/>
+            <Property name="title" value="STRING:Listing ke\u0161e"/>
             <ContainerProperty name="commands">
                 <ContainerPropertyItem value="$CommandAction24"/>
                 <ContainerPropertyItem value="$CommandAction13"/>
@@ -623,7 +624,7 @@
             <ContainerProperty name="commands"/>
         </DesignComponent>
         <DesignComponent id="cgCacheFilter" typeid="MIDP:javax.microedition.lcdui.ChoiceGroup" uid="148">
-            <Property name="label" value="STRING:Nejbli\u017E\u0161\u00ED cache:"/>
+            <Property name="label" value="STRING:Nejbli\u017E\u0161\u00ED ke\u0161e:"/>
             <Property name="choiceType" value="MULTIPLE"/>
             <ContainerProperty name="commands"/>
             <ContainerProperty name="elements">
@@ -801,7 +802,7 @@
             <Property name="imageResourcePath" value="/dummyIcon.png"/>
         </DesignComponent>
         <DesignComponent id="tfNumberCaches" typeid="MIDP:javax.microedition.lcdui.TextField" uid="218">
-            <Property name="label" value="STRING:Po\u010Det ke\u0161\u00ED:"/>
+            <Property name="label" value="STRING:Po\u010Det ke\u0161\u00ED p\u0159i hled\u00E1n\u00ED:"/>
             <Property name="string" value="STRING:10"/>
             <Property name="maxSize" value="120"/>
             <Property name="constraints" value="2"/>
@@ -835,7 +836,7 @@
             <Property name="actionOrigin" value="frmKeyword"/>
         </DesignComponent>
         <DesignComponent id="lstKeyword" typeid="MIDP:javax.microedition.lcdui.List" uid="223">
-            <Property name="title" value="STRING:Nalezen\u00E9 cache:"/>
+            <Property name="title" value="STRING:Nalezen\u00E9 ke\u0161e:"/>
             <Property name="choiceType" value="IMPLICIT"/>
             <Property name="fitPolicy" value="TEXT_WRAP_ON"/>
             <Property name="selectCommandAction" value="$SelectCommandAction5"/>
@@ -2093,7 +2094,7 @@
             <Property name="actionOrigin" value="frmNalezeno"/>
         </DesignComponent>
         <DesignComponent id="cmdAddFieldNotes" typeid="MIDP:javax.microedition.lcdui.Command" uid="506">
-            <Property name="label" value="STRING:P\u0159idat field note"/>
+            <Property name="label" value="STRING:+Field note"/>
             <Property name="priority" value="10"/>
             <Property name="type" value="SCREEN"/>
         </DesignComponent>
@@ -2479,6 +2480,17 @@
             <Property name="text" value="STRING:0/0"/>
             <ContainerProperty name="commands"/>
         </DesignComponent>
+        <DesignComponent id="cmdDownloadAll" typeid="MIDP:javax.microedition.lcdui.Command" uid="611">
+            <Property name="label" value="STRING:St\u00E1hnout v\u0161e"/>
+            <Property name="priority" value="1"/>
+            <Property name="type" value="ITEM"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction108" typeid="MIDP:CommandAction" uid="612">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdDownloadAll"/>
+            <Property name="actionOrigin" value="lstNearestCaches"/>
+        </DesignComponent>
     </DesignDocument>
     <FlowDocument version="1.1">
         <Node id="$MobileDevice" location="160,1184" order=",$StartPoint,,,,,,,,,$ExitPoint,,,,,"/>
@@ -2488,7 +2500,7 @@
         <Node id="lstMode" location="640,1184" order="$SelectCaseCommandAction2,$SelectCaseCommandAction3,$CommandAction7,$SelectCaseCommandAction19,$SelectCaseCommandAction22,$CommandAction89,$SelectCaseCommandAction26,,,,$Default,,,,,"/>
         <Node id="frmLoading" location="6280,208" order="$CommandAction29,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmCoordinates" location="5000,208" order="$CommandAction14,$CommandAction15,,,,,,,,,$Default,,,,,"/>
-        <Node id="lstNearestCaches" location="4680,208" order="$CommandAction16,$SelectCaseCommandAction4,,,,,,,,,$Default,,,,,"/>
+        <Node id="lstNearestCaches" location="4680,208" order="$CommandAction16,$SelectCaseCommandAction4,$CommandAction108,,,,,,,,$Default,,,,,"/>
         <Node id="frmWaypoint" location="6928,208" order="$CommandAction17,$CommandAction18,,,,,,,,,$Default,,,,,"/>
         <Node id="frmOverview" location="3392,208" order="$CommandAction21,$CommandAction23,$CommandAction19,$CommandAction22,$CommandAction33,$CommandAction20,$CommandAction34,$CommandAction38,$CommandAction45,$CommandAction78,$Default,$CommandAction85,$CommandAction61,$CommandAction105,,"/>
         <Node id="frmInfo" location="824,208" order="$CommandAction24,$CommandAction13,$CommandAction82,,,,,,,,$Default,,,,,"/>
@@ -2534,7 +2546,7 @@
         <Link id="$SelectCaseCommandAction7$ActionLink" path="920,1224,920,1113,1017,1113,1017,832,1160,832"/>
         <Link id="$CommandAction9$ActionLink" path="2152,184,2275,184,2275,695,562,695,562,1160,600,1160"/>
         <Link id="$CommandAction15$ActionLink" path="5040,184,5167,184,5167,664,975,664,975,512,1160,512"/>
-        <Link id="$CommandAction16$ActionLink" path="4720,200,4860,200,4860,184,4960,184"/>
+        <Link id="$CommandAction16$ActionLink" path="4720,200,4863,200,4863,184,4960,184"/>
         <Link id="$CommandAction17$ActionLink" path="6968,200,7016,200,7016,356,1140,356,1140,512,1160,512"/>
         <Link id="$CommandAction19$ActionLink" path="3432,168,3633,168,3633,285,6822,285,6822,184,6888,184"/>
         <Link id="$CommandAction24$ActionLink" path="864,200,1006,200,1006,285,3250,285,3250,184,3352,184"/>
