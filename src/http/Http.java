@@ -282,7 +282,7 @@ public class Http implements Runnable
                     gui.fromPreview = true;
                     
                     if (!offline)
-                        response = downloadData("part=overview&waypoint="+waypoint, false, true, "Stahuji informace o keši" + waypointCacheName + "...");
+                        response = downloadData("part=overview&waypoint="+waypoint, false, true, "Stahuji informace o keši " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         String[][] listing = parseData(response);
@@ -351,7 +351,7 @@ public class Http implements Runnable
                         if (!offline) {
                             favourites.editId = -1;
                             //Zephy 19.11.07 +\ -pridan posledni parametr
-                            favourites.addEdit("_Poslední cache",response,listing[0][4],listing[0][5],typeNumber,null, false, "NE", "",false, true, true);                        
+                            favourites.addEdit("_Poslední keš",response,listing[0][4],listing[0][5],typeNumber,null, false, "NE", "",false, true, true);                        
                             //Zephy 19.11.07 +/
                         }
                         gui.getDisplay().setCurrent(gui.get_frmOverview());
