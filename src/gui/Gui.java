@@ -773,6 +773,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
         } else if (displayable == frmLoading) {
             if (command == cmdStop) {//GEN-END:MVDCACase602
                 // Insert pre-action code here
+                http.stop();
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction136
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase136
@@ -1437,7 +1438,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                         get_lstFieldNotes().append(items[i].toString(!settings.iconsInFieldNotes, settings.nameInFieldNotesFirst), (settings.iconsInFieldNotes)? iconLoader.loadIcon(FieldNotes.getTypeIconName(items[i].getType()), false) : null);
                     }
                 });
-                dialog.setActionYesDisplayable(lstFavourites);
+                dialog.setActionYesDisplayable(lstFieldNotes);
                 dialog.show();
                 // Do nothing//GEN-LINE:MVDCAAction571
                 // Insert post-action code here

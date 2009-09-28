@@ -29,8 +29,8 @@ public class Navigation extends Canvas
     public String altitude = "";
     public String cacheName = "";
     public String accuracy = "";
-    public static int angle = 0;
-    public static int compass = 0;
+    public static double angle = 0;
+    public static double compass = 0;
     public String azimut = "";
     public String dateTime = "";
     public Image[] numbers, numbersNight;
@@ -356,23 +356,39 @@ public class Navigation extends Canvas
         int BORDER = 10;
         
         Font fnt = (getWidth()<140) ? gui.get_fntSmallBold() : gui.get_fntBold();
-        int width = fnt.stringWidth("Noční") + 2*BORDER;
-        int height = fnt.getHeight() + BORDER;
+        int width = getWidth();
+        int widthHalf = width / 2;
+        int widthNocni = fnt.stringWidth("Noční") + 2*BORDER;
+        int widthZpet = fnt.stringWidth("Zpět") + 2*BORDER;
+        int widthMapa = fnt.stringWidth("Mapa") + 2*BORDER;
         
-        int widthHalf = (getWidth() - width) / 2;
+        int HEIGHT = getHeight();
+        int BAR_HEIGHT = BOTTOM_MARGIN + BORDER;
+        
+        int widthNocniHalf = widthNocni / 2;
         
         //nocni rezim
-        if (y > getHeight() - height && y < getHeight() &&
-            x > widthHalf && x < widthHalf + width) {
+        if (y > HEIGHT - BAR_HEIGHT && y < HEIGHT &&
+            x > widthHalf - widthNocniHalf && x < widthHalf + widthNocniHalf) {
             gui.nightMode = !gui.nightMode;
             repaint();
         }
-        
         //zvetseni / zmenseni kompasu
-        if ((x-cX)*(x-cX) + (y-cY)*(y-cY) < radius*radius) {
+        else if ((x-cX)*(x-cX) + (y-cY)*(y-cY) < radius*radius) {
             viewModeSmall = !viewModeSmall;
             calculateSizes();
             repaint();
+        }
+        //Zpet
+        else if (y > HEIGHT - BAR_HEIGHT && x < widthZpet) {
+            gps.stop();
+            gui.getDisplay().setCurrent(gps.getPreviousScreen());
+        }
+        //Mapa
+        else if (y > HEIGHT - BAR_HEIGHT && x > width - widthMapa) {
+            favourites.loadFavouritesToMap();
+            gui.getDisplay().setCurrent(gui.get_cvsMap());
+            gps.changeAction(Gps.MAP);
         }
     }
 }

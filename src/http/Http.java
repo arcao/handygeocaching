@@ -110,6 +110,13 @@ public class Http implements Runnable
         gps = ref;
     }
     
+    /**
+     * Zastavi prenos, ukonci vlakno
+     */
+    public void stop() {
+       t.interrupt();
+    }
+    
     /***
      * Zacatek HTTP komunikace
      */
@@ -207,6 +214,9 @@ public class Http implements Runnable
                         start(previousAction, previousRefresh);
                     }
                 }
+                catch (InterruptedException e) {
+                    return;
+                } 
                 catch (Exception e)
                 {
                     gui.showError("logovani",e.toString(),response);
@@ -247,6 +257,9 @@ public class Http implements Runnable
                         }
                     }
                 }
+                catch (InterruptedException e) {
+                    return;
+                }
                 catch (Exception e)
                 {
                     gui.showError("nejblizsi kese",e.toString(),response);
@@ -270,6 +283,9 @@ public class Http implements Runnable
                         gui.getDisplay().setCurrent(gui.get_lstNearestCaches());
                     }
                     
+                }
+                catch (InterruptedException e) {
+                    return;
                 }
                 catch (Exception e)
                 {
@@ -357,27 +373,40 @@ public class Http implements Runnable
                         gui.getDisplay().setCurrent(gui.get_frmOverview());
                     }
                 }
+                catch (InterruptedException e) {
+                    return;
+                }
                 catch (Exception e)
                 {
                     gui.showError("overview",e.toString(),response);
                 }
                 break;
             case DOWNLOAD_ALL_CACHES:
-                for (int i = 0; i < waypoints.length; i++) {
-                    response = downloadData("part=overview&waypoint="+waypoints[i],false, true, "Stahuji keš " + foundCaches[i][0] + "...");
-                    if (checkData(response))
-                    {
-                        String[][] listing = parseData(response);
-                        favourites.editId = -1;
-                        favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],listing[0][10],null, false, "", "", false, false, false);
+                try {
+                    for (int i = 0; i < waypoints.length; i++) {
+                        response = downloadData("part=overview&waypoint="+waypoints[i],false, true, "Stahuji keš " + foundCaches[i][0] + "...");
+                        if (checkData(response))
+                        {
+                            String[][] listing = parseData(response);
+                            favourites.editId = -1;
+                            favourites.addEdit(listing[0][0],response,listing[0][4],listing[0][5],listing[0][10],null, false, "", "", false, false, false);
+                        }
+                        else 
+                        {
+                            break;
+                        }
                     }
-                    else 
-                    {
-                        break;
-                    }
+                    favourites.revalidate();
+                    gui.showAlert("Keše byly přidány do oblíbených.", AlertType.INFO, gui.get_lstNearestCaches());
                 }
-                favourites.revalidate();
-                gui.showAlert("Keše byly přidány do oblíbených.", AlertType.INFO, gui.get_lstNearestCaches());
+                catch (InterruptedException e) {
+                    favourites.revalidate();
+                    return;
+                }
+                catch (Exception e)
+                {
+                    gui.showError("overview",e.toString(),response);
+                }
                 break;
             case DETAIL:
                 try
@@ -394,6 +423,9 @@ public class Http implements Runnable
                         gui.getDisplay().setCurrent(gui.get_frmInfo());
                     }
                 }
+                catch (InterruptedException e) {
+                    return;
+                }
                 catch (Exception e)
                 {
                     gui.showError("listing",e.toString(),response);
@@ -409,6 +441,9 @@ public class Http implements Runnable
                         gui.get_frmHint().append(response);
                         gui.getDisplay().setCurrent(gui.get_frmHint());
                     }
+                }
+                catch (InterruptedException e) {
+                    return;
                 }
                 catch (Exception e)
                 {
@@ -430,6 +465,9 @@ public class Http implements Runnable
                         }
                         gui.getDisplay().setCurrent(gui.get_frmWaypoints());
                     }
+                }
+                catch (InterruptedException e) {
+                    return;
                 }
                 catch (Exception e)
                 {
@@ -464,6 +502,9 @@ public class Http implements Runnable
                         gui.getDisplay().setCurrent(gui.get_frmLogs());
                     }
                 }
+                catch (InterruptedException e) {
+                    return;
+                }
                 catch (Exception e)
                 {
                     gui.showError("logs",e.toString(),response);
@@ -483,6 +524,9 @@ public class Http implements Runnable
                         }
                         gui.getDisplay().setCurrent(gui.get_frmAllLogs());
                     }
+                }
+                catch (InterruptedException e) {
+                    return;
                 }
                 catch (Exception e)
                 {
@@ -506,6 +550,9 @@ public class Http implements Runnable
                         gui.getDisplay().setCurrent(gui.get_frmTrackable());
                     }
                 }
+                catch (InterruptedException e) {
+                    return;
+                }
                 catch (Exception e)
                 {
                     gui.showError("trackable",e.toString(),response);
@@ -521,6 +568,9 @@ public class Http implements Runnable
                         patterns.addDownloaded(patternsArray);
                     }
                 }
+                catch (InterruptedException e) {
+                    return;
+                }
                 catch (Exception e)
                 {
                     gui.showError("patterns",e.toString(),response);
@@ -535,6 +585,9 @@ public class Http implements Runnable
                         gui.showAlert("Nahráno " + response + " nových Field notes na GC.com.",AlertType.INFO,gui.get_lstFieldNotes());
                     }
                 }
+                catch (InterruptedException e) {
+                    return;
+                }
                 catch (Exception e)
                 {
                     gui.showError("field_notes",e.toString(),response);
@@ -547,7 +600,7 @@ public class Http implements Runnable
     /***
      * Vlastni pripojeni k HTTP a prevod streamu na string
      */
-    public String connect(String url)
+    public String connect(String url) throws InterruptedException
     {
         InputStreamReader reader = null;
         InputStream is = null;
@@ -593,6 +646,9 @@ public class Http implements Runnable
         {
             return "MUST_ALLOW";
         }
+        catch (InterruptedException e) {
+            throw e;
+        }
         catch (Exception e)
         {
             return "err:"+e.toString();
@@ -626,15 +682,15 @@ public class Http implements Runnable
     /**
      * Zjednodusovaci metoda a rozhodovani, zda se data budou nacitat z kese nebo ne
      */
-    public String downloadData(String data) {
+    public String downloadData(String data) throws InterruptedException {
         return downloadData(data, false, true, null);
     }
     
-    public String downloadData(String data, boolean useArcaoUrl, boolean addCookie) {
+    public String downloadData(String data, boolean useArcaoUrl, boolean addCookie) throws InterruptedException {
         return downloadData(data, useArcaoUrl, addCookie, null);
     }
         
-    public String downloadData(String data, boolean useArcaoUrl, boolean addCookie, String message)
+    public String downloadData(String data, boolean useArcaoUrl, boolean addCookie, String message) throws InterruptedException
     {
         boolean cachedAction = false;
         String cachedResponse = null;

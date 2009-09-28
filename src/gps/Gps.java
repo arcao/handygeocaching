@@ -271,9 +271,9 @@ public class Gps implements Runnable
                         gui.get_cvsNavigation().cacheName = targetname;
                         double rad_distance = computeRadianDistance(gpsParser.getLatitude(),targetlat,gpsParser.getLongitude(),targetlon);
                         int distance = radianToMeters(rad_distance);
-                        int bearing = computeBearing(gpsParser.getLatitude(),targetlat,gpsParser.getLongitude(),targetlon, rad_distance);
+                        double bearing = computeBearing(gpsParser.getLatitude(),targetlat,gpsParser.getLongitude(),targetlon, rad_distance);
                         //gui.get_siDebug().setText("fixMessage:"+gpsParser.hasFix()+"\nlat:"+gpsParser.getLattitude()+"\nlon:"+gpsParser.getLongitude()+"heading:"+gpsParser.getHeading()+"nmeaCount:"+gpsParser.getNmeaCount()+"\ndistance:"+distance+"cislo:"+Float.parse("6366832.9383716631",10));
-                        int navigate = computeCorrectionDirection(bearing, gpsParser.getHeading());
+                        double navigate = computeCorrectionDirection(bearing, gpsParser.getHeading());
                         
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(new Date());
@@ -292,7 +292,7 @@ public class Gps implements Runnable
                         gui.get_cvsNavigation().angle = navigate;
                         gui.get_cvsNavigation().compass = (int) gpsParser.getHeading();
                         gui.get_cvsNavigation().accuracy = "±"+gpsParser.getAccuracy();
-                        gui.get_cvsNavigation().azimut = bearing+"°";
+                        gui.get_cvsNavigation().azimut = ((int)bearing)+"°";
                         gui.get_cvsNavigation().dateTime = dateTime;
                         gui.get_cvsNavigation().repaint();
                         
@@ -445,7 +445,7 @@ public class Gps implements Runnable
     /**
      * Spocita bearing
      */
-    public int computeBearing(double lat1, double lat2, double lon1, double lon2, double rad_dist)
+    public double computeBearing(double lat1, double lat2, double lon1, double lon2, double rad_dist)
     {
         try
         {
@@ -471,7 +471,7 @@ public class Gps implements Runnable
             //prevod na stupne
             double bearing = Math.toDegrees(rad_bearing);
             bearing = 360 - bearing;
-            return (int) bearing;
+            return bearing;
         }
         catch (Exception e)
         {
@@ -483,7 +483,7 @@ public class Gps implements Runnable
     /**
      * Spocita korekcni smer k danym souradnicim ve stupnich
      */
-    public int computeCorrectionDirection(int bearing, double heading)
+    public double computeCorrectionDirection(double bearing, double heading)
     {
         try
         {
