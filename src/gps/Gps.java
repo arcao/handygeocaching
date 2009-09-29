@@ -492,7 +492,7 @@ public class Gps implements Runnable
             {
                 navigate = 360 + navigate;
             }
-            return (int)navigate;
+            return navigate;
         }
         catch (Exception e)
         {

@@ -43,7 +43,7 @@ public class Navigation extends Canvas
     private Gps gps;
     private Favourites favourites;
     
-    private final double RHO = 180/Math.PI;
+    private final double RHO = 180D/Math.PI;
     
     private int cX;
     private int cY;
@@ -136,7 +136,7 @@ public class Navigation extends Canvas
             g.fillRect(0, 0, width, height);
             
             //nastavime kompas a smer
-            setCompas(g);
+            drawCompass(g);
             setArrow(g);
             
             int startY = cY + radius + 5;
@@ -211,7 +211,7 @@ public class Navigation extends Canvas
     }
     
     // angle in degres
-    private void setCompas(Graphics g) {
+    private void drawCompass(Graphics g) {
         g.setColor((gui.nightMode) ? 0x0 : 0xffffff); //white
         g.fillArc(cX - radius, cY - radius, 2 * radius, 2 * radius, 0, 360);
 
