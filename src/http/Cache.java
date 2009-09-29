@@ -1,10 +1,13 @@
 /*
  * Cache.java
+ * This file is part of HandyGeocaching.
  *
- * Created on 4. červenec 2007, 12:16
- * 
+ * HandyGeocaching is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * (read more at: http://www.gnu.org/licenses/gpl.html)
  */
-
 package http;
 
 import java.util.Vector;

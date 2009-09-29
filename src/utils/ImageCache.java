@@ -1,12 +1,13 @@
 /*
  * ImageCache.java
+ * This file is part of HandyGeocaching.
  *
- * Created on 19. červenec 2009, 15:43
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * HandyGeocaching is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * (read more at: http://www.gnu.org/licenses/gpl.html)
  */
-
 package utils;
 
 import java.util.Vector;
@@ -14,8 +15,8 @@ import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.ImageItem;
 
 /**
- *
- * @author Administrator
+ * Kesuje obrazek v pameti tak, aby se nemusel znovu nacitat. 
+ * @author Arcao
  */
 public class ImageCache {
     private static Vector cache = null;

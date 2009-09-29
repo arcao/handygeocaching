@@ -1,3 +1,13 @@
+/*
+ * OpenFileBrowser.java
+ * This file is part of HandyGeocaching.
+ *
+ * HandyGeocaching is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * (read more at: http://www.gnu.org/licenses/gpl.html)
+ */
 package utils;
 
 import gui.LoadingForm;
@@ -8,6 +18,10 @@ import javax.microedition.io.file.*;
 import javax.microedition.midlet.*;  
 import javax.microedition.lcdui.*;  
    
+/**
+ * Slouzi k vybrani souboru v pameti mobilu.
+ * @author Arcao
+ */
 public class OpenFileBrowser extends List implements CommandListener   
 {  
     private String currDirName;

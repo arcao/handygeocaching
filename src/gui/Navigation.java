@@ -1,10 +1,13 @@
 /*
  * Navigation.java
+ * This file is part of HandyGeocaching.
  *
- * Created on 7. září 2007, 15:05
- *
+ * HandyGeocaching is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * (read more at: http://www.gnu.org/licenses/gpl.html)
  */
-
 package gui;
 
 import database.Favourites;
@@ -110,11 +113,11 @@ public class Navigation extends Canvas
         satellites = "5/11 sat.";
         speed = "330 km/h";
         altitude = "300 m.n.m";
-        cacheName = "Název keše";
+        cacheName = "NĂˇzev keĹˇe";
         angle = 270;
         compass = 275;
         PDOP = "PDOP:2.0";
-        azimut = "30°";
+        azimut = "30Â°";
         dateTime = "1.12 13:46";*/
         
     }
@@ -196,10 +199,10 @@ public class Navigation extends Canvas
             }
             
             //tlacitko zpet
-            g.drawString("Zpět", 3, height, Graphics.BOTTOM|Graphics.LEFT);
+            g.drawString("ZpÄ›t", 3, height, Graphics.BOTTOM|Graphics.LEFT);
             
             if (hasPointerEvents())
-                g.drawString("Noční",width/2,height, Graphics.BOTTOM|Graphics.HCENTER);
+                g.drawString("NoÄŤnĂ­",width/2,height, Graphics.BOTTOM|Graphics.HCENTER);
             
             //tlacitko mapa
             g.drawString("Mapa", width - 3, height, Graphics.BOTTOM|Graphics.RIGHT);
@@ -358,8 +361,8 @@ public class Navigation extends Canvas
         Font fnt = (getWidth()<140) ? gui.get_fntSmallBold() : gui.get_fntBold();
         int width = getWidth();
         int widthHalf = width / 2;
-        int widthNocni = fnt.stringWidth("Noční") + 2*BORDER;
-        int widthZpet = fnt.stringWidth("Zpět") + 2*BORDER;
+        int widthNocni = fnt.stringWidth("NoÄŤnĂ­") + 2*BORDER;
+        int widthZpet = fnt.stringWidth("ZpÄ›t") + 2*BORDER;
         int widthMapa = fnt.stringWidth("Mapa") + 2*BORDER;
         
         int HEIGHT = getHeight();

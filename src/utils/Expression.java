@@ -1,8 +1,17 @@
-
+/*
+ * Expression.java
+ * This file is part of HandyGeocaching.
+ *
+ * HandyGeocaching is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * (read more at: http://www.gnu.org/licenses/gpl.html)
+ */
 package utils;
 
-import java.io.*;
-import java.util.*;
+import java.util.Stack;
+
 /**
  * Tato trida vypocita zadany vyraz vcetne zavorek atd. Pouziva se k vypoctu vzorcu MultiSolveru
  * Expression.java - this program coverts an infix expression to a postfix expression, and evaluates it. Infix expressions must be typed with spaces between all numbers and operators.

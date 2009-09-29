@@ -1,10 +1,17 @@
-
+/* 
+ * StringTokenizer.java
+ *
+ * This file is originally part of J2ME GPS Track
+ * Copyright (C) 2006 Dana Peters
+ * http://www.qcontinuum.org/gpstrack
+ */
 package utils;
 
 import java.util.Vector;
 /**
  * Tato trida rozdeli jeden string podle zadaneho separatoru, vrati pole stringu
  * Puvodne soucast aplikace J2ME GPS Track, Copyright (C) 2006 Dana Peters, http://www.qcontinuum.org/gpstrack
+ * @author Dana Peters
  */
 public class StringTokenizer {
 
@@ -45,5 +52,4 @@ public class StringTokenizer {
             st[i] = (String)tokens.elementAt(i);
         return st;
     }
-
 }

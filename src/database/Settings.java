@@ -1,10 +1,13 @@
 /*
  * Settings.java
+ * This file is part of HandyGeocaching.
  *
- * Created on 16. říjen 2007, 21:11
- *
+ * HandyGeocaching is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * (read more at: http://www.gnu.org/licenses/gpl.html)
  */
-
 package database;
 
 import gui.Gui;
@@ -17,7 +20,7 @@ import javax.microedition.lcdui.Choice;
 import javax.microedition.rms.RecordStore;
 
 /**
- * Tato třída si pamatuje nastavení aplikace a umožňuje jeho správu
+ * Tato třída si pamatuje nastavení aplikace a umož�?uje jeho správu
  * @author David Vavra
  */
 public class Settings

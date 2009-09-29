@@ -1,12 +1,13 @@
 /*
  * Import.java
+ * This file is part of HandyGeocaching.
  *
- * Created on 4. červenec 2009, 10:28
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * HandyGeocaching is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * (read more at: http://www.gnu.org/licenses/gpl.html)
  */
-
 package utils;
 
 import database.Favourites;
@@ -29,8 +30,8 @@ import kxml2.xmlpull.XmlPullParser;
 import kxml2.xmlpull.XmlPullParserException;
 
 /**
- *
- * @author Administrator
+ * Trida, ktera provadi import kesi a bodu z GPX formatu.
+ * @author Arcao
  */
 public class GPXImport extends Form implements CommandListener {
     private Favourites favourites;

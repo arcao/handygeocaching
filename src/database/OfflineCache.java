@@ -1,12 +1,13 @@
 /*
  * OfflineCache.java
+ * This file is part of HandyGeocaching.
  *
- * Created on 30. červenec 2009, 18:47
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * HandyGeocaching is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * (read more at: http://www.gnu.org/licenses/gpl.html)
  */
-
 package database;
 
 import gnu.classpath.util.zip.DataFormatException;
@@ -218,7 +219,6 @@ public class OfflineCache {
         
         byte[] out = bos.toByteArray();
         try {
-
             return new String(out, 0, out.length, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
             ex.printStackTrace();
