@@ -17,7 +17,7 @@ import javax.microedition.lcdui.Image;
 import utils.ImageCache;
 
 /**
- * Tato tĹ™Ă­da primĂˇrnÄ› zjiĹˇĹĄuje rozliĹˇenĂ­ obrazovky. To je potĹ™eba pĹ™i variabilnĂ­m naÄŤĂ­tĂˇnĂ­ ikonek pro kaĹľdĂ© rozliĹˇenĂ­ jinou.
+ * Tato trida primarne zjistuje rozliseni obrazovky. To je potreba pri variabilnim nacitani ikonek pro kazde rozliseni jinou.
  * @author David Vavra
  */
 public class IconLoader extends Canvas
