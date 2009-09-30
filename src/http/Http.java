@@ -163,7 +163,7 @@ public class Http implements Runnable
         {
             if (settings.name.equals("") && settings.password.equals(""))
             {
-                gui.showAlert("NemĂˇte nastaveny pĹ™ihlaĹˇovacĂ­ Ăşdaje na server geocaching.com, budete pĹ™esmÄ›rovĂˇni do nastavenĂ­.",AlertType.WARNING,gui.get_frmSettings());
+                gui.showAlert("Nemáte nastaveny přihlašovací údaje na server geocaching.com, budete přesměrováni do nastavení.",AlertType.WARNING,gui.get_frmSettings());
                 settings.set();
             }
             else
@@ -214,7 +214,7 @@ public class Http implements Runnable
                         //kontrola verze
                         if (!login[0][1].equals("OK"))
                         {
-                            gui.showAlert("Je k dispozici novĂˇ verze aplikace: "+login[0][1],AlertType.INFO,gui.get_frmLoading());
+                            gui.showAlert("Je k dispozici nová verze aplikace: "+login[0][1],AlertType.INFO,gui.get_frmLoading());
                             t.sleep(3000);
                         }
                         //vip mod
@@ -244,7 +244,7 @@ public class Http implements Runnable
                     if (gps.convertLattitude(gui.get_tfLattitude().getString())==Double.NaN || gps.convertLongitude(gui.get_tfLongitude().getString())==Double.NaN)
                     {
                         rightCoordFormat = false;
-                        gui.showAlert("Ĺ patnĂ˝ formĂˇt souĹ™adnic",AlertType.WARNING,gui.get_frmCoordinates());
+                        gui.showAlert("Špatný formát souřadnic",AlertType.WARNING,gui.get_frmCoordinates());
                     }
                     else
                     {
@@ -252,11 +252,11 @@ public class Http implements Runnable
                     }
                     if (rightCoordFormat)
                     {
-                        response = downloadData("part=nearest&"+coordinates+"&filter="+settings.filter+"&numberCaches="+settings.numberCaches, false, true, "Stahuji seznam nejbliĹľĹˇĂ­ch keĹˇĂ­...");
+                        response = downloadData("part=nearest&"+coordinates+"&filter="+settings.filter+"&numberCaches="+settings.numberCaches, false, true, "Stahuji seznam nejbližších keší...");
                         if (checkData(response))
                         {
                             foundCaches = parseData(response);
-                            gui.get_lstNearestCaches().setTitle("NejbliĹľĹˇĂ­ keĹˇe");
+                            gui.get_lstNearestCaches().setTitle("Nejbližší keše");
                             gui.get_lstNearestCaches().deleteAll();
                             waypoints = new String[foundCaches.length];
                             for (int i=0;i<foundCaches.length;i++)
@@ -279,11 +279,11 @@ public class Http implements Runnable
             case KEYWORD:
                 try
                 {
-                    response = downloadData("part=keyword&keyword="+Utils.urlUTF8Encode(gui.get_tfKeyword().getString())+"&numberCaches="+settings.numberCaches, false, true, "Stahuji seznam keĹˇĂ­...");
+                    response = downloadData("part=keyword&keyword="+Utils.urlUTF8Encode(gui.get_tfKeyword().getString())+"&numberCaches="+settings.numberCaches, false, true, "Stahuji seznam keší...");
                     if (checkData(response))
                     {
                         foundCaches = parseData(response);
-                        gui.get_lstNearestCaches().setTitle("NalezenĂ© keĹˇe");
+                        gui.get_lstNearestCaches().setTitle("Nalezené keše");
                         gui.get_lstNearestCaches().deleteAll();
                         waypoints = new String[foundCaches.length];
                         for (int i=0;i<foundCaches.length;i++)
@@ -309,7 +309,7 @@ public class Http implements Runnable
                     gui.fromPreview = true;
                     
                     if (!offline)
-                        response = downloadData("part=overview&waypoint="+waypoint, false, true, "Stahuji informace o keĹˇi " + waypointCacheName + "...");
+                        response = downloadData("part=overview&waypoint="+waypoint, false, true, "Stahuji informace o keši " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         String[][] listing = parseData(response);
@@ -325,7 +325,7 @@ public class Http implements Runnable
                         gui.get_siInventory().setText(listing[0][8]);
                         if (listing[0][9].equals(""))
                         {
-                            gui.get_frmOverview().setTitle("Detaily keĹˇe");
+                            gui.get_frmOverview().setTitle("Detaily keše");
                         }
                         else
                         {
@@ -353,7 +353,7 @@ public class Http implements Runnable
                         if (listing[0][13].equals("1"))
                         {
                             gui.get_frmOverview().addCommand(gui.get_cmdDownloadPatterns());
-                            gui.get_siInventory().setText(gui.get_siInventory().getText()+"\n"+"Tato keĹˇ umoĹľnuje staĹľenĂ­ vzoreÄŤkĹŻ do MultiSolveru!");
+                            gui.get_siInventory().setText(gui.get_siInventory().getText()+"\n"+"Tato keš umožňuje stažení vzorečků do MultiSolveru!");
                         }    
                         //nastaveni kB podrobnosti
                         gui.get_frmOverview().removeCommand(gui.get_cmdInfo());
@@ -378,7 +378,7 @@ public class Http implements Runnable
                         if (!offline) {
                             favourites.editId = -1;
                             //Zephy 19.11.07 +\ -pridan posledni parametr
-                            favourites.addEdit("_PoslednĂ­ keĹˇ",response,listing[0][4],listing[0][5],typeNumber,null, false, "NE", "",false, true, true);                        
+                            favourites.addEdit("_Poslední keš",response,listing[0][4],listing[0][5],typeNumber,null, false, "NE", "",false, true, true);                        
                             //Zephy 19.11.07 +/
                         }
                         gui.getDisplay().setCurrent(gui.get_frmOverview());
@@ -395,7 +395,7 @@ public class Http implements Runnable
             case DOWNLOAD_ALL_CACHES:
                 try {
                     for (int i = 0; i < waypoints.length; i++) {
-                        response = downloadData("part=overview&waypoint="+waypoints[i],false, true, "Stahuji keĹˇ " + foundCaches[i][0] + "...");
+                        response = downloadData("part=overview&waypoint="+waypoints[i],false, true, "Stahuji keš " + foundCaches[i][0] + "...");
                         if (checkData(response))
                         {
                             String[][] listing = parseData(response);
@@ -408,7 +408,7 @@ public class Http implements Runnable
                         }
                     }
                     favourites.revalidate();
-                    gui.showAlert("KeĹˇe byly pĹ™idĂˇny do oblĂ­benĂ˝ch.", AlertType.INFO, gui.get_lstNearestCaches());
+                    gui.showAlert("Keše byly přidány do oblíbených.", AlertType.INFO, gui.get_lstNearestCaches());
                 }
                 catch (InterruptedException e) {
                     favourites.revalidate();
@@ -422,14 +422,14 @@ public class Http implements Runnable
             case DETAIL:
                 try
                 {
-                    response = downloadData("part=info&waypoint="+waypoint, false, true, "Stahuji listing keĹˇe " + waypointCacheName + "...");
+                    response = downloadData("part=info&waypoint="+waypoint, false, true, "Stahuji listing keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         gui.get_frmInfo().deleteAll();
                         gui.get_frmInfo().append(gui.get_siBegin());
                         gui.get_frmInfo().append(response);
                         gui.get_frmInfo().append(gui.get_siEnd());
-                        //limitace Javy na telefonech SE? nasledujici radka ulozi jen par vet.
+                        //limitace Javy na telefonech SE? nasledujici radka zobrazi jen par vet.
                         //gui.get_siContent().setText(response);
                         gui.getDisplay().setCurrent(gui.get_frmInfo());
                     }
@@ -445,7 +445,7 @@ public class Http implements Runnable
             case HINT:
                 try
                 {
-                    response = downloadData("part=hint&waypoint="+waypoint, false, true, "Stahuji nĂˇpovÄ›du keĹˇe " + waypointCacheName + "...");
+                    response = downloadData("part=hint&waypoint="+waypoint, false, true, "Stahuji nápovědu keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         gui.get_frmHint().deleteAll();
@@ -464,7 +464,7 @@ public class Http implements Runnable
             case WAYPOINTS:
                 try
                 {
-                    response = downloadData("part=waypoints&waypoint="+waypoint, false, true, "Stahuji waypointy keĹˇe " + waypointCacheName + "...");
+                    response = downloadData("part=waypoints&waypoint="+waypoint, false, true, "Stahuji waypointy keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         String[][] waypoints = parseData(response);
@@ -488,7 +488,7 @@ public class Http implements Runnable
             case LOGS:
                 try
                 {
-                    response = downloadData("part=logs&waypoint="+waypoint, false, true, "Stahuji logy keĹˇe " + waypointCacheName + "...");
+                    response = downloadData("part=logs&waypoint="+waypoint, false, true, "Stahuji logy keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         String[][] logs = parseData(response);
@@ -497,7 +497,7 @@ public class Http implements Runnable
                         {
                             if (i==logs.length-1)
                             {
-                                Command cmdMoreLogs = new Command(logs[i][0]+" dalĹˇĂ­ch", Command.SCREEN, 1);;
+                                Command cmdMoreLogs = new Command(logs[i][0]+" dalších", Command.SCREEN, 1);;
                                 gui.get_frmLogs().removeCommand(cmdMoreLogs);
                                 if (!logs[i][0].equals("0"))
                                 {
@@ -524,7 +524,7 @@ public class Http implements Runnable
             case ALL_LOGS:
                 try
                 {
-                    response = downloadData("part=alllogs&guideline="+guideline, false, true, "Stahuji vĹˇechny logy keĹˇe " + waypointCacheName + "...");
+                    response = downloadData("part=alllogs&guideline="+guideline, false, true, "Stahuji všechny logy keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         String[][] logs = parseData(response);
@@ -547,7 +547,7 @@ public class Http implements Runnable
             case TRACKABLE: 
                 try
                 {
-                    response = downloadData("part=trackable&trnumber="+gui.get_tfTrackingNumber().getString(), false, true, "HledĂˇm informace o pĹ™edmÄ›tu...");
+                    response = downloadData("part=trackable&trnumber="+gui.get_tfTrackingNumber().getString(), false, true, "Hledám informace o předmětu...");
                     if (checkData(response))
                     {
                         String[][] trackable = parseData(response);
@@ -572,7 +572,7 @@ public class Http implements Runnable
             case PATTERNS:
                 try
                 {
-                    response = downloadData("part=patterns&waypoint="+waypoint, false, true, "Stahuji vzoreÄŤky keĹˇe " + waypointCacheName + "...");
+                    response = downloadData("part=patterns&waypoint="+waypoint, false, true, "Stahuji vzorečky keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         String[][] patternsArray = parseData(response);
@@ -590,10 +590,10 @@ public class Http implements Runnable
             case FIELD_NOTES:
                 try
                 {
-                    response = downloadData("action=fieldnotes&fieldnotes="+Utils.urlUTF8Encode(FieldNotes.getInstance().getFieldNotes())+"&incremental="+((settings.incrementalFieldNotes)?"1":"0"), true, true, "NahrĂˇvĂˇm Field notes na GC.com...");
+                    response = downloadData("action=fieldnotes&fieldnotes="+Utils.urlUTF8Encode(FieldNotes.getInstance().getFieldNotes())+"&incremental="+((settings.incrementalFieldNotes)?"1":"0"), true, true, "Nahrávám Field notes na GC.com...");
                     if (checkData(response))
                     {
-                        gui.showAlert("NahrĂˇno " + response + " novĂ˝ch Field notes na GC.com.",AlertType.INFO,gui.get_lstFieldNotes());
+                        gui.showAlert("Nahráno " + response + " nových Field notes na GC.com.",AlertType.INFO,gui.get_lstFieldNotes());
                     }
                 }
                 catch (InterruptedException e) {
@@ -723,9 +723,9 @@ public class Http implements Runnable
             if (message != null)                
                 gui.get_siMessage().setText(message);
             else if (action == LOGIN)
-                gui.get_siMessage().setText("PĹ™ihlaĹˇovĂˇnĂ­ k serveru geocaching.com...");
+                gui.get_siMessage().setText("Přihlašování k serveru geocaching.com...");
             else
-                gui.get_siMessage().setText("PĹ™ipojovĂˇnĂ­ k serveru a stahovĂˇnĂ­ dat...");
+                gui.get_siMessage().setText("Připojování k serveru a stahování dat...");
             String adress = ((useArcaoUrl) ? arcao_url : url) + "?" + data;
             if (addCookie) adress+= "&cookie="+cookie;
             String returns = "";
@@ -769,69 +769,69 @@ public class Http implements Runnable
         {
             if (data.equals("err:TIMEOUT"))
             {
-                gui.showAlert("VyprĹˇel ÄŤasovĂ˝ limit spojenĂ­. Server geocaching.com neodpovĂ­dĂˇ. Zkuste to za chvilku znovu.",AlertType.ERROR,gui.get_lstMenu());
+                gui.showAlert("Vypršel časový limit spojení. Server geocaching.com neodpovídá. Zkuste to za chvilku znovu.",AlertType.ERROR,gui.get_lstMenu());
                 return false;
             }
             else if (data.length() >= 3 && data.substring(0,3).equals("err"))
             {
-                gui.showAlert("Ĺ patnÄ› nastavenĂ© nebo nedostupnĂ© GPRS spojenĂ­: " + data,AlertType.ERROR,gui.get_lstMenu());
+                gui.showAlert("Špatně nastavené nebo nedostupné GPRS spojení: " + data,AlertType.ERROR,gui.get_lstMenu());
                 return false;
             }
             else if (data.equals("MUST_ALLOW"))
             {
-                gui.showAlert("Pro sprĂˇvnou funkÄŤnost musĂ­te povolit pĹ™ipojenĂ­. Restartujte aplikaci.",AlertType.WARNING,gui.get_lstMenu());
+                gui.showAlert("Pro správnou funkčnost musíte povolit připojení. Restartujte aplikaci.",AlertType.WARNING,gui.get_lstMenu());
                 return false;
             }
             else if (data.equals("ERR_BAD_PASSWORD"))
             {
                 settings.set();
-                gui.showAlert("Ĺ patnĂ© uĹľivatelskĂ© jmĂ©no nebo heslo",AlertType.ERROR,gui.get_frmSettings());
+                gui.showAlert("Špatné uživatelské jméno nebo heslo.",AlertType.ERROR,gui.get_frmSettings());
                 return false;
             }
             else if (data.equals("ERR_AUTH_FAILED"))
             {
-                gui.showAlert("PĹ™ihlĂˇĹˇenĂ­ selhalo",AlertType.ERROR,gui.get_lstMenu());
+                gui.showAlert("Přihlášení selhalo.",AlertType.ERROR,gui.get_lstMenu());
                 return false;
             }            
             else if (data.equals("ERR_YOU_ARE_NOT_LOGGED"))
             {
-                gui.showAlert("Nejste pĹ™ihlĂˇĹˇen k GC.com, pravdÄ›dodobnÄ› vyprĹˇela vaĹˇe session.",AlertType.WARNING,gui.get_lstMenu());
+                gui.showAlert("Nejste přihlášen k GC.com, pravdědodobně vypršela vaše session.",AlertType.WARNING,gui.get_lstMenu());
                 gui.logged = false;
                 return false;
             }
             else if (data.equals("ERR_BAD_WAYPOINT"))
             {
-                gui.showAlert("TakovĂ˝ waypoint neexistuje!",AlertType.WARNING,gui.get_frmWaypoint());
+                gui.showAlert("Takový waypoint neexistuje!",AlertType.WARNING,gui.get_frmWaypoint());
                 return false;
             }
             else if (data.equals("NO_WAYPOINTS"))
             {
-                gui.showAlert("Tato keĹˇ nemĂˇ ĹľĂˇdnĂ© pĹ™Ă­davnĂ© waypointy",AlertType.INFO,gui.get_frmOverview());
+                gui.showAlert("Tato keš nemá žádné přídavné waypointy.",AlertType.INFO,gui.get_frmOverview());
                 return false;
             }
             else if (data.equals("NO_HINT"))
             {
-                gui.showAlert("Tato keĹˇ nemĂˇ nĂˇpovÄ›du",AlertType.INFO,gui.get_frmOverview());
+                gui.showAlert("Tato keš nemá nápovědu.",AlertType.INFO,gui.get_frmOverview());
                 return false;
             }
             else if (data.equals("PARSING_ERROR"))
             {
-                gui.showAlert("Server geocaching.com pravdÄ›podobnÄ› zmÄ›nil HTML kĂłd, kontaktujte prosĂ­m autora.",AlertType.ERROR,gui.get_lstMenu());
+                gui.showAlert("Server geocaching.com pravděpodobně změnil HTML kód, kontaktujte prosím autora.",AlertType.ERROR,gui.get_lstMenu());
                 return false;
             }
             else if (data.equals("WRONG_KEYWORD"))
             {
-                gui.showAlert("Toto klĂ­ÄŤovĂ© slovo neodpovĂ­dĂˇ ĹľĂˇdnĂ© keĹˇi",AlertType.WARNING,gui.get_frmKeyword());
+                gui.showAlert("Toto klíčové slovo neodpovídá žádné keši.",AlertType.WARNING,gui.get_frmKeyword());
                 return false;
             }
             else if (data.equals("WRONG_TRACKING_NUMBER"))
             {
-                gui.showAlert("PĹ™edmÄ›t s tĂ­mto tracking number neexistuje",AlertType.WARNING,gui.get_frmTrackingNumber());
+                gui.showAlert("Předmět s tímto tracking number neexistuje.",AlertType.WARNING,gui.get_frmTrackingNumber());
                 return false;
             }
             else if (data.equals("ERR_PM_ONLY"))
             {
-                gui.showAlert("Tato keĹˇ je pĹ™Ă­stupnĂˇ jenom Premium MemberĹŻm",AlertType.WARNING,gui.get_lstSearch());
+                gui.showAlert("Tato keš je přístupná jenom Premium Memberům.",AlertType.WARNING,gui.get_lstSearch());
                 return false;
             }
             else if (data.equals("ERR_FIELD_NOTES_FAILED")) 
