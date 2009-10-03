@@ -143,8 +143,8 @@ public class GPXImport extends Form implements CommandListener {
                             if (!parser.getNamespace().equals(GROUNDSPEAK_NS)) {
                                 if (parser.getName().equals("name")) {
                                     parser.next();
-                                    parts[0][7] = parser.getText(); //gcCode
-                                    WayPointName = parser.getText();
+                                    WayPointName = parser.getText(); //gcCode
+                                    parts[0][7] = WayPointName;
                                 } else if (parser.getName().equals("type")) {
                                     parser.next();
                                     parts[0][10] = convertGPXTypeToTypeID(parser.getText()); //typeIconID gc_xxx
@@ -188,7 +188,7 @@ public class GPXImport extends Form implements CommandListener {
                                     parser.next();
                                     listing = parser.getText();
                                     parts[0][14] = Integer.toString(listing.length() / 1024);
-                                    parts[0][13] = (listing.indexOf("<!--Handy") != -1) ? "1":"0";
+                                    parts[0][13] = "1"; //(listing.indexOf("<!--Handy") != -1) ? "1":"0";
                                 } else if (parser.getName().equals("encoded_hints")) {
                                     parser.next();
                                     hint = parser.getText();

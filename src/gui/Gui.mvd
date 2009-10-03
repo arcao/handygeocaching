@@ -2497,7 +2497,6 @@
         <Node id="lstDevices" location="2112,208" order="$CommandAction2,$CommandAction9,$SelectCaseCommandAction10,,,,,,,,$Default,,,,,"/>
         <Node id="lstMenu" location="912,1296" order="$SelectCaseCommandAction8,$SelectCaseCommandAction24,$SelectCaseCommandAction6,$SelectCaseCommandAction5,$SelectCaseCommandAction12,$SelectCaseCommandAction7,$SelectCaseCommandAction9,,,,$Default,,,,,"/>
         <Node id="frmAveraging" location="3072,208" order="$CommandAction4,$CommandAction5,$CommandAction6,$CommandAction80,,,,,,,$Default,,,,,"/>
-        <Node id="lstMode" location="640,1184" order="$SelectCaseCommandAction2,$SelectCaseCommandAction3,$CommandAction7,$SelectCaseCommandAction19,$SelectCaseCommandAction22,$CommandAction89,$SelectCaseCommandAction26,,,,$Default,,,,,"/>
         <Node id="frmLoading" location="6280,208" order="$CommandAction29,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmCoordinates" location="5000,208" order="$CommandAction14,$CommandAction15,,,,,,,,,$Default,,,,,"/>
         <Node id="lstNearestCaches" location="4680,208" order="$CommandAction16,$SelectCaseCommandAction4,$CommandAction108,,,,,,,,$Default,,,,,"/>
@@ -2537,6 +2536,7 @@
         <Node id="lstFieldNotes" location="912,1528" order="$CommandAction96,$CommandAction99,$CommandAction100,$CommandAction101,$CommandAction102,$CommandAction103,,,,,$Default,,,,,"/>
         <Node id="frmFieldNote" location="408,312" order="$CommandAction97,$CommandAction98,,,,,,,,,$Default,,,,,"/>
         <Node id="frmMemoryInfo" location="2136,1240" order="$CommandAction107,,,,,,,,,,$Default,,,,,"/>
+        <Node id="lstMode" location="640,1184" order="$SelectCaseCommandAction2,$SelectCaseCommandAction3,$CommandAction7,$SelectCaseCommandAction19,$SelectCaseCommandAction22,$CommandAction89,$SelectCaseCommandAction26,,,,$Default,,,,,"/>
         <Link id="$StartPoint$ActionLink" path="200,1160,392,1160"/>
         <Link id="$CommandAction2$ActionLink" path="2152,200,2305,200,2305,672,47,672,47,1160,120,1160"/>
         <Link id="$CommandAction4$ActionLink" path="3112,200,3232,200,3232,1627,1141,1627,1141,1800,1160,1800"/>

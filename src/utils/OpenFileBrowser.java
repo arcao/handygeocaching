@@ -111,12 +111,12 @@ public class OpenFileBrowser extends List implements CommandListener
     }
      
     private void list() {
-        final LoadingForm lForm = new LoadingForm(display, "Načítám..", "Načítám seznam souborů...", this, null);
-        lForm.show();
-        
+        final LoadingForm lForm = new LoadingForm(display, "Načítám...", "Načítám seznam souborů...", this, null);
+                
         new Thread(new Runnable() {
             public void run() {
                 Enumeration e;
+                lForm.show();
                 try {
                     deleteAll();
                     if (MEGA_ROOT.equals(currDirName)) {
@@ -128,13 +128,6 @@ public class OpenFileBrowser extends List implements CommandListener
                         currDir = (FileConnection)Connector.open("file://localhost/" + currDirName, Connector.READ);
                         append(UP_DIRECTORY,null);
                         
-                        e = currDir.list();
-                        while (e.hasMoreElements()) {
-                            fileName = (String) e.nextElement();
-                            if (fileName.charAt(fileName.length()-1) == SEP)
-                                append(fileName,null);  
-                        }
-
                         e = currDir.list();
                         while (e.hasMoreElements()) {
                             fileName = (String) e.nextElement();

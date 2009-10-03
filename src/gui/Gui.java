@@ -393,7 +393,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                         siVerze.setText(getAppProperty("MIDlet-Version")+"\n");
                         get_siSestaveni().setText(getAppProperty("Build-Vendor")+"-"+getAppProperty("Build-Version")+"\n");
                         if (settings.vip)
-                            siDonate.setText("DÄ›kuji moc za VĂˇĹˇ pĹ™Ă­spÄ›vek na vĂ˝voj aplikace! (ÄŤ.ĂşÄŤtu autora je 51-5385890237/0100)");
+                            siDonate.setText("Děkuji moc za Váš příspěvek na vývoj aplikace! (Č.účtu autora je 51-5385890237/0100)");
                         break;//GEN-BEGIN:MVDCACase41
                     case 6://GEN-END:MVDCACase41
                         // Insert pre-action code here
@@ -468,7 +468,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert pre-action code here
                 gps.stop();
                 favourites.editId = -1;
-                favourites.addEdit("VĂ˝sledek prĹŻmÄ›rovĂˇnĂ­","",siAverageLattitude.getText(),siAverageLongitude.getText(),"average",get_lstFavourites(), false, "NE", "", true, true, true);
+                favourites.addEdit("Výsledek průměrování","",siAverageLattitude.getText(),siAverageLongitude.getText(),"average",get_lstFavourites(), false, "NE", "", true, true, true);
                 // Do nothing//GEN-LINE:MVDCAAction391
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase391
@@ -492,7 +492,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                         } else {
                             bluetooth = new Bluetooth(this, http, settings, favourites, true);
                             if (bluetooth.isOn()) {
-                                get_frmConnecting().append("PĹ™ipojuji k poslednĂ­mu zaĹ™Ă­zenĂ­...");
+                                get_frmConnecting().append("Připojuji k poslednímu zařízení...");
                                 getDisplay().setCurrent(get_frmConnecting());
                                 gpsParser = new GpsParser(this, http, settings, favourites, bluetooth, settings.lastDevice, GpsParser.BLUETOOTH);
                                 bluetooth.setReference(gpsParser);
@@ -530,7 +530,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                         // Insert post-action code here
                         modeGPS = true;
                         gpsGate = false;
-                        get_frmConnecting().append("PĹ™ipojuji se k Sony Ericssson HGE-100...");
+                        get_frmConnecting().append("Připojuji se k Sony Ericssson HGE-100...");
                         getDisplay().setCurrent(get_frmConnecting());
                         gpsParser = new GpsParser(this, http, settings, favourites, bluetooth, "comm:AT5;baudrate=9600", GpsParser.GPS_HGE_100);
                         gpsParser.open();
@@ -555,11 +555,11 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert post-action code here
                 if (navigateToPoint) {
                     if (gps.convertLattitude(get_tfLattitude().getString())==0 || gps.convertLongitude(get_tfLongitude().getString())==0) {
-                        showAlert("Ĺ patnĂ˝ formĂˇt souĹ™adnic",AlertType.WARNING,get_frmCoordinates());
+                        showAlert("Špatný formát souřadnic",AlertType.WARNING,get_frmCoordinates());
                     } else {
                         settings.saveCoordinates(get_tfLattitude().getString(), get_tfLongitude().getString());
                         getDisplay().setCurrent(get_cvsNavigation());
-                        gps.setNavigationTarget(get_tfLattitude().getString(), get_tfLongitude().getString(),"ZadanĂ˝ bod");
+                        gps.setNavigationTarget(get_tfLattitude().getString(), get_tfLongitude().getString(),"Zadaný bod");
                         gps.start(Gps.NAVIGATION);
                         gps.setPreviousScreen(frmCoordinates);
                     }
@@ -661,7 +661,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                     gps.start(Gps.NAVIGATION);
                     gps.setPreviousScreen(frmOverview);
                 } else {
-                    showAlert("Tato funkce je pĹ™Ă­stupnĂˇ jenom v reĹľimu GPS",AlertType.WARNING,get_lstMode());
+                    showAlert("Tato funkce je přístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                 }
             } else if (command == cmdNext) {//GEN-LINE:MVDCACase168
                 // Insert pre-action code here
@@ -717,7 +717,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert post-action code here
             } else if (command == cmdPoznamka) {//GEN-LINE:MVDCACase507
                 // Insert pre-action code here
-                get_tbPoznamka().setTitle("PoznĂˇmka pro "+get_siName().getText());
+                get_tbPoznamka().setTitle("Poznámka pro "+get_siName().getText());
                 get_tbPoznamka().setString(favourites.getPoznamka(favourites.id));
                 getDisplay().setCurrent(get_tbPoznamka());//GEN-LINE:MVDCAAction589
                 // Insert post-action code here
@@ -855,11 +855,11 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                         navigateToPoint = false;
                         keyword = false;
                         if (!modeGPS) {
-                            get_frmCoordinates().setTitle("Zadejte souĹ™adnice:");
+                            get_frmCoordinates().setTitle("Zadejte souřadnice:");
                             get_tfLattitude().setString(settings.lastLattitude);
                             get_tfLongitude().setString(settings.lastLongitude);
                         } else {
-                            get_frmCoordinates().setTitle("Zadejte souĹ™adnice:");
+                            get_frmCoordinates().setTitle("Zadejte souřadnice:");
                             get_tfLattitude().setString("");
                             get_tfLongitude().setString("");
                             gps.start(Gps.CURRENT_POSITION);
@@ -896,7 +896,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                         nearestFromFavourite = false;
                         navigateToPoint = false;
                         keyword = false;
-                        get_frmCoordinates().setTitle("Zadejte souĹ™adnice:");
+                        get_frmCoordinates().setTitle("Zadejte souřadnice:");
                         get_tfLattitude().setString(settings.lastLattitude);
                         get_tfLongitude().setString(settings.lastLongitude);
 
@@ -924,7 +924,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                             get_tfLattitude().setString(settings.lastLattitude);
                             get_tfLongitude().setString(settings.lastLongitude);
                         } else {
-                            showAlert("Tato funkce je pĹ™Ă­stupnĂˇ jenom v reĹľimu GPS",AlertType.WARNING,get_lstMode());
+                            showAlert("Tato funkce je přístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                         }
                         // Do nothing//GEN-LINE:MVDCAAction240
                         // Insert post-action code here
@@ -936,7 +936,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                             // Insert post-action code here
                             gps.start(Gps.AVERAGING);
                         } else {
-                            showAlert("Tato funkce je pĹ™Ă­stupnĂˇ jenom v reĹľimu GPS",AlertType.WARNING,get_lstMode());
+                            showAlert("Tato funkce je přístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                         }
                         // Do nothing//GEN-LINE:MVDCAAction242
                         // Insert post-action code here
@@ -975,7 +975,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                             //gps.setPreviousScreen(lstGPS);
                             //TMP-/
                             
-                            showAlert("Tato funkce je pĹ™Ă­stupnĂˇ jenom v reĹľimu GPS",AlertType.WARNING,get_lstMode());
+                            showAlert("Tato funkce je přístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                         }
                         //Zephy 21.11.07 gpsstatus+/
                         // Do nothing//GEN-LINE:MVDCAAction469
@@ -995,7 +995,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
             } else if (command == cmdDeleteAll) {//GEN-LINE:MVDCACase253
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction257
-                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat vĹˇechny poloĹľky?", "Opravdu chcete smazat vĹˇechny poloĹľky?");
+                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat všechny položky?", "Opravdu chcete smazat všechny položky?");
                 dialog.setActionNoDisplayable(lstFavourites);
                 dialog.setActionYes(new Runnable() {
                     public void run() {
@@ -1017,19 +1017,19 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 fromMultiSolver = false;
                 if (modeGPS) {
                     favourites.editId = -1;
-                    get_frmAddGiven().setTitle("ZĂ­skĂˇvĂˇm souĹ™adnice...");
+                    get_frmAddGiven().setTitle("Získávám souřadnice...");
                     get_tfGivenName().setString("");
                     get_tfGivenDescription().setString("");
                     getDisplay().setCurrent(get_frmAddGiven());
                     gps.start(Gps.COORDINATES_FAVOURITES);
                 } else {
-                    showAlert("Tato funkce je pĹ™Ă­stupnĂˇ jenom v reĹľimu GPS",AlertType.WARNING,get_lstMode());
+                    showAlert("Tato funkce je přístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                 }
             } else if (command == cmdDelete) {//GEN-LINE:MVDCACase269
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction272
                 // Insert post-action code here
-                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat poloĹľky?", "Opravdu chcete smazat zvolenĂ© poloĹľky?");
+                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat položky?", "Opravdu chcete smazat zvolené položky?");
                 dialog.setActionNoDisplayable(lstFavourites);
                 dialog.setActionYes(new Runnable() {
                     public void run() {
@@ -1069,7 +1069,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                         gps.setPreviousScreen(get_lstFavourites());
                     }
                 } else {
-                    showAlert("Tato funkce je pĹ™Ă­stupnĂˇ jenom v reĹľimu GPS",AlertType.WARNING,get_lstMode());
+                    showAlert("Tato funkce je přístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                 }
                 // Do nothing//GEN-LINE:MVDCAAction390
                 // Insert post-action code here
@@ -1087,7 +1087,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                     gps.start(Gps.MAP);
                     gps.setPreviousScreen(get_lstFavourites());
                 } else {
-                    showAlert("Tato funkce je pĹ™Ă­stupnĂˇ jenom v reĹľimu GPS",AlertType.WARNING,get_lstMode());
+                    showAlert("Tato funkce je přístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                 }
                 // Do nothing//GEN-LINE:MVDCAAction420
                 // Insert post-action code here
@@ -1127,14 +1127,14 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                         getDisplay().setCurrent(get_frmFieldNote());//GEN-LINE:MVDCAAction509
                     // Insert post-action code here
                     } else {
-                        showAlert("Field note lze vytvoĹ™it pouze u keĹˇe. Pokud znĂˇte GC kĂłd, vytvoĹ™te field note v ÄŤĂˇsti HlavnĂ­ menu -> Field Notes -> PĹ™idat.", AlertType.ERROR, null);
+                        showAlert("Field note lze vytvořit pouze u keše. Pokud znáte GC kód, vytvořte field note v části Hlavní menu -> Field Notes -> Přidat.", AlertType.ERROR, null);
                     }
                 }
             } else if (command == cmdPoznamka) {//GEN-LINE:MVDCACase509
                 // Insert pre-action code here
                 int selected = firstCheckedFavourite();
                 if (selected != -1) {
-                    get_tbPoznamka().setTitle("PoznĂˇmka pro "+favourites.getCacheName(selected));
+                    get_tbPoznamka().setTitle("Poznámka pro "+favourites.getCacheName(selected));
                     favourites.id = selected;
                     get_tbPoznamka().setString(favourites.getPoznamka(favourites.id));
                     getDisplay().setCurrent(get_tbPoznamka());//GEN-LINE:MVDCAAction521
@@ -1163,7 +1163,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                     gps.start(Gps.NAVIGATION);
                     gps.setPreviousScreen(frmFavourite);
                 } else {
-                    showAlert("Tato funkce je pĹ™Ă­stupnĂˇ jenom v reĹľimu GPS",AlertType.WARNING,get_lstMode());
+                    showAlert("Tato funkce je přístupná jenom v režimu GPS",AlertType.WARNING,get_lstMode());
                 }
             } else if (command == cmdNext) {//GEN-LINE:MVDCACase263
                 // Insert pre-action code here
@@ -1174,7 +1174,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert post-action code here
             } else if (command == cmdPoznamka) {//GEN-LINE:MVDCACase360
                 // Insert pre-action code here
-                get_tbPoznamka().setTitle("PoznĂˇmka pro "+favourites.getCacheName(favourites.id));
+                get_tbPoznamka().setTitle("Poznámka pro "+favourites.getCacheName(favourites.id));
                 get_tbPoznamka().setString(favourites.getPoznamka(favourites.id));
                 getDisplay().setCurrent(get_tbPoznamka());//GEN-LINE:MVDCAAction524
                 // Insert post-action code here
@@ -1309,7 +1309,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction280
                 // Insert post-action code here
             } else if (command == cmdAddPattern) {//GEN-LINE:MVDCACase377
                 // Insert pre-action code here
-                get_frmEditPattern().setTitle("PĹ™idat vzorec");
+                get_frmEditPattern().setTitle("Přidat vzorec");
                 getDisplay().setCurrent(get_frmEditPattern());//GEN-LINE:MVDCAAction378
                 // Insert post-action code here
             } else if (command == lstPatterns.SELECT_COMMAND) {
@@ -1327,7 +1327,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction280
                 }
             } else if (command == cmdDelete) {//GEN-END:MVDCACase384
                 // Insert pre-action code here
-                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat poloĹľku?", "Opravdu chcete smazat tuto poloĹľku?");
+                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat položku?", "Opravdu chcete smazat tuto položku?");
                 dialog.setActionNoDisplayable(lstPatterns);
                 dialog.setActionYes(new Runnable() {
                     public void run() {
@@ -1409,7 +1409,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 // Insert post-action code here
             } else if (command == cmdDeleteAll) {//GEN-LINE:MVDCACase546
                 // Insert pre-action code here
-                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat vĹˇechny poloĹľky?", "Opravdu chcete smazat vĹˇechny poloĹľky?");
+                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat všechny položky?", "Opravdu chcete smazat všechny položky?");
                 dialog.setActionNoDisplayable(lstFieldNotes);
                 dialog.setActionYes(new Runnable() {
                     public void run() {
@@ -1423,7 +1423,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 // Insert post-action code here
             } else if (command == cmdDelete) {//GEN-LINE:MVDCACase573
                 // Insert pre-action code here
-                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat poloĹľky?", "Opravdu chcete smazat zvolenĂ© poloĹľky?");
+                ConfirmDialog dialog = new ConfirmDialog(getDisplay(), "Smazat položky?", "Opravdu chcete smazat zvolené položky?");
                 dialog.setActionNoDisplayable(lstFieldNotes);
                 dialog.setActionYes(new Runnable() {
                     public void run() {
@@ -1493,7 +1493,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 get_frmFieldNote().append(get_cgFNType());
                 get_frmFieldNote().append(get_dtFNDate());
                 get_frmFieldNote().append(get_tfFNText());
-                get_frmFieldNote().setTitle("PĹ™idat field note");
+                get_frmFieldNote().setTitle("Přidat field note");
                 
                 getDisplay().setCurrent(get_frmFieldNote());//GEN-LINE:MVDCAAction567
                 // Insert post-action code here
@@ -1546,7 +1546,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                     fRet = get_lstMenu(); 
                 }
                 
-                showAlert("Field note uloĹľeno.", AlertType.INFO, fRet);
+                showAlert("Field note uloženo.", AlertType.INFO, fRet);
             }//GEN-BEGIN:MVDCACase554
         } else if (displayable == frmMemoryInfo) {
             if (command == cmdBack) {//GEN-END:MVDCACase554
@@ -4788,7 +4788,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public void showError(String section, String errorMessage, String data) {
         //vymazani chyb
         if (data.equals("Chyba")) {
-            get_tbError().setString("ProblĂ©m s komunikaÄŤnĂ­m skriptem,opakujte akci.Pokud se tato chyba ukazuje poĹ™Ăˇd,mĂˇte nefunkÄŤnĂ­ GPRS.");
+            get_tbError().setString("Problém s komunikačním skriptem, opakujte akci. Pokud se tato chyba ukazuje pořád, máte nefunkční GPRS.");
         } else {
             get_tbError().setString("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" +
                     "'");
@@ -4811,7 +4811,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         else if (type == AlertType.INFO)
             caption = "Info";
         else if (type==AlertType.WARNING)
-            caption = "UpozornÄ›nĂ­";
+            caption = "Upozornění";
         Alert alert = new Alert(caption,text,null,type);
         alert.setTimeout(Alert.FOREVER);
         if (type == AlertType.INFO)

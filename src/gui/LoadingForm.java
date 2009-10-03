@@ -21,9 +21,9 @@ import javax.microedition.lcdui.Gauge;
  * @author Arcao
  */
 public class LoadingForm extends Form {
-    private Display display;
-    private Displayable next;    
-    private Alert nextAlert;
+    private final Display display;
+    private final Displayable next;    
+    private final Alert nextAlert;
     private boolean isSetFinish;
     
     /** Creates a new instance of LoadingForm */
@@ -55,13 +55,20 @@ public class LoadingForm extends Form {
            
     
     public void setFinish() {
-        System.out.println("finish");
-        isSetFinish = true;
-        if (nextAlert != null && nextAlert.isShown()) {
-            this.display.setCurrent(nextAlert, next);
-        } else {
-            this.display.setCurrent(next);
-        }
+        new Thread(new Runnable() {
+            public void run() {
+                System.out.println("finish");
+                isSetFinish = true;
+
+                while(!isShown()) Thread.yield();
+
+                if (nextAlert != null && nextAlert.isShown()) {
+                    display.setCurrent(nextAlert, next);
+                } else {
+                    display.setCurrent(next);
+                }
+            }
+        }).start();
     }
     
 }
