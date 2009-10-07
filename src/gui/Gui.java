@@ -393,7 +393,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                         siVerze.setText(getAppProperty("MIDlet-Version")+"\n");
                         get_siSestaveni().setText(getAppProperty("Build-Vendor")+"-"+getAppProperty("Build-Version")+"\n");
                         if (settings.vip)
-                            siDonate.setText("Děkuji moc za Váš příspěvek na vývoj aplikace! (Č.účtu autora je 51-5385890237/0100)");
+                            siDonate.setText("Děkuji moc za Váš příspěvek na vývoj aplikace! (č.účtu autora je 51-5385890237/0100)");
                         break;//GEN-BEGIN:MVDCACase41
                     case 6://GEN-END:MVDCACase41
                         // Insert pre-action code here
@@ -1045,7 +1045,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 get_tfGivenLongitude().setString(settings.lastLongitude);
                 get_tfGivenName().setString("");
                 get_tfGivenDescription().setString("");
-                get_frmAddGiven().setTitle("PĹ™idat bod");
+                get_frmAddGiven().setTitle("Přidat bod");
                 
                 
                 getDisplay().setCurrent(get_frmAddGiven());//GEN-LINE:MVDCAAction270

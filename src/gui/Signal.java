@@ -125,9 +125,9 @@ public class Signal extends Canvas
             g.drawString("HDOP: "+hdop,(width * 1/3)+7, height - 107, Graphics.TOP|Graphics.LEFT);            
             g.drawString("VDOP: "+vdop,(width * 2/3)+7, height - 107, Graphics.TOP|Graphics.LEFT);            
 
-            g.drawString("Nápověda", 7, height - nVyskaRadku - 4,Graphics.TOP|Graphics.LEFT);
+            g.drawString("Nápověda", 3, height,Graphics.BOTTOM|Graphics.LEFT);
             g.drawString("Sat: " + satellitescount, width/2, height - nVyskaRadku - 4, Graphics.TOP|Graphics.HCENTER);
-            g.drawString("Zpět", width-35, height - nVyskaRadku - 4, Graphics.TOP|Graphics.LEFT);
+            g.drawString("Zpět", width - 3, height, Graphics.BOTTOM|Graphics.RIGHT);
             //tajne menu
             if (ZobrazitDetailSatelitu)
             {
@@ -376,8 +376,30 @@ public class Signal extends Canvas
         else
         {
             ServiceMenuCode = "";
+        }         
+    }
+
+    protected void pointerPressed(int x, int y) {
+        int BORDER = 10;
+        
+        int widthNapoveda = gui.get_fntSmallBold().stringWidth("Nápověda") + 2*BORDER;
+        int widthZpet = gui.get_fntSmallBold().stringWidth("Zpět") + 2*BORDER;
+        
+        int width = getWidth();
+        int HEIGHT = getHeight();
+        int BAR_HEIGHT = nVyskaRadku;
+        
+        //Napoveda
+        if (y > HEIGHT - BAR_HEIGHT && x < widthNapoveda) {
+            gui.getDisplay().setCurrent(gui.get_frmGpsSignalHelp());
+        }
+        //Zpet
+        else if (y > HEIGHT - BAR_HEIGHT && x > width - widthZpet) {
+            gps.stop();
+            gui.getDisplay().setCurrent(gps.getPreviousScreen());
         }
         
-         
     }
+    
+
 }
