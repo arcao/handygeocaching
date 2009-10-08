@@ -11,12 +11,16 @@
 package utils;
 
 import gui.LoadingForm;
-import java.util.*;  
-import java.io.*;  
-import javax.microedition.io.*;  
-import javax.microedition.io.file.*;  
-import javax.microedition.midlet.*;  
-import javax.microedition.lcdui.*;  
+import java.io.IOException;
+import java.util.Enumeration;
+import javax.microedition.io.Connector;
+import javax.microedition.io.file.FileConnection;
+import javax.microedition.io.file.FileSystemRegistry;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.List;
    
 /**
  * Slouzi k vybrani souboru v pameti mobilu.
@@ -87,7 +91,7 @@ public class OpenFileBrowser extends List implements CommandListener
                     display.setCurrent(backScreen);
                 list();
             } else {  
-                fileName = "file://localhost/" + currDirName + currFile;
+                fileName = "file:///" + currDirName + currFile;
                 if (nextScreen != null)
                     display.setCurrent(nextScreen);
                 if (listener != null)
@@ -112,11 +116,11 @@ public class OpenFileBrowser extends List implements CommandListener
      
     private void list() {
         final LoadingForm lForm = new LoadingForm(display, "Načítám...", "Načítám seznam souborů...", this, null);
+        lForm.show();
                 
         new Thread(new Runnable() {
             public void run() {
                 Enumeration e;
-                lForm.show();
                 try {
                     deleteAll();
                     if (MEGA_ROOT.equals(currDirName)) {
@@ -125,7 +129,7 @@ public class OpenFileBrowser extends List implements CommandListener
                             append((String)e.nextElement(),null);
                         }
                     } else {
-                        currDir = (FileConnection)Connector.open("file://localhost/" + currDirName, Connector.READ);
+                        currDir = (FileConnection)Connector.open("file:///" + currDirName, Connector.READ);
                         append(UP_DIRECTORY,null);
                         
                         e = currDir.list();
@@ -155,7 +159,7 @@ public class OpenFileBrowser extends List implements CommandListener
     }
     
     private boolean openDirectory(String fileName) {  
-        System.out.println("fileName:"+fileName+"cur_dir:"+currDirName+"mega_root:"+MEGA_ROOT);  
+        System.out.println("fileName:"+fileName+" cur_dir:"+currDirName+" mega_root:"+MEGA_ROOT);  
         if (currDirName.equals(MEGA_ROOT)) {  
             if (fileName.equals(UP_DIRECTORY)) {  
                 // can not go up from MEGA_ROOT  
