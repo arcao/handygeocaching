@@ -260,7 +260,6 @@ public class GpsParser implements Runnable
             {
                 streamConnection = (StreamConnection)Connector.open(communicationURL);
                 inputStream = streamConnection.openInputStream();
-                outputStream = streamConnection.openOutputStream();
             }
             catch (Exception e)
             {
@@ -271,6 +270,7 @@ public class GpsParser implements Runnable
                 }
                 else if (source == GPS_HGE_100)
                 {
+                    outputStream = streamConnection.openOutputStream();
                     gui.showAlert("Nepovedlo se připojit k HGE-100. "+e.toString(),AlertType.ERROR,gui.get_lstMode());
                 }
                 else if (source == BLUETOOTH)
