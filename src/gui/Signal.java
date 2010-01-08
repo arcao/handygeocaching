@@ -1,13 +1,10 @@
 /*
  * Signal.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 25. listopad 2007, 10:00
+ *
  */
+
 package gui;
 
 
@@ -63,8 +60,8 @@ public class Signal extends Canvas
         speed = "330 km/h";
         altitude = "300 m.n.m";
 
-        latitude = "N 49Â° 58.2386";
-        longitude = "E 016Â° 58.0063";
+        latitude = "N 49° 58.2386";
+        longitude = "E 016° 58.0063";
         pdop = "2.5";
         vdop = "4.0";
         hdop = "6.0";
@@ -119,15 +116,15 @@ public class Signal extends Canvas
             
             g.setFont(gui.get_fntSmall());
             g.drawString("Rychl: "+speed, 7, 9 + (2 * nVyskaRadku), Graphics.TOP|Graphics.LEFT);
-            g.drawString("VÃ½Å¡ka: "+altitude, (width * 1/2)+5, 9 + (2 * nVyskaRadku), Graphics.TOP|Graphics.LEFT);
+            g.drawString("Výška: "+altitude, (width * 1/2)+5, 9 + (2 * nVyskaRadku), Graphics.TOP|Graphics.LEFT);
 
             g.drawString("PDOP: "+pdop,7 , height - 107, Graphics.TOP|Graphics.LEFT);            
             g.drawString("HDOP: "+hdop,(width * 1/3)+7, height - 107, Graphics.TOP|Graphics.LEFT);            
             g.drawString("VDOP: "+vdop,(width * 2/3)+7, height - 107, Graphics.TOP|Graphics.LEFT);            
 
-            g.drawString("NÃ¡povÄ›da", 3, height,Graphics.BOTTOM|Graphics.LEFT);
+            g.drawString("Nápovìda", 7, height - nVyskaRadku - 4,Graphics.TOP|Graphics.LEFT);
             g.drawString("Sat: " + satellitescount, width/2, height - nVyskaRadku - 4, Graphics.TOP|Graphics.HCENTER);
-            g.drawString("ZpÄ›t", width - 3, height, Graphics.BOTTOM|Graphics.RIGHT);
+            g.drawString("Zpìt", width-35, height - nVyskaRadku - 4, Graphics.TOP|Graphics.LEFT);
             //tajne menu
             if (ZobrazitDetailSatelitu)
             {
@@ -376,30 +373,8 @@ public class Signal extends Canvas
         else
         {
             ServiceMenuCode = "";
-        }         
-    }
-
-    protected void pointerPressed(int x, int y) {
-        int BORDER = 10;
-        
-        int widthNapoveda = gui.get_fntSmallBold().stringWidth("NÃ¡povÄ›da") + 2*BORDER;
-        int widthZpet = gui.get_fntSmallBold().stringWidth("ZpÄ›t") + 2*BORDER;
-        
-        int width = getWidth();
-        int HEIGHT = getHeight();
-        int BAR_HEIGHT = nVyskaRadku;
-        
-        //Napoveda
-        if (y > HEIGHT - BAR_HEIGHT && x < widthNapoveda) {
-            gui.getDisplay().setCurrent(gui.get_frmGpsSignalHelp());
-        }
-        //Zpet
-        else if (y > HEIGHT - BAR_HEIGHT && x > width - widthZpet) {
-            gps.stop();
-            gui.getDisplay().setCurrent(gps.getPreviousScreen());
         }
         
+         
     }
-    
-
 }

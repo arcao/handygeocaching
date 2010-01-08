@@ -1,23 +1,11 @@
-/*
- * Map.java
- * This file is part of HandyGeocaching.
- *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
- */
 package gui;
 
 import gps.Gps;
 import java.util.Vector;
 import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import track.Track;
-import utils.ImageCache;
 
 /**
  * Tato trida reprezentuje navigacni obrazovku, zobrazuje sipku a dalsi udaje
@@ -38,34 +26,19 @@ public class Map extends Canvas implements Runnable
     public double latitude = 49.91216; //pozice uzivatele
     public double longitude = 14.22126;  //pozice uzivatele
     public int heading = 0; //kam nam uzivatel miri?
-    public String fixMessage = "Není GPS signál";
+    public String fixMessage = "Nen� GPS sign�l";
     //ostatni promenne
     Vector mapItems;
     public int screenWidth;
     public int screenHeight;
-    public int screenWidthHalf;
-    public int screenHeightHalf;
     //konstanty
-    static final int STEP = 2; //urcuje rychlost posouvani mapy
+    static final int STEP = 1; //urcuje rychlost posouvani mapy
     static final int ZOOM_STEP = 1; //urcuje rychlost zoomovani
-    static final int KEY_DELAY = 20; //pauza mezi dvema stisknutimi klaves
+    static final int KEY_DELAY = 10; //pauza mezi dvema stisknutimi klaves
     //ostatni promenne
     private Thread thread;
     private int keyCode;
     private boolean firstPaint;
-    
-    private int lastDragX = -1;
-    private int lastDragY = -1;
-
-    private int fntSmall;
-    private int fntSmallBold;
-    private int fntBold;
-    private int fntNormal;
-    private int fntLargeBold;
-
-    private int TOP_MARGIN;
-
-    private int BOTTOM_MARGIN;
     
     public Map(Gui ref, Gps ref2, IconLoader ref3, Track ref4)
     {
@@ -124,155 +97,94 @@ public class Map extends Canvas implements Runnable
         return 111.000;
     }
     
-    private void drawLine(Graphics g, int x1, int y1, int x2, int y2) {
-        if (((x1 >= 0 && x1 <= screenWidth) || (x2 >= 0 && x2 <= screenWidth) ||
-             (y1 >= 0 && y1 <= screenHeight) || (y2 >= 0 && y2 <= screenHeight)) &&
-             (Math.abs(x2-x1) > 0 || Math.abs(y2-y1) > 0))
-        g.drawLine(x1, y1, x2, y2);
-    }
-    
     /**
      * Tato metoda vykresluje mapu
      */
     public void paint(Graphics g)
     {
-        calculateSizes();
         try
         {
-            setFullScreenMode(true);
             //velikost platna
             screenWidth = getWidth();
             screenHeight = getHeight();
-            
-            screenWidthHalf = screenWidth / 2;
-            screenHeightHalf = screenHeight / 2;
-            
-            g.setColor((gui.nightMode) ? 0x0 : 0xffffff); //pozadi
-            g.fillRect(0, 0, screenWidth, screenHeight);
-            g.setColor((gui.nightMode) ? 0xffffff : 0x0); //text
-            
             if (firstPaint)
             {
                 //loading
+                g.setColor(0xffffff);
+                g.fillRect(0, 0, screenWidth, screenHeight);
+                g.setColor(0);
                 g.setFont(gui.get_fntNormal());
-                g.drawString("Načítám mapu",screenWidthHalf,screenHeightHalf,Graphics.TOP|Graphics.HCENTER);
+                g.drawString("Na��t�m mapu",screenWidth/2,screenHeight/2,Graphics.TOP|Graphics.HCENTER);
                 firstPaint = false;
             }
             else if (fixMessage.equals(""))
             {
                 int pixelsPerKm = (int)Math.ceil((double)zoom/2 * Math.sqrt((double)zoom/10));
-                double getKmPerLonAtLatLatitude = getKmPerLonAtLat(latitude);
-
+                //kresleni mapy
+                g.setColor(0xffffff);
+                g.fillRect(0, 0, screenWidth, screenHeight);
                 //vykresleni tracku
                 track.reset();
-                
-                g.setColor((gui.nightMode) ? 0xffff00 : 0x0000ff); //usla cara
-                
                 double line[];
                 while ((line = track.nextLine())!=null)
                 {
-                    int x1 = (int)(getKmPerLonAtLatLatitude*(line[0]-longitude)*pixelsPerKm);
+                    int x1 = (int)(getKmPerLonAtLat(latitude)*(line[0]-longitude)*pixelsPerKm);
                     int y1 = (int)(getKmPerLat()*(latitude-line[1])*pixelsPerKm);
-                    int x2 = (int)(getKmPerLonAtLatLatitude*(line[2]-longitude)*pixelsPerKm);
+                    int x2 = (int)(getKmPerLonAtLat(latitude)*(line[2]-longitude)*pixelsPerKm);
                     int y2 = (int)(getKmPerLat()*(latitude-line[3])*pixelsPerKm);
-                    drawLine(g,screenWidthHalf+x1+x,screenHeightHalf+y1+y,screenWidthHalf+x2+x,screenHeightHalf+y2+y);
+                    g.setColor(0,0,255);
+                    g.drawLine(screenWidth/2+x1+x,screenHeight/2+y1+y,screenWidth/2+x2+x,screenHeight/2+y2+y);
                 }
-                
                 //vykresleni navigacni cary
                 if (gps.isNavigating())
                 {
-                    int xx = (int)(getKmPerLonAtLatLatitude*(gps.getNavigationLongitude()-longitude)*pixelsPerKm);
+                    int xx = (int)(getKmPerLonAtLat(latitude)*(gps.getNavigationLongitude()-longitude)*pixelsPerKm);
                     int yy = (int)(getKmPerLat()*(latitude-gps.getNavigationLatitude())*pixelsPerKm);
-                    g.setColor((gui.nightMode) ? 0xffffff : 0x0); //navigacni cara
+                    g.setColor(255,0,0);
                     g.setStrokeStyle(Graphics.DOTTED);
-                    drawLine(g,screenWidthHalf+x,screenHeightHalf+y,screenWidthHalf+xx+x,screenHeightHalf+yy+y);
+                    g.drawLine(screenWidth/2+x,screenHeight/2+y,screenWidth/2+xx+x,screenHeight/2+yy+y);
                     g.setStrokeStyle(Graphics.SOLID);
                 }
                 //kresleni jednotlivych bodu
-                int mapItemsSize = mapItems.size();
-                g.setColor((gui.nightMode) ? 0xffffff : 0x0); //font
-                g.setFont(gui.get_fntSmall());
-                
-                int iconSize = iconLoader.getIconSize();
-                int iconSizeHalf = iconSize / 2;
-                Font fnt = gui.get_fntSmall();
-                for (int i=0;i<mapItemsSize;i++)
+                for (int i=0;i<mapItems.size();i++)
                 {
                     MapItem mapItem = (MapItem)mapItems.elementAt(i);
-                    int item_x = (int)(getKmPerLonAtLatLatitude*(mapItem.longitude-longitude)*pixelsPerKm);
+                    int item_x = (int)(getKmPerLonAtLat(latitude)*(mapItem.longitude-longitude)*pixelsPerKm);
                     int item_y = (int)(getKmPerLat()*(latitude-mapItem.latitude)*pixelsPerKm);
-                                        
-                    int img_x = screenWidthHalf+item_x-iconSizeHalf+x;
-                    int img_y = screenHeightHalf+item_y-iconSizeHalf+y;
-                    
-                    int text_x_end = screenWidthHalf+item_x+iconSizeHalf+2+x+fnt.stringWidth(mapItem.name);
-                    
-                    if (img_x + iconSize >= 0 && img_x <= screenWidth && img_y + iconSize >= 0 && img_y <= screenHeight) {
-                        g.drawImage(iconLoader.loadIcon(mapItem.icon),img_x,img_y,Graphics.TOP|Graphics.LEFT);
-                        g.drawString(mapItem.name,screenWidthHalf+item_x+iconSizeHalf+2+x,screenHeightHalf+item_y-iconSizeHalf+y,Graphics.TOP|Graphics.LEFT);
-                    } else if (text_x_end >= 0 && img_x <= screenWidth) {
-                        g.drawString(mapItem.name,screenWidthHalf+item_x+iconSizeHalf+2+x,screenHeightHalf+item_y-iconSizeHalf+y,Graphics.TOP|Graphics.LEFT);
-                    }
+                    int halfIcon = iconLoader.getIconSize()/2;
+                    g.drawImage(Image.createImage(iconLoader.loadIcon(mapItem.icon)),screenWidth/2+item_x-halfIcon+x,screenHeight/2+item_y-halfIcon+y,Graphics.TOP|Graphics.LEFT);
+                    g.setFont(gui.get_fntSmall());
+                    g.setColor(0);
+                    g.drawString(mapItem.name,screenWidth/2+item_x+halfIcon+2+x,screenHeight/2+item_y-halfIcon+y,Graphics.TOP|Graphics.LEFT);
                 }
-                
                 //vykresleni pozice uzivatele
+                g.setColor(0);
                 g.drawArc(screenWidth/2-15+x, screenHeight/2-15+y, 30, 30, 0, 360);
-                drawLine(g, screenWidth/2-15+x,screenHeight/2+y,screenWidth/2+15+x,screenHeight/2+y);
-                drawLine(g, screenWidth/2+x,screenHeight/2-15+y,screenWidth/2+x,screenHeight/2+15+y);
-                
+                g.drawLine(screenWidth/2-15+x,screenHeight/2+y,screenWidth/2+15+x,screenHeight/2+y);
+                g.drawLine(screenWidth/2+x,screenHeight/2-15+y,screenWidth/2+x,screenHeight/2+15+y);
                 //vykresleni headingu
                 double radHeading = Math.toRadians(heading);
                 int xheading = (int)(screenWidth/2 + x + 15*Math.cos(radHeading-Math.PI/2));
                 int yheading = (int)(screenHeight/2 + y + 15*Math.sin(radHeading-Math.PI/2));
-                g.setColor((gui.nightMode) ? 0x00ffff : 0xff0000); //uhel
+                g.setColor(255,0,0);
                 g.fillArc(xheading-4,yheading-4,8,8,0,360);
-                
-                g.setColor((gui.nightMode) ? 0xffffff : 0x0); //text
             }
             else
             {
                 //neni signal
+                g.setColor(0xffffff);
+                g.fillRect(0, 0, screenWidth, screenHeight);
+                g.setColor(0);
                 g.setFont(gui.get_fntNormal());
                 g.drawString(fixMessage,screenWidth/2,screenHeight/2,Graphics.TOP|Graphics.HCENTER);
             }
-            
-            // vykresleni zomovacich tlacitek
-            
-            if (hasPointerEvents()) {
-                g.setColor((gui.nightMode) ? 0x333333 : 0xcccccc); //pozadi tlacitek
-                g.fillRect(0, 0, 30, 30);
-                g.fillRect(screenWidth - 30, 0, screenWidth, 30);
-
-                g.setColor((gui.nightMode) ? 0xffffff : 0x0); //text
-                g.drawLine(0, 30, 30, 30);
-                g.drawLine(30, 30, 30, 0);
-                
-                g.drawLine(screenWidth - 30, 30, screenWidth, 30);
-                g.drawLine(screenWidth - 30, 30, screenWidth - 30, 0);
-                
-                //plus
-                g.drawLine(5, 30/2, 30 - 5, 30/2);
-                g.drawLine(30/2, 5, 30/2, 30-5);
-                
-                //minus
-                g.drawLine(screenWidth - 30 + 5, 30/2, screenWidth - 5, 30/2);
-            }
-            
-
             //tlacitko zpet
-            if (screenWidth<140) {
-                g.setFont(gui.get_fntSmallBold());
-            } else {
-                g.setFont(gui.get_fntBold());
-            }
-            g.drawString("Zpět",3,screenHeight, Graphics.BOTTOM|Graphics.LEFT);
-            
-            if (hasPointerEvents())
-                g.drawString("Noční",screenWidth/2,screenHeight, Graphics.BOTTOM|Graphics.HCENTER);
-            
+            g.setFont(gui.get_fntBold());
+            g.setColor(0);
+            g.drawString("Zp�t",3,screenHeight-20,Graphics.TOP|Graphics.LEFT);
             //tlacitko navigace
             if (gps.isNavigating())
-                g.drawString("Navigace", screenWidth-3,screenHeight,Graphics.BOTTOM|Graphics.RIGHT);
+                g.drawString("Navigace", screenWidth-75,screenHeight-20,Graphics.TOP|Graphics.LEFT);
         }
         catch (Exception e)
         {
@@ -286,27 +198,15 @@ public class Map extends Canvas implements Runnable
     public void keyPressed(int key)
     {
         keyCode = key;
-        if (keyCode == KEY_NUM0) 
-        {
-            gui.nightMode = !gui.nightMode;
-            repaint();
-        }
-        if (keyCode == KEY_NUM5) 
-        {
-            x = 0;
-            y = 0;
-            zoom = 50;
-            repaint();
-        }
         //leve kontextove tlacitko
-        else if (keyCode == -6 || keyCode == -21 || keyCode == -20 || keyCode == 105 || keyCode == 21 || keyCode == -202 || keyCode == 113)
+        if (keyCode == -6 || keyCode == -21 || keyCode == -20 || keyCode == 105 || keyCode == 21 || keyCode == -202 || keyCode == 113)
         {
             gps.stop();
             gui.getDisplay().setCurrent(gps.getPreviousScreen());
             thread = null;
         }
         //prave kontextove tlacitko
-        else if (gps.isNavigating() && (keyCode == -7 || keyCode == 112 || keyCode == 111))
+        if (gps.isNavigating() && (keyCode == -7 || keyCode == 112 || keyCode == 111))
         {
             gui.getDisplay().setCurrent(gui.get_cvsNavigation());
             gps.changeAction(Gps.NAVIGATION);
@@ -326,94 +226,6 @@ public class Map extends Canvas implements Runnable
     public void keyReleased(int keyCode)
     {
         thread = null;
-    }
-
-    protected void pointerPressed(int x, int y) {
-        int BORDER = 10;
-        int ZOOM_BUTTON = 30 + BORDER;
-        
-        lastDragX = x;
-        lastDragY = y;
-        
-        int width = getWidth();
-        int widthHalf = width / 2;
-        Font fnt = (getWidth()<140) ? gui.get_fntSmallBold() : gui.get_fntBold();
-        int widthNocni = fnt.stringWidth("Noční") + 2*BORDER;
-        int widthZpet = fnt.stringWidth("Zpět") + 2*BORDER;
-        int widthNavigace = fnt.stringWidth("Navigace") + 2*BORDER;
-                
-        int HEIGHT = getHeight();
-        int BAR_HEIGHT = BOTTOM_MARGIN + BORDER;
-        
-        int widthNocniHalf = widthNocni / 2;
-        
-        //nocni rezim
-        if (y > HEIGHT - BAR_HEIGHT &&
-            x > widthHalf - widthNocniHalf && x < widthHalf + widthNocniHalf) {
-            gui.nightMode = !gui.nightMode;
-            repaint();
-        
-        }
-        //zoom in
-        else if (x < ZOOM_BUTTON && y < ZOOM_BUTTON) {
-            keyCode = Canvas.KEY_STAR;
-            thread = new Thread(this);
-            thread.start();
-        }
-        //zoom out
-        else if (x > width - ZOOM_BUTTON && y < ZOOM_BUTTON) {
-            keyCode = Canvas.KEY_POUND;
-            thread = new Thread(this);
-            thread.start();
-        }
-        //Zpet
-        else if (y > HEIGHT - BAR_HEIGHT && x < widthZpet) {
-            gps.stop();
-            gui.getDisplay().setCurrent(gps.getPreviousScreen());
-        }
-        //Navigace
-        else if ( gps.isNavigating() &&
-            y > HEIGHT - BAR_HEIGHT && x > width - widthNavigace) {
-            
-            gui.getDisplay().setCurrent(gui.get_cvsNavigation());
-            gps.changeAction(Gps.NAVIGATION);
-            thread = null;
-        }
-    }
-
-    protected void pointerReleased(int x, int y) {
-        thread = null;
-    }
-    
-    protected void pointerDragged(int x, int y) {
-        int BORDER = 10;
-        int ZOOM_BUTTON = 30 + BORDER;
-        
-        int HEIGHT = getHeight();
-        int BAR_HEIGHT = BOTTOM_MARGIN + BORDER;
-        
-        int width = getWidth();
-        int widthHalf = width / 2;
-        Font fnt = (getWidth()<140) ? gui.get_fntSmallBold() : gui.get_fntBold();
-        int widthNocni = fnt.stringWidth("Noční") + 2*BORDER;                      
-        int widthNocniHalf = widthNocni / 2;
-        
-        int changeX = x - lastDragX;
-        int changeY = y - lastDragY;
-        
-        lastDragX = x;
-        lastDragY = y;
-        
-        if ((y > HEIGHT - BAR_HEIGHT) ||
-            (x < ZOOM_BUTTON && y < ZOOM_BUTTON) ||
-            (x > width - ZOOM_BUTTON && y < ZOOM_BUTTON)) {
-            return;
-        }   
-        
-        this.x += changeX;
-        this.y += changeY;
-        
-        repaint();
     }
     
     
@@ -476,14 +288,6 @@ public class Map extends Canvas implements Runnable
         {
             gui.showError("map keypressed vlakno",e.toString(),"");
         }
-    }
-
-    private void calculateSizes() {       
-        fntSmallBold = gui.get_fntSmallBold().getHeight();
-        fntBold = gui.get_fntBold().getHeight();       
-        
-        TOP_MARGIN = (getWidth() < 140) ? fntSmallBold : fntBold;
-        BOTTOM_MARGIN = TOP_MARGIN;
     }
     
 }

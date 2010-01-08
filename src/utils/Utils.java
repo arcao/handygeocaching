@@ -1,13 +1,3 @@
-/*
- * Utils.java
- * This file is part of HandyGeocaching.
- *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
- */
 package utils;
 
 import java.util.Calendar;
@@ -18,7 +8,8 @@ import java.util.Random;
  * V teto tride jsou uzitecne metody, ktere pouzivaji ostatni tridy
  */
 public class Utils
-{   
+{
+    
     final static String[] hex = {
         "%00", "%01", "%02", "%03", "%04", "%05", "%06", "%07",
         "%08", "%09", "%0a", "%0b", "%0c", "%0d", "%0e", "%0f",
@@ -197,10 +188,8 @@ public class Utils
     
     public static String repairUTF8(String s) {
         // v urcitych situacich je spatne dekodovano UTF-8, tady se to napravuje
-        String t = s;
-        t = replaceString(t, "Å¾", "ž");
-        t = replaceString(t, "Å¡", "š");
-        return t;
+        s = replaceString(s, "??", "�");
+        return s;
     }
     
     public static String sessionId(String name, String password)
@@ -345,19 +334,6 @@ public class Utils
     }
     
     /**
-     * Doplneni cisla nulami na konec na danou delku
-     */
-    public static String addZerosAfter(String s, int length)
-    {
-        String surfix = "";
-        for (int i=0;i<(length-s.length());i++)
-        {
-           surfix = surfix.concat("0");
-        }
-        return s+surfix;
-    }
-    
-    /**
      * Desifrovani/sifrovani podle sifry ROT13
      */
     public static String decypherText(String s)
@@ -397,14 +373,8 @@ public class Utils
         c.setTime(date);
         StringBuffer sb = new StringBuffer();
         sb.append(c.get(Calendar.DATE)).append(".").append(c.get(Calendar.MONTH) + 1).append(". ");
-        sb.append(nulaNula(c.get(Calendar.HOUR_OF_DAY))).append(":").append(nulaNula(c.get(Calendar.MINUTE)));
+        sb.append(c.get(Calendar.HOUR_OF_DAY)).append(":").append(c.get(Calendar.MINUTE));
 
         return sb.toString();
-    }
-    
-    public static String nulaNula(int v) {
-        if (v < 10)
-            return "0"+Integer.toString(v, 10);
-        return Integer.toString(v);
     }
 }
