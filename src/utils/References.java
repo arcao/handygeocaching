@@ -1,13 +1,12 @@
 /*
  * References.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 19. listopad 2007, 22:08
+ *
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
  */
+
 package utils;
 
 import database.Settings;
@@ -16,7 +15,7 @@ import gps.Internal;
 import gui.Gui;
 
 /**
- * 
+ *
  * @author David Vavra
  */
 public class References

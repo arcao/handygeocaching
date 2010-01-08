@@ -1,13 +1,10 @@
 /*
  * Database.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 17. ¯Ìjen 2007, 9:45
+ *
  */
+
 package database;
 
 import gui.Gui;
@@ -16,10 +13,9 @@ import java.io.DataInputStream;
 import javax.microedition.rms.RecordComparator;
 import javax.microedition.rms.RecordFilter;
 import javax.microedition.rms.RecordStore;
-import javax.microedition.rms.RecordStoreNotOpenException;
 
 /**
- * Tato t≈ô√≠da je pouze abstraktn√≠ - dƒõd√≠ od n√≠ jednotliv√© datab√°ze
+ * Tato t¯Ìda je pouze abstraktnÌ - dÏdÌ od nÌ jednotlivÈ datab·ze
  * @author David Vavra
  */
 abstract class Database implements RecordFilter, RecordComparator
@@ -63,7 +59,7 @@ abstract class Database implements RecordFilter, RecordComparator
      */
 
     /**
-     * Zobraz√≠ v≈°echny polo≈æky datab√°zi - konkr√©tnƒõ implementuj√≠ potomci
+     * ZobrazÌ vöechny poloûky datab·zi - konkrÈtnÏ implementujÌ potomci
      */
     public void viewAll()
     {
@@ -84,7 +80,6 @@ abstract class Database implements RecordFilter, RecordComparator
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
             gui.showError("deleteAll "+databaseName,ex.toString(),"");
         }
     }
@@ -106,21 +101,21 @@ abstract class Database implements RecordFilter, RecordComparator
             DataInputStream dis2 = new DataInputStream(new ByteArrayInputStream(rec2));
             String s1 = dis1.readUTF();
             String s2 = dis2.readUTF();
-            // porovn√°n√≠ jmen z prvn√≠ho a druh√©ho z√°znamu
-            int i = s1.toLowerCase().compareTo(s2.toLowerCase());
+            // porovn·nÌ jmen z prvnÌho a druhÈho z·znamu
+            int i = s1.compareTo(s2);
             if (i == 0)
             {
-                // jm√©na jsou stejn√°
+                // jmÈna jsou stejn·
                 return RecordComparator.EQUIVALENT;
             }
             else if (i < 0)
             {
-                // prvn√≠ jm√©no je dr√≠ve ne≈æ druh√©
+                // prvnÌ jmÈno je drÌve neû druhÈ
                 return RecordComparator.PRECEDES;
             }
             else
             {
-                // prvn√≠ jm√©no je pozdƒõji ne≈æ druh√©
+                // prvnÌ jmÈno je pozdÏji neû druhÈ
                 return RecordComparator.FOLLOWS;
             }
         }
@@ -131,30 +126,4 @@ abstract class Database implements RecordFilter, RecordComparator
         }
     }
     
-    public int usedSize() {
-        try {
-            return recordStore.getSize();
-        } catch (RecordStoreNotOpenException ex) {
-            ex.printStackTrace();
-            return 0;
-        }
-    }
-    
-    public int totalSize() {
-        try {
-            return recordStore.getSize() + recordStore.getSizeAvailable();
-        } catch (RecordStoreNotOpenException ex) {
-            ex.printStackTrace();
-            return 0;
-        }
-    }
-    
-    public int count() {
-        try {
-            return recordStore.getNumRecords();
-        } catch (RecordStoreNotOpenException ex) {
-            ex.printStackTrace();
-            return 0;
-        }
-    }
 }

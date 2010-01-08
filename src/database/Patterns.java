@@ -1,13 +1,10 @@
 /*
  * Patterns.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 17. øíjen 2007, 10:29
+ *
  */
+
 package database;
 
 import gui.Gui;
@@ -155,7 +152,7 @@ public class Patterns extends Database
                 byte[] bytes = buffer.toByteArray();
                 recordStore.addRecord(bytes, 0, bytes.length);
             }
-            gui.showAlert("VzoreÄky byly ÃºspÄ›Å¡nÄ› uloÅ¾eny do MultiSolveru",AlertType.INFO,gui.get_frmOverview());
+            gui.showAlert("Vzoreèky byly úspìšnì uloeny do MultiSolveru",AlertType.INFO,gui.get_frmOverview());
         }
         catch (Exception ex)
         {
