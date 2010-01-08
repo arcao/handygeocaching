@@ -1,13 +1,10 @@
-/*
+/**
  * Gps.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 27. duben 2007, 11:08
+ *
  */
+
 package gps;
 
 import database.Settings;
@@ -32,8 +29,7 @@ public class Gps implements Runnable
 {
     //kostanty
     private static final long BREAK = 1000; //refresh
-    private static final long BREAK_NAVI = 500; //refresh
-    private static final int MAXIMUM_SKIPS = 20; //maximalni pocet refreshu bez spojeni z modulem
+    private static final int MAXIMUM_SKIPS = 5; //maximalni pocet refreshu bez spojeni z modulem
     
     //mozne akce
     public static final int AVERAGING = 0;
@@ -127,7 +123,7 @@ public class Gps implements Runnable
     }
     
     /**
-     * Nastavi navigacni souradnice
+     * Nastavi navigaèní souøadnice
      */
     public void setNavigationTarget(String lattitude, String longitude, String name)
     {
@@ -137,7 +133,7 @@ public class Gps implements Runnable
     }
     
     /**
-     * Zjisti, jestli jsou zadany navigacni souradnice
+     * Zjisti, jestli jsou zadany navigacni souøadnice
      */
     public boolean isNavigating()
     {
@@ -183,16 +179,16 @@ public class Gps implements Runnable
                 {
                     if (action == AVERAGING)
                     {
-                        gui.get_frmAveraging().setTitle("NenÃ­ GPS signÃ¡l("+gpsParser.getSatelliteCount()+" s.)");
+                        gui.get_frmAveraging().setTitle("Není GPS signál("+gpsParser.getSatelliteCount()+" s.)");
                     }
                     else if (action == NAVIGATION)
                     {
-                        gui.get_cvsNavigation().cacheName = "NenÃ­ GPS signÃ¡l("+gpsParser.getSatelliteCount()+" s.)";
+                        gui.get_cvsNavigation().cacheName = "Není GPS signál("+gpsParser.getSatelliteCount()+" s.)";
                         gui.get_cvsNavigation().repaint();
                     }
                     else if (action == MAP)
                     {
-                        gui.get_cvsMap().fixMessage = "NenÃ­ GPS signÃ¡l("+gpsParser.getSatelliteCount()+" s.)";
+                        gui.get_cvsMap().fixMessage = "Není GPS signál("+gpsParser.getSatelliteCount()+" s.)";
                         gui.get_cvsMap().repaint();
                     }
                     //Zephy 21.11.07 gpsstatus+\
@@ -201,8 +197,8 @@ public class Gps implements Runnable
                         gui.get_cvsSignal().signaldata = gpsParser.getSignalData();
                         gui.get_cvsSignal().activeSat = gpsParser.getActivSat();
 
-                        gui.get_cvsSignal().latitude = "<nenÃ­ signÃ¡l>";
-                        gui.get_cvsSignal().longitude = "<nenÃ­ signÃ¡l>";
+                        gui.get_cvsSignal().latitude = "<není signál>";
+                        gui.get_cvsSignal().longitude = "<není signál>";
                         gui.get_cvsSignal().speed = "0km/h";
                         gui.get_cvsSignal().altitude = "0m";
                         gui.get_cvsSignal().satellitescount = gpsParser.getSatelliteCount();                        
@@ -216,7 +212,7 @@ public class Gps implements Runnable
                     //Zephy 21.11.07 gpsstatus+/ 
                     else
                     {
-                        gui.get_frmCoordinates().setTitle("NenÃ­ GPS signÃ¡l("+gpsParser.getSatelliteCount()+" s.)");
+                        gui.get_frmCoordinates().setTitle("Není GPS signál("+gpsParser.getSatelliteCount()+" s.)");
                     }
                 }
                 else 
@@ -255,14 +251,14 @@ public class Gps implements Runnable
                         double degrees = Math.floor(Math.abs(podil));
                         double minutes = Math.abs(podil) - degrees;
                         minutes = minutes * 60;
-                        String avLattitude = ((podil>0)?"N":"S")+" "+Utils.addZeros(String.valueOf((int)degrees),2)+"Â° "+String.valueOf(minutes).substring(0,6);
+                        String avLattitude = ((podil>0)?"N":"S")+" "+Utils.addZeros(String.valueOf((int)degrees),2)+"° "+String.valueOf(minutes).substring(0,6);
                         podil = soucet2/deleno;
                         degrees = Math.floor(Math.abs(podil));
                         minutes = Math.abs(podil) - degrees;
                         minutes = minutes * 60;
-                        String avLongitude = ((podil>0)?"E":"W")+" "+Utils.addZeros(String.valueOf((int)degrees),3)+"Â° "+String.valueOf(minutes).substring(0,6);
+                        String avLongitude = ((podil>0)?"E":"W")+" "+Utils.addZeros(String.valueOf((int)degrees),3)+"° "+String.valueOf(minutes).substring(0,6);
                         //vypis
-                        gui.get_frmAveraging().setTitle("PrÅ¯mÄ›rovÃ¡nÃ­");
+                        gui.get_frmAveraging().setTitle("Prùmìrování");
                         gui.get_siCurrentCoordinates().setText(gpsParser.getFriendlyLattitude() + "\n"+ gpsParser.getFriendlyLongitude());
                         gui.get_siAverageLattitude().setText(avLattitude +"\n");
                         gui.get_siAverageLongitude().setText(avLongitude +"\n");
@@ -274,9 +270,9 @@ public class Gps implements Runnable
                         gui.get_cvsNavigation().cacheName = targetname;
                         double rad_distance = computeRadianDistance(gpsParser.getLatitude(),targetlat,gpsParser.getLongitude(),targetlon);
                         int distance = radianToMeters(rad_distance);
-                        double bearing = computeBearing(gpsParser.getLatitude(),targetlat,gpsParser.getLongitude(),targetlon, rad_distance);
+                        int bearing = computeBearing(gpsParser.getLatitude(),targetlat,gpsParser.getLongitude(),targetlon, rad_distance);
                         //gui.get_siDebug().setText("fixMessage:"+gpsParser.hasFix()+"\nlat:"+gpsParser.getLattitude()+"\nlon:"+gpsParser.getLongitude()+"heading:"+gpsParser.getHeading()+"nmeaCount:"+gpsParser.getNmeaCount()+"\ndistance:"+distance+"cislo:"+Float.parse("6366832.9383716631",10));
-                        double navigate = computeCorrectionDirection(bearing, gpsParser.getHeading());
+                        int navigate = computeCorrectionDirection(bearing, gpsParser.getHeading());
                         
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(new Date());
@@ -294,8 +290,8 @@ public class Gps implements Runnable
                         gui.get_cvsNavigation().satellites = gpsParser.getSatelliteCount()+" sat.";
                         gui.get_cvsNavigation().angle = navigate;
                         gui.get_cvsNavigation().compass = (int) gpsParser.getHeading();
-                        gui.get_cvsNavigation().accuracy = "Â±"+gpsParser.getAccuracy();
-                        gui.get_cvsNavigation().azimut = ((int)bearing)+"Â°";
+                        gui.get_cvsNavigation().accuracy = "±"+gpsParser.getAccuracy();
+                        gui.get_cvsNavigation().azimut = bearing+"°";
                         gui.get_cvsNavigation().dateTime = dateTime;
                         gui.get_cvsNavigation().repaint();
                         
@@ -328,7 +324,7 @@ public class Gps implements Runnable
                     }
                     else if (action == CURRENT_POSITION)
                     {
-                        gui.get_frmCoordinates().setTitle("SouÅ™adnice zÃ­skÃ¡ny");
+                        gui.get_frmCoordinates().setTitle("Souøadnice získány");
                         gui.get_tfLattitude().setString(gpsParser.getFriendlyLattitude());
                         gui.get_tfLongitude().setString(gpsParser.getFriendlyLongitude());
                         lattitude = String.valueOf(gpsParser.getLatitude());
@@ -338,7 +334,7 @@ public class Gps implements Runnable
                     }
                     else //ziskani souradnic u oblibenych
                     {
-                        gui.get_frmAddGiven().setTitle("SouÅ™adnice zÃ­skÃ¡ny");
+                        gui.get_frmAddGiven().setTitle("Souøadnice získány");
                         gui.get_tfGivenLattitude().setString(gpsParser.getFriendlyLattitude());
                         gui.get_tfGivenLongitude().setString(gpsParser.getFriendlyLongitude());
                         stop();
@@ -354,7 +350,7 @@ public class Gps implements Runnable
             try
             {
                 if (thread != null)
-                    thread.sleep((action == NAVIGATION && gpsParser.source != GpsParser.INTERNAL)? BREAK_NAVI : BREAK);
+                    thread.sleep(BREAK);
             }
             catch (InterruptedException e)
             {
@@ -364,7 +360,7 @@ public class Gps implements Runnable
                 //rozsviceni displeje
                 if (settings.flashbackPeriod > 0)
                 {
-                    if (flashbackLightPause < ((action == NAVIGATION && gpsParser.source != GpsParser.INTERNAL)? 2 * (settings.flashbackPeriod*2-1): settings.flashbackPeriod*2-1))
+                    if (flashbackLightPause < settings.flashbackPeriod*2-1)
                     {
                         flashbackLightPause++;
                     }
@@ -375,12 +371,12 @@ public class Gps implements Runnable
                     }
                 }
                 //detekce preruseneho spojeni
-                if (gpsParser.getNmeaCount() == lastNmeaCount && (gpsParser.source == GpsParser.BLUETOOTH || gpsParser.source == GpsParser.GPS_HGE_100))
+                if (gpsParser.getNmeaCount() == lastNmeaCount && (gpsParser.source == GpsParser.BLUETOOTH))
                 {
                     skips++;
                     if (skips>MAXIMUM_SKIPS)
                     {
-                        gui.showAlert("SpojenÃ­ s GPS modulem bylo pÅ™eruÅ¡eno!",AlertType.ERROR,gui.get_lstMode());
+                        gui.showAlert("Spojení s GPS modulem bylo pøerušeno!",AlertType.ERROR,gui.get_lstMode());
                         gpsParser.close();
                         stop();
                         skips = 0;
@@ -448,7 +444,7 @@ public class Gps implements Runnable
     /**
      * Spocita bearing
      */
-    public double computeBearing(double lat1, double lat2, double lon1, double lon2, double rad_dist)
+    public int computeBearing(double lat1, double lat2, double lon1, double lon2, double rad_dist)
     {
         try
         {
@@ -474,7 +470,7 @@ public class Gps implements Runnable
             //prevod na stupne
             double bearing = Math.toDegrees(rad_bearing);
             bearing = 360 - bearing;
-            return bearing;
+            return (int) bearing;
         }
         catch (Exception e)
         {
@@ -486,7 +482,7 @@ public class Gps implements Runnable
     /**
      * Spocita korekcni smer k danym souradnicim ve stupnich
      */
-    public double computeCorrectionDirection(double bearing, double heading)
+    public int computeCorrectionDirection(int bearing, double heading)
     {
         try
         {
@@ -495,7 +491,7 @@ public class Gps implements Runnable
             {
                 navigate = 360 + navigate;
             }
-            return navigate;
+            return (int)navigate;
         }
         catch (Exception e)
         {
@@ -507,13 +503,13 @@ public class Gps implements Runnable
     
     //Zephy 19.11.07 +\
     /**
-     * Zkonvertuje lattitude format z jakehokoliv typu na "N DegÂ° mi.mmm" a vraci zpet v tomto formatu
+     * Zkonvertuje lattitude format z jakehokoliv typu na "N Deg° mi.mmm" a vraci zpet v tomto formatu
      */
     public static String convertLattitudeFormat (String lat, boolean DegMinSecFormat)
     {
         if (!DegMinSecFormat)
         {
-            //vzorec uz je ve vychozim formatu "N DegÂ° mi.mmm"
+            //vzorec uz je ve vychozim formatu "N Deg° mi.mmm"
             return lat;
         }
         
@@ -537,13 +533,13 @@ public class Gps implements Runnable
     }
 
     /**
-     * Zkonvertuje lattitude format z jakehokoliv typu na "N DegÂ° mi.mmm" a vraci zpet v tomto formatu
+     * Zkonvertuje lattitude format z jakehokoliv typu na "N Deg° mi.mmm" a vraci zpet v tomto formatu
      */
     public static String convertLongitudeFormat (String lon, boolean DegMinSecFormat)
     {
         if (!DegMinSecFormat)
         {
-            //vzorec uz je ve vychozim formatu "N DegÂ° mi.mmm"
+            //vzorec uz je ve vychozim formatu "N Deg° mi.mmm"
             return lon;
         }
         
@@ -571,7 +567,7 @@ public class Gps implements Runnable
     }
     //Zephy 19.11.07 +/
     /**
-     * Zkonvertuje lattitude z typu N AAÂ° AA.AAA do AA.AAAAA
+     * Zkonvertuje lattitude z typu N AA° AA.AAA do AA.AAAAA
      */
     public static double convertLattitude(String lat)
     {
@@ -591,10 +587,6 @@ public class Gps implements Runnable
                 throw new Exception("lattitude neni N nebo S");
             }
             
-            if (!lat.substring(4,6).equals("Â° ") && !lat.substring(4,6).equals("  ")) {
-                throw new Exception("spatny format stupnu u lattitude ");
-            }
-            
             double lattitudeDegrees = direction * (Integer.parseInt(lat.substring(2,4))+Double.parseDouble(lat.substring(6,12))/60);
             
             return lattitudeDegrees;
@@ -602,12 +594,12 @@ public class Gps implements Runnable
         catch (Exception e)
         {
             System.out.println(e.toString());
-            return Double.NaN;
+            return 0;
         }
     }
     
     /**
-     * Zkonvertuje longitude z typu N AAAÂ° AA.AAA do AAA.AAAAA
+     * Zkonvertuje longitude z typu N AAA° AA.AAA do AAA.AAAAA
      */
     public static double convertLongitude(String lon)
     {
@@ -626,13 +618,8 @@ public class Gps implements Runnable
             {
                 throw new Exception("longitude neni W nebo E");
             }
-            
-            if (!lon.substring(4,6).equals("Â° ") && !lon.substring(4,6).equals("  ") && !lon.substring(5,7).equals("Â° ") && !lon.substring(5,7).equals("  ")) {
-                throw new Exception("spatny format stupnu u longitude");
-            }
-            
             double longitudeDegrees;
-            if (lon.substring(4,6).equals("Â° ") || lon.substring(4,6).equals("  "))
+            if (lon.length() == 12)
             {
                 longitudeDegrees = direction * (Integer.parseInt(lon.substring(2,4))+Double.parseDouble(lon.substring(6,12))/60);
             }
@@ -646,7 +633,7 @@ public class Gps implements Runnable
         catch (Exception e)
         {
             System.out.println(e.toString());
-            return Double.NaN;
+            return 0;
         }
     }
     
