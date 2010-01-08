@@ -4,9 +4,10 @@
     <configuration>
         <configurations xmlns="http://www.netbeans.org/ns/project-configurations/1">
             <configuration>Release</configuration>
+            <configuration>Debug</configuration>
         </configurations>
         <data xmlns="http://www.netbeans.org/ns/j2me-project">
-            <name>HG Arcao Edition</name>
+            <name>Handy Geocaching</name>
             <minimum-ant-version>1.6</minimum-ant-version>
         </data>
     </configuration>

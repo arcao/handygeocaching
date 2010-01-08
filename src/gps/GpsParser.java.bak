@@ -40,12 +40,10 @@ public class GpsParser implements Runnable
     protected int nmeaCount;
     //Zephy 21.11.07 gpsstatus+\
     protected Hashtable signaldata = new Hashtable(); //Obsahuje cisla satelitu a jejich signal;
-    //Zephy oprava 21.12.07 +\
-    protected int activsat[] = new int[30];           //seznam aktivnich satelitu
-    //Zephy oprava 21.12.07 +/
+    protected int activsat[] = new int[11];           //seznam aktivnich satelitu
     protected String pdop, hdop, vdop;
     //Zephy 21.11.07 gpsstatus+/
-    
+
     
     private String communicationURL;
     protected String nmea;
@@ -128,7 +126,7 @@ public class GpsParser implements Runnable
         else
             return accuracy+"(PDOP)";
     }
-    //Zephy 21.11.07 gpsstatus+\
+    
     public String getPDOP()
     {
         return pdop;
@@ -143,7 +141,7 @@ public class GpsParser implements Runnable
     {
         return vdop;
     }
-    //Zephy 21.11.07 gpsstatus+/
+    
     public boolean hasFix()
     {
         return fix;
@@ -200,7 +198,7 @@ public class GpsParser implements Runnable
         return activsat;
     }
     //Zephy 21.11.07 gpsstatus+/
-    
+
     /**
      * Otevreni spojeni z GPSkou
      */
@@ -355,31 +353,31 @@ public class GpsParser implements Runnable
             gui.showError("extractData",ex.toString(),"");
         }
     }
-    //Zephy 21.11.07 gpsstatus+\
+    
     protected void saveActivSat(String[] sat)
     {
         int Index = 0;
-        int PocetPrvkuPole = sat.length;
         for(int i = 3; i <=14; i++)
         {
-            //Zephy oprava 20.12.07 +\
-            if (i <= PocetPrvkuPole)    //ochrana aby promenna "i" nelezla mimo rozsah pole
+            if (sat[i].equals(""))
             {
-                if (sat[i].equals(""))
-                {
-                    activsat[Index] = 0;
-                }
-                else
-                {
-                    activsat[Index] = Integer.parseInt(sat[i]);
-                }
-                Index++;
+                activsat[Index] = 0;
             }
-            //Zephy oprava 20.12.07 +/
+            else
+            {
+                activsat[Index] = Integer.parseInt(sat[i]);
+            }
+            Index++;
         }
         
+        /*
+        for(int i = 3; i <=14; i++)
+        {
+            sateliteView.put(sat[i], "");
+        }
+         */
     }
-    //Zephy 21.11.07 gpsstatus+/
+    
     /**
      * Parsovani NMEA zprav a ziskavani potrebnych udaju
      */
@@ -391,9 +389,6 @@ public class GpsParser implements Runnable
             if (starIndex == -1)
                 return;
             String [] param = StringTokenizer.getArray(nmea.substring(0, starIndex), ",");
-            //Zephy oprava 20.12.07 +\
-            int PocetPrvkuParam = param.length;
-            //Zephy oprava 20.12.07 +/
             if (param[0].equals("$GPGSV"))
             {
                 int i, j;
@@ -404,42 +399,25 @@ public class GpsParser implements Runnable
                 {
                     signaldata.clear();
                 }
-
-                //Zephy oprava 20.12.07 +\
                 //1.cast
-                if ((PocetPrvkuParam > 7) )    //kontrola zda nelezu mimo rozsah
-                {
-                    String key = NullToNula(param[4]);
-                    String val = NullToNula(param[7]);
-                    signaldata.put(key, val);                    
-                }
+                String key = param[4];
+                String val = param[7]; 
+                signaldata.put(key, val);
                 //2.cast
-                if ((PocetPrvkuParam >11) )    //kontrola zda nelezu mimo rozsah
-                {
-                   String key = NullToNula(param[8]);
-                   String val = NullToNula(param[11]);
-                   signaldata.put(key, val);                    
-                }
-
+                key = param[8];
+                val = param[11]; 
+                signaldata.put(key, val);
                 //3.cast
-                if ((PocetPrvkuParam >15) )    //kontrola zda nelezu mimo rozsah
-                {
-                    String key = NullToNula(param[12]);
-                    String val = NullToNula(param[15]);
-                    signaldata.put(key, val);
-                }
-
+                key = param[12];
+                val = param[15]; 
+                signaldata.put(key, val);
                 //4.cast
-                if ((PocetPrvkuParam >19) )    //kontrola zda nelezu mimo rozsah
-                {
-                    String key = NullToNula(param[16]);
-                    String val = NullToNula(param[19]);
-                    signaldata.put(key, val);                    
-                }
-                //Zephy oprava 20.12.07 +/
+                key = param[16];
+                val = param[19]; 
+                signaldata.put(key, val);
                 
                 //Zephy 21.11.07 gpsstatus+/
-                
+
             }
             else if (param[0].equals("$GPGLL"))
             {
@@ -471,9 +449,7 @@ public class GpsParser implements Runnable
                 if (param[6].equals("0"))
                 {
                     fix = false;
-                    //Zephy 21.11.07 gpsstatus+\
                     fixSatellites = 0;
-                    //Zephy 21.11.07 gpsstatus+/
                 }
                 else
                 {
@@ -485,36 +461,19 @@ public class GpsParser implements Runnable
             }
             else if (param[0].equals("$GPGSA"))
             {
-                //Zephy 21.11.07 gpsstatus+\
-                //Zephy oprava 20.12.07 +\
-                if (param.length >= 17)     //ochrana jestli veta ma vubec tolik prvku. I kdyz je divny ze by nemela.
+                //if (!param[15].equals(null))                    
+                if (param[15].length() > 0)
                 {
-                    if (param[15].length() > 0)
-                    {
-                        accuracy = Double.parseDouble(param[15]);
-                        pdop = param[15];
-                    }
-                    if (param[16].length() > 0)
-                    {
-                        hdop = param[16];
-                    }
-                    if (param[17].length() > 0)
-                    {
-                        vdop = param[17];
-                    }
-
-                    saveActivSat(param);
-                    //Zephy 21.11.07 gpsstatus+/
+                    accuracy = Double.parseDouble(param[15]);
                 }
-                //Zephy oprava 20.12.07 +/
-                else
-                {
-                        accuracy = 0;
-                        pdop = "0";
-                        hdop = "0";
-                        vdop = "0";
-                }
+                
+                pdop = param[15];
+                hdop = param[16];
+                vdop = param[17];
+                
                 nmeaCount++;
+                saveActivSat(param);
+
             }
             else if (!param[0].equals(null))
             {
@@ -524,18 +483,6 @@ public class GpsParser implements Runnable
         catch (Exception e)
         {
             gui.showError("receiveNmea",e.toString(),nmea);
-        }
-    }
-   
-    private String NullToNula(String Hodnota)
-    {
-        if (Hodnota.length() == 0)
-        {
-            return "00";
-        }
-        else
-        {
-            return Hodnota;
         }
     }
     

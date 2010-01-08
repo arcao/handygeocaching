@@ -1,13 +1,10 @@
 /*
  * MultiSolver.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 17. øíjen 2007, 10:12
+ *
  */
+
 package database;
 
 import gui.Gui;
@@ -54,13 +51,12 @@ public class MultiSolver extends Database
             rc.rebuild();
             int id;
             boolean edited = false;
-            String tfLetter = gui.get_tfLetter().getString().toUpperCase();
             for (int i = 0; i < rc.numRecords(); i++)
             {
                 id = rc.nextRecordId();
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
                 String letter = dis.readUTF();
-                if (letter.equals(tfLetter))
+                if (letter.equals(gui.get_tfLetter().getString()))
                 {
                     recordStore.setRecord(id, bytes, 0, bytes.length);
                     edited = true;
@@ -109,8 +105,8 @@ public class MultiSolver extends Database
     {
         try
         {
-            gui.get_siLattitudePattern().setLabel("AktuÃ¡lnÃ­ vzorec");
-            gui.get_siLattitudePattern().setText("NenÃ­ zvolen aktuÃ¡lnÃ­ vzorec");
+            gui.get_siLattitudePattern().setLabel("Aktuální vzorec");
+            gui.get_siLattitudePattern().setText("Není zvolen aktuální vzorec");
             gui.get_siLongitudePattern().setText("");
             
             deleteAll();
@@ -129,9 +125,9 @@ public class MultiSolver extends Database
     {
         try
         {
-            if (gui.get_siLattitudePattern().getText().equals("NenÃ­ zvolen aktuÃ¡lnÃ­ vzorec"))
+            if (gui.get_siLattitudePattern().getText().equals("Není zvolen aktuální vzorec"))
             {
-                gui.showAlert("MusÃ­te nejdÅ™Ã­v zvolit jeden vzorec ze vzoreÄkÅ¯.",AlertType.WARNING,gui.get_frmMultiSolver());
+                gui.showAlert("Musíte nejdøív zvolit jeden vzorec ze vzoreèkù.",AlertType.WARNING,gui.get_frmMultiSolver());
             }
             else
             {
@@ -164,7 +160,7 @@ public class MultiSolver extends Database
                 }
                 if (!allReplaced)
                 {
-                    gui.showAlert("PÃ­smeno '"+(lattitude+longitude).charAt(i)+"' nemÃ¡ nastavenou hodnotu. PÅ™ed vÃ½poÄtem musÃ­ mÃ­t vÅ¡echna pÃ­smena svojÃ­ hodnotu.",AlertType.WARNING,gui.get_frmMultiSolver());
+                    gui.showAlert("Písmeno '"+(lattitude+longitude).charAt(i)+"' nemá nastavenou hodnotu. Pøed výpoètem musí mít všechna písmena svojí hodnotu.",AlertType.WARNING,gui.get_frmMultiSolver());
                 }
                 else
                 {
@@ -190,7 +186,7 @@ public class MultiSolver extends Database
                             }
                             catch (Exception e)
                             {
-                                gui.showAlert("NenÃ­ moÅ¾no vypoÄÃ­tat tento vÃ½raz prvnÃ­ souÅ™adnice: "+expression+". Zkontrolujte, zda mÃ¡ vÃ½raz sprÃ¡vnÃ½ formÃ¡t.",AlertType.ERROR,gui.get_frmEditPattern());
+                                gui.showAlert("Není možno vypoèítat tento výraz první souøadnice: "+expression+". Zkontrolujte, zda má výraz správný formát.",AlertType.ERROR,gui.get_frmEditPattern());
                                 computingError = true;
                                 break;
                             }
@@ -223,7 +219,7 @@ public class MultiSolver extends Database
                             }
                             catch (Exception e)
                             {
-                                gui.showAlert("NenÃ­ moÅ¾no vypoÄÃ­tat tento vÃ½raz druhÃ© souÅ™adnice: "+expression+". Zkontrolujte, zda mÃ¡ vÃ½raz sprÃ¡vnÃ½ formÃ¡t.",AlertType.ERROR,gui.get_frmEditPattern());
+                                gui.showAlert("Není možno vypoèítat tento výraz druhé souøadnice: "+expression+". Zkontrolujte, zda má výraz správný formát.",AlertType.ERROR,gui.get_frmEditPattern());
                                 computingError = true;
                                 break;
                             }

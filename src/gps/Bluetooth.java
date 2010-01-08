@@ -1,13 +1,10 @@
-/*
+/**
  * Bluetooth.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 27. duben 2007, 19:42
+ *
  */
+
 package gps;
 
 import database.Favourites;
@@ -76,7 +73,7 @@ public class Bluetooth implements DiscoveryListener
         }
         catch (BluetoothStateException ex)
         {
-            gui.showAlert("M√°te vypnut√© Bluetooth!",AlertType.WARNING,gui.get_lstMode());
+            gui.showAlert("M·te vypnutÈ Bluetooth!",AlertType.WARNING,gui.get_lstMode());
             return false;
         }
     }
@@ -88,7 +85,7 @@ public class Bluetooth implements DiscoveryListener
     {
         try
         {
-            gui.get_frmConnecting().append("\nHled√°m dostupn√° Bluetooth za≈ô√≠zen√≠...");
+            gui.get_frmConnecting().append("\nHled·m dostupn· Bluetooth za¯ÌzenÌ...");
             devices = new Vector();
             discoveryAgent = localDevice.getDiscoveryAgent();
             discoveryAgent.startInquiry(DiscoveryAgent.GIAC, this);
@@ -106,14 +103,14 @@ public class Bluetooth implements DiscoveryListener
     {
         try
         {
-            gui.get_frmConnecting().append("\nP≈ôipojuji k za≈ô√≠zen√≠...");
+            gui.get_frmConnecting().append("\nP¯ipojuji k za¯ÌzenÌ...");
             discoveryAgent.cancelInquiry(this);
             SearchServices search = new SearchServices(gui, this);
             search.start();
         }
         catch (Exception e)
         {
-            gui.get_frmConnecting().append("\nNastala vyj√≠mka: searchForServices, "+e.toString());
+            gui.get_frmConnecting().append("\nNastala vyjÌmka: searchForServices, "+e.toString());
         }
     }
     
@@ -138,13 +135,13 @@ public class Bluetooth implements DiscoveryListener
             }
             catch (IOException ex)
             {
-                name = "Nezn√°m√© BT za≈ô√≠zen√≠";
+                name = "Nezn·mÈ BT za¯ÌzenÌ";
             }
             gui.get_lstDevices().append(name,null);
         }
         catch (Exception e)
         {
-            gui.showAlert("Nastala vyj√≠mka: deviceDiscovered, "+e,AlertType.ERROR,gui.get_lstDevices());
+            gui.showAlert("Nastala vyjÌmka: deviceDiscovered, "+e,AlertType.ERROR,gui.get_lstDevices());
         }
     }
     
@@ -157,12 +154,12 @@ public class Bluetooth implements DiscoveryListener
         {
             if (devices.size()==0)
             {
-                gui.get_frmConnecting().append("\n≈Ω√°dn√° Bluetooth za≈ô√≠zen√≠ v dosahu nebo probl√©m s Bluetooth");
+                gui.get_frmConnecting().append("\né·dn· Bluetooth za¯ÌzenÌ v dosahu nebo problÈm s Bluetooth");
             }
         }
         catch (Exception e)
         {
-            gui.showAlert("Nastala vyj√≠mka: inquiryCompleted, "+e,AlertType.ERROR,gui.get_lstDevices());
+            gui.showAlert("Nastala vyjÌmka: inquiryCompleted, "+e,AlertType.ERROR,gui.get_lstDevices());
         }
     }
     
@@ -174,17 +171,17 @@ public class Bluetooth implements DiscoveryListener
         try
         {
             //btspp://000A3A2424BE:1;authenticate=false;encrypt:false;master=false
-            gui.get_frmConnecting().append("\nP≈ôipojeno!");
+            gui.get_frmConnecting().append("\nP¯ipojeno!");
             //zjisteni discoveryAgent adresy
             bluetoothAdress = servRecord[0].getConnectionURL(ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false);
             discoveryAgent.cancelServiceSearch(transID);
             //zahajeni gps komunikace
-            gpsParser = new GpsParser(gui, http, settings, favourites, this, bluetoothAdress, GpsParser.BLUETOOTH);
+            gpsParser = gpsParser = new GpsParser(gui, http, settings, favourites, this, bluetoothAdress, GpsParser.BLUETOOTH);
             gpsParser.open();
         }
         catch (Exception e)
         {
-            gui.get_frmConnecting().append("\nNastala vyj√≠mka: serviceDiscovered, "+e);
+            gui.get_frmConnecting().append("\nNastala vyjÌmka: serviceDiscovered, "+e);
         }
     }
     
@@ -195,7 +192,7 @@ public class Bluetooth implements DiscoveryListener
     {
         if (bluetoothAdress.equals(""))
         {
-            gui.showAlert("V√°≈° telefon je p≈ôipojen k jin√©mu BT za≈ô√≠zen√≠ nebo GPS modul ji≈æ komunikuje s jin√Ωm mobilem.",AlertType.ERROR,gui.get_lstDevices());
+            gui.showAlert("V·ö telefon je p¯ipojen k jinÈmu BT za¯ÌzenÌ nebo GPS modul jiû komunikuje s jin˝m mobilem.",AlertType.ERROR,gui.get_lstDevices());
         }
     }
 }
@@ -223,7 +220,7 @@ class SearchServices extends Thread
                 timeout++;
                 if (timeout>20)
                 {
-                    main.get_frmConnecting().append("\nNepoda≈ôilo se zah√°jit hled√°n√≠ Bluetooth slu≈æby");
+                    main.get_frmConnecting().append("\nNepoda¯ilo se zah·jit hled·nÌ Bluetooth sluûby");
                     searching = false;
                 }
                 bl.discoveryAgent.searchServices(null, new UUID[]{new UUID(0x1101)},(RemoteDevice)bl.devices.elementAt(main.get_lstDevices().getSelectedIndex()),bl);
@@ -237,7 +234,7 @@ class SearchServices extends Thread
                 }
                 catch (InterruptedException exc)
                 {
-                    main.get_frmConnecting().append("\nNastala vyj√≠mka: SearchServices, "+exc);
+                    main.get_frmConnecting().append("\nNastala vyjÌmka: SearchServices, "+exc);
                 }
             }
         }
