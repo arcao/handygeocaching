@@ -1,23 +1,18 @@
 /*
  * IconLoader.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 15. říjen 2007, 18:19
  */
+
 package gui;
 
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
-import utils.ImageCache;
 
 /**
- * Tato trida primarne zjistuje rozliseni obrazovky. To je potreba pri variabilnim nacitani ikonek pro kazde rozliseni jinou.
+ * Tato třída primárně zjišťuje rozlišení obrazovky. To je potřeba při variabilním načítání ikonek pro každé rozlišení jinou.
  * @author David Vavra
  */
 public class IconLoader extends Canvas
@@ -52,20 +47,12 @@ public class IconLoader extends Canvas
     /**
      * Tato metoda zajisti dynamicke loadovani ikon podle rozliseni telefonu
      */
-    public Image loadIcon(String name) {
-        return loadIcon(name, true);
-    }
-    
-    public Image loadIcon(String name, boolean sizable)
+    public Image loadIcon(String name)
     {
         Image img = null;
         try
         {
-            if (sizable) {
-                img = ImageCache.get("/icons"+iconSize+"/"+name+".png");
-            } else {
-                img = ImageCache.get("/images/"+name+".png");
-            }
+            img = Image.createImage("/icons"+iconSize+"/"+name+".png");
         }
         catch (Exception e)
         {

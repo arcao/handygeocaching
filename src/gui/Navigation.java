@@ -1,24 +1,19 @@
 /*
  * Navigation.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 7. září 2007, 15:05
+ *
  */
+
 package gui;
 
 import database.Favourites;
 import gps.Gps;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
-import utils.ImageCache;
 
 /**
  * Tato trida reprezentuje navigacni obrazovku, zobrazuje sipku a dalsi udaje
@@ -32,11 +27,11 @@ public class Navigation extends Canvas
     public String altitude = "";
     public String cacheName = "";
     public String accuracy = "";
-    public static double angle = 0;
-    public static double compass = 0;
+    public static int angle = 0;
+    public static int compass = 0;
     public String azimut = "";
     public String dateTime = "";
-    public Image[] numbers, numbersNight;
+    public Image[] numbers;
     private int image;
     private int transformation;
     private Image rotatedImage;
@@ -46,7 +41,7 @@ public class Navigation extends Canvas
     private Gps gps;
     private Favourites favourites;
     
-    private final double RHO = 180D/Math.PI;
+    private final double RHO = 180/Math.PI;
     
     private int cX;
     private int cY;
@@ -75,32 +70,18 @@ public class Navigation extends Canvas
             favourites = ref3;
                                     
             numbers = new Image[12];
-            numbers[0] = ImageCache.createImage("/images/compass/numberN.png");
-            numbers[1] = ImageCache.createImage("/images/compass/number030.png");
-            numbers[2] = ImageCache.createImage("/images/compass/number060.png");
-            numbers[3] = ImageCache.createImage("/images/compass/numberE.png");
-            numbers[4] = ImageCache.createImage("/images/compass/number120.png");
-            numbers[5] = ImageCache.createImage("/images/compass/number150.png");
-            numbers[6] = ImageCache.createImage("/images/compass/numberS.png");
-            numbers[7] = ImageCache.createImage("/images/compass/number210.png");
-            numbers[8] = ImageCache.createImage("/images/compass/number240.png");
-            numbers[9] = ImageCache.createImage("/images/compass/numberW.png");
-            numbers[10] = ImageCache.createImage("/images/compass/number300.png");
-            numbers[11] = ImageCache.createImage("/images/compass/number330.png");
-            
-            numbersNight = new Image[12];
-            numbersNight[0] = ImageCache.createImage("/images/compass_night/numberN.png");
-            numbersNight[1] = ImageCache.createImage("/images/compass_night/number030.png");
-            numbersNight[2] = ImageCache.createImage("/images/compass_night/number060.png");
-            numbersNight[3] = ImageCache.createImage("/images/compass_night/numberE.png");
-            numbersNight[4] = ImageCache.createImage("/images/compass_night/number120.png");
-            numbersNight[5] = ImageCache.createImage("/images/compass_night/number150.png");
-            numbersNight[6] = ImageCache.createImage("/images/compass_night/numberS.png");
-            numbersNight[7] = ImageCache.createImage("/images/compass_night/number210.png");
-            numbersNight[8] = ImageCache.createImage("/images/compass_night/number240.png");
-            numbersNight[9] = ImageCache.createImage("/images/compass_night/numberW.png");
-            numbersNight[10] = ImageCache.createImage("/images/compass_night/number300.png");
-            numbersNight[11] = ImageCache.createImage("/images/compass_night/number330.png");
+            numbers[0] = Image.createImage("/images/compass/numberN.png");
+            numbers[1] = Image.createImage("/images/compass/number030.png");
+            numbers[2] = Image.createImage("/images/compass/number060.png");
+            numbers[3] = Image.createImage("/images/compass/numberE.png");
+            numbers[4] = Image.createImage("/images/compass/number120.png");
+            numbers[5] = Image.createImage("/images/compass/number150.png");
+            numbers[6] = Image.createImage("/images/compass/numberS.png");
+            numbers[7] = Image.createImage("/images/compass/number210.png");
+            numbers[8] = Image.createImage("/images/compass/number240.png");
+            numbers[9] = Image.createImage("/images/compass/numberW.png");
+            numbers[10] = Image.createImage("/images/compass/number300.png");
+            numbers[11] = Image.createImage("/images/compass/number330.png");
             
             calculateSizes();
 
@@ -135,29 +116,30 @@ public class Navigation extends Canvas
             int height = getHeight();
             
             //vymazeme obrazovku
-            g.setColor((gui.nightMode) ? 0x0 : 0xffffff);
+            g.setColor(0xffffff);
             g.fillRect(0, 0, width, height);
             
             //nastavime kompas a smer
-            drawCompass(g);
+            setCompas(g);
             setArrow(g);
             
             int startY = cY + radius + 5;
                     
             //kresleni textu
-            g.setColor((gui.nightMode) ? 0xffffff : 0x0); //black
-            
             if (width<140) //male displeje
             {
                 //nadpis
+                g.setColor(0,0,0); //black
                 g.setFont(gui.get_fntSmallBold());
                 g.drawString(cacheName,width/2,1, Graphics.TOP|Graphics.HCENTER);
                                 
                 if (viewModeSmall) {
+                    g.setColor(0);
                     g.setFont(gui.get_fntBold());
                     g.drawString(distance,width/2,startY,Graphics.TOP|Graphics.HCENTER);
                 } else {
                     //ostatni napisy
+                    g.setColor(0);
                     g.setFont(gui.get_fntSmallBold());
                     g.drawString(distance,width/2,startY,Graphics.TOP|Graphics.HCENTER);
                     startY += fntSmallBold;
@@ -175,14 +157,17 @@ public class Navigation extends Canvas
             else //velke displeje
             {
                 //nadpis
+                g.setColor(0,0,0); //black
                 g.setFont(gui.get_fntBold());
                 g.drawString(cacheName,width/2,1, Graphics.TOP|Graphics.HCENTER);
                 
                 if (viewModeSmall) {
+                    g.setColor(0);
                     g.setFont(gui.get_fntLargeBold());
                     g.drawString(distance,width/2,startY,Graphics.TOP|Graphics.HCENTER);
                 } else {
                     //ostatni napisy
+                    g.setColor(0);
                     g.setFont(gui.get_fntBold());
                     g.drawString(distance,width/2,startY,Graphics.TOP|Graphics.HCENTER);
                     startY += fntBold;
@@ -200,10 +185,6 @@ public class Navigation extends Canvas
             
             //tlacitko zpet
             g.drawString("Zpět", 3, height, Graphics.BOTTOM|Graphics.LEFT);
-            
-            if (hasPointerEvents())
-                g.drawString("Noční",width/2,height, Graphics.BOTTOM|Graphics.HCENTER);
-            
             //tlacitko mapa
             g.drawString("Mapa", width - 3, height, Graphics.BOTTOM|Graphics.RIGHT);
         }
@@ -214,11 +195,11 @@ public class Navigation extends Canvas
     }
     
     // angle in degres
-    private void drawCompass(Graphics g) {
-        g.setColor((gui.nightMode) ? 0x0 : 0xffffff); //white
+    private void setCompas(Graphics g) {
+        g.setColor(255,255,255); //white
         g.fillArc(cX - radius, cY - radius, 2 * radius, 2 * radius, 0, 360);
 
-        g.setColor((gui.nightMode) ? 0xffffff : 0x0); //black
+        g.setColor(0,0,0); //black
         g.drawArc(cX - radius, cY - radius, 2 * radius, 2 * radius, 0, 360);
 
         double a;
@@ -255,12 +236,14 @@ public class Navigation extends Canvas
                 y1 = (int) (aCos * stringPosition);
 
 
-                g.drawImage((gui.nightMode) ? numbersNight[i / 3] : numbers[i / 3], cX + x1, cY - y1, Graphics.VCENTER | Graphics.HCENTER);
+                g.drawImage(numbers[i / 3], cX + x1, cY - y1, Graphics.VCENTER | Graphics.HCENTER);
             }
         }
     }
 
     private void setArrow(Graphics g) {
+        g.setColor(0, 0, 0); //white
+
         double a;
         int x1, x2, x3, x4, y1, y2, y3, y4;
 
@@ -280,16 +263,15 @@ public class Navigation extends Canvas
         x4 = (int) (Math.sin(a) * (radius * 0.5));
         y4 = (int) (Math.cos(a) * (radius * 0.5));
 
-        g.setColor((gui.nightMode) ? 0x00ffff : 0xff0000); //red
-        
-        g.fillTriangle(cX + x1, cY - y1, cX + x2, cY - y2, cX + x3, cY - y3);
-        g.fillTriangle(cX + x1, cY - y1, cX + x2, cY - y2, cX + x4, cY - y4);
+        g.setColor(255,0,0); //red
 
-        g.setColor((gui.nightMode) ? 0xffffff : 0x0); //black
         g.drawLine(cX + x1, cY - y1, cX + x3, cY - y3);
         g.drawLine(cX + x3, cY - y3, cX + x2, cY - y2);
         g.drawLine(cX + x2, cY - y2, cX + x4, cY - y4);
         g.drawLine(cX + x4, cY - y4, cX + x1, cY - y1);
+
+        g.fillTriangle(cX + x1, cY - y1, cX + x2, cY - y2, cX + x3, cY - y3);
+        g.fillTriangle(cX + x1, cY - y1, cX + x2, cY - y2, cX + x4, cY - y4);
     }
     
     private void calculateSizes() {
@@ -323,75 +305,34 @@ public class Navigation extends Canvas
             smallRadius = false;
         }
     }
-          
+
+    
+   
+    
     /**
      * Osetreni stisknuti leveho a praveho kontextoveho tlacitka
      */
     public void keyPressed(int keyCode)
     {
         repaint();
-        if (keyCode == KEY_NUM0) 
-        {
-            gui.nightMode = !gui.nightMode;
-            repaint();
-        }
         //leve tlacitko
-        else if (keyCode == -6 || keyCode == -21 || keyCode == -20 || keyCode == 105 || keyCode == 21 || keyCode == -202 || keyCode == 113)
+        if (keyCode == -6 || keyCode == -21 || keyCode == -20 || keyCode == 105 || keyCode == 21 || keyCode == -202 || keyCode == 113)
         {
             gps.stop();
             gui.getDisplay().setCurrent(gps.getPreviousScreen());
         }
         //prave tlacitko
-        else if (keyCode == -7 || keyCode == 112 || keyCode == 111)
+        if (keyCode == -7 || keyCode == 112 || keyCode == 111)
         {
             favourites.loadFavouritesToMap();
             gui.getDisplay().setCurrent(gui.get_cvsMap());
             gps.changeAction(Gps.MAP);
         }
-        else if (keyCode == KEY_NUM5) {
+        
+        if (keyCode == KEY_NUM5) {
             viewModeSmall = !viewModeSmall;
             calculateSizes();
             repaint();
-        }
-    }
-    
-    protected void pointerPressed(int x, int y) {
-        int BORDER = 10;
-        
-        Font fnt = (getWidth()<140) ? gui.get_fntSmallBold() : gui.get_fntBold();
-        int width = getWidth();
-        int widthHalf = width / 2;
-        int widthNocni = fnt.stringWidth("Noční") + 2*BORDER;
-        int widthZpet = fnt.stringWidth("Zpět") + 2*BORDER;
-        int widthMapa = fnt.stringWidth("Mapa") + 2*BORDER;
-        
-        int HEIGHT = getHeight();
-        int BAR_HEIGHT = BOTTOM_MARGIN + BORDER;
-        
-        int widthNocniHalf = widthNocni / 2;
-        
-        //nocni rezim
-        if (y > HEIGHT - BAR_HEIGHT && y < HEIGHT &&
-            x > widthHalf - widthNocniHalf && x < widthHalf + widthNocniHalf) {
-            gui.nightMode = !gui.nightMode;
-            repaint();
-        }
-        //zvetseni / zmenseni kompasu
-        else if ((x-cX)*(x-cX) + (y-cY)*(y-cY) < radius*radius) {
-            viewModeSmall = !viewModeSmall;
-            calculateSizes();
-            repaint();
-        }
-        //Zpet
-        else if (y > HEIGHT - BAR_HEIGHT && x < widthZpet) {
-            gps.stop();
-            gui.getDisplay().setCurrent(gps.getPreviousScreen());
-        }
-        //Mapa
-        else if (y > HEIGHT - BAR_HEIGHT && x > width - widthMapa) {
-            favourites.loadFavouritesToMap();
-            gui.getDisplay().setCurrent(gui.get_cvsMap());
-            gps.changeAction(Gps.MAP);
         }
     }
 }

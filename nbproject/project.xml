@@ -6,7 +6,7 @@
             <configuration>Release</configuration>
         </configurations>
         <data xmlns="http://www.netbeans.org/ns/j2me-project">
-            <name>HG Arcao Edition</name>
+            <name>Handy Geocaching</name>
             <minimum-ant-version>1.6</minimum-ant-version>
         </data>
     </configuration>
