@@ -1,13 +1,10 @@
-/*
+/**
  * Gps.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 27. duben 2007, 11:08
+ *
  */
+
 package gps;
 
 import database.Settings;
@@ -127,7 +124,7 @@ public class Gps implements Runnable
     }
     
     /**
-     * Nastavi navigacni souradnice
+     * Nastavi navigační souřadnice
      */
     public void setNavigationTarget(String lattitude, String longitude, String name)
     {
@@ -137,7 +134,7 @@ public class Gps implements Runnable
     }
     
     /**
-     * Zjisti, jestli jsou zadany navigacni souradnice
+     * Zjisti, jestli jsou zadany navigacni souřadnice
      */
     public boolean isNavigating()
     {
@@ -274,9 +271,9 @@ public class Gps implements Runnable
                         gui.get_cvsNavigation().cacheName = targetname;
                         double rad_distance = computeRadianDistance(gpsParser.getLatitude(),targetlat,gpsParser.getLongitude(),targetlon);
                         int distance = radianToMeters(rad_distance);
-                        double bearing = computeBearing(gpsParser.getLatitude(),targetlat,gpsParser.getLongitude(),targetlon, rad_distance);
+                        int bearing = computeBearing(gpsParser.getLatitude(),targetlat,gpsParser.getLongitude(),targetlon, rad_distance);
                         //gui.get_siDebug().setText("fixMessage:"+gpsParser.hasFix()+"\nlat:"+gpsParser.getLattitude()+"\nlon:"+gpsParser.getLongitude()+"heading:"+gpsParser.getHeading()+"nmeaCount:"+gpsParser.getNmeaCount()+"\ndistance:"+distance+"cislo:"+Float.parse("6366832.9383716631",10));
-                        double navigate = computeCorrectionDirection(bearing, gpsParser.getHeading());
+                        int navigate = computeCorrectionDirection(bearing, gpsParser.getHeading());
                         
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(new Date());
@@ -295,7 +292,7 @@ public class Gps implements Runnable
                         gui.get_cvsNavigation().angle = navigate;
                         gui.get_cvsNavigation().compass = (int) gpsParser.getHeading();
                         gui.get_cvsNavigation().accuracy = "±"+gpsParser.getAccuracy();
-                        gui.get_cvsNavigation().azimut = ((int)bearing)+"°";
+                        gui.get_cvsNavigation().azimut = bearing+"°";
                         gui.get_cvsNavigation().dateTime = dateTime;
                         gui.get_cvsNavigation().repaint();
                         
@@ -448,7 +445,7 @@ public class Gps implements Runnable
     /**
      * Spocita bearing
      */
-    public double computeBearing(double lat1, double lat2, double lon1, double lon2, double rad_dist)
+    public int computeBearing(double lat1, double lat2, double lon1, double lon2, double rad_dist)
     {
         try
         {
@@ -474,7 +471,7 @@ public class Gps implements Runnable
             //prevod na stupne
             double bearing = Math.toDegrees(rad_bearing);
             bearing = 360 - bearing;
-            return bearing;
+            return (int) bearing;
         }
         catch (Exception e)
         {
@@ -486,7 +483,7 @@ public class Gps implements Runnable
     /**
      * Spocita korekcni smer k danym souradnicim ve stupnich
      */
-    public double computeCorrectionDirection(double bearing, double heading)
+    public int computeCorrectionDirection(int bearing, double heading)
     {
         try
         {
@@ -495,7 +492,7 @@ public class Gps implements Runnable
             {
                 navigate = 360 + navigate;
             }
-            return navigate;
+            return (int)navigate;
         }
         catch (Exception e)
         {
@@ -591,10 +588,6 @@ public class Gps implements Runnable
                 throw new Exception("lattitude neni N nebo S");
             }
             
-            if (!lat.substring(4,6).equals("° ") && !lat.substring(4,6).equals("  ")) {
-                throw new Exception("spatny format stupnu u lattitude ");
-            }
-            
             double lattitudeDegrees = direction * (Integer.parseInt(lat.substring(2,4))+Double.parseDouble(lat.substring(6,12))/60);
             
             return lattitudeDegrees;
@@ -602,7 +595,7 @@ public class Gps implements Runnable
         catch (Exception e)
         {
             System.out.println(e.toString());
-            return Double.NaN;
+            return 0;
         }
     }
     
@@ -626,13 +619,8 @@ public class Gps implements Runnable
             {
                 throw new Exception("longitude neni W nebo E");
             }
-            
-            if (!lon.substring(4,6).equals("° ") && !lon.substring(4,6).equals("  ") && !lon.substring(5,7).equals("° ") && !lon.substring(5,7).equals("  ")) {
-                throw new Exception("spatny format stupnu u longitude");
-            }
-            
             double longitudeDegrees;
-            if (lon.substring(4,6).equals("° ") || lon.substring(4,6).equals("  "))
+            if (lon.length() == 12)
             {
                 longitudeDegrees = direction * (Integer.parseInt(lon.substring(2,4))+Double.parseDouble(lon.substring(6,12))/60);
             }
@@ -646,7 +634,7 @@ public class Gps implements Runnable
         catch (Exception e)
         {
             System.out.println(e.toString());
-            return Double.NaN;
+            return 0;
         }
     }
     

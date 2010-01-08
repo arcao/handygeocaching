@@ -1,19 +1,15 @@
 /*
  * Favourites.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 16. říjen 2007, 21:18
+ *
  */
+
 package database;
 
 import gps.Gps;
 import gui.Gui;
 import gui.IconLoader;
-import gui.LoadingForm;
 import http.Http;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,12 +18,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import javax.microedition.apdu.APDUConnection;
-import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.rms.RecordEnumeration;
-import javax.microedition.rms.RecordStore;
-import javax.microedition.rms.RecordStoreException;
 import utils.Utils;
 
 /**
@@ -49,10 +42,6 @@ public class Favourites extends Database
     public String found = "";
     public String poznamka = "";
     
-    private RecordEnumeration recordEnumeration = null;
-
-    private boolean needUpdateViewAll = true;
-    
     public Favourites(Gui ref, Settings ref2, IconLoader ref3)
     {
         super(ref, "favourites");
@@ -72,15 +61,6 @@ public class Favourites extends Database
     {
         gps = ref;
     }
-
-    public void deleteAll() {
-        revalidate();
-        super.deleteAll();
-        http.getHintCache().deleteAll();
-        http.getListingCache().deleteAll();
-    }
-
-
     
     /**
      * Zobrazi jednu konkretni oblibenou
@@ -90,7 +70,8 @@ public class Favourites extends Database
         try
         {
             this.id = number;
-            RecordEnumeration rc = getRecordEnumeration();
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
             int id = 0;
             for (int i = 0; i <= number; i++)
             {
@@ -159,7 +140,8 @@ public class Favourites extends Database
         try
         {
             this.id = number;
-            RecordEnumeration rc = getRecordEnumeration();
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
             int id = 0;
             for (int i = 0; i <= number; i++)
             {
@@ -171,11 +153,12 @@ public class Favourites extends Database
             dis.readUTF();
             String lattitude = dis.readUTF();
             String longitude = dis.readUTF();
-            
-            //lattitude = Utils.replaceString(Utils.replaceString(lattitude, "° ","d"),"N ","");
-            //longitude = Utils.replaceString(Utils.replaceString(longitude, "° ","d"),"E ","");
-            lattitude = Double.toString(Gps.convertLattitude(lattitude));
-            longitude = Double.toString(Gps.convertLongitude(longitude));
+            try {
+                dis.readUTF();
+                dis.readUTF();
+            } catch (Exception e) {}
+            lattitude = Utils.replaceString(Utils.replaceString(lattitude, "° ","d"),"N ","");
+            longitude = Utils.replaceString(Utils.replaceString(longitude, "° ","d"),"E ","");
             gui.platformRequest("http://wap.mapy.cz/search?from=&query="+lattitude+"+"+longitude+"&mapType=ophoto&zoom=16");
         }
         catch (Exception e)
@@ -187,25 +170,20 @@ public class Favourites extends Database
     /**
      * Prida oblibenou polozku do databaze (editId=-1), nebo edituje zadany zaznam (editId>=0)
      */
-    public void addEdit(String name, String description, String lattitude, String longitude, String type, Displayable nextScreen, boolean DegMinSecFormat, String found, String poznamka) {
-        addEdit(name, description, lattitude, longitude, type, nextScreen, DegMinSecFormat, found, poznamka, true, true, true);
-    }
-    
-    public void addEdit(String name, String description, String lattitude, String longitude, String type, Displayable nextScreen, boolean DegMinSecFormat, String found, String poznamka, boolean refreshView, boolean needRevalidate, boolean saveLastUse)
+    public void addEdit(String name, String description, String lattitude, String longitude, String type, Displayable nextScreen, boolean DegMinSecFormat, String found, String poznamka)
     {
-        Alert alert = null;
         try
         {
             //debug info
-            //System.out.println("addEdit");
-            //System.out.println("name: " + name);
-            //System.out.println("desc: " + description);
-            //System.out.println("lat: " + lattitude);
-            //System.out.println("lon: " + longitude);
-            //System.out.println("type: " + type);
-            //System.out.println("degFormat: " + ((DegMinSecFormat) ? "true" : "false"));
-            //System.out.println("found: " + found);
-            //System.out.println("poznamka: " + poznamka);
+            System.out.println("addEdit");
+            System.out.println("name: " + name);
+            System.out.println("desc: " + description);
+            System.out.println("lat: " + lattitude);
+            System.out.println("lon: " + longitude);
+            System.out.println("type: " + type);
+            System.out.println("degFormat: " + ((DegMinSecFormat) ? "true" : "false"));
+            System.out.println("found: " + found);
+            System.out.println("poznamka: " + poznamka);
             
             //Zephy 19.11.07 +\
             lattitude = gps.convertLattitudeFormat(lattitude, DegMinSecFormat);
@@ -213,23 +191,23 @@ public class Favourites extends Database
             //Zephy 19.11.07 +/
             
             //Zephy 19.11.07 + pridan OR v podmince
-            if (lattitude=="" | Gps.convertLattitude(lattitude)==Double.NaN)
+            if (lattitude=="" | Gps.convertLattitude(lattitude)==0)
             {
                 if (gui.fromMultiSolver)
-                    alert = gui.showAlert("Špatný formát první souřadnice",AlertType.WARNING,gui.get_frmResult());
+                    gui.showAlert("Špatný formát první souřadnice",AlertType.WARNING,gui.get_frmResult());
                 else
                 {
-                    alert = gui.showAlert("Špatný formát první souřadnice",AlertType.WARNING,gui.get_frmAddGiven());
+                    gui.showAlert("Špatný formát první souřadnice",AlertType.WARNING,gui.get_frmAddGiven());
                 }
             }
             //Zephy 19.11.07 + pridan OR v podmince
-            else if(longitude == "" | Gps.convertLongitude(longitude)==Double.NaN)
+            else if(longitude == "" | Gps.convertLongitude(longitude)==0)
             {
                 
                 if (gui.fromMultiSolver)
-                    alert = gui.showAlert("Špatný formát druhé souřadnice",AlertType.WARNING,gui.get_frmResult());
+                    gui.showAlert("Špatný formát druhé souřadnice",AlertType.WARNING,gui.get_frmResult());
                 else
-                    alert = gui.showAlert("Špatný formát druhé souřadnice",AlertType.WARNING,gui.get_frmAddGiven());
+                    gui.showAlert("Špatný formát druhé souřadnice",AlertType.WARNING,gui.get_frmAddGiven());
             }
             else
             {
@@ -249,17 +227,17 @@ public class Favourites extends Database
                 dos.writeUTF(poznamka);
                 byte[] bytes = buffer.toByteArray();
                 //posledni cache
-                if (name.equals("_Poslední cache") || name.equals("_Poslední keš"))
+                if (name.equals("_Poslední cache"))
                 {                    
                     editId = -1;
-                    RecordEnumeration rc = getRecordEnumeration();
+                    RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+                    rc.rebuild();
                     int id = 0;
                     for (int i = 0; i < rc.numRecords(); i++)
                     {
                         id = rc.nextRecordId();
                         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
-                        String recordName = dis.readUTF();
-                        if (recordName.equals("_Poslední cache") || recordName.equals("_Poslední keš"))
+                        if (dis.readUTF().equals("_Poslední cache"))
                         {
                             editId = id;
                             break;
@@ -268,33 +246,28 @@ public class Favourites extends Database
                 }
                                 
                 
-                if (editId==-1) { //pridani noveho zaznamu
+                if (editId==-1) //pridani noveho zaznamu
                     this.id = recordStore.addRecord(bytes, 0, bytes.length) - 1;
-                }
                 else
                 {
                     //editace stavajiciho zaznamu
                     this.id = editId - 1;
                     recordStore.setRecord(editId, bytes, 0, bytes.length);
                 }
-                if (needRevalidate) 
-                    revalidate();
-                if (saveLastUse)
-                    settings.saveCoordinates(lattitude, longitude);
+                settings.saveCoordinates(lattitude, longitude);
+                viewAll();
                 
-                if (!name.equals("_Poslední cache") && !name.equals("_Poslední keš") && editId==-1)
+                
+                if (!name.equals("_Poslední cache") && editId==-1)
                 {
-                    if (nextScreen != null) alert = gui.showAlert("Uloženo do oblíbených",AlertType.INFO,nextScreen);
+                    if (nextScreen != null) gui.showAlert("Uloženo do oblíbených",AlertType.INFO,nextScreen);
                 }
                 //Zephy 19.11.07 +\ -tohle doplneno aby se po skonceni editace preslo na seznam bodu
                 else
                 {
-                    if (nextScreen != null) alert = gui.showAlert("Změny uloženy",AlertType.INFO,nextScreen);
+                    if (nextScreen != null) gui.showAlert("Změny uloženy",AlertType.INFO,nextScreen);
                 }
                 //Zephy 19.11.07 +/
-                
-                if (refreshView)
-                    viewAll(alert);
             }
         }
         catch (Exception ex)
@@ -302,14 +275,15 @@ public class Favourites extends Database
             gui.showError("addFavourite",ex.toString(),"");
             ex.printStackTrace();
         }
-        //System.out.println("id:" + String.valueOf(id));
-        //System.out.println("editId:" + String.valueOf(editId));
+        System.out.println("id:" + String.valueOf(id));
+        System.out.println("editId:" + String.valueOf(editId));
     }
     
     public String getCacheName(int number) {
         try
         {
-            RecordEnumeration rc = getRecordEnumeration();
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
             int id = 0;
             for (int i = 0; i <= number; i++)
             {
@@ -330,7 +304,8 @@ public class Favourites extends Database
         try
         {
             this.id = number;
-            RecordEnumeration rc = getRecordEnumeration();
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
             int id = 0;
             for (int i = 0; i <= number; i++)
             {
@@ -350,7 +325,7 @@ public class Favourites extends Database
             editId = id;
             editType = type;
             
-            addEdit(name, description, lattitude, longitude, type, nextScreen, false, Utils.formatDate(found), poznamka, false, false, true);
+            addEdit(name, description, lattitude, longitude, type, nextScreen, false, Utils.formatDate(found), poznamka);
         }
         catch (Exception e)
         {
@@ -362,7 +337,8 @@ public class Favourites extends Database
         try
         {
             this.id = number;
-            RecordEnumeration rc = getRecordEnumeration();
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
             int id = 0;
             for (int i = 0; i <= number; i++)
             {
@@ -382,7 +358,7 @@ public class Favourites extends Database
             editId = id;
             editType = type;
             
-            addEdit(name, description, lattitude, longitude, type, nextScreen, false, found, poznamka, false, false, true);
+            addEdit(name, description, lattitude, longitude, type, nextScreen, false, found, poznamka);
         }
         catch (Exception e)
         {
@@ -393,7 +369,8 @@ public class Favourites extends Database
     public String getPoznamka(int number) {
         try
         {
-            RecordEnumeration rc = getRecordEnumeration();
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
             int id = 0;
             for (int i = 0; i <= number; i++)
             {
@@ -425,7 +402,8 @@ public class Favourites extends Database
         {
             this.id = number;
             
-            RecordEnumeration rc = getRecordEnumeration();
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
             int id = 0;
             for (int i = 0; i <= number; i++)
             {
@@ -453,7 +431,7 @@ public class Favourites extends Database
             //zobrazeni
             if (isCache(type))
             {
-                gui.showAlert("Keš není možné upravovat",AlertType.WARNING,gui.get_lstFavourites());
+                gui.showAlert("Cache není možné upravovat",AlertType.WARNING,gui.get_lstFavourites());
             }
             else
             {
@@ -481,32 +459,22 @@ public class Favourites extends Database
     {
         try
         {
-            RecordEnumeration rc = getRecordEnumeration();
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
             int numRecords = rc.numRecords();
             int[] recordIds = new int[numRecords];
             for (int i = 0; i < numRecords; i++)
             {
                 recordIds[i] = rc.nextRecordId();
             }
-            boolean needRevalidate = false;
             for (int i = 0; i < numRecords; i++)
             {
                 if (gui.get_lstFavourites().isSelected(i))
                 {
-                    String[] parts = getCachePartsID(recordIds[i]);
-                    if (parts.length > 0) {
-                        http.getHintCache().delete(parts[7]); //delete hint
-                        http.getListingCache().delete(parts[7]); //delete listing
-                    }
                     recordStore.deleteRecord(recordIds[i]);
-                    needRevalidate = true;
                 }
             }
-            
-            if (needRevalidate) {
-                revalidate();
-                viewAll();
-            }
+            viewAll();
         }
         catch (Exception e)
         {
@@ -517,49 +485,24 @@ public class Favourites extends Database
     /**
      * Vypise seznam oblibenych bodu
      */
-    public void viewAll() {
-        viewAll(null);
-    }
-    
-    public void viewAll(Alert alert)
+    public void viewAll()
     {
-        if (!needUpdateViewAll) {
-            gui.getDisplay().setCurrent(gui.get_lstFavourites());
-            return;
-        }
-        needUpdateViewAll = false;
-        final LoadingForm lForm = new LoadingForm(gui.getDisplay(), "Načítám..", "Načítám seznam keší...", gui.get_lstFavourites(), alert);
-        lForm.show();
-        
         try
         {
-            Thread t = new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        //if (recordStore.getNumRecords() != 0)
-                        //    lForm.show();
-                        
-                        gui.get_lstFavourites().deleteAll();
-                        RecordEnumeration rc = getRecordEnumeration();
-                        int count = rc.numRecords();
-                        
-                        for (int i = 0; i < count; i++)
-                        {
-                            DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(rc.nextRecordId())));
-                            String name = dis.readUTF();
-                            String type = dis.readUTF();
-                            gui.get_lstFavourites().append(name,iconLoader.loadIcon(type));
-                        }
-                    } catch (Exception e) {}
-                    lForm.setFinish();
-                }
-            });
-            t.start();
+            gui.get_lstFavourites().deleteAll();
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
+            for (int i = 0; i < rc.numRecords(); i++)
+            {
+                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(rc.nextRecordId())));
+                String name = dis.readUTF();
+                String type = dis.readUTF();
+                gui.get_lstFavourites().append(name,iconLoader.loadIcon(type));
+            }
         }
         catch (Exception ex)
         {
             gui.showError("viewFavourites",ex.toString(),"");
-            lForm.setFinish();
         }
     }
     
@@ -569,20 +512,13 @@ public class Favourites extends Database
      */
     public String[] getCacheParts(int index) {
         try {
-            RecordEnumeration rc = getRecordEnumeration();
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
             int id = 0;
             for (int i = 0; i <= index; i++)
             {
                 id = rc.nextRecordId();
             }
-            return getCachePartsID(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new String[0];
-        }
-    }
-    public String[] getCachePartsID(int id) {
-        try {
             DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
             dis.readUTF(); //name
             String type = dis.readUTF(); //type
@@ -602,19 +538,6 @@ public class Favourites extends Database
         }
     }
     
-    public static String cachePartsToDesc(String[][] parts) {
-        StringBuffer sb = new StringBuffer();
-        for (int x=0; x < parts.length; x++) {
-            for(int y=0; y < parts[x].length; y++) {
-                if (y != 0)
-                    sb.append('}'); //line item sep
-                sb.append(parts[x][y]);
-            }
-            sb.append('{'); //line sep
-        }
-        return sb.toString();
-    }
-    
     /**
      * Nahraje vsechny oblibene do mapy
      */
@@ -623,7 +546,8 @@ public class Favourites extends Database
         try
         {
             gui.get_cvsMap().reset();
-            RecordEnumeration rc = getRecordEnumeration();
+            RecordEnumeration rc = recordStore.enumerateRecords(this, this, true);
+            rc.rebuild();
             for (int i = 0; i < rc.numRecords(); i++)
             {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(rc.nextRecordId())));
@@ -632,7 +556,11 @@ public class Favourites extends Database
                 dis.readUTF();
                 double lattitude = Gps.convertLattitude(dis.readUTF());
                 double longitude = Gps.convertLongitude(dis.readUTF());
-                                
+                try {
+                    dis.readUTF();
+                    dis.readUTF();
+                } catch (Exception e) {}
+                
                 if (!name.equals("_Poslední cache"))
                     gui.get_cvsMap().addMapItem(lattitude,longitude,type,name);
             }
@@ -664,7 +592,6 @@ public class Favourites extends Database
                 byte[] bytes = buffer.toByteArray();
                 recordStore.addRecord(bytes, 0, bytes.length);
             }
-            revalidate();
             viewAll();
         }
         catch (Exception e)
@@ -684,22 +611,6 @@ public class Favourites extends Database
         //Zephy 20.11.07 +/
     }
     
-    private RecordEnumeration getRecordEnumeration() {
-        try {
-            if (recordEnumeration == null) {
-                recordEnumeration = recordStore.enumerateRecords(this, this, true);
-                recordEnumeration.rebuild();
-            }
-            recordEnumeration.reset();
-        } catch (Exception e) {}
-        
-        return recordEnumeration;
-    }
     
-    public void revalidate() {
-        needUpdateViewAll = true;
-        if (recordEnumeration != null)
-            recordEnumeration.destroy();
-        recordEnumeration = null;
-    }
+    
 }

@@ -1,13 +1,10 @@
 /*
  * Navigation.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 7. září 2007, 15:05
+ *
  */
+
 package gui;
 
 import database.Favourites;
@@ -32,8 +29,8 @@ public class Navigation extends Canvas
     public String altitude = "";
     public String cacheName = "";
     public String accuracy = "";
-    public static double angle = 0;
-    public static double compass = 0;
+    public static int angle = 0;
+    public static int compass = 0;
     public String azimut = "";
     public String dateTime = "";
     public Image[] numbers, numbersNight;
@@ -46,7 +43,7 @@ public class Navigation extends Canvas
     private Gps gps;
     private Favourites favourites;
     
-    private final double RHO = 180D/Math.PI;
+    private final double RHO = 180/Math.PI;
     
     private int cX;
     private int cY;
@@ -139,7 +136,7 @@ public class Navigation extends Canvas
             g.fillRect(0, 0, width, height);
             
             //nastavime kompas a smer
-            drawCompass(g);
+            setCompas(g);
             setArrow(g);
             
             int startY = cY + radius + 5;
@@ -214,7 +211,7 @@ public class Navigation extends Canvas
     }
     
     // angle in degres
-    private void drawCompass(Graphics g) {
+    private void setCompas(Graphics g) {
         g.setColor((gui.nightMode) ? 0x0 : 0xffffff); //white
         g.fillArc(cX - radius, cY - radius, 2 * radius, 2 * radius, 0, 360);
 
@@ -359,39 +356,23 @@ public class Navigation extends Canvas
         int BORDER = 10;
         
         Font fnt = (getWidth()<140) ? gui.get_fntSmallBold() : gui.get_fntBold();
-        int width = getWidth();
-        int widthHalf = width / 2;
-        int widthNocni = fnt.stringWidth("Noční") + 2*BORDER;
-        int widthZpet = fnt.stringWidth("Zpět") + 2*BORDER;
-        int widthMapa = fnt.stringWidth("Mapa") + 2*BORDER;
+        int width = fnt.stringWidth("Noční") + 2*BORDER;
+        int height = fnt.getHeight() + BORDER;
         
-        int HEIGHT = getHeight();
-        int BAR_HEIGHT = BOTTOM_MARGIN + BORDER;
-        
-        int widthNocniHalf = widthNocni / 2;
+        int widthHalf = (getWidth() - width) / 2;
         
         //nocni rezim
-        if (y > HEIGHT - BAR_HEIGHT && y < HEIGHT &&
-            x > widthHalf - widthNocniHalf && x < widthHalf + widthNocniHalf) {
+        if (y > getHeight() - height && y < getHeight() &&
+            x > widthHalf && x < widthHalf + width) {
             gui.nightMode = !gui.nightMode;
             repaint();
         }
+        
         //zvetseni / zmenseni kompasu
-        else if ((x-cX)*(x-cX) + (y-cY)*(y-cY) < radius*radius) {
+        if ((x-cX)*(x-cX) + (y-cY)*(y-cY) < radius*radius) {
             viewModeSmall = !viewModeSmall;
             calculateSizes();
             repaint();
-        }
-        //Zpet
-        else if (y > HEIGHT - BAR_HEIGHT && x < widthZpet) {
-            gps.stop();
-            gui.getDisplay().setCurrent(gps.getPreviousScreen());
-        }
-        //Mapa
-        else if (y > HEIGHT - BAR_HEIGHT && x > width - widthMapa) {
-            favourites.loadFavouritesToMap();
-            gui.getDisplay().setCurrent(gui.get_cvsMap());
-            gps.changeAction(Gps.MAP);
         }
     }
 }

@@ -1,13 +1,12 @@
 /*
  * FieldNotesItem.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 16. červenec 2009, 11:09
+ *
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
  */
+
 package database;
 
 import java.io.ByteArrayInputStream;
@@ -22,13 +21,13 @@ import utils.Utils;
 
 /**
  *
- * @author Arcao
+ * @author Administrator
  */
 public class FieldNotesItem {
     private int id;
     private String gcCode;
     private String name;
-    private Date date;
+    private long date;
     private int type;
     private String text;
     private RecordStore recordStore;
@@ -39,25 +38,24 @@ public class FieldNotesItem {
         this.id = id;
         gcCode = "GC";
         name = "";
-        date = new Date();
+        date = new Date().getTime();
         type = 0;
-        if (id == -1) {
-            Calendar c = Calendar.getInstance();
-            c.setTime(date);
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date(date));
         
-            text = new StringBuffer()
-                   .append(nulaNula(c.get(Calendar.HOUR_OF_DAY)))
-                   .append(':')
-                   .append(nulaNula(c.get(Calendar.MINUTE)))
-                   .toString();;
-        }
+        text = new StringBuffer()
+               .append(nulaNula(c.get(Calendar.HOUR_OF_DAY)))
+               .append(':')
+               .append(nulaNula(c.get(Calendar.MINUTE)))
+               .toString();;
+
         if (data != null && data.length > 0) {
             try {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
 
                 gcCode = dis.readUTF();
                 name = dis.readUTF();
-                date.setTime(dis.readLong());
+                date = dis.readLong();
                 type = dis.readInt();
                 text = dis.readUTF();
 
@@ -89,7 +87,7 @@ public class FieldNotesItem {
 
             dos.writeUTF(gcCode);
             dos.writeUTF(name);
-            dos.writeLong(date.getTime());
+            dos.writeLong(date);
             dos.writeInt(type);
             dos.writeUTF(text);
 
@@ -99,44 +97,32 @@ public class FieldNotesItem {
             return new byte[0];
         }
     }
-
+    
     public String toString() {
-        return toString(false, false);
-    }  
-   
-    public String toString(boolean withType, boolean nameFirst) {
-        StringBuffer sb =new StringBuffer();
-        
-        if (withType) {
-            sb.append('(');
-            sb.append(FieldNotes.getTypeAbbr(type));
-            sb.append(") ");
-        }
-        
-        sb.append(Utils.formatDate(getDate()));
-        sb.append(' ');
-        if (nameFirst && name.length() > 0) {
-            sb.append(name);
-            sb.append(' ').append('[').append(gcCode).append(']');
-        } else {
-            sb.append('[').append(gcCode).append(']');
-            sb.append(' ').append(name);
-        }
-        return sb.toString();
+        return new StringBuffer()
+        .append(Utils.formatDate(getDate()))
+        .append(' ')
+        .append('[').append(gcCode).append(']')
+        .append(' ')
+        .append(name)
+        .toString();
     }
-       
+    
     public int getId() {
         return id;
     }
     
     public Date getDate() {
-        return date;
+        if (date == 0)
+            return new Date();
+        return new Date(date);
     }
     
     public String getDateZuluString() {
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        Calendar c = Calendar.getInstance();
         c.setTime(getDate());
-                
+        c.setTimeZone(TimeZone.getTimeZone("GMT"));
+        
         StringBuffer sb = new StringBuffer();
         sb.append(c.get(Calendar.YEAR)).append('-');
         sb.append(nulaNula(c.get(Calendar.MONTH) + 1)).append('-');
@@ -148,11 +134,11 @@ public class FieldNotesItem {
     }
     
     public void setDate(Date date) {
-        this.date = date;
+        this.date = date.getTime();
     }
     
     public void setDate(Calendar calendar) {
-        date = calendar.getTime();
+        date = calendar.getTime().getTime();
     }
     
     public String getGcCode() {

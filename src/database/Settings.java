@@ -1,13 +1,10 @@
 /*
  * Settings.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 16. říjen 2007, 21:11
+ *
  */
+
 package database;
 
 import gui.Gui;
@@ -16,21 +13,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
-import javax.microedition.lcdui.Choice;
 import javax.microedition.rms.RecordStore;
 
 /**
- * Tato třída si pamatuje nastavení aplikace a umož�?uje jeho správu
+ * Tato třída si pamatuje nastavení aplikace a umožňuje jeho správu
  * @author David Vavra
  */
 public class Settings
 {
-    //Internal GPS enum
-    public static final int INTERNAL_GPS_GENERAL = 0;
-    public static final int INTERNAL_GPS_GENERAL_1S = 1;
-    public static final int INTERNAL_GPS_SAMSUNG_SGH_I5X0 = 2;
-    public static final int INTERNAL_GPS_BLACKBERRY = 3;
-        
     //reference
     private Gui gui;
     
@@ -44,14 +34,10 @@ public class Settings
     public int flashbackPeriod;
     public String lastDevice;
     public boolean vip;
-    public boolean incrementalFieldNotes;
-    public boolean iconsInFieldNotes;
-    public boolean nameInFieldNotesFirst;
-    public boolean wrappedFieldNotesList;
-    public int internalGPSType;
     
     //ostatni promenne
-    private RecordStore recordStore;   
+    private RecordStore recordStore;
+    
     public Settings(Gui ref)
     {
         try
@@ -97,11 +83,6 @@ public class Settings
             flashbackPeriod = 4;
             lastDevice = "";
             vip = false;
-            incrementalFieldNotes = true;
-            iconsInFieldNotes = true;
-            nameInFieldNotesFirst = false;
-            wrappedFieldNotesList = true;
-            internalGPSType = INTERNAL_GPS_GENERAL;
             
             if (recordStore.getNumRecords() == 0)
             {  //prvni start aplikace
@@ -122,11 +103,6 @@ public class Settings
                 flashbackPeriod = DI.readInt();
                 lastDevice = DI.readUTF();
                 vip = DI.readBoolean();
-                incrementalFieldNotes = DI.readBoolean();
-                iconsInFieldNotes = DI.readBoolean();
-                nameInFieldNotesFirst = DI.readBoolean();
-                wrappedFieldNotesList = DI.readBoolean();
-                internalGPSType = DI.readInt();
             }
             return true;
         }
@@ -155,18 +131,9 @@ public class Settings
             {
                 flags[i] = (filter.substring(i,i+1).equals("1"))?true:false;
             }
-            gui.get_cgCacheFilter().setSelectedFlags(flags);
+            gui.get_cgOtherSettings().setSelectedFlags(flags);
             gui.get_tfNumberCaches().setString(String.valueOf(numberCaches));
             gui.get_tfBackLight().setString(String.valueOf(flashbackPeriod));
-            
-            flags = new boolean[4];
-            flags[0] = incrementalFieldNotes;
-            flags[1] = iconsInFieldNotes;
-            flags[2] = nameInFieldNotesFirst;
-            flags[3] = wrappedFieldNotesList;
-            gui.get_cgFieldNotes().setSelectedFlags(flags);
-            
-            gui.get_cgInternalGPSType().setSelectedIndex(internalGPSType, true);
         }
         catch (Exception e)
         {
@@ -183,8 +150,8 @@ public class Settings
         {
             name = gui.get_tfName().getString();
             password = gui.get_tfPassword().getString();
-            boolean[] selected = new boolean[gui.get_cgCacheFilter().size()];
-            gui.get_cgCacheFilter().getSelectedFlags(selected);
+            boolean[] selected = new boolean[gui.get_cgOtherSettings().size()];
+            gui.get_cgOtherSettings().getSelectedFlags(selected);
             filter = "";
             for (int i=0;i<selected.length;i++)
             {
@@ -194,18 +161,6 @@ public class Settings
             if (numberCaches > 20)
                 numberCaches = 20;
             flashbackPeriod = Integer.parseInt(gui.get_tfBackLight().getString());
-            
-            selected = new boolean[4];
-            gui.get_cgFieldNotes().getSelectedFlags(selected);
-            incrementalFieldNotes = selected[0];
-            iconsInFieldNotes = selected[1];
-            nameInFieldNotesFirst = selected[2];
-            wrappedFieldNotesList = selected[3];
-            
-            internalGPSType = gui.get_cgInternalGPSType().getSelectedIndex();
-            
-            gui.get_lstFieldNotes().setFitPolicy((wrappedFieldNotesList)? Choice.TEXT_WRAP_ON : Choice.TEXT_WRAP_OFF);
-            
             store(false);
         }
         catch (Exception e)
@@ -232,12 +187,6 @@ public class Settings
             dos.writeInt(flashbackPeriod);
             dos.writeUTF(lastDevice);
             dos.writeBoolean(vip);
-            dos.writeBoolean(incrementalFieldNotes);
-            dos.writeBoolean(iconsInFieldNotes);
-            dos.writeBoolean(nameInFieldNotesFirst);
-            dos.writeBoolean(wrappedFieldNotesList);
-            dos.writeInt(internalGPSType);
-            
             byte[] bytes = buffer.toByteArray();
             if (createNewRecord)
                 recordStore.addRecord(bytes, 0, bytes.length);
@@ -300,5 +249,5 @@ public class Settings
             gui.showError("saveCoordinates",e.toString(),"");
         }
     }    
- 
- }
+    
+}

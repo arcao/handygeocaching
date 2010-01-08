@@ -1,19 +1,18 @@
 /*
  * ImageCacheItem.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 19. červenec 2009, 16:02
+ *
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
  */
+
 package utils;
 
 import javax.microedition.lcdui.Image;
 
 /**
- * Trida reprezentujici polozku obrazku v kesi.
+ *
  * @author Arcao
  */
 public class ImageCacheItem {

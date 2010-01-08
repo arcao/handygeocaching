@@ -1,31 +1,12 @@
-/*
- * OpenFileBrowser.java
- * This file is part of HandyGeocaching.
- *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
- */
 package utils;
 
-import gui.LoadingForm;
-import java.io.IOException;
-import java.util.Enumeration;
-import javax.microedition.io.Connector;
-import javax.microedition.io.file.FileConnection;
-import javax.microedition.io.file.FileSystemRegistry;
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.List;
+import java.util.*;  
+import java.io.*;  
+import javax.microedition.io.*;  
+import javax.microedition.io.file.*;  
+import javax.microedition.midlet.*;  
+import javax.microedition.lcdui.*;  
    
-/**
- * Slouzi k vybrani souboru v pameti mobilu.
- * @author Arcao
- */
 public class OpenFileBrowser extends List implements CommandListener   
 {  
     private String currDirName;
@@ -55,7 +36,7 @@ public class OpenFileBrowser extends List implements CommandListener
     }
 
     
-    public OpenFileBrowser(Display display, CommandListener listener) {
+    public OpenFileBrowser(CommandListener listener, Display display) {
         super("", List.IMPLICIT);
         
         this.listener = listener;
@@ -91,7 +72,7 @@ public class OpenFileBrowser extends List implements CommandListener
                     display.setCurrent(backScreen);
                 list();
             } else {  
-                fileName = "file:///" + currDirName + currFile;
+                fileName = "file://localhost/" + currDirName + currFile;
                 if (nextScreen != null)
                     display.setCurrent(nextScreen);
                 if (listener != null)
@@ -114,10 +95,7 @@ public class OpenFileBrowser extends List implements CommandListener
         }  
     }
      
-    private void list() {
-        final LoadingForm lForm = new LoadingForm(display, "Načítám...", "Načítám seznam souborů...", this, null);
-        lForm.show();
-                
+    private void list() {  
         new Thread(new Runnable() {
             public void run() {
                 Enumeration e;
@@ -125,26 +103,28 @@ public class OpenFileBrowser extends List implements CommandListener
                     deleteAll();
                     if (MEGA_ROOT.equals(currDirName)) {
                         e = FileSystemRegistry.listRoots();
-                        while (e.hasMoreElements()) {
-                            append((String)e.nextElement(),null);
-                        }
                     } else {
-                        currDir = (FileConnection)Connector.open("file:///" + currDirName, Connector.READ);
-                        append(UP_DIRECTORY,null);
-                        
+                        System.out.println("connector");
+                        System.out.println("path: " + "file:///" + currDirName);
+                        if (currDir == null) {
+                            currDir = (FileConnection)Connector.open("file:///" + currDirName, Connector.READ);
+                        } else {
+                            currDir.setFileConnection("file:///" + currDirName);
+                        }
                         e = currDir.list();
-                        while (e.hasMoreElements()) {
-                            fileName = (String) e.nextElement();
-                            if (fileName.charAt(fileName.length()-1) == SEP)
-                                append(fileName,null);  
-                        }
-                        
-                        e = currDir.list("*", true);
-                        while (e.hasMoreElements()) {
-                            fileName = (String) e.nextElement();
-                            if (fileName.charAt(fileName.length()-1) != SEP && fileName.substring(fileName.length() - 4).toLowerCase() == ".gpx")
-                                append(fileName,null);
-                        }
+                        append(UP_DIRECTORY,null);
+                    }  
+                    while (e.hasMoreElements()) {
+                        System.out.println("list");
+                        String fileName = (String)e.nextElement();
+                        System.out.println("fileName:"+fileName+" char_at:"+fileName.charAt(fileName.length()-1));
+
+                        if (fileName.charAt(fileName.length()-1) == SEP) {
+                            append(fileName,null);  
+                        } else {  
+                            System.out.println("h4");  
+                            append(fileName,null);  
+                        }  
                     }
                     if (currDir != null) {
                         currDir.close();
@@ -153,13 +133,12 @@ public class OpenFileBrowser extends List implements CommandListener
                 } catch (IOException ioe) {  
                     System.out.println(ioe);  
                 }
-                lForm.setFinish();
             }  
         }).start();
     }
     
     private boolean openDirectory(String fileName) {  
-        System.out.println("fileName:"+fileName+" cur_dir:"+currDirName+" mega_root:"+MEGA_ROOT);  
+        System.out.println("fileName:"+fileName+"cur_dir:"+currDirName+"mega_root:"+MEGA_ROOT);  
         if (currDirName.equals(MEGA_ROOT)) {  
             if (fileName.equals(UP_DIRECTORY)) {  
                 // can not go up from MEGA_ROOT  
@@ -180,25 +159,5 @@ public class OpenFileBrowser extends List implements CommandListener
             currDirName = currDirName + fileName; 
         }  
         return true;
-    }
-    
-    public Object getTag() {
-        return tag;
-    }
-    
-    public void setTag(Object tag) {
-        this.tag = tag;
-    }
-    
-    public Displayable getBackScreen() {
-        return backScreen;
-    }
-    
-    public Displayable getNextScreen() {
-        return nextScreen;
-    }
-    
-    public String getFileName() {
-        return fileName;
     }
 }   

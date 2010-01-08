@@ -1,13 +1,10 @@
 /*
  * Database.java
- * This file is part of HandyGeocaching.
  *
- * HandyGeocaching is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * (read more at: http://www.gnu.org/licenses/gpl.html)
+ * Created on 17. říjen 2007, 9:45
+ *
  */
+
 package database;
 
 import gui.Gui;
@@ -16,7 +13,6 @@ import java.io.DataInputStream;
 import javax.microedition.rms.RecordComparator;
 import javax.microedition.rms.RecordFilter;
 import javax.microedition.rms.RecordStore;
-import javax.microedition.rms.RecordStoreNotOpenException;
 
 /**
  * Tato třída je pouze abstraktní - dědí od ní jednotlivé databáze
@@ -84,7 +80,6 @@ abstract class Database implements RecordFilter, RecordComparator
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
             gui.showError("deleteAll "+databaseName,ex.toString(),"");
         }
     }
@@ -107,7 +102,7 @@ abstract class Database implements RecordFilter, RecordComparator
             String s1 = dis1.readUTF();
             String s2 = dis2.readUTF();
             // porovnání jmen z prvního a druhého záznamu
-            int i = s1.toLowerCase().compareTo(s2.toLowerCase());
+            int i = s1.compareTo(s2);
             if (i == 0)
             {
                 // jména jsou stejná
@@ -131,30 +126,4 @@ abstract class Database implements RecordFilter, RecordComparator
         }
     }
     
-    public int usedSize() {
-        try {
-            return recordStore.getSize();
-        } catch (RecordStoreNotOpenException ex) {
-            ex.printStackTrace();
-            return 0;
-        }
-    }
-    
-    public int totalSize() {
-        try {
-            return recordStore.getSize() + recordStore.getSizeAvailable();
-        } catch (RecordStoreNotOpenException ex) {
-            ex.printStackTrace();
-            return 0;
-        }
-    }
-    
-    public int count() {
-        try {
-            return recordStore.getNumRecords();
-        } catch (RecordStoreNotOpenException ex) {
-            ex.printStackTrace();
-            return 0;
-        }
-    }
 }
