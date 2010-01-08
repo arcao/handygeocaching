@@ -48,55 +48,6 @@ public class Internal implements LocationListener
     }
     
     /**
-     * Vytvari objekt provideru. Na zaklade nastaveni bere v uvahu nastaveni criteria u internich GPS.
-     */
-    public LocationProvider createProvider() throws LocationException {
-        LocationProvider provider = null;
-        Criteria criteria = new Criteria();
-        criteria.setAltitudeRequired(true);
-        criteria.setSpeedAndCourseRequired(true);
-        criteria.setCostAllowed(true);
-
-        
-        switch(settings.internalGPSType) {
-            case Settings.INTERNAL_GPS_BLACKBERRY:
-                provider = LocationProvider.getInstance(null);
-                break;
-            case Settings.INTERNAL_GPS_SAMSUNG_SGH_I5X0:
-                //+PB, 17.5.2008: fix pro Samsung SGH-i550, SGH-i560
-                // tyto telefony nemaji provider pro rychlost a smer 
-                // a pokud je pozadujete, provider neprijde!
-                criteria.setSpeedAndCourseRequired(false);
-                provider = LocationProvider.getInstance(criteria);
-                break;
-            default:
-                provider = LocationProvider.getInstance(criteria);
-                break;  
-        }
-        
-        return provider;
-    }
-    
-    /**
-     * Registruje listener na zadany provider. U Siemens SXG75 a BBY se zada o sekundove tempo
-     * aktualizace.
-     *
-     * @param provider objekt provideru
-     */
-    public void registerLocationListener(LocationProvider provider) {
-        switch(settings.internalGPSType) {
-            case Settings.INTERNAL_GPS_BLACKBERRY:
-            case Settings.INTERNAL_GPS_SAMSUNG_SGH_I5X0:
-            case Settings.INTERNAL_GPS_GENERAL_1S:
-                provider.setLocationListener(this,1,1,1);
-                break;
-            default:
-                provider.setLocationListener(this,-1,-1,-1);
-                break;
-        }
-    }
-    
-    /**
      * Zacatek gps komunikace, vraci false pokud se nepodarilo pripojit
      */
     public boolean start()
@@ -105,35 +56,58 @@ public class Internal implements LocationListener
         {
             gui.getDisplay().setCurrent(gui.get_frmConnecting());
             gui.get_frmConnecting().append("Připojuji...\n");
+            Criteria criteria = new Criteria();
+            criteria.setPreferredResponseTime(1000);
+            criteria.setAltitudeRequired(true);
+            criteria.setSpeedAndCourseRequired(true);
+            //criteria.setCostAllowed(true);
+            provider = LocationProvider.getInstance(criteria);
             
-            provider = createProvider();
+            if (provider == null)
+            {
+                //+PB, 17.5.2008: fix pro Samsung SGH-i550, SGH-i560
+                // tyto telefony nemaji provider pro rychlost a smer 
+                // a pokud je pozadujete, provider neprijde!
+                gui.get_frmConnecting().append("Telefon je asi Samsung, že?\n");
+                criteria.setSpeedAndCourseRequired(false);
+                provider = LocationProvider.getInstance(criteria);
+            }
             
             if( provider!=null )
             {
+                //?PB: tohle se mi nelibi - u Siemens SXG75 vede na to, ze da souradnice tak
+                // jednou za minutu. chce to explicitne pozadat o sekundove tempo
+                // provider.setLocationListener(this,-1,-1,-1);
                 gui.get_frmConnecting().append("Našli jsme GPS přijímač\n");
-                registerLocationListener(provider);
+                provider.setLocationListener(this,3,1,1);
                 gui.get_frmConnecting().append("Přijímač zapnut\n");
             }
             else
             {
-                gui.showAlert("Nepodařilo se připojit k interní GPS. Nepovedlo se vytvořit provider.",AlertType.ERROR,gui.get_lstMode());
+                gui.showAlert("Nepodařilo se připojit k interní GPS (1)",AlertType.ERROR,gui.get_lstMode());
                 return false;
             }
-
-            if (provider.getState()!=LocationProvider.OUT_OF_SERVICE)
+            //-PB konec fixu   
+            
+            //?PB: tohle je ale blbost! Po spusteni bude mit provider stav
+               // TEMPORARILY_UNAVAILABLE 
+               // a to po nekolik desitek sekund, nez se chyti druzice...
+               // ! Navic v predesle variante kodu muze v tomto miste byt provider NULL!
+            // if( provider.getState()==LocationProvider.AVAILABLE)
+            if ( provider!=null && provider.getState()!=LocationProvider.OUT_OF_SERVICE)
             {
                 gui.get_frmConnecting().append("Připojeno\n");
                 return true;
             }
             else
             {
-                gui.showAlert("Nepodařilo se připojit k interní GPS. Je GPS zapnuto?",AlertType.ERROR,gui.get_lstMode());
+                gui.showAlert("Nepodařilo se připojit k interní GPS (2)",AlertType.ERROR,gui.get_lstMode());
                 return false;
             }
         }
         catch (LocationException ex)
         {
-            gui.showAlert("Nepodařilo se připojit k interní GPS: "+ex.toString(),AlertType.ERROR,gui.get_lstMode());
+            gui.showAlert("Nepodařilo se připojit k interní GPS (3)",AlertType.ERROR,gui.get_lstMode());
             return false;
         }
         catch (Exception e)
@@ -158,12 +132,12 @@ public class Internal implements LocationListener
                 if (nmea != null && nmea.length() > 0 && nmea.trim().startsWith("$GPGSV"))
                     gpsParser.receiveNmea(nmea.trim());
 
+                
+                QualifiedCoordinates coordinates = location.getQualifiedCoordinates();
+                if (coordinates.getHorizontalAccuracy() > 100) return; //zahazujeme velke nepresnosti
+                
                 gpsParser.nmeaCount++;
                 gpsParser.fix = true;
-                                
-                QualifiedCoordinates coordinates = location.getQualifiedCoordinates();
-                //if (coordinates.getHorizontalAccuracy() > 100) return; //zahazujeme velke nepresnosti
-                
                 gpsParser.latitude = coordinates.getLatitude();
                 String friendly = Coordinates.convert(Math.abs(coordinates.getLatitude()),Coordinates.DD_MM);
                 gpsParser.friendlyLattitude = ((gpsParser.latitude>0)?"N ":"S ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),2)+Utils.replaceString(Utils.addZerosAfter(friendly.substring(friendly.indexOf(':')), 7),":","° ");

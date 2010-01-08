@@ -333,8 +333,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private StringItem siRMSHint;
     private StringItem siRMSFieldNotes;
     private StringItem siRMSListing;
-    private Command cmdDownloadAll;
-    private ChoiceGroup cgInternalGPSType;//GEN-END:MVDFields
+    private Command cmdDownloadAll;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -2408,7 +2407,6 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 get_tfPassword(),
                 get_cgCacheFilter(),
                 get_tfNumberCaches(),
-                get_cgInternalGPSType(),
                 get_cgFieldNotes(),
                 get_tfBackLight(),
                 get_stringItem10()
@@ -4748,34 +4746,6 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         }//GEN-BEGIN:MVDGetEnd611
         return cmdDownloadAll;
     }//GEN-END:MVDGetEnd611
-
-    /** This method returns instance for cgInternalGPSType component and should be called instead of accessing cgInternalGPSType field directly.//GEN-BEGIN:MVDGetBegin613
-     * @return Instance for cgInternalGPSType component
-     */
-    public ChoiceGroup get_cgInternalGPSType() {
-        if (cgInternalGPSType == null) {//GEN-END:MVDGetBegin613
-            // Insert pre-init code here
-            cgInternalGPSType = new ChoiceGroup("Typ intern\u00ED GPS:", Choice.POPUP, new String[] {//GEN-BEGIN:MVDGetInit613
-                "Obecn\u00FD",
-                "Obec. 1s aktual.",
-                "Sam. SGH-i5x0",
-                "BlackBerry"
-            }, new Image[] {
-                null,
-                null,
-                null,
-                null
-            });
-            cgInternalGPSType.setSelectedFlags(new boolean[] {
-                true,
-                false,
-                false,
-                false
-            });//GEN-END:MVDGetInit613
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd613
-        return cgInternalGPSType;
-    }//GEN-END:MVDGetEnd613
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {
