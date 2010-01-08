@@ -179,7 +179,7 @@ public class Bluetooth implements DiscoveryListener
             bluetoothAdress = servRecord[0].getConnectionURL(ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false);
             discoveryAgent.cancelServiceSearch(transID);
             //zahajeni gps komunikace
-            gpsParser = gpsParser = new GpsParser(gui, http, settings, favourites, this, bluetoothAdress, GpsParser.BLUETOOTH);
+            gpsParser = new GpsParser(gui, http, settings, favourites, this, bluetoothAdress, GpsParser.BLUETOOTH);
             gpsParser.open();
         }
         catch (Exception e)

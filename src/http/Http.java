@@ -92,7 +92,7 @@ public class Http implements Runnable
     public String response; //odpoved HTTP, vyuziva se hlavne pri ukladani do cache
     public String favouriteResponse; //odpoved HTTP, vyuziva se pri ukladani do oblibenych
     private boolean refresh; //refresh mod - znovunacteni ulozene kese a aktualizace db
-    
+
     public Http(Gui ref, Settings ref2, Favourites ref3, IconLoader ref4, Patterns ref5)
     {
         gui = ref;
@@ -222,6 +222,7 @@ public class Http implements Runnable
                             settings.setVIP(true);
                         else
                             settings.setVIP(false);
+                        
                         start(previousAction, previousRefresh);
                     }
                 }
@@ -795,9 +796,13 @@ public class Http implements Runnable
             }            
             else if (data.equals("ERR_YOU_ARE_NOT_LOGGED"))
             {
-                gui.showAlert("Nejste přihlášen k GC.com, pravdědodobně vypršela vaše session.",AlertType.WARNING,gui.get_lstMenu());
                 gui.logged = false;
+                
+                //refresh musi byt true, jinak nacita stale z cache informaci, ze uzivatel neni prihlasen
+                start(action, true);
                 return false;
+                //gui.showAlert("Nejste přihlášen k GC.com, pravdědodobně vypršela vaše session.",AlertType.WARNING,gui.get_lstMenu());
+                //return false;
             }
             else if (data.equals("ERR_BAD_WAYPOINT"))
             {

@@ -260,6 +260,8 @@ public class GpsParser implements Runnable
             {
                 streamConnection = (StreamConnection)Connector.open(communicationURL);
                 inputStream = streamConnection.openInputStream();
+                if (source == GPS_HGE_100)
+                    outputStream = streamConnection.openOutputStream();
             }
             catch (Exception e)
             {
@@ -270,7 +272,6 @@ public class GpsParser implements Runnable
                 }
                 else if (source == GPS_HGE_100)
                 {
-                    outputStream = streamConnection.openOutputStream();
                     gui.showAlert("Nepovedlo se připojit k HGE-100. "+e.toString(),AlertType.ERROR,gui.get_lstMode());
                 }
                 else if (source == BLUETOOTH)
@@ -289,7 +290,7 @@ public class GpsParser implements Runnable
                 connectionSuccessfull();
             }
             
-            if (source == GPS_HGE_100) {
+            if (source == GPS_HGE_100 && outputStream != null) {
                 outputStream.write("$STA\r\n".getBytes()); // Tell HGE-100 to start transmitting NMEA data
             }
             
@@ -305,7 +306,7 @@ public class GpsParser implements Runnable
                     
                     ch = 0;
                     //cteni dat
-                    while (true) {
+                    while (thread != null) {
                         if (inputStream.available() > 0) {
                             ch = inputStream.read();
                             if (ch == -1) {
@@ -317,9 +318,10 @@ public class GpsParser implements Runnable
                             }
                         } else {
                             // let us rest for a bit
-                            try { Thread.sleep(100); } catch (InterruptedException e) { }
+                            //try { Thread.sleep(100); } catch (InterruptedException e) { }
+                            Thread.yield();
+                            
                         }
-                        if (thread == null) return;
                     }
 
                     nmea = sb.toString();
@@ -328,13 +330,14 @@ public class GpsParser implements Runnable
                 catch (Exception ex)
                 {
                     exception = ex.toString();
-                    //gui.showAlert("Někde se něco posralo s GPS: " + exception, AlertType.ERROR, null);
+                    gui.showAlert("Chyba při příjmu dat z GPS: " + exception, AlertType.ERROR, null);
                 }
             }
         }
         catch (Exception ex)
         {
             exception = ex.toString();
+            gui.showAlert("Chyba ve spojení s GPS: " + exception, AlertType.ERROR, null);
         }
         finally 
         {

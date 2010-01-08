@@ -139,10 +139,10 @@ public class OpenFileBrowser extends List implements CommandListener
                                 append(fileName,null);  
                         }
                         
-                        e = currDir.list("*.gpx", true);
+                        e = currDir.list("*", true);
                         while (e.hasMoreElements()) {
                             fileName = (String) e.nextElement();
-                            if (fileName.charAt(fileName.length()-1) != SEP)
+                            if (fileName.charAt(fileName.length()-1) != SEP && fileName.substring(fileName.length() - 4).toLowerCase() == ".gpx")
                                 append(fileName,null);
                         }
                     }

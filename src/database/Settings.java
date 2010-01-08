@@ -20,11 +20,17 @@ import javax.microedition.lcdui.Choice;
 import javax.microedition.rms.RecordStore;
 
 /**
- * Tato třída si pamatuje nastavení aplikace a umož�?uje jeho správu
+ * Tato třída si pamatuje nastavení aplikace a umož�?uje jeho správu
  * @author David Vavra
  */
 public class Settings
 {
+    //Internal GPS enum
+    public static final int INTERNAL_GPS_GENERAL = 0;
+    public static final int INTERNAL_GPS_GENERAL_1S = 1;
+    public static final int INTERNAL_GPS_SAMSUNG_SGH_I5X0 = 2;
+    public static final int INTERNAL_GPS_BLACKBERRY = 3;
+        
     //reference
     private Gui gui;
     
@@ -42,6 +48,7 @@ public class Settings
     public boolean iconsInFieldNotes;
     public boolean nameInFieldNotesFirst;
     public boolean wrappedFieldNotesList;
+    public int internalGPSType;
     
     //ostatni promenne
     private RecordStore recordStore;   
@@ -94,6 +101,7 @@ public class Settings
             iconsInFieldNotes = true;
             nameInFieldNotesFirst = false;
             wrappedFieldNotesList = true;
+            internalGPSType = INTERNAL_GPS_GENERAL;
             
             if (recordStore.getNumRecords() == 0)
             {  //prvni start aplikace
@@ -118,6 +126,7 @@ public class Settings
                 iconsInFieldNotes = DI.readBoolean();
                 nameInFieldNotesFirst = DI.readBoolean();
                 wrappedFieldNotesList = DI.readBoolean();
+                internalGPSType = DI.readInt();
             }
             return true;
         }
@@ -156,6 +165,8 @@ public class Settings
             flags[2] = nameInFieldNotesFirst;
             flags[3] = wrappedFieldNotesList;
             gui.get_cgFieldNotes().setSelectedFlags(flags);
+            
+            gui.get_cgInternalGPSType().setSelectedIndex(internalGPSType, true);
         }
         catch (Exception e)
         {
@@ -191,6 +202,8 @@ public class Settings
             nameInFieldNotesFirst = selected[2];
             wrappedFieldNotesList = selected[3];
             
+            internalGPSType = gui.get_cgInternalGPSType().getSelectedIndex();
+            
             gui.get_lstFieldNotes().setFitPolicy((wrappedFieldNotesList)? Choice.TEXT_WRAP_ON : Choice.TEXT_WRAP_OFF);
             
             store(false);
@@ -223,6 +236,7 @@ public class Settings
             dos.writeBoolean(iconsInFieldNotes);
             dos.writeBoolean(nameInFieldNotesFirst);
             dos.writeBoolean(wrappedFieldNotesList);
+            dos.writeInt(internalGPSType);
             
             byte[] bytes = buffer.toByteArray();
             if (createNewRecord)
@@ -286,5 +300,5 @@ public class Settings
             gui.showError("saveCoordinates",e.toString(),"");
         }
     }    
-    
-}
+ 
+ }
