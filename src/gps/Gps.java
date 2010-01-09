@@ -111,11 +111,12 @@ public class Gps implements Runnable
      */
     public void stop()
     {
-        thread = null;
         if (action==NAVIGATION || action==MAP )
         {
             track.stop();
         }
+        //thread.interrupt();
+        thread = null;
     }
     
     /**

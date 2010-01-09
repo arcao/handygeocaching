@@ -324,8 +324,10 @@ public class GpsParser implements Runnable
                         }
                     }
 
-                    nmea = sb.toString();
-                    receiveNmea(nmea);
+                    if (thread != null) {
+                        nmea = sb.toString();
+                        receiveNmea(nmea);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -434,7 +436,12 @@ public class GpsParser implements Runnable
             int starIndex = nmea.indexOf('*');
             if (starIndex != -1)
                 nmea = nmea.substring(0, starIndex);
-            String [] param = StringTokenizer.getArray(nmea.trim(), ",");
+            
+            nmea = nmea.trim();
+            if (!nmea.startsWith("$"))
+                return;
+            
+            String [] param = StringTokenizer.getArray(nmea, ",");
             //Zephy oprava 20.12.07 +\
             int PocetPrvkuParam = param.length;
             //Zephy oprava 20.12.07 +/

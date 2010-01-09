@@ -16,6 +16,7 @@ import java.util.Enumeration;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
+import javax.microedition.io.file.IllegalModeException;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
@@ -87,8 +88,13 @@ public class OpenFileBrowser extends List implements CommandListener
             
             if (currFile.endsWith(SEP_STR) || currFile.equals(UP_DIRECTORY)) {  
                 System.out.println("dirUP");
-                if (!openDirectory(currFile))
-                    display.setCurrent(backScreen);
+                if (!openDirectory(currFile)) {
+                    if (backScreen != null)
+                        display.setCurrent(backScreen);
+                    if (listener != null)
+                        listener.commandAction(CANCEL, this);
+                    return;
+                }
                 list();
             } else {  
                 fileName = "file:///" + currDirName + currFile;
@@ -117,6 +123,8 @@ public class OpenFileBrowser extends List implements CommandListener
     private void list() {
         final LoadingForm lForm = new LoadingForm(display, "Načítám...", "Načítám seznam souborů...", this, null);
         lForm.show();
+        
+        final OpenFileBrowser that = this;
                 
         new Thread(new Runnable() {
             public void run() {
@@ -139,20 +147,29 @@ public class OpenFileBrowser extends List implements CommandListener
                                 append(fileName,null);  
                         }
                         
-                        e = currDir.list("*", true);
+                        e = currDir.list();
                         while (e.hasMoreElements()) {
                             fileName = (String) e.nextElement();
-                            if (fileName.charAt(fileName.length()-1) != SEP && fileName.substring(fileName.length() - 4).toLowerCase() == ".gpx")
+                            if (fileName.length() >= 4 && fileName.substring(fileName.length() - 4).equalsIgnoreCase(".gpx"))
                                 append(fileName,null);
                         }
                     }
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                } catch (IllegalModeException ime) {
+                    ime.printStackTrace();
+                    
+                    if (backScreen != null)
+                        display.setCurrent(backScreen);
+                    if (listener != null)
+                        listener.commandAction(CANCEL, that);
+                    return;
+                } finally {
                     if (currDir != null) {
-                        currDir.close();
+                        try { currDir.close(); } catch (Exception ex) { }
                         currDir = null;
                     }
-                } catch (IOException ioe) {  
-                    System.out.println(ioe);  
-                }
+                }    
                 lForm.setFinish();
             }  
         }).start();
