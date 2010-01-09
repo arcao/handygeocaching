@@ -432,9 +432,9 @@ public class GpsParser implements Runnable
         try
         {
             int starIndex = nmea.indexOf('*');
-            if (starIndex == -1)
-                return;
-            String [] param = StringTokenizer.getArray(nmea.substring(0, starIndex), ",");
+            if (starIndex != -1)
+                nmea = nmea.substring(0, starIndex);
+            String [] param = StringTokenizer.getArray(nmea.trim(), ",");
             //Zephy oprava 20.12.07 +\
             int PocetPrvkuParam = param.length;
             //Zephy oprava 20.12.07 +/

@@ -12,6 +12,7 @@ package gps;
 
 import database.Settings;
 import gui.Gui;
+import java.util.Vector;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.location.Coordinates;
 import javax.microedition.location.Criteria;
@@ -20,6 +21,7 @@ import javax.microedition.location.LocationException;
 import javax.microedition.location.LocationListener;
 import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
+import utils.StringTokenizer;
 import utils.Utils;
 
 /**
@@ -154,10 +156,6 @@ public class Internal implements LocationListener
         {
             if (location.isValid())
             {
-                String nmea = location.getExtraInfo("application/X-jsr179-location-nmea");
-                if (nmea != null && nmea.length() > 0 && nmea.trim().startsWith("$GPGSV"))
-                    gpsParser.receiveNmea(nmea.trim());
-
                 gpsParser.nmeaCount++;
                 gpsParser.fix = true;
                                 
@@ -183,6 +181,17 @@ public class Internal implements LocationListener
                 double speed = location.getSpeed();
                 if (!Double.isNaN(speed))
                     gpsParser.speed = speed; // km/h nebo m/s? buh vi. Dle dokumentace m/s, dle implementace v telefonech km/h. :)
+                
+                //Pokud podporuje application/X-jsr179-location-nmea, muzou se ziskat lepsi, pripadne dalsi informace. Stavajici prepise.  
+                String nmea = location.getExtraInfo("application/X-jsr179-location-nmea");
+                if (nmea != null && nmea.length() > 0) {
+                    Vector lines = StringTokenizer.getVector(nmea, "$");
+                    for(int i = 0; i < lines.size(); i++) {
+                        String line = (String) lines.elementAt(i);
+                        if (line.length() > 0)
+                            gpsParser.receiveNmea("$" + nmea);
+                    }
+                }
             }
             else
             {
