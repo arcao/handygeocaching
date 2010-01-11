@@ -392,9 +392,9 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                         getDisplay().setCurrent(get_frmAbout());//GEN-LINE:MVDCAAction41
                         // Insert post-action code here
                         siVerze.setText(getAppProperty("MIDlet-Version")+"\n");
-                        get_siSestaveni().setText(getAppProperty("Build-Vendor")+"-"+getAppProperty("Build-Version")+"\n");
+                        //get_siSestaveni().setText(getAppProperty("Build-Vendor")+"-"+getAppProperty("Build-Version")+"\n");
                         if (settings.vip)
-                            siDonate.setText("Děkuji moc za Váš příspěvek na vývoj aplikace! (č.účtu autora je 51-5385890237/0100)");
+                            siDonate.setText("Děkuji moc za Váš příspěvek na vývoj aplikace!");
                         break;//GEN-BEGIN:MVDCACase41
                     case 6://GEN-END:MVDCACase41
                         // Insert pre-action code here
@@ -2325,6 +2325,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public Form get_frmAbout() {
         if (frmAbout == null) {//GEN-END:MVDGetBegin126
             // Insert pre-init code here
+            /*
             frmAbout = new Form("Handy Geocaching", new Item[] {//GEN-BEGIN:MVDGetInit126
                 get_siVerze(),
                 get_siSestaveni(),
@@ -2334,7 +2335,15 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             frmAbout.addCommand(get_cmdBack());
             frmAbout.addCommand(get_cmdMemoryInfo());
             frmAbout.setCommandListener(this);//GEN-END:MVDGetInit126
-            // Insert post-init code here
+            */
+            frmAbout = new Form("Handy Geocaching", new Item[] {
+                get_siVerze(),
+                get_stringItem1(),
+                get_siDonate()
+            });
+            frmAbout.addCommand(get_cmdBack());
+            frmAbout.addCommand(get_cmdMemoryInfo());
+            frmAbout.setCommandListener(this);
         }//GEN-BEGIN:MVDGetEnd126
         return frmAbout;
     }//GEN-END:MVDGetEnd126
@@ -2357,8 +2366,10 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public StringItem get_stringItem1() {
         if (stringItem1 == null) {//GEN-END:MVDGetBegin128
             // Insert pre-init code here
+            /*
             stringItem1 = new StringItem("O aplikaci:", "Tuto aplikaci sponzoruje Axima spol. s.r.o., Palack\u00E9ho t\u0159\u00EDda 16, 61200 Brno.\n\nAplikaci vytvo\u0159il David V\u00E1vra (Destil). Kontakt: me@destil.cz\n\nV p\u0159\u00EDpad\u011B probl\u00E9m\u016F a pro v\u00EDce informac\u00ED nav\u0161tivte str\u00E1nky http://hg.destil.cz");//GEN-LINE:MVDGetInit128
-            stringItem1.setText(stringItem1.getText()+"\n");
+            */
+            stringItem1 = new StringItem("O aplikaci:", "Tuto aplikaci sponzoruje Axima spol. s.r.o., Palack\u00E9ho t\u0159\u00EDda 16, 61200 Brno.\n\nAplikaci vytvo\u0159il David V\u00E1vra (Destil). Nyní aplikaci vyvíjí Martin Sloup (Arcao)\n\nV p\u0159\u00EDpad\u011B probl\u00E9m\u016F a pro v\u00EDce informac\u00ED nav\u0161tivte str\u00E1nky http://code.google.com/p/handygeocaching\n"); 
 // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd128
         return stringItem1;
@@ -3163,7 +3174,10 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public StringItem get_siDonate() {
         if (siDonate == null) {//GEN-END:MVDGetBegin281
             // Insert pre-init code here
+            /*
             siDonate = new StringItem("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED, podpo\u0159te finan\u010Dn\u011B jej\u00ED v\u00FDvoj! Za\u0161lete pros\u00EDm libovolnou \u010D\u00E1stku na \u00FA\u010Det autora:\n\n51-5385890237/0100\n\nVe zpr\u00E1v\u011B pro p\u0159\u00EDjemce uve\u010F\u0165e sv\u016Fj nick na GC.com, p\u0159estane se V\u00E1m pak ukazovat \u00FAvodn\u00ED reklama.");//GEN-LINE:MVDGetInit281
+            */
+            siDonate = new StringItem("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED, podpo\u0159te finan\u010Dn\u011B jej\u00ED v\u00FDvoj! Za\u0161lete pros\u00EDm libovolnou \u010D\u00E1stku na \u00FA\u010Det autora:\n\n670100-2201481946/6210\n\nVe zpr\u00E1v\u011B pro p\u0159\u00EDjemce uve\u010F\u0165e sv\u016Fj nick na GC.com, p\u0159estane se V\u00E1m pak ukazovat \u00FAvodn\u00ED reklama.");
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd281
         return siDonate;

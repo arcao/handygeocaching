@@ -18,22 +18,15 @@ import database.Settings;
 import gps.Gps;
 import gui.Gui;
 import gui.IconLoader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Gauge;
 import javax.microedition.lcdui.StringItem;
-import utils.ConfirmDialog;
-import utils.StringTokenizer;
 import utils.Utils;
 
 /***
