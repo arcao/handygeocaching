@@ -155,7 +155,7 @@ public class Patterns extends Database
                 byte[] bytes = buffer.toByteArray();
                 recordStore.addRecord(bytes, 0, bytes.length);
             }
-            gui.showAlert("Vzorečky byly úspěšně uloženy do MultiSolveru",AlertType.INFO,gui.get_frmOverview());
+            gui.showAlert("Vzorečky byly úspěšně uloženy do MultiSolveru",AlertType.INFO,gui.get_frmOverview(), true);
         }
         catch (Exception ex)
         {

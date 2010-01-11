@@ -306,7 +306,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Command cmdNastavit;
     private Command cmdAddFieldNotes;
     private StringItem siNalezeno1;
-    private StringItem siSestaveni;
     private TextBox tbPoznamka;
     private Command cmdPoznamka;
     private StringItem siPoznamka;
@@ -392,7 +391,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                         getDisplay().setCurrent(get_frmAbout());//GEN-LINE:MVDCAAction41
                         // Insert post-action code here
                         siVerze.setText(getAppProperty("MIDlet-Version")+"\n");
-                        //get_siSestaveni().setText(getAppProperty("Build-Vendor")+"-"+getAppProperty("Build-Version")+"\n");
+                        
                         if (settings.vip)
                             siDonate.setText("Děkuji moc za Váš příspěvek na vývoj aplikace!");
                         break;//GEN-BEGIN:MVDCACase41
@@ -1547,7 +1546,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                     fRet = get_lstMenu(); 
                 }
                 
-                showAlert("Field note uloženo.", AlertType.INFO, fRet);
+                showAlert("Field note uloženo.", AlertType.INFO, fRet, true);
             }//GEN-BEGIN:MVDCACase554
         } else if (displayable == frmMemoryInfo) {
             if (command == cmdBack) {//GEN-END:MVDCACase554
@@ -2326,15 +2325,14 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         if (frmAbout == null) {//GEN-END:MVDGetBegin126
             // Insert pre-init code here
             /*
-            frmAbout = new Form("Handy Geocaching", new Item[] {//GEN-BEGIN:MVDGetInit126
-                get_siVerze(),
-                get_siSestaveni(),
-                get_stringItem1(),
-                get_siDonate()
-            });
-            frmAbout.addCommand(get_cmdBack());
-            frmAbout.addCommand(get_cmdMemoryInfo());
-            frmAbout.setCommandListener(this);//GEN-END:MVDGetInit126
+frmAbout = new Form ("Handy Geocaching", new Item[] {//GEN-BEGIN:MVDGetInit126
+get_siVerze(),
+get_stringItem1(),
+get_siDonate()
+});
+frmAbout.addCommand (get_cmdBack());
+frmAbout.addCommand (get_cmdMemoryInfo());
+frmAbout.setCommandListener (this);//GEN-END:MVDGetInit126
             */
             frmAbout = new Form("Handy Geocaching", new Item[] {
                 get_siVerze(),
@@ -2367,7 +2365,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         if (stringItem1 == null) {//GEN-END:MVDGetBegin128
             // Insert pre-init code here
             /*
-            stringItem1 = new StringItem("O aplikaci:", "Tuto aplikaci sponzoruje Axima spol. s.r.o., Palack\u00E9ho t\u0159\u00EDda 16, 61200 Brno.\n\nAplikaci vytvo\u0159il David V\u00E1vra (Destil). Kontakt: me@destil.cz\n\nV p\u0159\u00EDpad\u011B probl\u00E9m\u016F a pro v\u00EDce informac\u00ED nav\u0161tivte str\u00E1nky http://hg.destil.cz");//GEN-LINE:MVDGetInit128
+stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spol. s.r.o., Palack\u00E9ho t\u0159\u00EDda 16, 61200 Brno.\n\nAplikaci vytvo\u0159il David V\u00E1vra (Destil). Kontakt: me@destil.cz\n\nV p\u0159\u00EDpad\u011B probl\u00E9m\u016F a pro v\u00EDce informac\u00ED nav\u0161tivte str\u00E1nky http://hg.destil.cz");//GEN-LINE:MVDGetInit128
             */
             stringItem1 = new StringItem("O aplikaci:", "Tuto aplikaci sponzoruje Axima spol. s.r.o., Palack\u00E9ho t\u0159\u00EDda 16, 61200 Brno.\n\nAplikaci vytvo\u0159il David V\u00E1vra (Destil). Nyní aplikaci vyvíjí Martin Sloup (Arcao)\n\nV p\u0159\u00EDpad\u011B probl\u00E9m\u016F a pro v\u00EDce informac\u00ED nav\u0161tivte str\u00E1nky http://code.google.com/p/handygeocaching\n"); 
 // Insert post-init code here
@@ -3175,7 +3173,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         if (siDonate == null) {//GEN-END:MVDGetBegin281
             // Insert pre-init code here
             /*
-            siDonate = new StringItem("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED, podpo\u0159te finan\u010Dn\u011B jej\u00ED v\u00FDvoj! Za\u0161lete pros\u00EDm libovolnou \u010D\u00E1stku na \u00FA\u010Det autora:\n\n51-5385890237/0100\n\nVe zpr\u00E1v\u011B pro p\u0159\u00EDjemce uve\u010F\u0165e sv\u016Fj nick na GC.com, p\u0159estane se V\u00E1m pak ukazovat \u00FAvodn\u00ED reklama.");//GEN-LINE:MVDGetInit281
+siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED, podpo\u0159te finan\u010Dn\u011B jej\u00ED v\u00FDvoj! Za\u0161lete pros\u00EDm libovolnou \u010D\u00E1stku na \u00FA\u010Det autora:\n\n51-5385890237/0100\n\nVe zpr\u00E1v\u011B pro p\u0159\u00EDjemce uve\u010F\u0165e sv\u016Fj nick na GC.com, p\u0159estane se V\u00E1m pak ukazovat \u00FAvodn\u00ED reklama.");//GEN-LINE:MVDGetInit281
             */
             siDonate = new StringItem("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED, podpo\u0159te finan\u010Dn\u011B jej\u00ED v\u00FDvoj! Za\u0161lete pros\u00EDm libovolnou \u010D\u00E1stku na \u00FA\u010Det autora:\n\n670100-2201481946/6210\n\nVe zpr\u00E1v\u011B pro p\u0159\u00EDjemce uve\u010F\u0165e sv\u016Fj nick na GC.com, p\u0159estane se V\u00E1m pak ukazovat \u00FAvodn\u00ED reklama.");
             // Insert post-init code here
@@ -4355,17 +4353,6 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         return siNalezeno1;
     }//GEN-END:MVDGetEnd510
     
-    /** This method returns instance for siSestaveni component and should be called instead of accessing siSestaveni field directly.//GEN-BEGIN:MVDGetBegin514
-     * @return Instance for siSestaveni component
-     */
-    public StringItem get_siSestaveni() {
-        if (siSestaveni == null) {//GEN-END:MVDGetBegin514
-            // Insert pre-init code here
-            siSestaveni = new StringItem("Speci\u00E1ln\u00ED sestaven\u00ED:", "");//GEN-LINE:MVDGetInit514
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd514
-        return siSestaveni;
-    }//GEN-END:MVDGetEnd514
     
     /** This method returns instance for tbPoznamka component and should be called instead of accessing tbPoznamka field directly.//GEN-BEGIN:MVDGetBegin515
      * @return Instance for tbPoznamka component
@@ -4841,10 +4828,20 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         getDisplay().setCurrent(get_tbError());
     }
     
+    public Alert showAlert(String text, AlertType type, Displayable next, boolean useTimeout) {
+        final int TIMEOUT = 800;
+        
+        return showAlert(text, type, next, useTimeout?TIMEOUT:0);
+    }
+    
+    public Alert showAlert(String text, AlertType type, Displayable next) {
+        return showAlert(text, type, next, 0);
+    }
+    
     /**
      * Tato metoda se pouziva k zobrazovani alertu v aplikaci
      */
-    public Alert showAlert(String text, AlertType type, Displayable next) {
+    public Alert showAlert(String text, AlertType type, Displayable next, int timeout) {
         String caption = "";
         if (type == AlertType.ALARM)
             caption = "Alarm";
@@ -4858,8 +4855,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
             caption = "Upozornění";
         Alert alert = new Alert(caption,text,null,type);
         alert.setTimeout(Alert.FOREVER);
-        if (type == AlertType.INFO)
-            alert.setTimeout(800);
+        if (timeout > 0)
+            alert.setTimeout(timeout);
         if (next == null) next = getDisplay().getCurrent();
         getDisplay().setCurrent(alert, next);
         return alert;

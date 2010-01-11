@@ -533,7 +533,6 @@
             </ContainerProperty>
             <ContainerProperty name="items">
                 <ContainerPropertyItem value="siVerze"/>
-                <ContainerPropertyItem value="siSestaveni"/>
                 <ContainerPropertyItem value="stringItem1"/>
                 <ContainerPropertyItem value="siDonate"/>
             </ContainerProperty>
@@ -2116,11 +2115,6 @@
             <Property name="text" value="STRING:"/>
             <ContainerProperty name="commands"/>
         </DesignComponent>
-        <DesignComponent id="siSestaveni" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="514">
-            <Property name="label" value="STRING:Speci\u00E1ln\u00ED sestaven\u00ED:"/>
-            <Property name="text" value="STRING:"/>
-            <ContainerProperty name="commands"/>
-        </DesignComponent>
         <DesignComponent id="tbPoznamka" typeid="MIDP:javax.microedition.lcdui.TextBox" uid="515">
             <Property name="title" value="STRING:Pozn\u00E1mka pro ..."/>
             <Property name="maxSize" value="8192"/>
@@ -2588,7 +2582,6 @@
         <Link id="$CommandAction26$ActionLink" path="6000,200,6150,200,6150,347,3250,347,3250,184,3352,184"/>
         <Link id="$CommandAction27$ActionLink" path="1240,848,1369,848,1369,1105,827,1105,827,1272,872,1272"/>
         <Link id="$CommandAction29$ActionLink" path="6320,200,6455,200,6455,1337,713,1337,713,1272,872,1272"/>
-        <Link id="$SelectCaseCommandAction9$ActionLink" path="904,1224,904,1130,1051,1130,1051,1160,1160,1160"/>
         <Link id="$CommandAction32$ActionLink" path="1240,1160,1308,1160,1308,1338,713,1338,713,1272,872,1272"/>
         <Link id="$CommandAction11$ActionLink" path="2472,200,2597,200,2597,695,562,695,562,1160,600,1160"/>
         <Link id="$CommandAction36$ActionLink" path="5680,200,5813,200,5813,184,5920,184"/>
@@ -2641,6 +2634,7 @@
         <Link id="$CommandAction105$ActionLink" path="3384,237,3384,365,1378,365,1378,608,1440,608"/>
         <Link id="$CommandAction106$ActionLink" path="1240,832,1409,832,1409,938,2059,938,2059,1216,2096,1216"/>
         <Link id="$CommandAction107$ActionLink" path="2176,1232,2243,1232,2243,683,1112,683,1112,832,1160,832"/>
+        <Link id="$SelectCaseCommandAction9$ActionLink" path="904,1224,904,1130,1051,1130,1051,1160,1160,1160"/>
     </FlowDocument>
     <ScreenDesigner version="1.0">
         <CustomScreenSize height="128" width="128"/>

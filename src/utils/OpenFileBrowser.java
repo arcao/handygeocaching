@@ -156,6 +156,14 @@ public class OpenFileBrowser extends List implements CommandListener
                     }
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
+                } catch (SecurityException se) {
+                    se.printStackTrace();
+                    
+                    if (backScreen != null)
+                        display.setCurrent(backScreen);
+                    if (listener != null)
+                        listener.commandAction(CANCEL, that);
+                    return;
                 } catch (IllegalModeException ime) {
                     ime.printStackTrace();
                     

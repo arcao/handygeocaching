@@ -27,6 +27,7 @@ import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Gauge;
 import javax.microedition.lcdui.StringItem;
+import utils.StringTokenizer;
 import utils.Utils;
 
 /***
@@ -36,6 +37,7 @@ import utils.Utils;
  */
 public class Http implements Runnable
 {
+    
     
     //adresa skriptu
     private static final String url = "http://handygeocaching.sluzba.cz/handy31.php";
@@ -198,14 +200,14 @@ public class Http implements Runnable
             case LOGIN:
                 try
                 {
-                    response = downloadData("part=login&sessid="+Utils.sessionId(settings.name, settings.password)+"&version="+gui.getAppProperty("MIDlet-Version")+"&light=0&build="+gui.getAppProperty("Build-Vendor")+"-"+gui.getAppProperty("Build-Version"), false, false);
+                    response = downloadData("part=login&sessid="+Utils.sessionId(settings.name, settings.password)+"&version="+gui.getAppProperty("MIDlet-Version")+"&light=0", false, false);
                     if (checkData(response))
                     {
                         String[][] login = parseData(response);
                         cookie = login[0][0];
                         gui.logged = true;
                         //kontrola verze
-                        if (!login[0][1].equals("OK"))
+                        if (!login[0][1].equals("OK") && compareVersion(gui.getAppProperty("MIDlet-Version"), login[0][1]) < 0)
                         {
                             gui.showAlert("Je k dispozici nová verze aplikace: "+login[0][1],AlertType.INFO,gui.get_frmLoading());
                             t.sleep(3000);
@@ -906,6 +908,56 @@ public class Http implements Runnable
             gui.showError("parseData",e.toString(),data);
             return null;
         }
+    }
+
+    private static int compareVersion(String ver1, String ver2) {
+        int[] intVer1 = parseVersion(ver1);
+        int[] intVer2 = parseVersion(ver2);
+        
+        int cmp;
+        
+        if (intVer1.length <= intVer2.length) {
+            for(int i = 0; i < intVer1.length; i++) {
+                int num = (i < intVer1.length) ? intVer1[i] : 0;
+                
+                cmp = compareNumber(num, intVer2[i]);
+                if (cmp != 0)
+                    return cmp;
+            }            
+            return 0;
+        } else {
+            for(int i = 0; i < intVer2.length; i++) {
+                int num = (i < intVer2.length) ? intVer2[i] : 0;
+                
+                cmp = compareNumber(intVer1[i], num);
+                if (cmp != 0)
+                    return cmp;
+            }
+            return 0;
+        }
+    }
+    
+    private static int compareNumber(int number1, int number2) {
+       if (number1 > number2)
+           return 1;
+       if (number1 < number2)
+           return -1;
+       return 0;
+    }
+    
+    private static int[] parseVersion(String version) {
+        String[] stringArray = StringTokenizer.getArray(version, ".");
+        int[] intArray = new int[stringArray.length];
+        
+        for(int i = 0; i < intArray.length; i++) {
+            try {
+                intArray[i] = Integer.parseInt(stringArray[i]);
+            } catch (NumberFormatException e) {
+                intArray[i] = 0;
+            }
+        }
+        
+        return intArray;
     }
     
     

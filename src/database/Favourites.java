@@ -280,12 +280,12 @@ public class Favourites extends Database
                 
                 if (!name.equals("_Poslední cache") && !name.equals("_Poslední keš") && editId==-1)
                 {
-                    if (nextScreen != null) alert = gui.showAlert("Uloženo do oblíbených",AlertType.INFO,nextScreen);
+                    if (nextScreen != null) alert = gui.showAlert("Uloženo do oblíbených",AlertType.INFO,nextScreen, true);
                 }
                 //Zephy 19.11.07 +\ -tohle doplneno aby se po skonceni editace preslo na seznam bodu
                 else
                 {
-                    if (nextScreen != null) alert = gui.showAlert("Změny uloženy",AlertType.INFO,nextScreen);
+                    if (nextScreen != null) alert = gui.showAlert("Změny uloženy",AlertType.INFO,nextScreen, true);
                 }
                 //Zephy 19.11.07 +/
                 
