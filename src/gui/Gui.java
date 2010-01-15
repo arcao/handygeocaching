@@ -88,10 +88,14 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     
     private FieldNotesItem fieldNoteItem = null;
     
+    private static Gui gui = null;
+    
     /***
      * Creates a new instance of Gui
      */
     public Gui() {
+        gui = this;
+        
         settings = new Settings(this);
         iconLoader = new IconLoader(this);
         favourites = new Favourites(this, settings, iconLoader);
@@ -4929,5 +4933,9 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         get_siRMSHint().setText(http.getHintCache().usedSize() / 1024 + "/" + http.getHintCache().totalSize() / 1024 + " (" + http.getHintCache().count() + ")");
         get_siRMSListing().setText(http.getListingCache().usedSize() / 1024 + "/" + http.getListingCache().totalSize() / 1024 + " (" + http.getListingCache().count() + ")");
         get_siRMSFieldNotes().setText(FieldNotes.getInstance().usedSize() / 1024 + "/" + FieldNotes.getInstance().totalSize() / 1024 + " (" + FieldNotes.getInstance().count() + ")");
+    }
+    
+    public static Gui getInstance() {
+        return gui;
     }
 }

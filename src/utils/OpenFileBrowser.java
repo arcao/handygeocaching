@@ -10,6 +10,7 @@
  */
 package utils;
 
+import gui.Gui;
 import gui.LoadingForm;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -17,6 +18,7 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
 import javax.microedition.io.file.IllegalModeException;
+import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
@@ -49,6 +51,8 @@ public class OpenFileBrowser extends List implements CommandListener
     private Display display;
     private FileConnection currDir = null;
     
+    private boolean buggyAPI = false; 
+    
     private Object tag;
 
     public static boolean isApiAvailable() {
@@ -57,7 +61,7 @@ public class OpenFileBrowser extends List implements CommandListener
 
     
     public OpenFileBrowser(Display display, CommandListener listener) {
-        super("", List.IMPLICIT);
+        super("Otevřít GPX..", List.IMPLICIT);
         
         this.listener = listener;
         this.display = display;
@@ -70,8 +74,10 @@ public class OpenFileBrowser extends List implements CommandListener
     }
     
     public boolean open(Displayable nextScreen) {
-        if (!isApiAvailable())
+        if (!isApiAvailable()) {
+            Gui.getInstance().showAlert("Telefon neumožňuje načítat soubory.", AlertType.ERROR, display.getCurrent());
             return false;
+        }
         
         this.nextScreen = nextScreen;
         backScreen = display.getCurrent();
@@ -96,8 +102,12 @@ public class OpenFileBrowser extends List implements CommandListener
                     return;
                 }
                 list();
-            } else {  
-                fileName = "file:///" + currDirName + currFile;
+            } else {
+                if (!buggyAPI) {
+                    fileName = "file:///" + currDirName + currFile;
+                } else {
+                    fileName = "file://" + currDirName + currFile;
+                }
                 if (nextScreen != null)
                     display.setCurrent(nextScreen);
                 if (listener != null)
@@ -121,6 +131,7 @@ public class OpenFileBrowser extends List implements CommandListener
     }
      
     private void list() {
+        try {
         final LoadingForm lForm = new LoadingForm(display, "Načítám...", "Načítám seznam souborů...", this, null);
         lForm.show();
         
@@ -137,13 +148,22 @@ public class OpenFileBrowser extends List implements CommandListener
                             append((String)e.nextElement(),null);
                         }
                     } else {
-                        currDir = (FileConnection)Connector.open("file:///" + currDirName, Connector.READ);
+                        currDir = null;
+                        
+                        if (!buggyAPI)
+                            currDir = (FileConnection)Connector.open("file:///" + currDirName, Connector.READ);
+                        
+                        if (currDir == null || !currDir.exists()) {
+                            currDir = (FileConnection)Connector.open("file://" + currDirName, Connector.READ);
+                            buggyAPI = true;
+                        }
+                        
                         append(UP_DIRECTORY,null);
                         
                         e = currDir.list();
                         while (e.hasMoreElements()) {
                             fileName = (String) e.nextElement();
-                            if (fileName.charAt(fileName.length()-1) == SEP)
+                            if (fileName.length() > 1 && fileName.charAt(fileName.length()-1) == SEP)
                                 append(fileName,null);  
                         }
                         
@@ -156,6 +176,8 @@ public class OpenFileBrowser extends List implements CommandListener
                     }
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
+                    Gui.getInstance().showError("OFBrowser_list_in", "IOException", ioe.toString());
+                    return;
                 } catch (SecurityException se) {
                     se.printStackTrace();
                     
@@ -172,6 +194,10 @@ public class OpenFileBrowser extends List implements CommandListener
                     if (listener != null)
                         listener.commandAction(CANCEL, that);
                     return;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Gui.getInstance().showError("OFBrowser_list", "Exception", ex.toString());
+                    return;
                 } finally {
                     if (currDir != null) {
                         try { currDir.close(); } catch (Exception ex) { }
@@ -181,6 +207,9 @@ public class OpenFileBrowser extends List implements CommandListener
                 lForm.setFinish();
             }  
         }).start();
+        } catch (Exception e) {
+            Gui.getInstance().showError("OFBrowser_list_out", "Exception", e.toString());
+        }
     }
     
     private boolean openDirectory(String fileName) {  
