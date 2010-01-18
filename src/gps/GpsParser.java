@@ -258,7 +258,7 @@ public class GpsParser implements Runnable
         {
             try
             {
-                streamConnection = (StreamConnection)Connector.open(communicationURL);
+                streamConnection = (StreamConnection)Connector.open(communicationURL, Connector.READ_WRITE);
                 inputStream = streamConnection.openInputStream();
                 if (source == GPS_HGE_100)
                     outputStream = streamConnection.openOutputStream();

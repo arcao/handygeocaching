@@ -629,7 +629,7 @@ public class Favourites extends Database
                 double lattitude = Gps.convertLattitude(dis.readUTF());
                 double longitude = Gps.convertLongitude(dis.readUTF());
                                 
-                if (!name.equals("_Poslední cache"))
+                if (!name.equals("_Poslední cache") && !name.equals("_Poslední keš"))
                     gui.get_cvsMap().addMapItem(lattitude,longitude,type,name);
             }
         }

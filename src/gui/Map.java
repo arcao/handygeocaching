@@ -31,9 +31,9 @@ public class Map extends Canvas implements Runnable
     Track track;
     
     //promenne ktere meni uzivatel
-    int x = 0; //x-ova pozice kurzoru
-    int y = 0; //y-ova pozice kurzoru
-    int zoom = 50; //defaultni priblizeni
+    double x = 0; //x-ova pozice kurzoru
+    double y = 0; //y-ova pozice kurzoru
+    int zoom = DEFAULT_ZOOM; //defaultni priblizeni
     //promenne ktere meni gpska
     public double latitude = 49.91216; //pozice uzivatele
     public double longitude = 14.22126;  //pozice uzivatele
@@ -49,6 +49,7 @@ public class Map extends Canvas implements Runnable
     static final int STEP = 2; //urcuje rychlost posouvani mapy
     static final int ZOOM_STEP = 1; //urcuje rychlost zoomovani
     static final int KEY_DELAY = 20; //pauza mezi dvema stisknutimi klaves
+    static final int DEFAULT_ZOOM = 50; //vychozi nastaveni zoomu
     //ostatni promenne
     private Thread thread;
     private int keyCode;
@@ -162,6 +163,8 @@ public class Map extends Canvas implements Runnable
             {
                 int pixelsPerKm = (int)Math.ceil((double)zoom/2 * Math.sqrt((double)zoom/10));
                 double getKmPerLonAtLatLatitude = getKmPerLonAtLat(latitude);
+                int zoomed_x = (int) this.x;
+                int zoomed_y = (int) this.y;
 
                 //vykresleni tracku
                 track.reset();
@@ -175,7 +178,7 @@ public class Map extends Canvas implements Runnable
                     int y1 = (int)(getKmPerLat()*(latitude-line[1])*pixelsPerKm);
                     int x2 = (int)(getKmPerLonAtLatLatitude*(line[2]-longitude)*pixelsPerKm);
                     int y2 = (int)(getKmPerLat()*(latitude-line[3])*pixelsPerKm);
-                    drawLine(g,screenWidthHalf+x1+x,screenHeightHalf+y1+y,screenWidthHalf+x2+x,screenHeightHalf+y2+y);
+                    drawLine(g,screenWidthHalf+x1+zoomed_x,screenHeightHalf+y1+zoomed_y,screenWidthHalf+x2+zoomed_x,screenHeightHalf+y2+zoomed_y);
                 }
                 
                 //vykresleni navigacni cary
@@ -185,7 +188,7 @@ public class Map extends Canvas implements Runnable
                     int yy = (int)(getKmPerLat()*(latitude-gps.getNavigationLatitude())*pixelsPerKm);
                     g.setColor((gui.nightMode) ? 0xffffff : 0x0); //navigacni cara
                     g.setStrokeStyle(Graphics.DOTTED);
-                    drawLine(g,screenWidthHalf+x,screenHeightHalf+y,screenWidthHalf+xx+x,screenHeightHalf+yy+y);
+                    drawLine(g,screenWidthHalf+zoomed_x,screenHeightHalf+zoomed_y,screenWidthHalf+xx+zoomed_x,screenHeightHalf+yy+zoomed_y);
                     g.setStrokeStyle(Graphics.SOLID);
                 }
                 //kresleni jednotlivych bodu
@@ -202,28 +205,28 @@ public class Map extends Canvas implements Runnable
                     int item_x = (int)(getKmPerLonAtLatLatitude*(mapItem.longitude-longitude)*pixelsPerKm);
                     int item_y = (int)(getKmPerLat()*(latitude-mapItem.latitude)*pixelsPerKm);
                                         
-                    int img_x = screenWidthHalf+item_x-iconSizeHalf+x;
-                    int img_y = screenHeightHalf+item_y-iconSizeHalf+y;
+                    int img_x = screenWidthHalf+item_x-iconSizeHalf+zoomed_x;
+                    int img_y = screenHeightHalf+item_y-iconSizeHalf+zoomed_y;
                     
-                    int text_x_end = screenWidthHalf+item_x+iconSizeHalf+2+x+fnt.stringWidth(mapItem.name);
+                    int text_x_end = screenWidthHalf+item_x+iconSizeHalf+2+zoomed_x+fnt.stringWidth(mapItem.name);
                     
                     if (img_x + iconSize >= 0 && img_x <= screenWidth && img_y + iconSize >= 0 && img_y <= screenHeight) {
                         g.drawImage(iconLoader.loadIcon(mapItem.icon),img_x,img_y,Graphics.TOP|Graphics.LEFT);
-                        g.drawString(mapItem.name,screenWidthHalf+item_x+iconSizeHalf+2+x,screenHeightHalf+item_y-iconSizeHalf+y,Graphics.TOP|Graphics.LEFT);
+                        g.drawString(mapItem.name,screenWidthHalf+item_x+iconSizeHalf+2+zoomed_x,screenHeightHalf+item_y-iconSizeHalf+zoomed_y,Graphics.TOP|Graphics.LEFT);
                     } else if (text_x_end >= 0 && img_x <= screenWidth) {
-                        g.drawString(mapItem.name,screenWidthHalf+item_x+iconSizeHalf+2+x,screenHeightHalf+item_y-iconSizeHalf+y,Graphics.TOP|Graphics.LEFT);
+                        g.drawString(mapItem.name,screenWidthHalf+item_x+iconSizeHalf+2+zoomed_x,screenHeightHalf+item_y-iconSizeHalf+zoomed_y,Graphics.TOP|Graphics.LEFT);
                     }
                 }
                 
                 //vykresleni pozice uzivatele
-                g.drawArc(screenWidth/2-15+x, screenHeight/2-15+y, 30, 30, 0, 360);
-                drawLine(g, screenWidth/2-15+x,screenHeight/2+y,screenWidth/2+15+x,screenHeight/2+y);
-                drawLine(g, screenWidth/2+x,screenHeight/2-15+y,screenWidth/2+x,screenHeight/2+15+y);
+                g.drawArc(screenWidth/2-15+zoomed_x, screenHeight/2-15+zoomed_y, 30, 30, 0, 360);
+                drawLine(g, screenWidth/2-15+zoomed_x,screenHeight/2+zoomed_y,screenWidth/2+15+zoomed_x,screenHeight/2+zoomed_y);
+                drawLine(g, screenWidth/2+zoomed_x,screenHeight/2-15+zoomed_y,screenWidth/2+zoomed_x,screenHeight/2+15+zoomed_y);
                 
                 //vykresleni headingu
                 double radHeading = Math.toRadians(heading);
-                int xheading = (int)(screenWidth/2 + x + 15*Math.cos(radHeading-Math.PI/2));
-                int yheading = (int)(screenHeight/2 + y + 15*Math.sin(radHeading-Math.PI/2));
+                int xheading = (int)(screenWidth/2 + zoomed_x + 15*Math.cos(radHeading-Math.PI/2));
+                int yheading = (int)(screenHeight/2 + zoomed_y + 15*Math.sin(radHeading-Math.PI/2));
                 g.setColor((gui.nightMode) ? 0x00ffff : 0xff0000); //uhel
                 g.fillArc(xheading-4,yheading-4,8,8,0,360);
                 
@@ -250,12 +253,13 @@ public class Map extends Canvas implements Runnable
                 g.drawLine(screenWidth - 30, 30, screenWidth, 30);
                 g.drawLine(screenWidth - 30, 30, screenWidth - 30, 0);
                 
-                //plus
-                g.drawLine(5, 30/2, 30 - 5, 30/2);
-                g.drawLine(30/2, 5, 30/2, 30-5);
-                
                 //minus
+                g.drawLine(5, 30/2, 30 - 5, 30/2);
+                
+                //plus
                 g.drawLine(screenWidth - 30 + 5, 30/2, screenWidth - 5, 30/2);
+                g.drawLine(screenWidth - 30/2, 5, screenWidth - 30/2, 30-5);
+                
             }
             
 
@@ -354,13 +358,13 @@ public class Map extends Canvas implements Runnable
             repaint();
         
         }
-        //zoom in
+        //zoom out
         else if (x < ZOOM_BUTTON && y < ZOOM_BUTTON) {
             keyCode = Canvas.KEY_STAR;
             thread = new Thread(this);
             thread.start();
         }
-        //zoom out
+        //zoom in
         else if (x > width - ZOOM_BUTTON && y < ZOOM_BUTTON) {
             keyCode = Canvas.KEY_POUND;
             thread = new Thread(this);
@@ -427,20 +431,29 @@ public class Map extends Canvas implements Runnable
             while (thread != null)
             {
                 repaint();
-                //hvezdicka - zoom in
+                //hvezdicka - zoom out
                 if (keyCode == Canvas.KEY_STAR)
                 {
                     zoom-=ZOOM_STEP;
-                    if (zoom<1) //minimalni priblizeni
+                    if (zoom<1) { //minimalni priblizeni
                         zoom = 1;
+                    } else {
+                        x= (x * zoom) / (zoom + ZOOM_STEP);
+                        y= (y * zoom) / (zoom + ZOOM_STEP);
+                    }
                     repaint();
                 }
-                //krizek - zoom out
+                //krizek - zoom in
                 else if (keyCode == Canvas.KEY_POUND)
                 {
                     zoom+=ZOOM_STEP;
-                    if (zoom>500) //maximalni priblizeni
+                    if (zoom>500) { //maximalni priblizeni
                         zoom = 500;
+                    } else {
+                        x= (x * zoom) / (zoom - ZOOM_STEP);
+                        y= (y * zoom) / (zoom - ZOOM_STEP);
+                    }
+                                        
                     repaint();
                 }
                 //doleva
