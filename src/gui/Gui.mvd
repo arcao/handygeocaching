@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MVDData version="1.3">
-    <DesignDocument designVersion="MIDP-2" uidCounter="620">
+    <DesignDocument designVersion="MIDP-2" uidCounter="626">
         <DesignComponent id="$MobileDevice" typeid="MIDP:$MobileDevice" uid="0"/>
         <DesignComponent id="$StartPoint" typeid="MIDP:$StartPoint" uid="1">
-            <Property name="targetDisplayable" value="ssAdvertisement"/>
+            <Property name="targetDisplayable" value="ssAdvertisment"/>
             <Property name="targetForwardDisplayable"/>
         </DesignComponent>
         <DesignComponent id="lstDevices" typeid="MIDP:javax.microedition.lcdui.List" uid="3">
@@ -717,21 +717,6 @@
             <Property name="face" value="FACE_SYSTEM"/>
             <Property name="style" value="0"/>
             <Property name="size" value="SIZE_MEDIUM"/>
-        </DesignComponent>
-        <DesignComponent id="ssAdvertisement" typeid="MIDP-2:org.netbeans.microedition.lcdui.SplashScreen" uid="184">
-            <Property name="timeout" value="2000"/>
-            <Property name="dismissCommandAction" value="$InternalCommandAction1"/>
-            <Property name="text" value="STRING:"/>
-            <Property name="image" value="imgAdvertisement"/>
-            <Property name="fullScreen" value="true"/>
-            <Property name="title" value="STRING:Handy Geocaching"/>
-            <ContainerProperty name="commands"/>
-        </DesignComponent>
-        <DesignComponent id="$InternalCommandAction1" typeid="MIDP:InternalCommandAction" uid="185">
-            <Property name="targetDisplayable" value="lstMode"/>
-            <Property name="targetForwardDisplayable"/>
-            <Property name="actionSource" value="ssAdvertisement"/>
-            <Property name="actionOrigin" value="ssAdvertisement"/>
         </DesignComponent>
         <DesignComponent id="imgAdvertisement" typeid="MIDP:javax.microedition.lcdui.Image" uid="189">
             <Property name="imageResourcePath" value="/reklama.png"/>
@@ -2517,13 +2502,24 @@
             <Property name="image"/>
             <Property name="selected" value="false"/>
         </DesignComponent>
+        <DesignComponent id="ssAdvertisment" typeid="MIDP-2:org.netbeans.microedition.lcdui.SplashScreen" uid="624">
+            <Property name="timeout" value="2000"/>
+            <Property name="dismissCommandAction" value="$InternalCommandAction2"/>
+            <Property name="image" value="imgAdvertisement"/>
+            <Property name="fullScreen" value="true"/>
+            <Property name="title" value="STRING:Handy Geocaching"/>
+            <ContainerProperty name="commands"/>
+        </DesignComponent>
+        <DesignComponent id="$InternalCommandAction2" typeid="MIDP:InternalCommandAction" uid="625">
+            <Property name="targetDisplayable" value="lstMode"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="ssAdvertisment"/>
+            <Property name="actionOrigin" value="ssAdvertisment"/>
+        </DesignComponent>
     </DesignDocument>
     <FlowDocument version="1.1">
-        <Node id="$MobileDevice" location="160,1184" order=",$StartPoint,,,,,,,,,$ExitPoint,,,,,"/>
         <Node id="lstDevices" location="2112,208" order="$CommandAction2,$CommandAction9,$SelectCaseCommandAction10,,,,,,,,$Default,,,,,"/>
-        <Node id="lstMenu" location="912,1296" order="$SelectCaseCommandAction8,$SelectCaseCommandAction24,$SelectCaseCommandAction6,$SelectCaseCommandAction5,$SelectCaseCommandAction12,$SelectCaseCommandAction7,$SelectCaseCommandAction9,,,,$Default,,,,,"/>
         <Node id="frmAveraging" location="3072,208" order="$CommandAction4,$CommandAction5,$CommandAction6,$CommandAction80,,,,,,,$Default,,,,,"/>
-        <Node id="lstMode" location="640,1184" order="$SelectCaseCommandAction2,$SelectCaseCommandAction3,$CommandAction7,$SelectCaseCommandAction19,$SelectCaseCommandAction22,$CommandAction89,$SelectCaseCommandAction26,,,,$Default,,,,,"/>
         <Node id="frmLoading" location="6280,208" order="$CommandAction29,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmCoordinates" location="5000,208" order="$CommandAction14,$CommandAction15,,,,,,,,,$Default,,,,,"/>
         <Node id="lstNearestCaches" location="4680,208" order="$CommandAction16,$SelectCaseCommandAction4,$CommandAction108,,,,,,,,$Default,,,,,"/>
@@ -2537,7 +2533,6 @@
         <Node id="frmSettings" location="1200,1184" order=",$CommandAction32,$CommandAction1,,,,,,,,$Default,,,,,"/>
         <Node id="frmConnecting" location="2432,208" order="$CommandAction11,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmAllLogs" location="5640,208" order="$CommandAction36,,,,,,,,,,$Default,,,,,"/>
-        <Node id="ssAdvertisement" location="432,1184" order="$InternalCommandAction1,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmDebug" location="1792,208" order="$CommandAction10,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmKeyword" location="3712,208" order="$CommandAction39,$CommandAction40,,,,,,,,,$Default,,,,,"/>
         <Node id="lstKeyword" location="4040,208" order="$CommandAction41,$SelectCaseCommandAction17,,,,,,,,,$Default,,,,,"/>
@@ -2563,7 +2558,10 @@
         <Node id="lstFieldNotes" location="912,1528" order="$CommandAction96,$CommandAction99,$CommandAction100,$CommandAction101,$CommandAction102,$CommandAction103,,,,,$Default,,,,,"/>
         <Node id="frmFieldNote" location="408,312" order="$CommandAction97,$CommandAction98,,,,,,,,,$Default,,,,,"/>
         <Node id="frmMemoryInfo" location="2136,1240" order="$CommandAction107,,,,,,,,,,$Default,,,,,"/>
-        <Link id="$StartPoint$ActionLink" path="200,1160,392,1160"/>
+        <Node id="$MobileDevice" location="160,1184" order=",$StartPoint,,,,,,,,,$ExitPoint,,,,,"/>
+        <Node id="ssAdvertisment" location="432,1120" order="$InternalCommandAction2,,,,,,,,,,$Default,,,,,"/>
+        <Node id="lstMode" location="640,1184" order="$SelectCaseCommandAction2,$SelectCaseCommandAction3,$CommandAction7,$SelectCaseCommandAction19,$SelectCaseCommandAction22,$CommandAction89,$SelectCaseCommandAction26,,,,$Default,,,,,"/>
+        <Node id="lstMenu" location="912,1296" order="$SelectCaseCommandAction8,$SelectCaseCommandAction24,$SelectCaseCommandAction6,$SelectCaseCommandAction5,$SelectCaseCommandAction12,$SelectCaseCommandAction7,$SelectCaseCommandAction9,,,,$Default,,,,,"/>
         <Link id="$CommandAction2$ActionLink" path="2152,200,2305,200,2305,672,47,672,47,1160,120,1160"/>
         <Link id="$CommandAction4$ActionLink" path="3112,200,3232,200,3232,1627,1141,1627,1141,1800,1160,1800"/>
         <Link id="$SelectCaseCommandAction3$ActionLink" path="680,1160,778,1160,778,1272,872,1272"/>
@@ -2586,7 +2584,6 @@
         <Link id="$CommandAction32$ActionLink" path="1240,1160,1308,1160,1308,1338,713,1338,713,1272,872,1272"/>
         <Link id="$CommandAction11$ActionLink" path="2472,200,2597,200,2597,695,562,695,562,1160,600,1160"/>
         <Link id="$CommandAction36$ActionLink" path="5680,200,5813,200,5813,184,5920,184"/>
-        <Link id="$InternalCommandAction1$ActionLink" path="472,1176,562,1176,562,1160,600,1160"/>
         <Link id="$CommandAction10$ActionLink" path="1832,200,1888,200,1888,1337,713,1337,713,1272,872,1272"/>
         <Link id="$SelectCaseCommandAction12$ActionLink" path="936,1224,936,1145,1033,1145,1033,1480,1160,1480"/>
         <Link id="$CommandAction39$ActionLink" path="3752,200,3887,200,3887,356,1140,356,1140,512,1160,512"/>
@@ -2635,6 +2632,8 @@
         <Link id="$CommandAction105$ActionLink" path="3384,237,3384,365,1378,365,1378,608,1440,608"/>
         <Link id="$CommandAction106$ActionLink" path="1240,832,1409,832,1409,938,2059,938,2059,1216,2096,1216"/>
         <Link id="$CommandAction107$ActionLink" path="2176,1232,2243,1232,2243,683,1112,683,1112,832,1160,832"/>
+        <Link id="$InternalCommandAction2$ActionLink" path="472,1112,560,1112,560,1160,600,1160"/>
+        <Link id="$StartPoint$ActionLink" path="200,1160,282,1160,282,1096,392,1096"/>
     </FlowDocument>
     <ScreenDesigner version="1.0">
         <CustomScreenSize height="128" width="128"/>

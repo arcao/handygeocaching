@@ -190,7 +190,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Image imgNavigate;
     private Font fntBold;
     private Font fntNormal;
-    private org.netbeans.microedition.lcdui.SplashScreen ssAdvertisement;
     private Image imgAdvertisement;
     private Form frmDebug;
     private StringItem siDebug;
@@ -337,7 +336,8 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private StringItem siRMSFieldNotes;
     private StringItem siRMSListing;
     private Command cmdDownloadAll;
-    private ChoiceGroup cgInternalGPSType;//GEN-END:MVDFields
+    private ChoiceGroup cgInternalGPSType;
+    private org.netbeans.microedition.lcdui.SplashScreen ssAdvertisment;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -807,14 +807,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 getDisplay().setCurrent(get_frmLogs());//GEN-LINE:MVDCAAction178
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase178
-        } else if (displayable == ssAdvertisement) {
-            if (command == ssAdvertisement.DISMISS_COMMAND) {//GEN-END:MVDCACase178
-                // Insert pre-action code here
-                getDisplay().setCurrent(get_lstMode());//GEN-LINE:MVDCAAction185
-                // Insert post-action code here
-            }//GEN-BEGIN:MVDCACase185
         } else if (displayable == frmDebug) {
-            if (command == cmdMenu) {//GEN-END:MVDCACase185
+            if (command == cmdMenu) {//GEN-END:MVDCACase178
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction191
                 // Insert post-action code here
@@ -1558,7 +1552,13 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 getDisplay().setCurrent(get_frmAbout());//GEN-LINE:MVDCAAction605
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase605
-        }//GEN-END:MVDCACase605
+        } else if (displayable == ssAdvertisment) {
+            if (command == ssAdvertisment.DISMISS_COMMAND) {//GEN-END:MVDCACase605
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstMode());//GEN-LINE:MVDCAAction625
+                // Insert post-action code here
+            }//GEN-BEGIN:MVDCACase625
+        }//GEN-END:MVDCACase625
 // Insert global post-action code here
         
         if (displayable == openFileBrowser && openFileBrowser != null) {
@@ -1607,7 +1607,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         if (settings.vip)
             getDisplay().setCurrent(get_lstMode());
         else
-            getDisplay().setCurrent(get_ssAdvertisement());//GEN-LINE:MVDInitInit
+            getDisplay().setCurrent(get_ssAdvertisment());//GEN-LINE:MVDInitInit
         // Insert post-init code here
     }//GEN-LINE:MVDInitEnd
     
@@ -2633,23 +2633,6 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
         return fntNormal;
     }//GEN-END:MVDGetEnd183
     
-    /** This method returns instance for ssAdvertisement component and should be called instead of accessing ssAdvertisement field directly.//GEN-BEGIN:MVDGetBegin184
-     * @return Instance for ssAdvertisement component
-     */
-    public org.netbeans.microedition.lcdui.SplashScreen get_ssAdvertisement() {
-        if (ssAdvertisement == null) {//GEN-END:MVDGetBegin184
-            // Insert pre-init code here
-            ssAdvertisement = new org.netbeans.microedition.lcdui.SplashScreen(getDisplay());//GEN-BEGIN:MVDGetInit184
-            ssAdvertisement.setCommandListener(this);
-            ssAdvertisement.setTitle("Handy Geocaching");
-            ssAdvertisement.setFullScreenMode(true);
-            ssAdvertisement.setText("");
-            ssAdvertisement.setImage(get_imgAdvertisement());
-            ssAdvertisement.setTimeout(2000);//GEN-END:MVDGetInit184
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd184
-        return ssAdvertisement;
-    }//GEN-END:MVDGetEnd184
     
     /** This method returns instance for imgAdvertisement component and should be called instead of accessing imgAdvertisement field directly.//GEN-BEGIN:MVDGetBegin189
      * @return Instance for imgAdvertisement component
@@ -4781,6 +4764,23 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd613
         return cgInternalGPSType;
     }//GEN-END:MVDGetEnd613
+ 
+    /** This method returns instance for ssAdvertisment component and should be called instead of accessing ssAdvertisment field directly.//GEN-BEGIN:MVDGetBegin624
+     * @return Instance for ssAdvertisment component
+     */
+    public org.netbeans.microedition.lcdui.SplashScreen get_ssAdvertisment() {
+        if (ssAdvertisment == null) {//GEN-END:MVDGetBegin624
+            // Insert pre-init code here
+            ssAdvertisment = new org.netbeans.microedition.lcdui.SplashScreen(getDisplay());//GEN-BEGIN:MVDGetInit624
+            ssAdvertisment.setCommandListener(this);
+            ssAdvertisment.setTitle("Handy Geocaching");
+            ssAdvertisment.setFullScreenMode(true);
+            ssAdvertisment.setImage(get_imgAdvertisement());
+            ssAdvertisment.setTimeout(2000);//GEN-END:MVDGetInit624
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd624
+        return ssAdvertisment;
+    }//GEN-END:MVDGetEnd624
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {
