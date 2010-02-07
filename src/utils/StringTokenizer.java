@@ -49,8 +49,7 @@ public class StringTokenizer {
         Vector tokens = getVector(tokenList,separator);
         String[] st = new String[tokens.size()];
         tokens.copyInto(st);
-        //for (int i = 0; i <= tokens.size() - 1; i++)
-        //    st[i] = (String)tokens.elementAt(i);
+        
         return st;
     }
 }

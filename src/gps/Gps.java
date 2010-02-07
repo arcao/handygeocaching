@@ -515,7 +515,7 @@ public class Gps implements Runnable
         if (!DegMinSecFormat)
         {
             //vzorec uz je ve vychozim formatu "N Deg° mi.mmm"
-            return lat;
+            return lat.replace('?', '°');
         }
         
         //prevedeni na zakladni tvar
@@ -527,7 +527,7 @@ public class Gps implements Runnable
                  Integer.parseInt  (lat.substring(6,8))
                 + (Double.parseDouble(lat.substring(9,15))/60));
             String tmpOut = (lat.substring(0,6) + String.valueOf(lattitudeDegrees));
-            return tmpOut.substring(0, 12);
+            return tmpOut.substring(0, 12).replace('?', '°');
         }
         catch (Exception e)
         {
@@ -545,7 +545,7 @@ public class Gps implements Runnable
         if (!DegMinSecFormat)
         {
             //vzorec uz je ve vychozim formatu "N Deg° mi.mmm"
-            return lon;
+            return lon.replace('?', '°');
         }
         
         //prevedeni na zakladni tvar
@@ -562,7 +562,7 @@ public class Gps implements Runnable
                 Integer.parseInt  (lon.substring(7,9))
                 +(Double.parseDouble(lon.substring(10,15))/60));
             String tmpOut =  (lon.substring(0,7) + String.valueOf(longitudeDegrees));
-            return tmpOut.substring(0, 13);
+            return tmpOut.substring(0, 13).replace('?','°');
         }
         catch (Exception e)
         {
@@ -592,7 +592,7 @@ public class Gps implements Runnable
                 throw new Exception("lattitude neni N nebo S");
             }
             
-            if (!lat.substring(4,6).equals("° ") && !lat.substring(4,6).equals("  ")) {
+            if (!lat.substring(4,6).equals("° ") && !lat.substring(4,6).equals("  ") && !lat.substring(4,6).equals("? ")) {
                 throw new Exception("spatny format stupnu u lattitude ");
             }
             
@@ -628,12 +628,14 @@ public class Gps implements Runnable
                 throw new Exception("longitude neni W nebo E");
             }
             
-            if (!lon.substring(4,6).equals("° ") && !lon.substring(4,6).equals("  ") && !lon.substring(5,7).equals("° ") && !lon.substring(5,7).equals("  ")) {
+            if (!lon.substring(4,6).equals("° ") && !lon.substring(5,7).equals("° ") &&
+                !lon.substring(4,6).equals("  ") && !lon.substring(5,7).equals("  ") &&
+                !lon.substring(4,6).equals("? ") && !lon.substring(5,7).equals("? ")) {
                 throw new Exception("spatny format stupnu u longitude");
             }
             
             double longitudeDegrees;
-            if (lon.substring(4,6).equals("° ") || lon.substring(4,6).equals("  "))
+            if (lon.substring(4,6).equals("° ") || lon.substring(4,6).equals("  ") || lon.substring(4,6).equals("? "))
             {
                 longitudeDegrees = direction * (Integer.parseInt(lon.substring(2,4))+Double.parseDouble(lon.substring(6,12))/60);
             }

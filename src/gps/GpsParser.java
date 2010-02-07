@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
+import javax.bluetooth.BluetoothConnectionException;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.lcdui.AlertType;
@@ -71,6 +72,11 @@ public class GpsParser implements Runnable
     public static final int INTERNAL = 2;
     public static final int GPS_HGE_100 = 3;
     public int source;
+    
+    //buffer pro nacitani dat z GPSky
+    private byte[] buffer = new byte[2048];
+    private int bufferPosition = 0;
+
     
     private Thread thread;
     
@@ -245,37 +251,71 @@ public class GpsParser implements Runnable
             settings.saveLastDevice(communicationURL);
     }
     
+    private String readline (InputStream is) throws IOException {
+        int lastBufferPosition = 0;
+        endlessloop: while (true) {
+            //pokud je jiz v bufferu nova radka, pouzije me ji, misto nacitani dalsich dat
+            for (int i = lastBufferPosition; i < bufferPosition; i++) {
+                if (buffer[i] == '\n' || (buffer[i]=='\r' && i + 1 < bufferPosition)) break endlessloop;
+            }
+ 
+            //pokud neni naplnime buffer daty
+            int available = is.available();
+            lastBufferPosition = bufferPosition;
+            if (available > 0) {
+                //naplnime buffer prectenymi daty, pokud jsou data moc velka, cteme jen do velikosti bufferu
+                int len = Math.min(available, buffer.length - bufferPosition);
+                bufferPosition += is.read(buffer, bufferPosition, len);
+                //pokud se nic nenacetlo, jedna se o chybu
+                if (bufferPosition == lastBufferPosition) throw new IOException("GPS device disconnected.");
+            } else {
+                // nacteme pouze jeden znak. Pokud je -1, znaci to uzavreny stream, nebo chybu
+                int r = is.read();
+                if (r == -1) throw new IOException("GPS device disconnected.");
+                buffer[bufferPosition++] = (byte)r;
+            }
+        }
+        
+        //hledame pozici nove radky
+        int newLineCharPos = 0;
+        int newLineCharSize = 1;
+        for (newLineCharPos = 0; newLineCharPos < bufferPosition; newLineCharPos++) {
+            if (buffer[newLineCharPos] == '\n') break;
+            if (buffer[newLineCharPos] == '\r' && newLineCharPos + 1 < bufferPosition) {
+                if (buffer[newLineCharPos+1] == '\n')
+                    newLineCharSize = 2;
+                break;
+            }
+        }
+        
+        //do Stringu ulozime text i s koncem nove radky
+        String ret = new String(buffer, 0, newLineCharPos);
+        bufferPosition -= newLineCharPos + newLineCharSize;
+        System.arraycopy(buffer, newLineCharPos + newLineCharSize, buffer, 0, bufferPosition);
+        
+        return ret;
+    }
+    
     /**
      * Vlakno NMEA komunikace s GPS, na nic neceka, porad parsuje data
      */
-    public void run()
-    {
-        
+    public void run() {
         StreamConnection streamConnection = null;
         InputStream inputStream = null;
         OutputStream outputStream = null;
-        try
-        {
-            try
-            {
+        try {
+            try {
                 streamConnection = (StreamConnection)Connector.open(communicationURL, Connector.READ_WRITE);
                 inputStream = streamConnection.openInputStream();
                 if (source == GPS_HGE_100)
                     outputStream = streamConnection.openOutputStream();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 exception = e.toString();
-                if (source == GPS_GATE)
-                {
+                if (source == GPS_GATE) {
                     gui.showAlert("Program GPS Gate není spuštěn nebo správně nastaven. "+e.toString(),AlertType.ERROR,gui.get_lstMode());
-                }
-                else if (source == GPS_HGE_100)
-                {
+                } else if (source == GPS_HGE_100) {
                     gui.showAlert("Nepovedlo se připojit k HGE-100. "+e.toString(),AlertType.ERROR,gui.get_lstMode());
-                }
-                else if (source == BLUETOOTH)
-                {
+                } else if (source == BLUETOOTH) {
                     //nezdarilo se pripojit k poslednimu zarizeni - hledame jina zarizeni v dosahu
                     gui.get_frmConnecting().append("\nPřipojení se nezdařilo");
                     gui.searchBluetooth();
@@ -286,63 +326,20 @@ public class GpsParser implements Runnable
             
             //uspesne pripojeni
             if (thread != null)
-            {
                 connectionSuccessfull();
-            }
             
-            if (source == GPS_HGE_100 && outputStream != null) {
+            if (source == GPS_HGE_100 && outputStream != null)
                 outputStream.write("$STA\r\n".getBytes()); // Tell HGE-100 to start transmitting NMEA data
-            }
             
-            //cteni dat
-            //ByteArrayOutputStream byteArrayOutputStream = null;
-            StringBuffer sb = new StringBuffer(50);
-            int ch;
-            while (thread != null)
-            {
-                try
-                {
-                    sb.setLength(0);
-                    
-                    ch = 0;
-                    //cteni dat
-                    while (thread != null) {
-                        if (inputStream.available() > 0) {
-                            ch = inputStream.read();
-                            if (ch == -1) {
-                                throw new IOException("GPS device disconnected.");
-                            } else if (ch == '\n') {
-                                break;
-                            } else {
-                                sb.append((char)ch);
-                            }
-                        } else {
-                            // let us rest for a bit
-                            //try { Thread.sleep(100); } catch (InterruptedException e) { }
-                            Thread.yield();
-                            
-                        }
-                    }
-
-                    if (thread != null) {
-                        nmea = sb.toString();
-                        receiveNmea(nmea);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    exception = ex.toString();
-                    gui.showAlert("Chyba při příjmu dat z GPS: " + exception, AlertType.ERROR, null);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
+            try {
+                //cteni dat
+                while (thread != null)
+                    receiveNmea(readline(inputStream));
+            } catch (IOException ex) {}
+        } catch (Exception ex) {
             exception = ex.toString();
             gui.showAlert("Chyba ve spojení s GPS: " + exception, AlertType.ERROR, null);
-        }
-        finally 
-        {
+        } finally {
             if (source == GPS_HGE_100 && outputStream != null)
                 try { outputStream.write("$STO\r\n".getBytes()); } catch (IOException ex) {} // Tell HGE-100 to stop transmitting NMEA data
             if (inputStream != null)
