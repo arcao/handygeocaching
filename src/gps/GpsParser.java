@@ -46,11 +46,18 @@ public class GpsParser implements Runnable
     protected String friendlyLongitude;
     protected double heading = 0, speed = 0, altitude = 0;
     protected double accuracy = 50;
+    protected double accuracyInMeters = 0;
     protected int allSatellites, fixSatellites;
     protected boolean fix;
     protected int hour, minute, second;
     protected int day, month, year;
+    
     protected int nmeaCount;
+    protected int nmeaGSVCount;
+    protected int nmeaGLLCount;
+    protected int nmeaRMCCount;
+    protected int nmeaGGACount;
+    protected int nmeaGSACount;
     //Zephy 21.11.07 gpsstatus+\
     protected Hashtable signaldata = new Hashtable(); //Obsahuje cisla satelitu a jejich signal;
     //Zephy oprava 21.12.07 +\
@@ -74,18 +81,50 @@ public class GpsParser implements Runnable
     public int source;
     
     //buffer pro nacitani dat z GPSky
-    private byte[] buffer = new byte[2048];
+    private byte[] buffer;
     private int bufferPosition = 0;
-
     
     private Thread thread;
+    
+    public int getNmeaGSVCount() {
+        return nmeaGSVCount;
+    }
+
+    public int getNmeaGLLCount() {
+        return nmeaGLLCount;
+    }
+
+    public int getNmeaRMCCount() {
+        return nmeaRMCCount;
+    }
+
+    public int getNmeaGGACount() {
+        return nmeaGGACount;
+    }
+
+    public int getNmeaGSACount() {
+        return nmeaGSACount;
+    }
+    
+    public int getBufferFreeInPercent() {
+        return 100 - ((bufferPosition * 100) / buffer.length);
+    }
     
     /**
      * Pripojeni k neznamemu zarizeni
      */
     public GpsParser(Gui ref, Http ref2, Settings ref3, Favourites ref4, Bluetooth ref5, String address, int gpsSource)
     {
+        buffer = new byte[2048];
+        bufferPosition = 0;
+        
         nmeaCount = 0;
+        nmeaGSVCount = 0;
+        nmeaGLLCount = 0;
+        nmeaRMCCount = 0;
+        nmeaGGACount = 0;
+        nmeaGSACount = 0;
+        
         gui = ref;
         http = ref2;
         settings = ref3;
@@ -93,6 +132,7 @@ public class GpsParser implements Runnable
         bluetooth = ref5;
         communicationURL = address;
         source = gpsSource;
+        
         if (source == INTERNAL)
         {
             internal = References.getInternal(gui, this, settings);
@@ -111,7 +151,7 @@ public class GpsParser implements Runnable
     {
         return nmeaCount;
     }
-    
+     
     public double getHeading()
     {
         return heading;
@@ -122,7 +162,7 @@ public class GpsParser implements Runnable
      */
     public long getSpeed()
     {
-        if (source==INTERNAL)
+        if (source==INTERNAL && nmeaRMCCount == 0)
             return (long)(speed*3.6);
         return (long)(speed*1.852);
     }
@@ -134,7 +174,7 @@ public class GpsParser implements Runnable
     
     public String getSatelliteCount()
     {
-        if (source==INTERNAL)
+        if (source==INTERNAL && nmeaGSVCount == 0)
             return "N/A";
         else
             return fixSatellites+"/"+allSatellites;
@@ -143,7 +183,7 @@ public class GpsParser implements Runnable
     public String getAccuracy()
     {
         if (source==INTERNAL)
-            return String.valueOf((int)accuracy)+" m";
+            return String.valueOf((int)accuracyInMeters)+" m";
         else
             return accuracy+"(PDOP)";
     }
@@ -258,6 +298,13 @@ public class GpsParser implements Runnable
             for (int i = lastBufferPosition; i < bufferPosition; i++) {
                 if (buffer[i] == '\n' || (buffer[i]=='\r' && i + 1 < bufferPosition)) break endlessloop;
             }
+            
+            //ochrana pred zaplnenim bufferu bez nove radky
+            if (bufferPosition == buffer.length) {
+                lastBufferPosition = 0;
+                bufferPosition = 0;
+            }
+                
  
             //pokud neni naplnime buffer daty
             int available = is.available();
@@ -303,6 +350,9 @@ public class GpsParser implements Runnable
         StreamConnection streamConnection = null;
         InputStream inputStream = null;
         OutputStream outputStream = null;
+        
+        bufferPosition = 0;
+                
         try {
             try {
                 streamConnection = (StreamConnection)Connector.open(communicationURL, Connector.READ_WRITE);
@@ -438,6 +488,8 @@ public class GpsParser implements Runnable
             if (!nmea.startsWith("$"))
                 return;
             
+            nmeaCount++;
+            
             String [] param = StringTokenizer.getArray(nmea, ",");
             //Zephy oprava 20.12.07 +\
             int PocetPrvkuParam = param.length;
@@ -445,7 +497,7 @@ public class GpsParser implements Runnable
             if (param[0].equals("$GPGSV"))
             {
                 int i, j;
-                nmeaCount++;
+                nmeaGSVCount++;
                 allSatellites = Integer.parseInt(param[3]);
                 //Zephy 21.11.07 gpsstatus+\
                 if (param[2].equals("1"))
@@ -491,13 +543,13 @@ public class GpsParser implements Runnable
             }
             else if (param[0].equals("$GPGLL"))
             {
-                nmeaCount++;
+                nmeaGLLCount++;
                 extractData(param, 1, 2, 3, 4, 5);
                 fix = (param[6].charAt(0) == 'A');
             }
             else if (param[0].equals("$GPRMC"))
             {
-                nmeaCount++;
+                nmeaRMCCount++;
                 extractData(param, 3, 4, 5, 6, 1);
                 fix = (param[2].charAt(0) == 'A');
                 if (fix)
@@ -515,7 +567,7 @@ public class GpsParser implements Runnable
             }
             else if (param[0].equals("$GPGGA"))
             {
-                nmeaCount++;
+                nmeaGGACount++;
                 if (param[6].equals("0"))
                 {
                     fix = false;
@@ -533,6 +585,7 @@ public class GpsParser implements Runnable
             }
             else if (param[0].equals("$GPGSA"))
             {
+                nmeaGSACount++;
                 //Zephy 21.11.07 gpsstatus+\
                 //Zephy oprava 20.12.07 +\
                 if (param.length >= 17)     //ochrana jestli veta ma vubec tolik prvku. I kdyz je divny ze by nemela.

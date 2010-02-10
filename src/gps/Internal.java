@@ -58,6 +58,7 @@ public class Internal implements LocationListener
         criteria.setAltitudeRequired(true);
         criteria.setSpeedAndCourseRequired(true);
         criteria.setCostAllowed(true);
+        criteria.setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
 
         
         switch(settings.internalGPSType) {
@@ -168,7 +169,7 @@ public class Internal implements LocationListener
                 gpsParser.longitude = coordinates.getLongitude();
                 friendly = Coordinates.convert(Math.abs(coordinates.getLongitude()),Coordinates.DD_MM);
                 gpsParser.friendlyLongitude = ((gpsParser.longitude>0)?"E ":"W ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),3)+Utils.replaceString(Utils.addZerosAfter(friendly.substring(friendly.indexOf(':')), 7),":","° ");
-                gpsParser.accuracy = coordinates.getHorizontalAccuracy();
+                gpsParser.accuracyInMeters = coordinates.getHorizontalAccuracy();
                 
                 double altitude = Math.floor(coordinates.getAltitude());
                 if (!Double.isNaN(altitude))
@@ -185,11 +186,10 @@ public class Internal implements LocationListener
                 //Pokud podporuje application/X-jsr179-location-nmea, muzou se ziskat lepsi, pripadne dalsi informace. Stavajici prepise.  
                 String nmea = location.getExtraInfo("application/X-jsr179-location-nmea");
                 if (nmea != null && nmea.length() > 0) {
-                    Vector lines = StringTokenizer.getVector(nmea, "$");
-                    for(int i = 0; i < lines.size(); i++) {
-                        String line = (String) lines.elementAt(i);
-                        if (line.length() > 0)
-                            gpsParser.receiveNmea("$" + nmea);
+                    String[] lines = StringTokenizer.getArray(nmea, "$");
+                    for(int i = 0; i < lines.length; i++) {
+                        if (lines[i].length() > 0)
+                            gpsParser.receiveNmea("$" + lines[i]);
                     }
                 }
             }

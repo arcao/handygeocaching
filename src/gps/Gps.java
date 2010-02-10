@@ -67,6 +67,10 @@ public class Gps implements Runnable
     private int skips = 0; //pocet kol bez spojeni s gpskou
     private Displayable previousScreen; //posledni obrazovka pri navratu z navigace/mapy
     
+    public GpsParser getGpsParser() {
+        return gpsParser;
+    }
+    
     public Gps(Gui ref, Http ref2, GpsParser ref3, Settings ref4)
     {
         gui = ref;

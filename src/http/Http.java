@@ -628,16 +628,20 @@ public class Http implements Runnable
             reader = new InputStreamReader(is, "UTF-8");
             gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
             
-            int ch;
-            int x = 0;
+            //int ch;
+            //int x = 0;
             StringBuffer sb = new StringBuffer();
             
-            while ((ch = reader.read()) != -1)
+            char[] charBuffer = new char[1024];
+            int len;
+            
+            while ((len = reader.read(charBuffer)) != -1)
             {
-                sb.append((char) ch);
-                if (x%50==0)
-                    gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
-                x++;
+                gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
+                sb.append(charBuffer, 0, len);
+                //if (x%50==0)
+                //    gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
+                //x++;
             }
 
             String s = sb.toString();

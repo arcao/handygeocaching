@@ -4821,12 +4821,19 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
      * Tato metoda se pouziva k zobrazovani vyjimek, ktere mohou v aplikaci nastat
      */
     public void showError(String section, String errorMessage, String data) {
+        if (section == null)
+            section = "";
+        if (errorMessage == null)
+            errorMessage = "";
+        if (data == null)
+            data = "";
+        
+        System.out.println("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" + data + "'");
         //vymazani chyb
         if (data.equals("Chyba")) {
             get_tbError().setString("Problém s komunikačním skriptem, opakujte akci. Pokud se tato chyba ukazuje pořád, máte nefunkční GPRS.");
         } else {
-            get_tbError().setString("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" +
-                    "'");
+            get_tbError().setString("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" + data + "'");
         }
         //System.out.println(get_tbError().getString());
         getDisplay().setCurrent(get_tbError());

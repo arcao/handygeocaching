@@ -146,6 +146,14 @@ public class Signal extends Canvas
                 g.setColor(255,0,0);
                 g.drawString( getTopTenList(), 7, (height - 94 - (nVyskaRadku*5)), Graphics.LEFT|Graphics.TOP);
                 g.setColor(0);
+            } else {
+                g.drawString("Počet NMEA: " + gps.getGpsParser().getNmeaCount(), 7, (height - 94 - nVyskaRadku*5), Graphics.LEFT|Graphics.TOP);
+                g.drawString("GLL: " + gps.getGpsParser().getNmeaGLLCount(), 7, (height - 94 - nVyskaRadku*4), Graphics.LEFT|Graphics.TOP);
+                g.drawString("RMC: " + gps.getGpsParser().getNmeaRMCCount(), (width * 1/2)+5, (height - 94 - nVyskaRadku*4), Graphics.LEFT|Graphics.TOP);
+                g.drawString("GGA: " + gps.getGpsParser().getNmeaGGACount(), 7, (height - 94 - nVyskaRadku*3), Graphics.LEFT|Graphics.TOP);
+                g.drawString("GSA: " + gps.getGpsParser().getNmeaGSACount(), (width * 1/2)+5, (height - 94 - nVyskaRadku*3), Graphics.LEFT|Graphics.TOP);
+                g.drawString("GSV: " + gps.getGpsParser().getNmeaGSVCount(), 7, (height - 94 - nVyskaRadku*2), Graphics.LEFT|Graphics.TOP);
+                g.drawString("Buffer: " + gps.getGpsParser().getBufferFreeInPercent() + "%", (width * 1/2)+5, (height - 94 - nVyskaRadku*2), Graphics.LEFT|Graphics.TOP);
             }
             
             //zobrazeni signalu
