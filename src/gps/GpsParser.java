@@ -58,6 +58,8 @@ public class GpsParser implements Runnable
     protected int nmeaRMCCount;
     protected int nmeaGGACount;
     protected int nmeaGSACount;
+    
+    protected boolean dgpsUsed = false;
     //Zephy 21.11.07 gpsstatus+\
     protected Hashtable signaldata = new Hashtable(); //Obsahuje cisla satelitu a jejich signal;
     //Zephy oprava 21.12.07 +\
@@ -77,6 +79,9 @@ public class GpsParser implements Runnable
     public static final int BLUETOOTH = 0;
     public static final int GPS_GATE = 1;
     public static final int INTERNAL = 2;
+
+    private int fixType = 0;
+
     public static final int GPS_HGE_100 = 3;
     public int source;
     
@@ -85,6 +90,37 @@ public class GpsParser implements Runnable
     private int bufferPosition = 0;
     
     private Thread thread;
+    
+    public boolean isDgpsUsed() {
+        return dgpsUsed;
+    }
+    
+    public int getFixType() {
+        return fixType;
+    }
+    
+    public String getFixTypeText() {
+        switch(fixType) {
+            case 1:
+                return "GPS";
+            case 2:
+                return "DGPS";
+            case 3:
+                return "PPS";
+            case 4:
+                return "RTK";
+            case 5:
+                return "FRTK";
+            case 6:
+                return "EST";
+            case 7:
+                return "MAN";
+            case 8:
+                return "SIM";
+            default:
+                return "INV";
+        }
+    }
     
     public int getNmeaGSVCount() {
         return nmeaGSVCount;
@@ -568,6 +604,7 @@ public class GpsParser implements Runnable
             else if (param[0].equals("$GPGGA"))
             {
                 nmeaGGACount++;
+                fixType = Integer.parseInt(param[6]);
                 if (param[6].equals("0"))
                 {
                     fix = false;
@@ -577,6 +614,8 @@ public class GpsParser implements Runnable
                 }
                 else
                 {
+                    if (fixType == 2)
+                        dgpsUsed = true;
                     extractData(param, 2, 3, 4, 5, 1);
                     fixSatellites = Integer.parseInt(param[7]);
                     if (param[9].length() > 0)

@@ -586,13 +586,20 @@ public class KXmlParser implements XmlPullParser {
 
         isWhitespace &= c <= ' ';
 
-        if (txtPos == txtBuf.length) {
+        if (txtPos >= txtBuf.length - 1) {
             char[] bigger = new char[txtPos * 4 / 3 + 4];
             System.arraycopy(txtBuf, 0, bigger, 0, txtPos);
             txtBuf = bigger;
         }
 
-        txtBuf[txtPos++] = (char) c;
+        if (c > 0xffff) {
+            // write high Unicode value as surrogate pair
+            int offset = c - 0x010000;
+            txtBuf[txtPos++] = (char)((offset >>> 10) + 0xd800);
+            txtBuf[txtPos++] = (char)((offset & 0x3ff) + 0xdc00);
+        } else {
+            txtBuf[txtPos++] = (char) c;
+        } 
     }
 
     /** Sets name and attributes */

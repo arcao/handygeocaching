@@ -188,7 +188,7 @@ public class GPXImport extends Form implements CommandListener {
                                     parser.next();
                                     listing = parser.getText();
                                     parts[0][14] = Integer.toString(listing.length() / 1024);
-                                    parts[0][13] = "1"; //(listing.indexOf("<!--Handy") != -1) ? "1":"0";
+                                    parts[0][13] = (listing.indexOf("<!--Handy") != -1) ? "1":"0";
                                 } else if (parser.getName().equals("encoded_hints")) {
                                     parser.next();
                                     hint = parser.getText();
@@ -198,11 +198,19 @@ public class GPXImport extends Form implements CommandListener {
                                 } else if (parser.getName().equals("logs")) {
                                     while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("logs") || !parser.getNamespace().equals(GROUNDSPEAK_NS))
                                         parser.next();
+                                } else if (parser.getName().equals("travelbugs")) {
+                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("travelbugs") || !parser.getNamespace().equals(GROUNDSPEAK_NS)) {
+                                        parser.next();
+                                        if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("name")) {
+                                            parser.next();
+                                            parts[0][8]+= parser.getText() + ", ";
+                                        }
+                                    }
                                 }
+                                
                             }
                         }
                     }
-                    parts[0][8] = ""; // inventory
                     parts[0][11] = "1"; // has waipoints
                     parts[0][6] = difficulty + "/" + terrain;
                     
@@ -216,12 +224,12 @@ public class GPXImport extends Form implements CommandListener {
                     } else {
                         favourites.addEdit(parts[0][0], Favourites.cachePartsToDesc(parts), parts[0][4], parts[0][5], parts[0][10], null, false, "", comment, false, false, false);
                         http.getHintCache().add(parts[0][7], hint);
-                        http.getListingCache().add(parts[0][7], listing);
+                        http.getListingCache().add(parts[0][7], stripTags(listing));
                     }
                     count++;
                     
-                    if (count % 10 == 0)
-                        siImportCacheCount.setText(Integer.toString(count));
+                    //if (count % 10 == 0)
+                    siImportCacheCount.setText(Integer.toString(count));
                 } else {
                     while ((parser.getEventType() != XmlPullParser.END_TAG) || (parser.getName().equals(tagName) == false))
                         parser.next();
@@ -325,4 +333,35 @@ public class GPXImport extends Form implements CommandListener {
        }
     }
     
+    private String stripTags(String html) {
+        StringBuffer sb = new StringBuffer();
+        
+        int pos = 0;
+        int foundTag = 0;
+        int foundComment = 0;
+        
+        foundTag = html.indexOf('<', pos);
+        foundComment = html.indexOf("<!--", pos);
+                
+        while(foundTag != -1 || foundComment != -1) {
+            if (foundTag < foundComment || (foundComment == -1 && foundTag != -1)) {
+                sb.append(html.substring(pos, foundTag));
+                pos = foundTag + 1;
+                if ((foundTag = html.indexOf('>', pos)) != -1)
+                    pos = foundTag + 1;
+            } else {
+                sb.append(html.substring(pos, foundComment));
+                pos = foundComment + 4;
+                if ((foundComment = html.indexOf("-->", pos)) != -1)
+                    pos = foundComment + 3;
+            }
+            
+            foundTag = html.indexOf('<', pos);
+            foundComment = html.indexOf("<!--", pos);
+        }
+        
+        sb.append(html.substring(pos));
+        
+        return sb.toString();
+    }
 }

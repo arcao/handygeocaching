@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MVDData version="1.3">
-    <DesignDocument designVersion="MIDP-2" uidCounter="626">
+    <DesignDocument designVersion="MIDP-2" uidCounter="631">
         <DesignComponent id="$MobileDevice" typeid="MIDP:$MobileDevice" uid="0"/>
         <DesignComponent id="$StartPoint" typeid="MIDP:$StartPoint" uid="1">
             <Property name="targetDisplayable" value="ssAdvertisment"/>
@@ -330,7 +330,6 @@
                 <ContainerPropertyItem value="$CommandAction23"/>
                 <ContainerPropertyItem value="$CommandAction33"/>
                 <ContainerPropertyItem value="$CommandAction34"/>
-                <ContainerPropertyItem value="$CommandAction38"/>
                 <ContainerPropertyItem value="$CommandAction45"/>
                 <ContainerPropertyItem value="$CommandAction78"/>
                 <ContainerPropertyItem value="$CommandAction85"/>
@@ -763,12 +762,6 @@
             <Property name="image"/>
             <Property name="selected" value="false"/>
         </DesignComponent>
-        <DesignComponent id="$CommandAction38" typeid="MIDP:CommandAction" uid="209">
-            <Property name="targetDisplayable"/>
-            <Property name="targetForwardDisplayable"/>
-            <Property name="actionSource"/>
-            <Property name="actionOrigin" value="frmOverview"/>
-        </DesignComponent>
         <DesignComponent id="imgKeyword" typeid="MIDP:javax.microedition.lcdui.Image" uid="212">
             <Property name="imageResourcePath" value="/dummyIcon.png"/>
         </DesignComponent>
@@ -1007,8 +1000,8 @@
             <Property name="indexBasedSwitch" value="true"/>
             <ContainerProperty name="commands">
                 <ContainerPropertyItem value="$CommandAction44"/>
-                <ContainerPropertyItem value="$CommandAction46"/>
                 <ContainerPropertyItem value="$CommandAction47"/>
+                <ContainerPropertyItem value="$CommandAction46"/>
                 <ContainerPropertyItem value="$CommandAction51"/>
                 <ContainerPropertyItem value="$CommandAction52"/>
                 <ContainerPropertyItem value="$CommandAction53"/>
@@ -1017,6 +1010,7 @@
                 <ContainerPropertyItem value="$CommandAction84"/>
                 <ContainerPropertyItem value="$CommandAction88"/>
                 <ContainerPropertyItem value="$CommandAction37"/>
+                <ContainerPropertyItem value="$CommandAction109"/>
                 <ContainerPropertyItem value="$CommandAction74"/>
                 <ContainerPropertyItem value="$CommandAction94"/>
                 <ContainerPropertyItem value="$CommandAction75"/>
@@ -2515,6 +2509,17 @@
             <Property name="targetForwardDisplayable"/>
             <Property name="actionSource" value="ssAdvertisment"/>
             <Property name="actionOrigin" value="ssAdvertisment"/>
+        </DesignComponent>
+        <DesignComponent id="cmdShowCacheInBrowser" typeid="MIDP:javax.microedition.lcdui.Command" uid="627">
+            <Property name="label" value="STRING:Geocaching.com"/>
+            <Property name="priority" value="3"/>
+            <Property name="type" value="SCREEN"/>
+        </DesignComponent>
+        <DesignComponent id="$CommandAction109" typeid="MIDP:CommandAction" uid="628">
+            <Property name="targetDisplayable"/>
+            <Property name="targetForwardDisplayable"/>
+            <Property name="actionSource" value="cmdShowCacheInBrowser"/>
+            <Property name="actionOrigin" value="lstFavourites"/>
         </DesignComponent>
     </DesignDocument>
     <FlowDocument version="1.1">

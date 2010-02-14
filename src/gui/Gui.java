@@ -337,7 +337,8 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private StringItem siRMSListing;
     private Command cmdDownloadAll;
     private ChoiceGroup cgInternalGPSType;
-    private org.netbeans.microedition.lcdui.SplashScreen ssAdvertisment;//GEN-END:MVDFields
+    private org.netbeans.microedition.lcdui.SplashScreen ssAdvertisment;
+    private Command cmdShowCacheInBrowser;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -1144,9 +1145,17 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert post-action code here
                 openFileBrowser = new OpenFileBrowser(getDisplay(), this);
                 openFileBrowser.open(null);
-            }//GEN-BEGIN:MVDCACase587
+            } else if (command == cmdShowCacheInBrowser) {//GEN-LINE:MVDCACase587
+                // Insert pre-action code here
+                // Do nothing//GEN-LINE:MVDCAAction628
+                // Insert post-action code here
+                int selected = firstCheckedFavourite();
+                if (selected != -1) {
+                    favourites.openCacheInBrowser(selected);
+                }
+            }//GEN-BEGIN:MVDCACase628
         } else if (displayable == frmFavourite) {
-            if (command == cmdBack) {//GEN-END:MVDCACase587
+            if (command == cmdBack) {//GEN-END:MVDCACase628
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstFavourites());//GEN-LINE:MVDCAAction262
                 // Insert post-action code here
@@ -2917,8 +2926,8 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
             // Insert pre-init code here
             lstFavourites = new List("Obl\u00EDben\u00E9", Choice.MULTIPLE, new String[0], new Image[0]);//GEN-BEGIN:MVDGetInit251
             lstFavourites.addCommand(get_cmdBack());
-            lstFavourites.addCommand(get_cmdDeleteAll());
             lstFavourites.addCommand(get_cmdSelect());
+            lstFavourites.addCommand(get_cmdDeleteAll());
             lstFavourites.addCommand(get_cmdAddActual());
             lstFavourites.addCommand(get_cmdAddGiven());
             lstFavourites.addCommand(get_cmdDelete());
@@ -2927,6 +2936,7 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
             lstFavourites.addCommand(get_cmdMultiSolver());
             lstFavourites.addCommand(get_cmdMap());
             lstFavourites.addCommand(get_cmdMapyCz());
+            lstFavourites.addCommand(get_cmdShowCacheInBrowser());
             lstFavourites.addCommand(get_cmdAddFieldNotes());
             lstFavourites.addCommand(get_cmdPoznamka());
             lstFavourites.addCommand(get_cmdImportGPX());
@@ -4781,6 +4791,18 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd624
         return ssAdvertisment;
     }//GEN-END:MVDGetEnd624
+
+    /** This method returns instance for cmdShowCacheInBrowser component and should be called instead of accessing cmdShowCacheInBrowser field directly.//GEN-BEGIN:MVDGetBegin627
+     * @return Instance for cmdShowCacheInBrowser component
+     */
+    public Command get_cmdShowCacheInBrowser() {
+        if (cmdShowCacheInBrowser == null) {//GEN-END:MVDGetBegin627
+            // Insert pre-init code here
+            cmdShowCacheInBrowser = new Command("Geocaching.com", Command.SCREEN, 3);//GEN-LINE:MVDGetInit627
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd627
+        return cmdShowCacheInBrowser;
+    }//GEN-END:MVDGetEnd627
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {

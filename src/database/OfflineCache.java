@@ -51,7 +51,7 @@ public class OfflineCache {
             
             dos.writeUTF(waypoint); //waypoint
             boolean compression = (data.length() > 200) ? true : false;
-            dos.writeBoolean(compression); //future use, is GZipped
+            dos.writeBoolean(compression); //is GZipped
             if (compression) {
                 byte cData[] = compress(data);
                 dos.writeInt(cData.length);

@@ -180,6 +180,39 @@ public class Favourites extends Database
         }
     }
     
+     /**
+     * Tato metoda otevre externi browser s mapy.cz
+     */
+    public void openCacheInBrowser(int number)
+    {
+        String description = "";
+        try
+        {
+            this.id = number;
+            RecordEnumeration rc = getRecordEnumeration();
+            int id = 0;
+            for (int i = 0; i <= number; i++)
+            {
+                id = rc.nextRecordId();
+            }
+            DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));
+            dis.readUTF(); //name
+            String type = dis.readUTF(); //type
+            if (!isCache(type)) {
+                gui.showAlert("U waypointu není podporováno!",AlertType.ERROR, null);
+                return;
+            }
+            description = dis.readUTF();
+            String[][] data = gui.http.parseData(description);
+                        
+            gui.platformRequest("http://www.geocaching.com/seek/cache_details.aspx?wp="+data[0][7]);
+        }
+        catch (Exception e)
+        {
+            gui.showError("openCacheInBrowser",e.toString(), description);
+        }
+    }
+    
     /**
      * Prida oblibenou polozku do databaze (editId=-1), nebo edituje zadany zaznam (editId>=0)
      */
