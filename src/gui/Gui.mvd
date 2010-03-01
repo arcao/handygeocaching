@@ -2453,6 +2453,7 @@
         <Node id="frmFavourite" location="5320,208" order="$CommandAction49,$CommandAction50,$CommandAction73,,$CommandAction95,$CommandAction104,,,,,$Default,,,,,"/>
         <Node id="frmAddGiven" location="1480,848" order="$CommandAction54,$CommandAction55,,,,,,,,,$Default,,,,,"/>
         <Node id="frmTrackingNumber" location="1480,1736" order="$CommandAction30,,$CommandAction58,,,,,,,,$Default,,,,,"/>
+        <Node id="frmTrackable" location="1144,208" order="$CommandAction57,$CommandAction59,,,,,,,,,$Default,,,,,"/>
         <Node id="frmMultiSolver" location="1480,1288" order="$CommandAction62,$CommandAction63,$CommandAction64,$CommandAction65,$CommandAction70,$CommandAction83,,,,,$Default,,,,,"/>
         <Node id="frmEditPattern" location="1968,1184" order="$CommandAction67,$CommandAction68,,,,,,,,,$Default,,,,,"/>
         <Node id="frmAddLetter" location="1720,1072" order="$CommandAction66,$CommandAction69,,,,,,,,,$Default,,,,,"/>
@@ -2468,7 +2469,6 @@
         <Node id="frmFieldNote" location="408,312" order="$CommandAction97,$CommandAction98,,,,,,,,,$Default,,,,,"/>
         <Node id="frmMemoryInfo" location="2136,1240" order="$CommandAction107,,,,,,,,,,$Default,,,,,"/>
         <Node id="ssAdvertisment" location="432,1120" order="$InternalCommandAction2,,,,,,,,,,$Default,,,,,"/>
-        <Node id="frmTrackable" location="1144,208" order="$CommandAction57,$CommandAction59,,,,,,,,,$Default,,,,,"/>
         <Link id="$StartPoint$ActionLink" path="200,1160,282,1160,282,1096,392,1096"/>
         <Link id="$CommandAction2$ActionLink" path="2152,200,2305,200,2305,672,47,672,47,1160,120,1160"/>
         <Link id="$CommandAction4$ActionLink" path="3112,200,3232,200,3232,1627,1141,1627,1141,1800,1160,1800"/>

@@ -4687,15 +4687,22 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         if (data == null)
             data = "";
         
+        TextArea text = new TextArea(getDisplay());
+        text.setLeftButtonScreen(get_lstMenu());
+        text.setLeftButtonText("Zavřít");
+        
         System.out.println("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" + data + "'");
         //vymazani chyb
         if (data.equals("Chyba")) {
-            get_tbError().setString("Problém s komunikačním skriptem, opakujte akci. Pokud se tato chyba ukazuje pořád, máte nefunkční GPRS.");
+            //get_tbError().setString("Problém s komunikačním skriptem, opakujte akci. Pokud se tato chyba ukazuje pořád, máte nefunkční GPRS.");
+            text.setText("Problém s komunikačním skriptem, opakujte akci. Pokud se tato chyba ukazuje pořád, máte nefunkční GPRS.");
         } else {
-            get_tbError().setString("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" + data + "'");
+            //get_tbError().setString("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" + data + "'");
+            text.setText("Popis chyby:\n\nSekce: " + section + "\nDruh: " + errorMessage + "\nData: '" + data + "'");
         }
         //System.out.println(get_tbError().getString());
-        getDisplay().setCurrent(get_tbError());
+        //getDisplay().setCurrent(get_tbError());
+        text.show();
     }
     
     public Alert showAlert(String text, AlertType type, Displayable next, boolean useTimeout) {

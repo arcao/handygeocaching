@@ -202,12 +202,12 @@ public class TextArea extends Canvas implements Runnable {
                 pos = found;
                 
                 //kontrola noveho radku
-                /*if (item.endsWith("\n") && text.charAt(pos) == '\n') {
+                if (item.endsWith("\n")) {
                     v.addElement(sbLine.toString().trim());
-                    v.addElement("");
+                    //v.addElement("");
                     sbLine.setLength(0);
                     left = PADDING;
-                }*/
+                }
            } else if (left + itemWidth > maxWidth && left == PADDING) {
                 //rozpulit slovo, protoze se nevejde na radek
                 int nextCharWidth = font.charWidth(text.charAt(pos));
@@ -227,18 +227,20 @@ public class TextArea extends Canvas implements Runnable {
                 left+= itemWidth;
                 
                 //kontrola noveho radku
-                /*if (item.endsWith("\n") && text.charAt(pos) == '\n') {
+                if (item.endsWith("\n")) {
                     v.addElement(sbLine.toString().trim());
-                    v.addElement("");
+                    //v.addElement("");
                     sbLine.setLength(0);
                     left = PADDING;
-                }*/
+                }
             }
         }
         
         if (sbLine.length() > 0)
             v.addElement(sbLine.toString().trim());
-                
+
+        v.addElement("");
+        
         //osetrime pozici
         position = (int) (position * ((double) v.size() / (double) lineBuffer.length));
         

@@ -187,11 +187,11 @@ public class GPXImport extends Form implements CommandListener {
                                     parser.next();
                                     terrain = parser.getText(); //terrain
                                 } else if (parser.getName().equals("long_description")) {
-                                    boolean isHTML = parser.getAttributeValue(GROUNDSPEAK_NS, "html").equals("True");
+                                    String isHTML = parser.getAttributeValue("", "html");
                                     parser.next();
                                     listing = parser.getText();
                                                                                                   
-                                    if (isHTML)
+                                    if (isHTML != null && isHTML.equalsIgnoreCase("true"))
                                         listing = stripTags(listing);
                                     
                                     parts[0][14] = Integer.toString(listing.length() / 1024);
