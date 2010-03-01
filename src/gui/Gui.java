@@ -161,8 +161,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Command cmdInfo;
     private Command cmdLogs;
     private Command cmdWaypoints;
-    private Form frmInfo;
-    private Form frmHint;
     private Form frmWaypoints;
     private Form frmLogs;
     private Image imgSearch;
@@ -272,11 +270,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private StringItem siAverageLongitude;
     private TextBox tbError;
     private Font fntSmallBold;
-    private Command cmdBegin;
-    private Command cmdEnd;
-    private StringItem siContent;
-    private StringItem siEnd;
-    private StringItem siBegin;
     private Command cmdFavourites;
     private Command cmdMultiSolver;
     private Command cmdRefresh;
@@ -287,9 +280,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Form frmConnectionHelp;
     private StringItem stringItem12;
     private Image imgWaypoint;
-    private Form frmDebug1;
-    private StringItem siPart;
-    private StringItem siDebug1;
     private Command cmdMapyCz;
     private Image imgPdaGps;
     private Image imgOther;
@@ -727,30 +717,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 getDisplay().setCurrent(get_tbPoznamka());//GEN-LINE:MVDCAAction589
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase589
-        } else if (displayable == frmInfo) {
-            if (command == cmdBack) {//GEN-END:MVDCACase589
-                // Insert pre-action code here
-                getDisplay().setCurrent(get_frmOverview());//GEN-LINE:MVDCAAction111
-                // Insert post-action code here
-            } else if (command == cmdEnd) {//GEN-LINE:MVDCACase111
-                // Insert pre-action code here
-                getDisplay().setCurrentItem(get_siEnd());
-                // Do nothing//GEN-LINE:MVDCAAction399
-                // Insert post-action code here
-            } else if (command == cmdBegin) {//GEN-LINE:MVDCACase399
-                // Insert pre-action code here
-                getDisplay().setCurrentItem(get_siBegin());
-                // Do nothing//GEN-LINE:MVDCAAction398
-                // Insert post-action code here
-            }//GEN-BEGIN:MVDCACase398
-        } else if (displayable == frmHint) {
-            if (command == cmdBack) {//GEN-END:MVDCACase398
-                // Insert pre-action code here
-                getDisplay().setCurrent(get_frmOverview());//GEN-LINE:MVDCAAction113
-                // Insert post-action code here
-            }//GEN-BEGIN:MVDCACase113
         } else if (displayable == frmWaypoints) {
-            if (command == cmdBack) {//GEN-END:MVDCACase113
+            if (command == cmdBack) {//GEN-END:MVDCACase589
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_frmOverview());//GEN-LINE:MVDCAAction117
                 // Insert post-action code hereC
@@ -1370,14 +1338,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction280
                 getDisplay().setCurrent(get_lstMode());//GEN-LINE:MVDCAAction426
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase426
-        } else if (displayable == frmDebug1) {
-            if (command == cmdBack) {//GEN-END:MVDCACase426
-                // Insert pre-action code here
-                getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction444
-                // Insert post-action code here
-            }//GEN-BEGIN:MVDCACase444
         } else if (displayable == frmGpsSignalHelp) {
-            if (command == cmdBack) {//GEN-END:MVDCACase444
+            if (command == cmdBack) {//GEN-END:MVDCACase426
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction489
                 // Insert post-action code here
@@ -2172,39 +2134,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         return cmdWaypoints;
     }//GEN-END:MVDGetEnd108
     
-    /** This method returns instance for frmInfo component and should be called instead of accessing frmInfo field directly.//GEN-BEGIN:MVDGetBegin110
-     * @return Instance for frmInfo component
-     */
-    public Form get_frmInfo() {
-        if (frmInfo == null) {//GEN-END:MVDGetBegin110
-            // Insert pre-init code here
-            frmInfo = new Form("Listing ke\u0161e", new Item[] {//GEN-BEGIN:MVDGetInit110
-                get_siBegin(),
-                get_siContent(),
-                get_siEnd()
-            });
-            frmInfo.addCommand(get_cmdBack());
-            frmInfo.addCommand(get_cmdBegin());
-            frmInfo.addCommand(get_cmdEnd());
-            frmInfo.setCommandListener(this);//GEN-END:MVDGetInit110
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd110
-        return frmInfo;
-    }//GEN-END:MVDGetEnd110
     
-    /** This method returns instance for frmHint component and should be called instead of accessing frmHint field directly.//GEN-BEGIN:MVDGetBegin112
-     * @return Instance for frmHint component
-     */
-    public Form get_frmHint() {
-        if (frmHint == null) {//GEN-END:MVDGetBegin112
-            // Insert pre-init code here
-            frmHint = new Form("N\u00E1pov\u011Bda", new Item[0]);//GEN-BEGIN:MVDGetInit112
-            frmHint.addCommand(get_cmdBack());
-            frmHint.setCommandListener(this);//GEN-END:MVDGetInit112
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd112
-        return frmHint;
-    }//GEN-END:MVDGetEnd112
     
     /** This method returns instance for frmWaypoints component and should be called instead of accessing frmWaypoints field directly.//GEN-BEGIN:MVDGetBegin116
      * @return Instance for frmWaypoints component
@@ -3846,65 +3776,10 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         return fntSmallBold;
     }//GEN-END:MVDGetEnd395
     
-    /** This method returns instance for cmdBegin component and should be called instead of accessing cmdBegin field directly.//GEN-BEGIN:MVDGetBegin396
-     * @return Instance for cmdBegin component
-     */
-    public Command get_cmdBegin() {
-        if (cmdBegin == null) {//GEN-END:MVDGetBegin396
-            // Insert pre-init code here
-            cmdBegin = new Command("Na za\u010D\u00E1tek", Command.SCREEN, 1);//GEN-LINE:MVDGetInit396
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd396
-        return cmdBegin;
-    }//GEN-END:MVDGetEnd396
     
-    /** This method returns instance for cmdEnd component and should be called instead of accessing cmdEnd field directly.//GEN-BEGIN:MVDGetBegin397
-     * @return Instance for cmdEnd component
-     */
-    public Command get_cmdEnd() {
-        if (cmdEnd == null) {//GEN-END:MVDGetBegin397
-            // Insert pre-init code here
-            cmdEnd = new Command("Na konec", Command.SCREEN, 2);//GEN-LINE:MVDGetInit397
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd397
-        return cmdEnd;
-    }//GEN-END:MVDGetEnd397
     
-    /** This method returns instance for siContent component and should be called instead of accessing siContent field directly.//GEN-BEGIN:MVDGetBegin401
-     * @return Instance for siContent component
-     */
-    public StringItem get_siContent() {
-        if (siContent == null) {//GEN-END:MVDGetBegin401
-            // Insert pre-init code here
-            siContent = new StringItem("", "");//GEN-LINE:MVDGetInit401
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd401
-        return siContent;
-    }//GEN-END:MVDGetEnd401
     
-    /** This method returns instance for siEnd component and should be called instead of accessing siEnd field directly.//GEN-BEGIN:MVDGetBegin402
-     * @return Instance for siEnd component
-     */
-    public StringItem get_siEnd() {
-        if (siEnd == null) {//GEN-END:MVDGetBegin402
-            // Insert pre-init code here
-            siEnd = new StringItem("", "--KONEC--");//GEN-LINE:MVDGetInit402
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd402
-        return siEnd;
-    }//GEN-END:MVDGetEnd402
     
-    /** This method returns instance for siBegin component and should be called instead of accessing siBegin field directly.//GEN-BEGIN:MVDGetBegin403
-     * @return Instance for siBegin component
-     */
-    public StringItem get_siBegin() {
-        if (siBegin == null) {//GEN-END:MVDGetBegin403
-            // Insert pre-init code here
-            siBegin = new StringItem("", " ");//GEN-LINE:MVDGetInit403
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd403
-        return siBegin;
-    }//GEN-END:MVDGetEnd403
     
     /** This method returns instance for cmdFavourites component and should be called instead of accessing cmdFavourites field directly.//GEN-BEGIN:MVDGetBegin405
      * @return Instance for cmdFavourites component
@@ -4043,46 +3918,8 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     
     
     
-    /** This method returns instance for frmDebug1 component and should be called instead of accessing frmDebug1 field directly.//GEN-BEGIN:MVDGetBegin443
-     * @return Instance for frmDebug1 component
-     */
-    public Form get_frmDebug1() {
-        if (frmDebug1 == null) {//GEN-END:MVDGetBegin443
-            // Insert pre-init code here
-            frmDebug1 = new Form("Debug", new Item[] {//GEN-BEGIN:MVDGetInit443
-                get_siPart(),
-                get_siDebug1()
-            });
-            frmDebug1.addCommand(get_cmdBack());
-            frmDebug1.setCommandListener(this);//GEN-END:MVDGetInit443
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd443
-        return frmDebug1;
-    }//GEN-END:MVDGetEnd443
     
-    /** This method returns instance for siPart component and should be called instead of accessing siPart field directly.//GEN-BEGIN:MVDGetBegin450
-     * @return Instance for siPart component
-     */
-    public StringItem get_siPart() {
-        if (siPart == null) {//GEN-END:MVDGetBegin450
-            // Insert pre-init code here
-            siPart = new StringItem("Part", "<Enter Text>");//GEN-LINE:MVDGetInit450
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd450
-        return siPart;
-    }//GEN-END:MVDGetEnd450
     
-    /** This method returns instance for siDebug1 component and should be called instead of accessing siDebug1 field directly.//GEN-BEGIN:MVDGetBegin451
-     * @return Instance for siDebug1 component
-     */
-    public StringItem get_siDebug1() {
-        if (siDebug1 == null) {//GEN-END:MVDGetBegin451
-            // Insert pre-init code here
-            siDebug1 = new StringItem("Debug", "<Enter Text>");//GEN-LINE:MVDGetInit451
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd451
-        return siDebug1;
-    }//GEN-END:MVDGetEnd451
     
     /** This method returns instance for cmdMapyCz component and should be called instead of accessing cmdMapyCz field directly.//GEN-BEGIN:MVDGetBegin452
      * @return Instance for cmdMapyCz component

@@ -18,6 +18,7 @@ import database.Settings;
 import gps.Gps;
 import gui.Gui;
 import gui.IconLoader;
+import gui.TextArea;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -421,13 +422,18 @@ public class Http implements Runnable
                     response = downloadData("part=info&waypoint="+waypoint, false, true, "Stahuji listing keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
-                        gui.get_frmInfo().deleteAll();
-                        gui.get_frmInfo().append(gui.get_siBegin());
-                        gui.get_frmInfo().append(response);
-                        gui.get_frmInfo().append(gui.get_siEnd());
+                        TextArea area = new TextArea(gui.getDisplay());
+                        area.setLeftButtonText("Zpět");
+                        area.setLeftButtonScreen(gui.get_frmOverview());
+                        area.setText(response);
+                        area.show();
+                        //gui.get_frmInfo().deleteAll();
+                        //gui.get_frmInfo().append(gui.get_siBegin());
+                        //gui.get_frmInfo().append(response);
+                        //gui.get_frmInfo().append(gui.get_siEnd());
                         //limitace Javy na telefonech SE? nasledujici radka zobrazi jen par vet.
                         //gui.get_siContent().setText(response);
-                        gui.getDisplay().setCurrent(gui.get_frmInfo());
+                        //gui.getDisplay().setCurrent(gui.get_frmInfo());
                     }
                 }
                 catch (InterruptedException e) {
@@ -444,9 +450,14 @@ public class Http implements Runnable
                     response = downloadData("part=hint&waypoint="+waypoint, false, true, "Stahuji nápovědu keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
-                        gui.get_frmHint().deleteAll();
-                        gui.get_frmHint().append(response);
-                        gui.getDisplay().setCurrent(gui.get_frmHint());
+                        TextArea area = new TextArea(gui.getDisplay());
+                        area.setLeftButtonText("Zpět");
+                        area.setLeftButtonScreen(gui.get_frmOverview());
+                        area.setText(response);
+                        area.show();
+                        //gui.get_frmHint().deleteAll();
+                        //gui.get_frmHint().append(response);
+                        //gui.getDisplay().setCurrent(gui.get_frmHint());
                     }
                 }
                 catch (InterruptedException e) {

@@ -127,8 +127,10 @@ public class GPXImport extends Form implements CommandListener {
                         parts[0][i] = "";
                     
                     parts[0][10] = "waypoint";
+                    parts[0][12] = "0";
+                    parts[0][13] = "0";
                     parts[0][14] = "0";
-                    
+                                        
                     //for (int i=0; i<parser.getAttributeCount(); i++) {
                     //    System.out.println("{"+parser.getAttributeNamespace(i)+"}"+parser.getAttributeName(i)+"="+parser.getAttributeValue(i));
                     //}
@@ -185,8 +187,13 @@ public class GPXImport extends Form implements CommandListener {
                                     parser.next();
                                     terrain = parser.getText(); //terrain
                                 } else if (parser.getName().equals("long_description")) {
+                                    boolean isHTML = parser.getAttributeValue(GROUNDSPEAK_NS, "html").equals("True");
                                     parser.next();
                                     listing = parser.getText();
+                                                                                                  
+                                    if (isHTML)
+                                        listing = stripTags(listing);
+                                    
                                     parts[0][14] = Integer.toString(listing.length() / 1024);
                                     parts[0][13] = (listing.indexOf("<!--Handy") != -1) ? "1":"0";
                                 } else if (parser.getName().equals("encoded_hints")) {
@@ -224,7 +231,7 @@ public class GPXImport extends Form implements CommandListener {
                     } else {
                         favourites.addEdit(parts[0][0], Favourites.cachePartsToDesc(parts), parts[0][4], parts[0][5], parts[0][10], null, false, "", comment, false, false, false);
                         http.getHintCache().add(parts[0][7], hint);
-                        http.getListingCache().add(parts[0][7], stripTags(listing));
+                        http.getListingCache().add(parts[0][7], listing);
                     }
                     count++;
                     
@@ -336,6 +343,9 @@ public class GPXImport extends Form implements CommandListener {
     private String stripTags(String html) {
         StringBuffer sb = new StringBuffer();
         
+        html = html.replace('\n', ' ');
+        html = Utils.unHTMLEntity(html);
+        
         int pos = 0;
         int foundTag = 0;
         int foundComment = 0;
@@ -347,6 +357,25 @@ public class GPXImport extends Form implements CommandListener {
             if (foundTag < foundComment || (foundComment == -1 && foundTag != -1)) {
                 sb.append(html.substring(pos, foundTag));
                 pos = foundTag + 1;
+                //pridani prazdnych radku. Ale dost naprd, slo by to tisickrat lip
+                if (pos + 2 < html.length()) {
+                    String tag2CH = html.substring(pos, pos + 2).toLowerCase();
+                    if (tag2CH.equals("p>") || tag2CH.equals("p "))
+                        sb.append("\n\n");
+                }
+                if (pos + 3 < html.length()) {
+                    String tag3CH = html.substring(pos, pos + 3).toLowerCase();
+                    if (tag3CH.equals("br>") || tag3CH.equals("br ") || tag3CH.equals("br/"))
+                        sb.append("\n");
+                }
+                if (pos + 4 < html.length()) {
+                    String tag4CH = html.substring(pos, pos + 4).toLowerCase();
+                    if (tag4CH.startsWith("/h") && (tag4CH.charAt(2) >= '1' && tag4CH.charAt(2) <= '7') && tag4CH.charAt(3) == '>')
+                        sb.append("\n");
+                    if (tag4CH.equals("div>") || tag4CH.equals("div "))
+                        sb.append("\n\n");
+                }                
+                
                 if ((foundTag = html.indexOf('>', pos)) != -1)
                     pos = foundTag + 1;
             } else {
