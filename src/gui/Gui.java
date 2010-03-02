@@ -74,7 +74,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     public boolean nightMode = false;
     
     //reference na jednotlive moduly
-    private Gps gps = null;
+    public Gps gps = null;
     private Bluetooth bluetooth;
     private Settings settings;
     private Favourites favourites;

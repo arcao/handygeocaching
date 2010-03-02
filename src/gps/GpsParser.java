@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
-import javax.bluetooth.BluetoothConnectionException;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.lcdui.AlertType;
@@ -388,13 +387,18 @@ public class GpsParser implements Runnable
         OutputStream outputStream = null;
         
         bufferPosition = 0;
+        int lastNmeaCount = 0;
                 
         try {
             try {
-                streamConnection = (StreamConnection)Connector.open(communicationURL, Connector.READ_WRITE);
-                inputStream = streamConnection.openInputStream();
-                if (source == GPS_HGE_100)
+                if (source != GPS_HGE_100) {
+                    streamConnection = (StreamConnection)Connector.open(communicationURL);
+                    inputStream = streamConnection.openInputStream();
+                } else {
+                    streamConnection = (StreamConnection)Connector.open(communicationURL, Connector.READ_WRITE);
+                    inputStream = streamConnection.openInputStream();
                     outputStream = streamConnection.openOutputStream();
+                }
             } catch (Exception e) {
                 exception = e.toString();
                 if (source == GPS_GATE) {
@@ -424,7 +428,7 @@ public class GpsParser implements Runnable
             } catch (IOException ex) {}
         } catch (Exception ex) {
             exception = ex.toString();
-            gui.showAlert("Chyba ve spojení s GPS: " + exception, AlertType.ERROR, null);
+            gui.showAlert("Chyba ve spojení s GPS: " + exception, AlertType.ERROR, gui.get_lstMode());
         } finally {
             if (source == GPS_HGE_100 && outputStream != null)
                 try { outputStream.write("$STO\r\n".getBytes()); } catch (IOException ex) {} // Tell HGE-100 to stop transmitting NMEA data
@@ -434,6 +438,7 @@ public class GpsParser implements Runnable
                 try { outputStream.close(); } catch (IOException ex) {}
             if (streamConnection != null)
                 try { streamConnection.close(); } catch (IOException ex) {}
+            thread = null;
         }
         
     }

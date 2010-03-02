@@ -94,7 +94,7 @@ public class Settings
             lastLattitude = "N 50° 00.000";
             lastLongitude = "E 014° 00.000";
             numberCaches = 10;
-            flashbackPeriod = 4;
+            flashbackPeriod = 0;
             lastDevice = "";
             vip = false;
             incrementalFieldNotes = true;

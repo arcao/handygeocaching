@@ -68,7 +68,9 @@ public class Bluetooth implements DiscoveryListener
      */
     public boolean isOn()
     {
-        try
+        //mozna buggy, tak vraci vzdy true
+        return true;
+        /*try
         {
             localDevice = LocalDevice.getLocalDevice();
             localDevice.setDiscoverable(DiscoveryAgent.GIAC);
@@ -78,7 +80,7 @@ public class Bluetooth implements DiscoveryListener
         {
             gui.showAlert("Máte vypnuté Bluetooth!",AlertType.WARNING,gui.get_lstMode());
             return false;
-        }
+        }*/
     }
     
     /**

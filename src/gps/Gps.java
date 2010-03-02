@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Displayable;
-import javax.microedition.xml.rpc.Element;
 import track.Track;
 import utils.StringTokenizer;
 import utils.Utils;
@@ -380,7 +379,13 @@ public class Gps implements Runnable
                     }
                 }
                 //detekce preruseneho spojeni
-                if (gpsParser.getNmeaCount() == lastNmeaCount && (gpsParser.source == GpsParser.BLUETOOTH || gpsParser.source == GpsParser.GPS_HGE_100))
+                if ((gpsParser.source == GpsParser.BLUETOOTH || gpsParser.source == GpsParser.GPS_HGE_100) && !gpsParser.isOpen()) {
+                    gui.showAlert("Spojení s GPS modulem bylo přerušeno!",AlertType.ERROR,gui.get_lstMode());
+                    gpsParser.close();
+                    stop();
+                }
+                
+                /*if (gpsParser.getNmeaCount() == lastNmeaCount && (gpsParser.source == GpsParser.BLUETOOTH || gpsParser.source == GpsParser.GPS_HGE_100))
                 {
                     skips++;
                     if (skips>MAXIMUM_SKIPS)
@@ -395,7 +400,7 @@ public class Gps implements Runnable
                 {
                     skips = 0;
                 }
-                lastNmeaCount = gpsParser.getNmeaCount();
+                lastNmeaCount = gpsParser.getNmeaCount();*/
             }
             catch (Exception e)
             {
