@@ -67,7 +67,7 @@ public class TextArea extends Canvas implements Runnable {
         lastHeight = -1;
         
         position = 0;
-        font = Font.getDefaultFont();
+        font = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
         fontBold = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_MEDIUM);
         
         lineHeight = font.getHeight();
