@@ -155,10 +155,22 @@ public class Internal implements LocationListener
         
         try
         {
+            //Pokud podporuje application/X-jsr179-location-nmea, ziskame informace o satelitech
+            String nmea = location.getExtraInfo("application/X-jsr179-location-nmea");
+            if (nmea != null && nmea.length() > 0) {
+                String[] lines = StringTokenizer.getArray(nmea, "$");
+                for(int i = 0; i < lines.length; i++) {
+                    if (lines[i].length() > 0 && (lines[i].startsWith("GPGSV") || lines[i].startsWith("GPGSA")))
+                        gpsParser.receiveNmea("$" + lines[i]);
+                }
+            }
+            
+            gpsParser.nmeaCount++;
+
             if (location.isValid())
             {
-                gpsParser.nmeaCount++;
                 gpsParser.fix = true;
+                gpsParser.fixType = 1;
                                 
                 QualifiedCoordinates coordinates = location.getQualifiedCoordinates();
                 //if (coordinates.getHorizontalAccuracy() > 100) return; //zahazujeme velke nepresnosti
@@ -181,22 +193,14 @@ public class Internal implements LocationListener
                 
                 double speed = location.getSpeed();
                 if (!Double.isNaN(speed))
-                    gpsParser.speed = speed; // km/h nebo m/s? buh vi. Dle dokumentace m/s, dle implementace v telefonech km/h. :)
+                    gpsParser.speed = speed;
                 
-                //Pokud podporuje application/X-jsr179-location-nmea, muzou se ziskat lepsi, pripadne dalsi informace. Stavajici prepise.  
-                String nmea = location.getExtraInfo("application/X-jsr179-location-nmea");
-                if (nmea != null && nmea.length() > 0) {
-                    String[] lines = StringTokenizer.getArray(nmea, "$");
-                    for(int i = 0; i < lines.length; i++) {
-                        if (lines[i].length() > 0)
-                            gpsParser.receiveNmea("$" + lines[i]);
-                    }
-                }
             }
             else
             {
-                gpsParser.nmeaCount++;
                 gpsParser.fix = false;
+                gpsParser.fixType = 0;
+                gpsParser.fixSatellites = 0;
             }
         }
         catch (Exception e)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MVDData version="1.3">
-    <DesignDocument designVersion="MIDP-2" uidCounter="631">
+    <DesignDocument designVersion="MIDP-2" uidCounter="632">
         <DesignComponent id="$MobileDevice" typeid="MIDP:$MobileDevice" uid="0"/>
         <DesignComponent id="$StartPoint" typeid="MIDP:$StartPoint" uid="1">
             <Property name="targetDisplayable" value="ssAdvertisment"/>
@@ -1890,6 +1890,7 @@
                 <ContainerPropertyItem value="siVyska"/>
                 <ContainerPropertyItem value="siPresnost"/>
                 <ContainerPropertyItem value="siPravdepodobnost"/>
+                <ContainerPropertyItem value="stringItem2"/>
                 <ContainerPropertyItem value="siSat"/>
             </ContainerProperty>
         </DesignComponent>
@@ -2425,6 +2426,11 @@
             <Property name="targetForwardDisplayable"/>
             <Property name="actionSource" value="cmdShowCacheInBrowser"/>
             <Property name="actionOrigin" value="lstFavourites"/>
+        </DesignComponent>
+        <DesignComponent id="stringItem2" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="631">
+            <Property name="label" value="STRING:\nWASS / EGNOS / MSAS"/>
+            <Property name="text" value="STRING:Vyskytuje-li se v tabulce sign\u00E1lu p\u00EDsmeno W, E nebo M, pak je pozice zp\u0159esn\u011Bna pomoc\u00ED DGPS. P\u0159\u00EDslu\u0161n\u00E9 p\u00EDsmeno ozna\u010Duje pou\u017Eit\u00FD syst\u00E9m . V Evrop\u011B je pro zp\u0159esn\u011Bn\u00ED pot\u0159eba chytat satelity EGNOSu (p\u00EDsmeno E). Pokud je zp\u0159esn\u011Bno pomoc\u00ED satelit\u016F jin\u00E9ho syst\u00E9mu, je to na \u0161kodu."/>
+            <ContainerProperty name="commands"/>
         </DesignComponent>
     </DesignDocument>
     <FlowDocument version="1.1">

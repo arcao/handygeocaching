@@ -328,7 +328,8 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Command cmdDownloadAll;
     private ChoiceGroup cgInternalGPSType;
     private org.netbeans.microedition.lcdui.SplashScreen ssAdvertisment;
-    private Command cmdShowCacheInBrowser;//GEN-END:MVDFields
+    private Command cmdShowCacheInBrowser;
+    private StringItem stringItem2;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -4004,6 +4005,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
                 get_siVyska(),
                 get_siPresnost(),
                 get_siPravdepodobnost(),
+                get_stringItem2(),
                 get_siSat()
             });
             frmGpsSignalHelp.addCommand(get_cmdBack());
@@ -4640,6 +4642,18 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd627
         return cmdShowCacheInBrowser;
     }//GEN-END:MVDGetEnd627
+
+    /** This method returns instance for stringItem2 component and should be called instead of accessing stringItem2 field directly.//GEN-BEGIN:MVDGetBegin631
+     * @return Instance for stringItem2 component
+     */
+    public StringItem get_stringItem2() {
+        if (stringItem2 == null) {//GEN-END:MVDGetBegin631
+            // Insert pre-init code here
+            stringItem2 = new StringItem("\nWASS / EGNOS / MSAS", "Vyskytuje-li se v tabulce sign\u00E1lu p\u00EDsmeno W, E nebo M, pak je pozice zp\u0159esn\u011Bna pomoc\u00ED DGPS. P\u0159\u00EDslu\u0161n\u00E9 p\u00EDsmeno ozna\u010Duje pou\u017Eit\u00FD syst\u00E9m . V Evrop\u011B je pro zp\u0159esn\u011Bn\u00ED pot\u0159eba chytat satelity EGNOSu (p\u00EDsmeno E). Pokud je zp\u0159esn\u011Bno pomoc\u00ED satelit\u016F jin\u00E9ho syst\u00E9mu, je to na \u0161kodu.");//GEN-LINE:MVDGetInit631
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd631
+        return stringItem2;
+    }//GEN-END:MVDGetEnd631
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {

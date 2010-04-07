@@ -79,7 +79,7 @@ public class GpsParser implements Runnable
     public static final int GPS_GATE = 1;
     public static final int INTERNAL = 2;
 
-    private int fixType = 0;
+    protected int fixType = 0;
 
     public static final int GPS_HGE_100 = 3;
     public int source;
@@ -89,7 +89,7 @@ public class GpsParser implements Runnable
     private int bufferPosition = 0;
     
     private Thread thread;
-    
+
     public boolean isDgpsUsed() {
         return dgpsUsed;
     }
@@ -486,7 +486,7 @@ public class GpsParser implements Runnable
         }
         catch (Exception ex)
         {
-            gui.showError("extractData",ex.toString(),"");
+            gui.showError("extractData",ex.toString(),nmea);
         }
     }
     //Zephy 21.11.07 gpsstatus+\
@@ -494,6 +494,7 @@ public class GpsParser implements Runnable
     {
         int Index = 0;
         int PocetPrvkuPole = sat.length;
+        int active = 0;
         for(int i = 3; i <=14; i++)
         {
             //Zephy oprava 20.12.07 +\
@@ -506,12 +507,13 @@ public class GpsParser implements Runnable
                 else
                 {
                     activsat[Index] = Integer.parseInt(sat[i]);
+                    active++;
                 }
                 Index++;
             }
             //Zephy oprava 20.12.07 +/
         }
-        
+        fixSatellites = active;
     }
     //Zephy 21.11.07 gpsstatus+/
     /**
@@ -528,6 +530,8 @@ public class GpsParser implements Runnable
             nmea = nmea.trim();
             if (!nmea.startsWith("$"))
                 return;
+            
+            this.nmea = nmea;
             
             nmeaCount++;
             

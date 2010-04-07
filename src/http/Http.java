@@ -500,25 +500,52 @@ public class Http implements Runnable
                     if (checkData(response))
                     {
                         String[][] logs = parseData(response);
-                        gui.get_frmLogs().deleteAll();
+                        //gui.get_frmLogs().deleteAll();
+                        
+                        StringBuffer sb = new StringBuffer();
+                        TextArea area = new TextArea(gui.getDisplay());
+                        area.setLeftButtonText("Zpět");
+                        area.setLeftButtonScreen(gui.get_frmOverview());
+                        
                         for (int i=0;i<logs.length;i++)
                         {
                             if (i==logs.length-1)
                             {
-                                Command cmdMoreLogs = new Command(logs[i][0]+" dalších", Command.SCREEN, 1);;
-                                gui.get_frmLogs().removeCommand(cmdMoreLogs);
+                                //Command cmdMoreLogs = new Command(logs[i][0]+" dalších", Command.SCREEN, 1);;
+                                //gui.get_frmLogs().removeCommand(cmdMoreLogs);
                                 if (!logs[i][0].equals("0"))
                                 {
-                                    gui.get_frmLogs().addCommand(cmdMoreLogs);
+                                    area.setRightButtonText("Dalších " + logs[i][0]);
+                                    area.setRightButtonAction(new Runnable() {
+                                        public void run() {
+                                            start(Http.ALL_LOGS, false);
+                                        }
+                                    });
+                                    //gui.get_frmLogs().addCommand(cmdMoreLogs);
                                 }
                                 guideline = logs[i][1];
                             }
                             else
                             {
-                                gui.get_frmLogs().append(new StringItem(logs[i][0]+":"+logs[i][1]+"("+logs[i][2]+" nalezeno)",logs[i][3]+": "+logs[i][4]));
+                                sb.append(logs[i][0]); //typ logu
+                                sb.append(':');
+                                sb.append(logs[i][1]); //autor
+                                sb.append('(');
+                                sb.append(logs[i][2]); //pocet nalezu
+                                sb.append(" nalezeno)\n");
+                                sb.append(logs[i][3]); //datum
+                                sb.append(": ");
+                                sb.append(logs[i][4]); //text logu
+                                sb.append("\n\n");
+                                                                
+                                //gui.get_frmLogs().append(new StringItem(logs[i][0]+":"+logs[i][1]+"("+logs[i][2]+" nalezeno)",logs[i][3]+": "+logs[i][4]));
+                                
                             }
                         }
-                        gui.getDisplay().setCurrent(gui.get_frmLogs());
+                        area.setText(sb.toString());
+                        area.show();
+                        
+                        //gui.getDisplay().setCurrent(gui.get_frmLogs());
                     }
                 }
                 catch (InterruptedException e) {
@@ -536,12 +563,34 @@ public class Http implements Runnable
                     if (checkData(response))
                     {
                         String[][] logs = parseData(response);
-                        gui.get_frmAllLogs().deleteAll();
+                        //gui.get_frmAllLogs().deleteAll();
+                        StringBuffer sb = new StringBuffer();
+                        TextArea area = new TextArea(gui.getDisplay());
+                        area.setLeftButtonText("Zpět");
+                        area.setLeftButtonAction(new Runnable() {
+                            public void run() {
+                                start(Http.LOGS, false);
+                            }
+                        });
+                        
                         for (int i=0;i<logs.length;i++)
                         {
-                            gui.get_frmAllLogs().append(new StringItem(logs[i][0]+":"+logs[i][1]+"("+logs[i][2]+" nalezeno)",logs[i][3]+": "+logs[i][4]));
+                            sb.append(logs[i][0]); //typ logu
+                            sb.append(':');
+                            sb.append(logs[i][1]); //autor
+                            sb.append('(');
+                            sb.append(logs[i][2]); //pocet nalezu
+                            sb.append(" nalezeno)\n");
+                            sb.append(logs[i][3]); //datum
+                            sb.append(": ");
+                            sb.append(logs[i][4]); //text logu
+                            sb.append("\n\n");
+
+                            //gui.get_frmAllLogs().append(new StringItem(logs[i][0]+":"+logs[i][1]+"("+logs[i][2]+" nalezeno)",logs[i][3]+": "+logs[i][4]));
                         }
-                        gui.getDisplay().setCurrent(gui.get_frmAllLogs());
+                        //gui.getDisplay().setCurrent(gui.get_frmAllLogs());
+                        area.setText(sb.toString());
+                        area.show();
                     }
                 }
                 catch (InterruptedException e) {

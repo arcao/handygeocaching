@@ -57,6 +57,8 @@ public class TextArea extends Canvas implements Runnable {
     
     private int keyCode = 0;
     private Thread repeatThread = null;
+    
+    private Thread rebuildThread = null;
         
     /** Creates a new instance of TextArea */
     public TextArea(Display display) {
@@ -174,6 +176,10 @@ public class TextArea extends Canvas implements Runnable {
         int pos = 0;
         int len = text.length();
         
+        //pridani dvou radku na zacatek kvuli symbolu spojeni u Nokii
+        v.addElement("");
+        v.addElement("");
+                
         int maxWidth = width - 2 * PADDING - SCROLL_WIDTH; 
         
         StringBuffer sbLine = new StringBuffer();
@@ -260,17 +266,34 @@ public class TextArea extends Canvas implements Runnable {
     protected void paint(Graphics g) {
         int width = getWidth();
         int height = getHeight();
- 
+        
+        g.setFont(font);
+                
         //pokud se zmenilo rozliseni prekopeme radky
-        if (width != lastWidth || height != lastHeight) 
+        if (width != lastWidth || height != lastHeight) {
             rebuild();
-       
+            //smazani pozadi
+            //g.setColor((Gui.getInstance().nightMode) ? 0x0 : 0xffffff); //pozadi
+            //g.fillRect(0, 0, width, height);
+            //g.setColor((Gui.getInstance().nightMode) ? 0xffffff : 0x0); //text
+            
+            //g.drawString("Pracuji...", width/2, height/2, Graphics.HCENTER | Graphics.VCENTER);
+            //if (rebuildThread == null) {
+            //    rebuildThread = new Thread() {
+            //        public void run() {
+            //            rebuild();
+            //            rebuildThread = null;
+            //        }
+            //    };
+            //    rebuildThread.start();
+            //}
+            //return;
+        }
+        
         //smazani pozadi
         g.setColor((Gui.getInstance().nightMode) ? 0x0 : 0xffffff); //pozadi
         g.fillRect(0, 0, width, height);
-        
         g.setColor((Gui.getInstance().nightMode) ? 0xffffff : 0x0); //text
-        g.setFont(font);
         
         for(int i = 0; i < linesPerScreen; i++) {
             if (position + i >= lineBuffer.length - 1)

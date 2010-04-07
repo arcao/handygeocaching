@@ -147,15 +147,16 @@ public class Signal extends Canvas
                 g.drawString( getTopTenList(), 7, (height - 94 - (nVyskaRadku*5)), Graphics.LEFT|Graphics.TOP);
                 g.setColor(0);
             } else {
-                g.drawString("Počet NMEA: " + gps.getGpsParser().getNmeaCount(), 7, (height - 94 - nVyskaRadku*6), Graphics.LEFT|Graphics.TOP);
-                g.drawString("GLL: " + gps.getGpsParser().getNmeaGLLCount(), 7, (height - 94 - nVyskaRadku*5), Graphics.LEFT|Graphics.TOP);
-                g.drawString("RMC: " + gps.getGpsParser().getNmeaRMCCount(), (width * 1/2)+5, (height - 94 - nVyskaRadku*5), Graphics.LEFT|Graphics.TOP);
-                g.drawString("GGA: " + gps.getGpsParser().getNmeaGGACount(), 7, (height - 94 - nVyskaRadku*4), Graphics.LEFT|Graphics.TOP);
-                g.drawString("GSA: " + gps.getGpsParser().getNmeaGSACount(), (width * 1/2)+5, (height - 94 - nVyskaRadku*4), Graphics.LEFT|Graphics.TOP);
-                g.drawString("GSV: " + gps.getGpsParser().getNmeaGSVCount(), 7, (height - 94 - nVyskaRadku*3), Graphics.LEFT|Graphics.TOP);
-                g.drawString("Buffer: " + gps.getGpsParser().getBufferFreeInPercent() + "%", (width * 1/2)+5, (height - 94 - nVyskaRadku*3), Graphics.LEFT|Graphics.TOP);
-                g.drawString("Fix: " + gps.getGpsParser().getFixTypeText(), 7, (height - 94 - nVyskaRadku*2), Graphics.LEFT|Graphics.TOP);
-                g.drawString("DGPS: " + (gps.getGpsParser().isDgpsUsed() ? "ANO" : "NE"), (width * 1/2)+5, (height - 94 - nVyskaRadku*2), Graphics.LEFT|Graphics.TOP);
+                //Zatim vypnuto, nevejde se na malych obrazovkach
+                //g.drawString("Počet NMEA: " + gps.getGpsParser().getNmeaCount(), 7, (height - 94 - nVyskaRadku*6), Graphics.LEFT|Graphics.TOP);
+                //g.drawString("GLL: " + gps.getGpsParser().getNmeaGLLCount(), 7, (height - 94 - nVyskaRadku*5), Graphics.LEFT|Graphics.TOP);
+                //g.drawString("RMC: " + gps.getGpsParser().getNmeaRMCCount(), (width * 1/2)+5, (height - 94 - nVyskaRadku*5), Graphics.LEFT|Graphics.TOP);
+                //g.drawString("GGA: " + gps.getGpsParser().getNmeaGGACount(), 7, (height - 94 - nVyskaRadku*4), Graphics.LEFT|Graphics.TOP);
+                //g.drawString("GSA: " + gps.getGpsParser().getNmeaGSACount(), (width * 1/2)+5, (height - 94 - nVyskaRadku*4), Graphics.LEFT|Graphics.TOP);
+                //g.drawString("GSV: " + gps.getGpsParser().getNmeaGSVCount(), 7, (height - 94 - nVyskaRadku*3), Graphics.LEFT|Graphics.TOP);
+                //g.drawString("Buffer: " + gps.getGpsParser().getBufferFreeInPercent() + "%", (width * 1/2)+5, (height - 94 - nVyskaRadku*3), Graphics.LEFT|Graphics.TOP);
+                //g.drawString("Fix: " + gps.getGpsParser().getFixTypeText(), 7, (height - 94 - nVyskaRadku*2), Graphics.LEFT|Graphics.TOP);
+                //g.drawString("DGPS: " + (gps.getGpsParser().isDgpsUsed() ? "ANO" : "NE"), (width * 1/2)+5, (height - 94 - nVyskaRadku*2), Graphics.LEFT|Graphics.TOP);
             }
             
             //zobrazeni signalu
@@ -248,9 +249,22 @@ public class Signal extends Canvas
                  {
                     gui.showError("prevod sily signalu na cislo", e.toString(), "");
                     
-                 }                 
+                 }
+                 int satelite_id = -1;
+                 try {
+                     satelite_id = Integer.parseInt(key);
+                 }
+                 catch (Exception e) {}
                  
                  g.fillRect(7+ (nSirkaSloupce * Index), nSpodek - Signal, (nSirkaSloupce-1), Signal);
+                 g.setColor(0);
+                 //Zobrazeni informace o Wass/Egnos/Msas
+                 if (satelite_id == 46 || satelite_id == 48 || satelite_id == 51 || satelite_id == 47 || satelite_id == 35) //North America
+                     g.drawChar('W', 7 + (nSirkaSloupce * Index) + nSirkaSloupce / 2, nSpodek - 1, Graphics.BOTTOM | Graphics.HCENTER);
+                 if (satelite_id == 33 || satelite_id == 37 || satelite_id == 39 || satelite_id == 44) //Europe
+                     g.drawChar('E', 7 + (nSirkaSloupce * Index) + nSirkaSloupce / 2, nSpodek - 1, Graphics.BOTTOM | Graphics.HCENTER); 
+                 if (satelite_id == 42 || satelite_id == 50) //Japan
+                     g.drawChar('M', 7 + (nSirkaSloupce * Index) + nSirkaSloupce / 2, nSpodek - 1, Graphics.BOTTOM | Graphics.HCENTER);
                  siglist = siglist + tmp + "|";
                  setTopTen(Signal);
 

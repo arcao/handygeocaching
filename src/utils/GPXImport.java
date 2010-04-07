@@ -11,6 +11,7 @@
 package utils;
 
 import database.Favourites;
+import gui.Gui;
 import http.Http;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,8 +36,12 @@ import kxml2.xmlpull.XmlPullParserException;
  */
 public class GPXImport extends Form implements CommandListener {
     private Favourites favourites;
-    private static final String GPX_NS = "http://www.topografix.com/GPX/1/1";
+    private static final String GPX_NS1 = "http://www.topografix.com/GPX/1/0";
+    private static final String GPX_NS2 = "http://www.topografix.com/GPX/1/1";
     private static final String GROUNDSPEAK_NS = "http://www.groundspeak.com/cache/1/0";
+    private static final String GROUNDSPEAK_NS1 = "http://www.groundspeak.com/cache/1/0";
+    private static final String GROUNDSPEAK_NS2 = "http://www.groundspeak.com/cache/1/0/1";
+        
     public static final Command SUCCESS = new Command("SUCCESS", Command.OK, 0);
     public static final Command CANCEL = new Command("Storno", Command.BACK, 0);
     private StringItem siImportCacheCount;
@@ -82,12 +87,10 @@ public class GPXImport extends Form implements CommandListener {
                     System.out.println(fileName);
                     FileConnection file = (FileConnection) Connector.open(fileName, Connector.READ);
                     parse(file.openInputStream());
-                } catch (XmlPullParserException ex) {
-                    ex.printStackTrace();
-                    favourites.revalidate();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     favourites.revalidate();
+                    Gui.getInstance().showError("GPX Import", ex.toString(), "Nastala chyba při importu GPX. Prosím zašlete chybové hlášení včetně GPX souboru na arcao@arcao.com");
                 }
                 
             }
@@ -142,7 +145,7 @@ public class GPXImport extends Form implements CommandListener {
                         parser.next();
                         
                         if (parser.getEventType() == XmlPullParser.START_TAG) {
-                            if (!parser.getNamespace().equals(GROUNDSPEAK_NS)) {
+                            if (!parser.getNamespace().startsWith(GROUNDSPEAK_NS)) {
                                 if (parser.getName().equals("name")) {
                                     parser.next();
                                     WayPointName = parser.getText(); //gcCode
@@ -160,8 +163,8 @@ public class GPXImport extends Form implements CommandListener {
                             } else {
                                 if (parser.getName().equals("cache")) {
                                     parts[0][9] = ""; // disabled/archived
-                                    String available = parser.getAttributeValue(GROUNDSPEAK_NS, "available");
-                                    String archived = parser.getAttributeValue(GROUNDSPEAK_NS, "archived");
+                                    String available = parser.getAttributeValue(null, "available");
+                                    String archived = parser.getAttributeValue(null, "archived");
                                     if (available != null && available.toLowerCase().equals("false")) {
                                         parts[0][9] = "disabled";
                                     }
@@ -190,6 +193,8 @@ public class GPXImport extends Form implements CommandListener {
                                     String isHTML = parser.getAttributeValue("", "html");
                                     parser.next();
                                     listing = parser.getText();
+                                    if (listing == null)
+                                        listing = "";
                                                                                                   
                                     if (isHTML != null && isHTML.equalsIgnoreCase("true"))
                                         listing = stripTags(listing);
@@ -199,14 +204,18 @@ public class GPXImport extends Form implements CommandListener {
                                 } else if (parser.getName().equals("encoded_hints")) {
                                     parser.next();
                                     hint = parser.getText();
-                                    
+                                    if (hint == null)
+                                        hint = "";
                                     parts[0][12] = (hint.length() > 0) ? "1":"0";
                                     //comment+= ((comment.length() > 0) ? "\r\n" : "") + parser.getText();
                                 } else if (parser.getName().equals("logs")) {
-                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("logs") || !parser.getNamespace().equals(GROUNDSPEAK_NS))
+                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("logs") || !parser.getNamespace().startsWith(GROUNDSPEAK_NS))
+                                        parser.next();
+                                } else if (parser.getName().equals("attributes")) {
+                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("attributes") || !parser.getNamespace().startsWith(GROUNDSPEAK_NS))
                                         parser.next();
                                 } else if (parser.getName().equals("travelbugs")) {
-                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("travelbugs") || !parser.getNamespace().equals(GROUNDSPEAK_NS)) {
+                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("travelbugs") || !parser.getNamespace().startsWith(GROUNDSPEAK_NS)) {
                                         parser.next();
                                         if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("name")) {
                                             parser.next();
@@ -270,6 +279,7 @@ public class GPXImport extends Form implements CommandListener {
     }
     
     private static String convertGPXTypeToTypeID(String type) {
+        System.out.println(type);
         String name = type.substring(type.indexOf('|') + 1).toLowerCase();
         type = type.substring(0, type.indexOf('|'));
         
@@ -297,6 +307,7 @@ public class GPXImport extends Form implements CommandListener {
             return "gc_locationless";
         }
         
+        //TODO Detekce wherigo
         return "gc_unknown";
     }
     
