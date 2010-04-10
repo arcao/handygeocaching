@@ -268,7 +268,7 @@ public class Favourites extends Database
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                 DataOutputStream dos = new DataOutputStream(buffer);
                 dos.writeUTF(name);
-                if (editId>=0) //pri editaci se bere typ odjinud
+                if (editId>=0 && editType.equals("waypoint")) //pri editaci se bere typ odjinud
                     type = editType;
                 dos.writeUTF(type);
                 dos.writeUTF(description);
@@ -677,6 +677,7 @@ public class Favourites extends Database
      */
     public void addWaypoints(String data)
     {
+        String cacheName = gui.get_siName().getText();
         try
         {
             String[][] waypoints = http.parseData(data);
@@ -685,7 +686,7 @@ public class Favourites extends Database
                 //ulozeni do db
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                 DataOutputStream dos = new DataOutputStream(buffer);
-                dos.writeUTF(waypoints[i][1]+"-"+waypoints[i][0]);
+                dos.writeUTF(cacheName+"-"+waypoints[i][0]);
                 dos.writeUTF("additional_waypoint");
                 dos.writeUTF(waypoints[i][4]);
                 dos.writeUTF(waypoints[i][2]);

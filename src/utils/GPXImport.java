@@ -38,9 +38,10 @@ public class GPXImport extends Form implements CommandListener {
     private Favourites favourites;
     private static final String GPX_NS1 = "http://www.topografix.com/GPX/1/0";
     private static final String GPX_NS2 = "http://www.topografix.com/GPX/1/1";
-    private static final String GROUNDSPEAK_NS = "http://www.groundspeak.com/cache/1/0";
+    private static final String GROUNDSPEAK_NS = "http://www.groundspeak.com/cache/1/";
     private static final String GROUNDSPEAK_NS1 = "http://www.groundspeak.com/cache/1/0";
     private static final String GROUNDSPEAK_NS2 = "http://www.groundspeak.com/cache/1/0/1";
+    private static final String GROUNDSPEAK_NS3 = "http://www.groundspeak.com/cache/1/1";
         
     public static final Command SUCCESS = new Command("SUCCESS", Command.OK, 0);
     public static final Command CANCEL = new Command("Storno", Command.BACK, 0);
@@ -98,7 +99,7 @@ public class GPXImport extends Form implements CommandListener {
         t.start();
     }
        
-    private void parse(InputStream in) throws IOException, XmlPullParserException {
+    private void parse(InputStream in) throws IOException, XmlPullParserException, Exception {
         KXmlParser parser = new KXmlParser();
         parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true);
         parser.setInput(in, "UTF-8");
@@ -106,10 +107,15 @@ public class GPXImport extends Form implements CommandListener {
         
         //System.out.println("Search gpx tag..");
         parser.next();
-        parser.require(XmlPullParser.START_TAG, null, "gpx");
+        if (!parser.getName().equals("gpx") && !parser.getName().equals("loc"))
+            throw new Exception("Nejedná se o GPX nebo LOC soubor.");
+        //parser.require(XmlPullParser.START_TAG, null, "gpx");
         //System.out.println("gpx tag found");
         
         String parts[][] = new String[1][15];
+        
+        String lastGcCode = "";
+        String lastCacheName = "";
         
         trucking = true;
         int count = 0;
@@ -118,12 +124,61 @@ public class GPXImport extends Form implements CommandListener {
             if (parser.getEventType() == XmlPullParser.START_TAG) {
                 String tagName = parser.getName();
                 
-                if (tagName.equals("wpt")) {
+                if (tagName.equals("waypoint")) {
+                    for (int i=0; i < parts[0].length; i++)
+                        parts[0][i] = "";
+                    
+                    parts[0][1] = "?";
+                    parts[0][2] = "?";
+                    parts[0][3] = "?";
+                    parts[0][10] = "waypoint";
+                    parts[0][12] = "1";
+                    parts[0][13] = "0";
+                    parts[0][14] = "0";
+                    
+                    while ((parser.getEventType() != XmlPullParser.END_TAG) || (parser.getName().equals(tagName) == false)) {
+                        parser.next();
+                        if (parser.getEventType() == XmlPullParser.START_TAG) {
+                            if (parser.getName().equals("name")) {
+                                parts[0][7] = parser.getAttributeValue(null, "id"); //GCCode
+                                if (parts[0][7] == null)
+                                    parts[0][7] = "";
+                                if (parts[0][7].length() > 2 && parts[0][7].substring(0, 2).equalsIgnoreCase("gc"))
+                                    parts[0][10] = "gc_traditional";
+                                    
+                                parser.next();
+                                
+                                parts[0][0] = parser.getText(); //cacheName
+                            } else if (parser.getName().equals("coord")) {
+                                parts[0][4] = getFriendlyLatLon(parser.getAttributeValue(null, "lat"), true); //latitude
+                                parts[0][5] = getFriendlyLatLon(parser.getAttributeValue(null, "lon"), false); //longitude
+                                parser.next();
+                            }
+                            
+                        }
+                    }
+                    parts[0][11] = "1"; // has waypoints
+                    parts[0][6] = "?/?";
+                                        
+                    favourites.editId = -1;
+                    
+                    if (parts[0][10].equals("waypoint")) {
+                        favourites.addEdit(parts[0][0], "", parts[0][4], parts[0][5], parts[0][10], null, false, "", "", false, false, false);
+                    } else {
+                        favourites.addEdit(parts[0][0], Favourites.cachePartsToDesc(parts), parts[0][4], parts[0][5], parts[0][10], null, false, "", "", false, false, false);
+                    }
+                    count++;
+                    
+                    //if (count % 10 == 0)
+                    siImportCacheCount.setText(Integer.toString(count));
+                } else if (tagName.equals("wpt")) {
                     //System.out.println("wpt tag found");
                     String difficulty = "";
                     String terrain = "";
                     String comment = "";
-                    String WayPointName = "";
+                    String cmt = "";
+                    String waypointName = "";
+                    String realWaypointName = "";
                     String hint = "";
                     String listing = "";
                     for (int i=0; i < parts[0].length; i++)
@@ -138,8 +193,8 @@ public class GPXImport extends Form implements CommandListener {
                     //    System.out.println("{"+parser.getAttributeNamespace(i)+"}"+parser.getAttributeName(i)+"="+parser.getAttributeValue(i));
                     //}
                     
-                    parts[0][4] = getFriendlyLatLon(parser.getAttributeValue("", "lat"), true); //latitude
-                    parts[0][5] = getFriendlyLatLon(parser.getAttributeValue("", "lon"), false); //longitude
+                    parts[0][4] = getFriendlyLatLon(parser.getAttributeValue(null, "lat"), true); //latitude
+                    parts[0][5] = getFriendlyLatLon(parser.getAttributeValue(null, "lon"), false); //longitude
                     
                     while ((parser.getEventType() != XmlPullParser.END_TAG) || (parser.getName().equals(tagName) == false)) {
                         parser.next();
@@ -148,17 +203,26 @@ public class GPXImport extends Form implements CommandListener {
                             if (!parser.getNamespace().startsWith(GROUNDSPEAK_NS)) {
                                 if (parser.getName().equals("name")) {
                                     parser.next();
-                                    WayPointName = parser.getText(); //gcCode
-                                    parts[0][7] = WayPointName;
+                                    waypointName = parser.getText(); //gcCode
+                                    parts[0][7] = waypointName;
                                 } else if (parser.getName().equals("type")) {
                                     parser.next();
                                     parts[0][10] = convertGPXTypeToTypeID(parser.getText()); //typeIconID gc_xxx
                                 } else if (parser.getName().equals("desc")) {
                                     parser.next();
-                                    comment = (comment.length() > 0) ? parser.getText() + "\r\n" + comment : parser.getText(); //comment
+                                    realWaypointName = parser.getText();
+                                    if (realWaypointName == null)
+                                        realWaypointName = "";
+                                    if (realWaypointName.length() > 0)
+                                        comment = (comment.length() > 0) ? realWaypointName + "\r\n" + comment : realWaypointName; //comment
                                 } else if (parser.getName().equals("cmt")) {
                                     parser.next();
-                                    comment+= (comment.length() > 0) ? "\r\n" + parser.getText() : parser.getText(); //comment
+                                    String text = parser.getText();
+                                    if (text == null) 
+                                        text = "";
+                                    cmt = text;
+                                    if (text.length() > 0)
+                                        comment+= (comment.length() > 0) ? "\r\n" + text : text; //comment
                                 }
                             } else {
                                 if (parser.getName().equals("cache")) {
@@ -174,12 +238,14 @@ public class GPXImport extends Form implements CommandListener {
                                 } else if (parser.getName().equals("name")) {
                                     parser.next();
                                     parts[0][0] = parser.getText(); //cache name
+                                    lastCacheName = parts[0][0];
                                 } else if (parser.getName().equals("placed_by")) {
                                     parser.next();
                                     parts[0][1] = parser.getText();
                                 } else if (parser.getName().equals("type")) {
                                     parser.next();
                                     parts[0][2] = parser.getText(); //type name
+                                    parts[0][10] = convertGPXTypeToTypeID(parts[0][2]);
                                 } else if (parser.getName().equals("container")) {
                                     parser.next();
                                     parts[0][3] = parser.getText(); //container size
@@ -233,14 +299,23 @@ public class GPXImport extends Form implements CommandListener {
                     //System.out.println("adding cache");
                     //System.out.println(parts[0][10].equals("waypoint"));
                     
+                    parts[0][0] = parts[0][0].replace('{','(').replace('}',')'); 
+                    parts[0][1] = parts[0][1].replace('{','(').replace('}',')'); 
+                    parts[0][8] = parts[0][8].replace('{','(').replace('}',')'); 
+                                        
                     favourites.editId = -1;
                     
                     if (parts[0][10].equals("waypoint")) {
-                        favourites.addEdit(WayPointName, "", parts[0][4], parts[0][5], parts[0][10], null, false, "", comment, false, false, false);
+                        if (waypointName.length() > 2 && lastGcCode.length() > 2 && waypointName.substring(2).equalsIgnoreCase(lastGcCode.substring(2)))
+                            waypointName = lastCacheName + "-" + realWaypointName;
+                        favourites.addEdit(waypointName, cmt, parts[0][4], parts[0][5], parts[0][10], null, false, "", comment, false, false, false);
                     } else {
                         favourites.addEdit(parts[0][0], Favourites.cachePartsToDesc(parts), parts[0][4], parts[0][5], parts[0][10], null, false, "", comment, false, false, false);
-                        http.getHintCache().add(parts[0][7], hint);
-                        http.getListingCache().add(parts[0][7], listing);
+                        if (hint.length() > 0)
+                            http.getHintCache().add(parts[0][7], hint);
+                        if (listing.length() > 0)
+                            http.getListingCache().add(parts[0][7], listing);
+                        lastGcCode = waypointName;
                     }
                     count++;
                     
@@ -251,7 +326,8 @@ public class GPXImport extends Form implements CommandListener {
                         parser.next();
                 }
             }
-            if ((parser.getEventType() == XmlPullParser.END_TAG && parser.getName().equals("gpx")) || parser.getEventType() == XmlPullParser.END_DOCUMENT) {
+            if ((parser.getEventType() == XmlPullParser.END_TAG && (parser.getName().equals("gpx") || parser.getName().equals("loc"))) ||
+                 parser.getEventType() == XmlPullParser.END_DOCUMENT) {
                 trucking = false;
                 favourites.revalidate();
                 
@@ -280,8 +356,12 @@ public class GPXImport extends Form implements CommandListener {
     
     private static String convertGPXTypeToTypeID(String type) {
         System.out.println(type);
-        String name = type.substring(type.indexOf('|') + 1).toLowerCase();
-        type = type.substring(0, type.indexOf('|'));
+        String name = type.toLowerCase();
+        
+        if (type.indexOf("|") > -1) {
+            name = type.substring(type.indexOf('|') + 1).toLowerCase();
+            type = type.substring(0, type.indexOf('|'));
+        }
         
         if (type.equalsIgnoreCase("waypoint")) {
             return "waypoint";

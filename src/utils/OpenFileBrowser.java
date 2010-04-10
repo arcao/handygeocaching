@@ -61,7 +61,7 @@ public class OpenFileBrowser extends List implements CommandListener
 
     
     public OpenFileBrowser(Display display, CommandListener listener) {
-        super("Otevřít GPX..", List.IMPLICIT);
+        super("Importovat...", List.IMPLICIT);
         
         this.listener = listener;
         this.display = display;
@@ -170,7 +170,10 @@ public class OpenFileBrowser extends List implements CommandListener
                         e = currDir.list();
                         while (e.hasMoreElements()) {
                             fileName = (String) e.nextElement();
-                            if (fileName.length() >= 4 && fileName.substring(fileName.length() - 4).equalsIgnoreCase(".gpx"))
+                            String ext = "";
+                            if (fileName.length() >= 4)
+                                ext =  fileName.substring(fileName.length() - 4).toLowerCase();
+                            if (ext.equals(".gpx") || ext.equals(".loc"))
                                 append(fileName,null);
                         }
                     }

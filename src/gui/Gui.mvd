@@ -2285,7 +2285,7 @@
             <Property name="actionOrigin" value="frmFavourite"/>
         </DesignComponent>
         <DesignComponent id="cmdImportGPX" typeid="MIDP:javax.microedition.lcdui.Command" uid="586">
-            <Property name="label" value="STRING:Importovat z GPX..."/>
+            <Property name="label" value="STRING:Importovat..."/>
             <Property name="priority" value="11"/>
             <Property name="type" value="SCREEN"/>
         </DesignComponent>
@@ -2503,9 +2503,9 @@
         <Link id="$SelectCaseCommandAction6$ActionLink" path="952,1256,1040,1256,1040,1800,1160,1800"/>
         <Link id="$CommandAction42$ActionLink" path="1240,480,1347,480,1347,1337,713,1337,713,1272,872,1272"/>
         <Link id="$CommandAction43$ActionLink" path="1240,1784,1377,1784,1377,1337,713,1337,713,1272,872,1272"/>
-        <Link id="$CommandAction44$ActionLink" path="1240,1496,1385,1496,1385,1338,713,1338,713,1272,872,1272"/>
-        <Link id="$CommandAction49$ActionLink" path="5360,200,5511,200,5511,338,1075,338,1075,1480,1160,1480"/>
-        <Link id="$CommandAction52$ActionLink" path="1224,1432,1224,1236,1337,1236,1337,824,1440,824"/>
+        <Link id="$CommandAction44$ActionLink" path="1240,1496,1327,1496,1327,1338,713,1338,713,1272,872,1272"/>
+        <Link id="$CommandAction49$ActionLink" path="5360,200,5445,200,1085,1480,1160,1480"/>
+        <Link id="$CommandAction52$ActionLink" path="1224,1432,1224,1236,1390,1236,1390,824,1440,824"/>
         <Link id="$CommandAction55$ActionLink" path="1520,824,1606,824,1606,1325,1075,1325,1075,1480,1160,1480"/>
         <Link id="$CommandAction30$ActionLink" path="1520,1728,1575,1728,1575,1861,1141,1861,1141,1800,1160,1800"/>
         <Link id="$CommandAction57$ActionLink" path="1184,200,1357,200,1357,1712,1440,1712"/>
@@ -2528,12 +2528,12 @@
         <Link id="$CommandAction90$ActionLink" path="952,1064,1060,1064,1060,1329,562,1329,562,1160,600,1160"/>
         <Link id="$SelectCaseCommandAction23$ActionLink" path="1208,1752,1208,1661,1324,1661,1324,1712,1440,1712"/>
         <Link id="$CommandAction1$ActionLink" path="1240,1144,1308,1144,1308,1338,713,1338,713,1272,872,1272"/>
-        <Link id="$CommandAction31$ActionLink" path="1520,1064,1606,1064,1606,1325,1075,1325,1075,1480,1160,1480"/>
+        <Link id="$CommandAction31$ActionLink" path="1520,1064,1578,1064,1085,1480,1160,1480"/>
         <Link id="$CommandAction61$ActionLink" path="3368,237,3368,375,323,375,323,288,368,288"/>
-        <Link id="$CommandAction74$ActionLink" path="1176,1533,1176,1651,316,1651,316,288,368,288"/>
+        <Link id="$CommandAction74$ActionLink" path="1176,1533,1176,1643,309,1643,309,288,368,288"/>
         <Link id="$CommandAction92$ActionLink" path="1520,624,1606,624,1606,1325,1075,1325,1075,1480,1160,1480"/>
-        <Link id="$CommandAction93$ActionLink" path="1520,608,1606,608,1606,1325,1075,1325,1075,1480,1160,1480"/>
-        <Link id="$CommandAction94$ActionLink" path="1192,1533,1192,1639,1327,1639,1327,608,1440,608"/>
+        <Link id="$CommandAction93$ActionLink" path="1520,608,1568,608,1085,1480,1160,1480"/>
+        <Link id="$CommandAction94$ActionLink" path="1192,1533,1192,1656,1083,1656,1083,608,1440,608"/>
         <Link id="$CommandAction95$ActionLink" path="5344,136,5344,31,1378,31,1378,608,1440,608"/>
         <Link id="$CommandAction96$ActionLink" path="952,1520,1018,1520,1018,1338,713,1338,713,1272,872,1272"/>
         <Link id="$SelectCaseCommandAction24$ActionLink" path="952,1272,1053,1272,1053,1676,843,1676,843,1504,872,1504"/>

@@ -1173,7 +1173,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction280
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction279
                 // Insert post-action code here
-                favourites.addEdit(tfGivenName.getString(),tfGivenDescription.getString(),tfGivenLattitude.getString(),tfGivenLongitude.getString(),"waypoint",get_lstFavourites(), (cgGivenFormat.getSelectedIndex()==1), "NE", "", false, true, true);
+                favourites.addEdit(tfGivenName.getString(),tfGivenDescription.getString(),tfGivenLattitude.getString(),tfGivenLongitude.getString(),"waypoint",get_lstFavourites(), (cgGivenFormat.getSelectedIndex()==1), siNalezeno.getText(), "", false, true, true);
                 /*
                  *Zephy 19.11.07 REM - pri editaci bodu a zadani chybnych souradnic byla prebita hlaska o chybne zadanych souradnicich a vlezlo se zpet do seznamu. Toto bylo presunuto do Favourites.java
                  */
@@ -4464,7 +4464,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public Command get_cmdImportGPX() {
         if (cmdImportGPX == null) {//GEN-END:MVDGetBegin586
             // Insert pre-init code here
-            cmdImportGPX = new Command("Importovat z GPX...", Command.SCREEN, 11);//GEN-LINE:MVDGetInit586
+            cmdImportGPX = new Command("Importovat...", Command.SCREEN, 11);//GEN-LINE:MVDGetInit586
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd586
         return cmdImportGPX;
