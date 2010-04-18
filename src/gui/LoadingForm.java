@@ -15,6 +15,7 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Gauge;
+import javax.microedition.lcdui.StringItem;
 
 /**
  * Slouzi k zobrazeni okna informujici o nacitani nejakych dat.
@@ -35,7 +36,9 @@ public class LoadingForm extends Form {
         
         isSetFinish = false;
         
-        append(new Gauge(message, false, Gauge.INDEFINITE, Gauge.CONTINUOUS_RUNNING));
+        //Bug v Gauge u N5800 - nepouzivat Gauge
+        //append(new Gauge(message, false, Gauge.INDEFINITE, Gauge.CONTINUOUS_RUNNING));
+        append(new StringItem(message, null));
     }
     
     public void show() {

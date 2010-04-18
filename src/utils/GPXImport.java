@@ -63,7 +63,8 @@ public class GPXImport extends Form implements CommandListener {
         this.http = http;
         
         append("Importuji z GPX...");
-        append(new Gauge("", false, Gauge.INDEFINITE, Gauge.CONTINUOUS_RUNNING));
+        //Bug v Gauge u N5800 - nepouzivat Gauge
+        //append(new Gauge("", false, Gauge.INDEFINITE, Gauge.CONTINUOUS_RUNNING));
         siImportCacheCount = new StringItem("Objektů naimportováno:","0");
         append(siImportCacheCount);
         

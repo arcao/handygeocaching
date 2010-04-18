@@ -132,7 +132,8 @@ public class Http implements Runnable
     {
         offline = false;
         refresh = refr;
-        gui.get_gaLoading().setValue(Gauge.CONTINUOUS_IDLE);
+        //Bug v Gauge u N5800 - nepouzivat Gauge
+        //gui.get_gaLoading().setValue(Gauge.CONTINUOUS_IDLE);
         action = act;
         if (action == NEXT_NEAREST)
         {
@@ -682,12 +683,14 @@ public class Http implements Runnable
             c.setRequestMethod(HttpConnection.GET);
 
             // Otevreni vstupniho proudu
-            gui.get_gaLoading().setValue(Gauge.CONTINUOUS_RUNNING);
+            //Bug v Gauge u N5800 - nepouzivat Gauge
+            //gui.get_gaLoading().setValue(Gauge.CONTINUOUS_RUNNING);
             if (c.getResponseCode() != 200)
                 throw new Exception("TIMEOUT");
             is = c.openInputStream();
             reader = new InputStreamReader(is, "UTF-8");
-            gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
+            //Bug v Gauge u N5800 - nepouzivat Gauge
+            //gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
             
             //int ch;
             //int x = 0;
@@ -698,7 +701,8 @@ public class Http implements Runnable
             
             while ((len = reader.read(charBuffer)) != -1)
             {
-                gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
+                //Bug v Gauge u N5800 - nepouzivat Gauge
+                //gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
                 sb.append(charBuffer, 0, len);
                 //if (x%50==0)
                 //    gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
@@ -707,7 +711,8 @@ public class Http implements Runnable
 
             String s = sb.toString();
             s = Utils.repairUTF8(s);
-            gui.get_gaLoading().setValue(Gauge.INCREMENTAL_IDLE);
+            //Bug v Gauge u N5800 - nepouzivat Gauge
+            //gui.get_gaLoading().setValue(Gauge.INCREMENTAL_IDLE);
             //vraceni vystupnich dat
             return s;
             

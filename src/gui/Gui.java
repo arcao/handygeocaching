@@ -255,7 +255,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private TextField tfResultLongitude;
     private TextField tfResultName;
     private TextField tfResultDescription;
-    private Gauge gaLoading;
     private TextField tfBackLight;
     private StringItem stringItem10;
     private Command cmdYes;
@@ -1821,10 +1820,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public Form get_frmLoading() {
         if (frmLoading == null) {//GEN-END:MVDGetBegin53
             // Insert pre-init code here
-            frmLoading = new Form("Pros\u00EDm \u010Dekejte", new Item[] {//GEN-BEGIN:MVDGetInit53
-                get_siMessage(),
-                get_gaLoading()
-            });
+            frmLoading = new Form("Pros\u00EDm \u010Dekejte", new Item[] {get_siMessage()});//GEN-BEGIN:MVDGetInit53
             frmLoading.addCommand(get_cmdStop());
             frmLoading.setCommandListener(this);//GEN-END:MVDGetInit53
             // Insert post-init code here
@@ -3578,18 +3574,6 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         return tfResultDescription;
     }//GEN-END:MVDGetEnd358
     
-    /** This method returns instance for gaLoading component and should be called instead of accessing gaLoading field directly.//GEN-BEGIN:MVDGetBegin359
-     * @return Instance for gaLoading component
-     */
-    public Gauge get_gaLoading() {
-        if (gaLoading == null) {//GEN-END:MVDGetBegin359
-            // Insert pre-init code here
-            gaLoading = new Gauge("", false, 60, 0);//GEN-LINE:MVDGetInit359
-            // Insert post-init code here
-            gaLoading.setMaxValue(Gauge.INDEFINITE);
-        }//GEN-BEGIN:MVDGetEnd359
-        return gaLoading;
-    }//GEN-END:MVDGetEnd359
     
     /** This method returns instance for tfBackLight component and should be called instead of accessing tfBackLight field directly.//GEN-BEGIN:MVDGetBegin361
      * @return Instance for tfBackLight component

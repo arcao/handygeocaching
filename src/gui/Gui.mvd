@@ -213,7 +213,6 @@
             </ContainerProperty>
             <ContainerProperty name="items">
                 <ContainerPropertyItem value="siMessage"/>
-                <ContainerPropertyItem value="gaLoading"/>
             </ContainerProperty>
         </DesignComponent>
         <DesignComponent id="siMessage" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="54">
@@ -1513,13 +1512,6 @@
         <DesignComponent id="tfResultDescription" typeid="MIDP:javax.microedition.lcdui.TextField" uid="358">
             <Property name="label" value="STRING:Popis:"/>
             <Property name="maxSize" value="120"/>
-            <ContainerProperty name="commands"/>
-        </DesignComponent>
-        <DesignComponent id="gaLoading" typeid="MIDP:javax.microedition.lcdui.Gauge" uid="359">
-            <Property name="label" value="STRING:"/>
-            <Property name="interactive" value="false"/>
-            <Property name="maxValue" value="60"/>
-            <Property name="value" value="0"/>
             <ContainerProperty name="commands"/>
         </DesignComponent>
         <DesignComponent id="$CommandAction73" typeid="MIDP:CommandAction" uid="360">
