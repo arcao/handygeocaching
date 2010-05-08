@@ -172,16 +172,15 @@ public class TextArea extends Canvas implements Runnable {
         
         Vector v = new Vector();
         int found;
-        int left = PADDING;
+        int maxWidth = width - 2 * PADDING - SCROLL_WIDTH; 
+        int left = 0;
         int pos = 0;
         int len = text.length();
         
         //pridani dvou radku na zacatek kvuli symbolu spojeni u Nokii
         v.addElement("");
-        v.addElement("");
-                
-        int maxWidth = width - 2 * PADDING - SCROLL_WIDTH; 
-        
+        v.addElement("");               
+       
         StringBuffer sbLine = new StringBuffer();
         
         while (pos < len) {
@@ -198,32 +197,41 @@ public class TextArea extends Canvas implements Runnable {
             String item = text.substring(pos, found);
             int itemWidth = font.stringWidth(item);
             
-            if (left + itemWidth > maxWidth && left != PADDING) {
+            if (left + itemWidth > maxWidth) {
                 //slovo se na radek jiz nevejde
                 v.addElement(sbLine.toString().trim());
                 sbLine.setLength(0);
-                sbLine.append(item.trim());
-                sbLine.append(' ');
-                left = itemWidth + PADDING;
-                pos = found;
-                
+                left = 0;
+                if (itemWidth < maxWidth) {
+                    //ale vejde se na dalsi radek
+                    sbLine.append(item.trim());
+                    sbLine.append(' ');
+                    left+= itemWidth;
+                    pos = found;
+                } else {
+                    //nevejde se ani na dalsi radek
+                    //rozpulit slovo, protoze se nevejde na radek
+                    while (pos <= found) {
+                        int charWidth = font.charWidth(text.charAt(pos));
+                        while (pos <= found && left + charWidth < maxWidth) {
+                            sbLine.append(text.charAt(pos));
+                            left+= charWidth;
+                            pos++;
+
+                            charWidth = font.charWidth(text.charAt(pos));
+                        }
+                        if (left + charWidth >= maxWidth) {
+                            v.addElement(sbLine.toString().trim());
+                            sbLine.setLength(0);
+                            left = 0;
+                        }
+                    }
+                }
                 //kontrola noveho radku
                 if (item.endsWith("\n")) {
                     v.addElement(sbLine.toString().trim());
-                    //v.addElement("");
                     sbLine.setLength(0);
-                    left = PADDING;
-                }
-           } else if (left + itemWidth > maxWidth && left == PADDING) {
-                //rozpulit slovo, protoze se nevejde na radek
-                int nextCharWidth = font.charWidth(text.charAt(pos));
-                
-                while (left + nextCharWidth < width) {
-                    sbLine.append(text.charAt(pos));
-                    left+= nextCharWidth;
-                    pos++;
-                    
-                    nextCharWidth = font.charWidth(text.charAt(pos));
+                    left = 0;
                 }
             } else {
                 //na radek se jeste vejde, pridame do sbLine
@@ -237,7 +245,7 @@ public class TextArea extends Canvas implements Runnable {
                     v.addElement(sbLine.toString().trim());
                     //v.addElement("");
                     sbLine.setLength(0);
-                    left = PADDING;
+                    left = 0;
                 }
             }
         }

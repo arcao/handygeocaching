@@ -161,7 +161,7 @@ public class Http implements Runnable
         {
             if (settings.name.equals("") && settings.password.equals(""))
             {
-                gui.showAlert("Nemáte nastaveny přihlašovací údaje na server geocaching.com, budete přesměrováni do nastavení.",AlertType.WARNING,gui.get_frmSettings());
+                gui.showAlert("Nemáte nastaveny přihlašovací údaje na server geocaching.com, budete přesměrováni do nastavení.",AlertType.WARNING,gui.get_frmSettingsGeneral());
                 settings.set();
             }
             else
@@ -235,12 +235,10 @@ public class Http implements Runnable
             case NEAREST_CACHES:
                 try
                 {
-                    String coordinates;
                     boolean rightCoordFormat = true;
                     //zadane souradnice
-                    coordinates = "lattitude="+gps.convertLattitude(gui.get_tfLattitude().getString())+"&longitude="+gps.convertLongitude(gui.get_tfLongitude().getString());
                     //spatny format souradnic
-                    if (gps.convertLattitude(gui.get_tfLattitude().getString())==Double.NaN || gps.convertLongitude(gui.get_tfLongitude().getString())==Double.NaN)
+                    if (gps.convertDegToDouble(gui.get_tfLattitude().getString())==Double.NaN || gps.convertDegToDouble(gui.get_tfLongitude().getString())==Double.NaN)
                     {
                         rightCoordFormat = false;
                         gui.showAlert("Špatný formát souřadnic",AlertType.WARNING,gui.get_frmCoordinates());
@@ -251,6 +249,7 @@ public class Http implements Runnable
                     }
                     if (rightCoordFormat)
                     {
+                        String coordinates = "lattitude="+gps.convertDegToDouble(gui.get_tfLattitude().getString())+"&longitude="+gps.convertDegToDouble(gui.get_tfLongitude().getString());
                         response = downloadData("part=nearest&"+coordinates+"&filter="+settings.filter+"&numberCaches="+settings.numberCaches, false, true, "Stahuji seznam nejbližších keší...");
                         if (checkData(response))
                         {
@@ -851,7 +850,7 @@ public class Http implements Runnable
             else if (data.equals("ERR_BAD_PASSWORD"))
             {
                 settings.set();
-                gui.showAlert("Špatné uživatelské jméno nebo heslo.",AlertType.ERROR,gui.get_frmSettings());
+                gui.showAlert("Špatné uživatelské jméno nebo heslo.",AlertType.ERROR,gui.get_frmSettingsGeneral());
                 return false;
             }
             else if (data.equals("ERR_AUTH_FAILED"))

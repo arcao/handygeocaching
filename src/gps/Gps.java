@@ -136,8 +136,8 @@ public class Gps implements Runnable
     public void setNavigationTarget(String lattitude, String longitude, String name)
     {
         targetname = name;
-        targetlat = convertLattitude(lattitude);
-        targetlon = convertLongitude(longitude);
+        targetlat = convertDegToDouble(lattitude);
+        targetlon = convertDegToDouble(longitude);
     }
     
     /**
@@ -246,30 +246,19 @@ public class Gps implements Runnable
                         else
                             deleno = bufferPosition;
                         //soucet
-                        double soucet1=0;
-                        double soucet2=0;
+                        double sumLat=0;
+                        double sumLon=0;
                         int j;
                         for (j=0;j<deleno;j++)
                         {
-                            soucet1 += buffer1[j];
-                            soucet2 += buffer2[j];
+                            sumLat += buffer1[j];
+                            sumLon += buffer2[j];
                         }
-                        //deleni
-                        double podil = soucet1/deleno;
-                        double degrees = Math.floor(Math.abs(podil));
-                        double minutes = Math.abs(podil) - degrees;
-                        minutes = minutes * 60;
-                        String avLattitude = ((podil>0)?"N":"S")+" "+Utils.addZeros(String.valueOf((int)degrees),2)+"° "+String.valueOf(minutes).substring(0,6);
-                        podil = soucet2/deleno;
-                        degrees = Math.floor(Math.abs(podil));
-                        minutes = Math.abs(podil) - degrees;
-                        minutes = minutes * 60;
-                        String avLongitude = ((podil>0)?"E":"W")+" "+Utils.addZeros(String.valueOf((int)degrees),3)+"° "+String.valueOf(minutes).substring(0,6);
-                        //vypis
+                        
                         gui.get_frmAveraging().setTitle("Průměrování");
-                        gui.get_siCurrentCoordinates().setText(gpsParser.getFriendlyLattitude() + "\n"+ gpsParser.getFriendlyLongitude());
-                        gui.get_siAverageLattitude().setText(avLattitude +"\n");
-                        gui.get_siAverageLongitude().setText(avLongitude +"\n");
+                        gui.get_siCurrentCoordinates().setText(gpsParser.getFriendlyLatitude() + "\n"+ gpsParser.getFriendlyLongitude());
+                        gui.get_siAverageLattitude().setText(convertDoubleToDeg(sumLat/deleno, false) +"\n");
+                        gui.get_siAverageLongitude().setText(convertDoubleToDeg(sumLon/deleno, true) +"\n");
                         gui.get_siMeasures().setText(deleno+"/100");
                         gui.get_siAdditional().setText(gpsParser.getSatelliteCount()+" sat./"+String.valueOf(gpsParser.getSpeed())+" km/h/"+String.valueOf(gpsParser.getAccuracy()));
                     }
@@ -307,7 +296,7 @@ public class Gps implements Runnable
                     //Zephy 21.11.07 gpsstatus+\
                     else if (action == GPS_SIGNAL)
                     {  
-                        gui.get_cvsSignal().latitude = gpsParser.getFriendlyLattitude();
+                        gui.get_cvsSignal().latitude = gpsParser.getFriendlyLatitude();
                         gui.get_cvsSignal().longitude = gpsParser.getFriendlyLongitude();
                         gui.get_cvsSignal().speed = String.valueOf(gpsParser.getSpeed()) +"km/h";
                         gui.get_cvsSignal().altitude = gpsParser.getAltitude()+"m";
@@ -333,7 +322,7 @@ public class Gps implements Runnable
                     else if (action == CURRENT_POSITION)
                     {
                         gui.get_frmCoordinates().setTitle("Souřadnice získány");
-                        gui.get_tfLattitude().setString(gpsParser.getFriendlyLattitude());
+                        gui.get_tfLattitude().setString(gpsParser.getFriendlyLatitude());
                         gui.get_tfLongitude().setString(gpsParser.getFriendlyLongitude());
                         lattitude = String.valueOf(gpsParser.getLatitude());
                         longitude = String.valueOf(gpsParser.getLongitude());
@@ -343,7 +332,7 @@ public class Gps implements Runnable
                     else //ziskani souradnic u oblibenych
                     {
                         gui.get_frmAddGiven().setTitle("Souřadnice získány");
-                        gui.get_tfGivenLattitude().setString(gpsParser.getFriendlyLattitude());
+                        gui.get_tfGivenLattitude().setString(gpsParser.getFriendlyLatitude());
                         gui.get_tfGivenLongitude().setString(gpsParser.getFriendlyLongitude());
                         stop();
                     }
@@ -351,8 +340,7 @@ public class Gps implements Runnable
             }
             catch (Exception e)
             {
-                gui.get_siDebug().setText("Chyba v Gps: "+e.toString()+"\nNMEA: "+gpsParser.getNmea()+"\nException: "+gpsParser.exception);
-                gui.getDisplay().setCurrent(gui.get_frmDebug());
+                gui.showError("GPS thread", e.toString(), "\nNMEA: "+gpsParser.getNmea()+"\nException: "+gpsParser.exception);
                 this.stop();
             }
             try
@@ -513,154 +501,94 @@ public class Gps implements Runnable
             return 0;
         }
     }
-    
-    
-    //Zephy 19.11.07 +\
-    /**
-     * Zkonvertuje lattitude format z jakehokoliv typu na "N Deg° mi.mmm" a vraci zpet v tomto formatu
-     */
-    public static String convertLattitudeFormat (String lat, boolean DegMinSecFormat)
-    {
-        if (!DegMinSecFormat)
-        {
-            //vzorec uz je ve vychozim formatu "N Deg° mi.mmm"
-            return lat.replace('?', '°');
-        }
         
-        //prevedeni na zakladni tvar
-         try
-        {
-            double lattitudeDegrees;
-            
-            lattitudeDegrees = (
-                 Integer.parseInt  (lat.substring(6,8))
-                + (Double.parseDouble(lat.substring(9,15))/60));
-            String tmpOut = (lat.substring(0,6) + String.valueOf(lattitudeDegrees));
-            return tmpOut.substring(0, 12).replace('?', '°');
+    public static String formatDeg(String source, boolean isLon) {
+        double value = convertDegToDouble(source);
+        
+        if (value == Double.NaN)
+            throw new IllegalArgumentException("Špatný formát souřadnic.");
+        return convertDoubleToDeg(value, isLon);
+    }
+    
+    public static String convertDoubleToDeg(double source, boolean isLon) {
+        return convertDoubleToDeg(source, isLon, 3);
+    }
+    
+    public static String convertDoubleToDeg(double source, boolean isLon, int precision) {
+        StringBuffer sb = new StringBuffer();
+        if (source < 0) {
+            sb.append((!isLon) ? 'S':'W');
+            source = -source;
+        } else {
+            sb.append((!isLon) ? 'N':'E');
         }
-        catch (Exception e)
-        {
-            System.out.println(e.toString());
-            return "";
-        }
-               
+        sb.append(' ');
+
+        int deg = (int) source;
+        sb.append(deg);
+        sb.append("° ");
+
+        double min = (source - deg) * 60;
+        sb.append(Utils.round(min, precision));
+
+        return sb.toString();
     }
 
-    /**
-     * Zkonvertuje lattitude format z jakehokoliv typu na "N Deg° mi.mmm" a vraci zpet v tomto formatu
-     */
-    public static String convertLongitudeFormat (String lon, boolean DegMinSecFormat)
-    {
-        if (!DegMinSecFormat)
-        {
-            //vzorec uz je ve vychozim formatu "N Deg° mi.mmm"
-            return lon.replace('?', '°');
-        }
-        
-        //prevedeni na zakladni tvar
-         try
-        {
-            double longitudeDegrees;
-            String[] Elements = StringTokenizer.getArray(lon, " ");
-            if (Elements.length < 4)
-            {
-                return "";
-            }
-            
-            longitudeDegrees = (
-                Integer.parseInt  (lon.substring(7,9))
-                +(Double.parseDouble(lon.substring(10,15))/60));
-            String tmpOut =  (lon.substring(0,7) + String.valueOf(longitudeDegrees));
-            return tmpOut.substring(0, 13).replace('?','°');
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.toString());
-            return "";
-        }
-    }
-    //Zephy 19.11.07 +/
-    /**
-     * Zkonvertuje lattitude z typu N AA° AA.AAA do AA.AAAAA
-     */
-    public static double convertLattitude(String lat)
-    {
-        try
-        {
-            int direction;
-            if (lat.substring(0,1).equals("N"))
-            {
-                direction = 1;
-            }
-            else if (lat.substring(0,1).equals("S"))
-            {
+    public static double convertDegToDouble(String source) {
+        String tmp = source.trim();
+
+        int index = 0;
+        int end = 0;
+
+        char ch = ' ';
+
+        double deg = 0;
+        double min = 0;
+        double sec = 0;
+
+        int direction = 1;
+
+        try {
+            ch = Character.toUpperCase(tmp.charAt(index));
+            if (ch == 'S' || ch == 'W' || ch == '-') {
                 direction = -1;
+                index++;
             }
-            else
-            {
-                throw new Exception("lattitude neni N nebo S");
+            if (ch == 'N' || ch == 'E' || ch == '+')
+                index++;
+
+            while (!Character.isDigit(tmp.charAt(index))) index++;
+            end = getDoubleNumberEnd(tmp, index);
+            deg = Float.parseFloat(tmp.substring(index, end));
+            index = end;
+
+            while (!Character.isDigit(tmp.charAt(index))) index++;
+            if (index < tmp.length()) {
+                end = getDoubleNumberEnd(tmp, index);
+                min = Float.parseFloat(tmp.substring(index, end));
+                index = end;
+
+                while (index < tmp.length() && !Character.isDigit(tmp.charAt(index))) index++;
+                if (index < tmp.length()) {
+                    end = getDoubleNumberEnd(tmp, index);
+                    sec = Float.parseFloat(tmp.substring(index, end));
+                    index = end;
+                }
             }
-            
-            if (!lat.substring(4,6).equals("° ") && !lat.substring(4,6).equals("  ") && !lat.substring(4,6).equals("? ")) {
-                throw new Exception("spatny format stupnu u lattitude ");
-            }
-            
-            double lattitudeDegrees = direction * (Integer.parseInt(lat.substring(2,4))+Double.parseDouble(lat.substring(6,12))/60);
-            
-            return lattitudeDegrees;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.toString());
-            return Double.NaN;
-        }
-    }
-    
-    /**
-     * Zkonvertuje longitude z typu N AAA° AA.AAA do AAA.AAAAA
-     */
-    public static double convertLongitude(String lon)
-    {
-        try
-        {
-            int direction;
-            if (lon.substring(0,1).equals("E"))
-            {
-                direction = 1;
-            }
-            else if (lon.substring(0,1).equals("W"))
-            {
-                direction = -1;
-            }
-            else
-            {
-                throw new Exception("longitude neni W nebo E");
-            }
-            
-            if (!lon.substring(4,6).equals("° ") && !lon.substring(5,7).equals("° ") &&
-                !lon.substring(4,6).equals("  ") && !lon.substring(5,7).equals("  ") &&
-                !lon.substring(4,6).equals("? ") && !lon.substring(5,7).equals("? ")) {
-                throw new Exception("spatny format stupnu u longitude");
-            }
-            
-            double longitudeDegrees;
-            if (lon.substring(4,6).equals("° ") || lon.substring(4,6).equals("  ") || lon.substring(4,6).equals("? "))
-            {
-                longitudeDegrees = direction * (Integer.parseInt(lon.substring(2,4))+Double.parseDouble(lon.substring(6,12))/60);
-            }
-            else
-            {
-                longitudeDegrees = direction * (Integer.parseInt(lon.substring(2,5))+Double.parseDouble(lon.substring(7,13))/60);
-            }
-            
-            return longitudeDegrees;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.toString());
-            return Double.NaN;
+
+            return direction * (deg + (min / 60) + (sec / 3600));
+        } catch (Exception e) {
+            return Float.NaN;
         }
     }
-    
-    
+
+    private static int getDoubleNumberEnd(String source, int start) {
+        for (int i = start; i < source.length(); i++) {
+            //TODO desetina tecka ve forme carky
+            if (!Character.isDigit(source.charAt(i)) && source.charAt(i) != '.') {
+                return i;
+            }
+        }
+        return source.length();
+    }
 }

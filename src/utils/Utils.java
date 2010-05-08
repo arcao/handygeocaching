@@ -446,4 +446,28 @@ public class Utils
         
         return text;
     }
+    
+    public static String round(double source, int decimals) {
+        if (decimals < 0)
+            throw new IllegalArgumentException("decimals must be great than zero");
+
+        if (decimals == 0)
+            return Integer.toString((int) source);
+
+        String val = Double.toString(source);
+        int dot = val.indexOf('.');
+        if (dot == -1) {
+            StringBuffer sb = new StringBuffer(val);
+            sb.append('.');
+            for(int i = 0; i < decimals; i++) sb.append('0');
+            return sb.toString();
+        } else {
+            if (val.length() - (dot + decimals) > 0) {
+                return val.substring(0, dot + decimals + 1);
+            }
+            StringBuffer sb = new StringBuffer(val);
+            for(int i = val.length(); i <= dot + decimals; i++) sb.append('0');
+            return sb.toString();
+        }
+    }
 }

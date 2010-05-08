@@ -170,8 +170,8 @@ public class Favourites extends Database
             
             //lattitude = Utils.replaceString(Utils.replaceString(lattitude, "° ","d"),"N ","");
             //longitude = Utils.replaceString(Utils.replaceString(longitude, "° ","d"),"E ","");
-            lattitude = Double.toString(Gps.convertLattitude(lattitude));
-            longitude = Double.toString(Gps.convertLongitude(longitude));
+            lattitude = Double.toString(Gps.convertDegToDouble(lattitude));
+            longitude = Double.toString(gps.convertDegToDouble(longitude));
             gui.platformRequest("http://wap.mapy.cz/search?from=&query="+lattitude+"+"+longitude+"&mapType=ophoto&zoom=16");
         }
         catch (Exception e)
@@ -206,6 +206,7 @@ public class Favourites extends Database
             String[][] data = gui.http.parseData(description);
                         
             gui.platformRequest("http://www.geocaching.com/seek/cache_details.aspx?wp="+data[0][7]);
+            viewAll();
         }
         catch (Exception e)
         {
@@ -236,13 +237,7 @@ public class Favourites extends Database
             //System.out.println("found: " + found);
             //System.out.println("poznamka: " + poznamka);
             
-            //Zephy 19.11.07 +\
-            lattitude = gps.convertLattitudeFormat(lattitude, DegMinSecFormat);
-            longitude = gps.convertLongitudeFormat(longitude, DegMinSecFormat);
-            //Zephy 19.11.07 +/
-            
-            //Zephy 19.11.07 + pridan OR v podmince
-            if (lattitude=="" | Gps.convertLattitude(lattitude)==Double.NaN)
+            if (lattitude=="" | Gps.convertDegToDouble(lattitude)==Double.NaN)
             {
                 if (gui.fromMultiSolver)
                     alert = gui.showAlert("Špatný formát první souřadnice",AlertType.WARNING,gui.get_frmResult());
@@ -252,7 +247,7 @@ public class Favourites extends Database
                 }
             }
             //Zephy 19.11.07 + pridan OR v podmince
-            else if(longitude == "" | Gps.convertLongitude(longitude)==Double.NaN)
+            else if(longitude == "" | Gps.convertDegToDouble(longitude)==Double.NaN)
             {
                 
                 if (gui.fromMultiSolver)
@@ -262,6 +257,8 @@ public class Favourites extends Database
             }
             else
             {
+                lattitude = gps.formatDeg(lattitude, false);
+                longitude = Gps.formatDeg(longitude, true);
                 
                 if (name.equals(""))
                     name = "Beze jména";
@@ -659,8 +656,8 @@ public class Favourites extends Database
                 String name = dis.readUTF();
                 String type = dis.readUTF();
                 dis.readUTF();
-                double lattitude = Gps.convertLattitude(dis.readUTF());
-                double longitude = Gps.convertLongitude(dis.readUTF());
+                double lattitude = Gps.convertDegToDouble(dis.readUTF());
+                double longitude = Gps.convertDegToDouble(dis.readUTF());
                                 
                 if (!name.equals("_Poslední cache") && !name.equals("_Poslední keš"))
                     gui.get_cvsMap().addMapItem(lattitude,longitude,type,name);

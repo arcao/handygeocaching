@@ -10,6 +10,7 @@
  */
 package database;
 
+import gps.Gps;
 import gui.Gui;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -49,6 +50,7 @@ public class Settings
     public boolean nameInFieldNotesFirst;
     public boolean wrappedFieldNotesList;
     public int internalGPSType;
+    public boolean acceptingDialogs;
     
     //ostatni promenne
     private RecordStore recordStore;   
@@ -102,6 +104,7 @@ public class Settings
             nameInFieldNotesFirst = false;
             wrappedFieldNotesList = true;
             internalGPSType = INTERNAL_GPS_GENERAL;
+            acceptingDialogs = false;
             
             if (recordStore.getNumRecords() == 0)
             {  //prvni start aplikace
@@ -127,6 +130,7 @@ public class Settings
                 nameInFieldNotesFirst = DI.readBoolean();
                 wrappedFieldNotesList = DI.readBoolean();
                 internalGPSType = DI.readInt();
+                acceptingDialogs = DI.readBoolean();
             }
             return true;
         }
@@ -167,6 +171,8 @@ public class Settings
             gui.get_cgFieldNotes().setSelectedFlags(flags);
             
             gui.get_cgInternalGPSType().setSelectedIndex(internalGPSType, true);
+            
+            gui.get_cgAcceptingDialogs().setSelectedIndex((acceptingDialogs) ? 0 : 1, true);
         }
         catch (Exception e)
         {
@@ -204,6 +210,8 @@ public class Settings
             
             internalGPSType = gui.get_cgInternalGPSType().getSelectedIndex();
             
+            acceptingDialogs = (gui.get_cgAcceptingDialogs().getSelectedIndex() == 0);
+            
             gui.get_lstFieldNotes().setFitPolicy((wrappedFieldNotesList)? Choice.TEXT_WRAP_ON : Choice.TEXT_WRAP_OFF);
             
             store(false);
@@ -237,6 +245,7 @@ public class Settings
             dos.writeBoolean(nameInFieldNotesFirst);
             dos.writeBoolean(wrappedFieldNotesList);
             dos.writeInt(internalGPSType);
+            dos.writeBoolean(acceptingDialogs);
             
             byte[] bytes = buffer.toByteArray();
             if (createNewRecord)
@@ -289,9 +298,8 @@ public class Settings
     {
         try
         {
-            //vlozeni znaku °
-            lastLattitude = lat.substring(0,4)+"°"+lat.substring(5);
-            lastLongitude = lon.substring(0,5)+"°"+lon.substring(6);
+            lastLattitude = Gps.formatDeg(lat, false);
+            lastLongitude = Gps.formatDeg(lon, true);
             
             store(false);
         }

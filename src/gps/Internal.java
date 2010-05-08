@@ -176,11 +176,10 @@ public class Internal implements LocationListener
                 //if (coordinates.getHorizontalAccuracy() > 100) return; //zahazujeme velke nepresnosti
                 
                 gpsParser.latitude = coordinates.getLatitude();
-                String friendly = Coordinates.convert(Math.abs(coordinates.getLatitude()),Coordinates.DD_MM);
-                gpsParser.friendlyLattitude = ((gpsParser.latitude>0)?"N ":"S ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),2)+Utils.replaceString(Utils.addZerosAfter(friendly.substring(friendly.indexOf(':')), 7),":","° ");
+                gpsParser.friendlyLatitude = Gps.convertDoubleToDeg(coordinates.getLatitude(), false, 4);
+                
                 gpsParser.longitude = coordinates.getLongitude();
-                friendly = Coordinates.convert(Math.abs(coordinates.getLongitude()),Coordinates.DD_MM);
-                gpsParser.friendlyLongitude = ((gpsParser.longitude>0)?"E ":"W ")+Utils.addZeros(friendly.substring(0,friendly.indexOf(':')),3)+Utils.replaceString(Utils.addZerosAfter(friendly.substring(friendly.indexOf(':')), 7),":","° ");
+                gpsParser.friendlyLongitude = Gps.convertDoubleToDeg(coordinates.getLongitude(), false, 4);
                 gpsParser.accuracyInMeters = coordinates.getHorizontalAccuracy();
                 
                 double altitude = Math.floor(coordinates.getAltitude());

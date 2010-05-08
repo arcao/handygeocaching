@@ -41,7 +41,7 @@ public class GpsParser implements Runnable
     //gps udaje
     protected double latitude;
     protected double longitude;
-    protected String friendlyLattitude;
+    protected String friendlyLatitude;
     protected String friendlyLongitude;
     protected double heading = 0, speed = 0, altitude = 0;
     protected double accuracy = 50;
@@ -253,9 +253,9 @@ public class GpsParser implements Runnable
         return longitude;
     }
     
-    public String getFriendlyLattitude()
+    public String getFriendlyLatitude()
     {
-        return friendlyLattitude;
+        return friendlyLatitude;
     }
     
     public String getFriendlyLongitude()
@@ -450,31 +450,39 @@ public class GpsParser implements Runnable
     {
         try
         {
-            int degree, minute, fraction;
-            String friendlyFraction;
+            int degree;
+            double minute;
+            
             double f;
             if (param[a].length() > 8 && param[b].length() == 1)
             {
-                degree = Integer.parseInt(param[a].substring(0, 2));
-                minute = Integer.parseInt(param[a].substring(2, 4));
-                fraction = Integer.parseInt(param[a].substring(5, 9).concat("0000").substring(0, 4));
-                friendlyFraction = param[a].substring(5, 9).concat("0000").substring(0, 4);
-                latitude = degree + ((double)minute+(double)fraction/10000)/60;
-                if (param[b].charAt(0) == 'S')
+                if (param[a].charAt(0) == '-') {
+                    degree = Integer.parseInt(param[a].substring(1, 3));
+                    minute = Double.parseDouble(param[a].substring(3));
+                } else {
+                    degree = Integer.parseInt(param[a].substring(0, 2));
+                    minute = Double.parseDouble(param[a].substring(2));
+                }
+                
+                latitude = degree + minute/60;
+                if (param[a].charAt(0) == '-' || param[b].charAt(0) == 'S')
                     latitude =  -latitude;
-                friendlyLattitude = param[b].charAt(0)+" "+degree+"° "+minute+"."+friendlyFraction;
+                friendlyLatitude = Gps.convertDoubleToDeg(latitude, false, 4);
             }
             if (param[c].length() > 9 && param[d].length() == 1)
             {
-                degree = Integer.parseInt(param[c].substring(0, 3));
-                String degree2 = param[c].substring(0, 3);
-                minute = Integer.parseInt(param[c].substring(3, 5));
-                fraction = Integer.parseInt(param[c].substring(6, 10).concat("0000").substring(0, 4));
-                friendlyFraction = param[c].substring(6, 10).concat("0000").substring(0, 4);
-                longitude = degree + ((double)minute+(double)fraction/10000)/60;
-                if (param[d].charAt(0) == 'W')
+                if (param[c].charAt(0) == '-') {
+                    degree = Integer.parseInt(param[c].substring(1, 4));
+                    minute = Double.parseDouble(param[c].substring(4));
+                } else {
+                    degree = Integer.parseInt(param[c].substring(0, 3));
+                    minute = Double.parseDouble(param[c].substring(3));
+                }
+                
+                longitude = degree + minute/60;                
+                if (param[c].charAt(0) == '-' || param[d].charAt(0) == 'W')
                     longitude =  -longitude;
-                friendlyLongitude = param[d].charAt(0)+" "+degree2+"° "+minute+"."+friendlyFraction;
+                friendlyLongitude = Gps.convertDoubleToDeg(longitude, true, 4);
             }
             if (param[e].length() > 5)
             {

@@ -174,7 +174,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private StringItem stringItem1;
     private Command cmdStop;
     private Image imgSettings;
-    private Form frmSettings;
+    private Form frmSettingsGeneral;
     private Command cmdSave;
     private StringItem stringItem3;
     private TextField tfName;
@@ -189,15 +189,11 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Font fntBold;
     private Font fntNormal;
     private Image imgAdvertisement;
-    private Form frmDebug;
-    private StringItem siDebug;
-    private StringItem siDebug2;
     private Image imgKeyword;
     private Image imgFavourites;
     private TextField tfNumberCaches;
     private Form frmKeyword;
     private TextField tfKeyword;
-    private List lstKeyword;
     private List lstSearch;
     private Image imgNearest;
     private List lstGPS;
@@ -217,7 +213,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Form frmAddGiven;
     private TextField tfGivenLattitude;
     private TextField tfGivenLongitude;
-    private StringItem stringItem4;
     private TextField tfGivenName;
     private TextField tfGivenDescription;
     private StringItem siDonate;
@@ -267,7 +262,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private StringItem siAfterReplacement;
     private Command cmdDownloadPatterns;
     private StringItem siAverageLongitude;
-    private TextBox tbError;
     private Font fntSmallBold;
     private Command cmdFavourites;
     private Command cmdMultiSolver;
@@ -282,7 +276,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Command cmdMapyCz;
     private Image imgPdaGps;
     private Image imgOther;
-    private ChoiceGroup cgGivenFormat;
     private Form frmGpsSignalHelp;
     private StringItem siSouradnice;
     private StringItem siRychlost;
@@ -313,7 +306,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private DateField dtFNDate;
     private TextField tfFNText;
     private Command cmdPostFieldNotes;
-    private ChoiceGroup cgFieldNotes;
     private Command cmdSetFound;
     private Command cmdImportGPX;
     private Gauge gaLoadingIndicator;
@@ -325,10 +317,20 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private StringItem siRMSFieldNotes;
     private StringItem siRMSListing;
     private Command cmdDownloadAll;
-    private ChoiceGroup cgInternalGPSType;
     private org.netbeans.microedition.lcdui.SplashScreen ssAdvertisment;
     private Command cmdShowCacheInBrowser;
-    private StringItem stringItem2;//GEN-END:MVDFields
+    private StringItem stringItem2;
+    private List lstSettings;
+    private Form frmSettingsGPS;
+    private Command okCommand1;
+    private Command okCommand2;
+    private ChoiceGroup cgInternalGPSType;
+    private Form frmSettingsFieldNotes;
+    private Command okCommand3;
+    private Command okCommand4;
+    private Command okCommand5;
+    private ChoiceGroup cgFieldNotes;
+    private ChoiceGroup cgAcceptingDialogs;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -397,9 +399,9 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                         break;//GEN-BEGIN:MVDCACase115
                     case 3://GEN-END:MVDCACase115
                         // Insert pre-action code here
-                        getDisplay().setCurrent(get_frmSettings());//GEN-LINE:MVDCAAction139
-                        // Insert post-action code here
                         settings.set();
+                        getDisplay().setCurrent(get_lstSettings());//GEN-LINE:MVDCAAction139
+                        // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase139
                     case 1://GEN-END:MVDCACase139
                         // Insert pre-action code here
@@ -549,7 +551,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Do nothing//GEN-LINE:MVDCAAction68
                 // Insert post-action code here
                 if (navigateToPoint) {
-                    if (gps.convertLattitude(get_tfLattitude().getString())==0 || gps.convertLongitude(get_tfLongitude().getString())==0) {
+                    if (gps.convertDegToDouble(get_tfLattitude().getString())==Double.NaN || gps.convertDegToDouble(get_tfLongitude().getString())==Double.NaN) {
                         showAlert("Špatný formát souřadnic",AlertType.WARNING,get_frmCoordinates());
                     } else {
                         settings.saveCoordinates(get_tfLattitude().getString(), get_tfLongitude().getString());
@@ -753,15 +755,15 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction136
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase136
-        } else if (displayable == frmSettings) {
+        } else if (displayable == frmSettingsGeneral) {
             if (command == cmdSave) {//GEN-END:MVDCACase136
                 // Insert pre-action code here
-                getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction144
+                getDisplay().setCurrent(get_lstSettings());//GEN-LINE:MVDCAAction144
                 // Insert post-action code here
                 settings.save();
             } else if (command == cmdBack) {//GEN-LINE:MVDCACase144
                 // Insert pre-action code here
-                getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction478
+                getDisplay().setCurrent(get_lstSettings());//GEN-LINE:MVDCAAction478
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase478
         } else if (displayable == frmConnecting) {
@@ -776,32 +778,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 getDisplay().setCurrent(get_frmLogs());//GEN-LINE:MVDCAAction178
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase178
-        } else if (displayable == frmDebug) {
-            if (command == cmdMenu) {//GEN-END:MVDCACase178
-                // Insert pre-action code here
-                getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction191
-                // Insert post-action code here
-            }//GEN-BEGIN:MVDCACase191
-        } else if (displayable == lstKeyword) {
-            if (command == cmdBack) {//GEN-END:MVDCACase191
-                // Insert pre-action code here
-                getDisplay().setCurrent(get_frmKeyword());//GEN-LINE:MVDCAAction225
-                // Insert post-action code here
-            } else if (command == lstKeyword.SELECT_COMMAND) {
-                http.waypoint = http.waypoints[lstKeyword.getSelectedIndex()];
-                http.waypointCacheName = lstKeyword.getString(lstKeyword.getSelectedIndex());
-                http.start(Http.OVERVIEW, false);
-            } else if (command == lstKeyword.SELECT_COMMAND) {//GEN-BEGIN:MVDCACase225
-                switch (get_lstKeyword().getSelectedIndex()) {
-                    case 0://GEN-END:MVDCACase225
-                        // Insert pre-action code here
-                        // Do nothing//GEN-LINE:MVDCAAction316
-                        // Insert post-action code here
-                        break;//GEN-BEGIN:MVDCACase316
-                }
-            }
         } else if (displayable == frmKeyword) {
-            if (command == cmdBack) {//GEN-END:MVDCACase316
+            if (command == cmdBack) {//GEN-END:MVDCACase178
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstSearch());//GEN-LINE:MVDCAAction221
                 // Insert post-action code here
@@ -1172,7 +1150,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction280
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction279
                 // Insert post-action code here
-                favourites.addEdit(tfGivenName.getString(),tfGivenDescription.getString(),tfGivenLattitude.getString(),tfGivenLongitude.getString(),"waypoint",get_lstFavourites(), (cgGivenFormat.getSelectedIndex()==1), siNalezeno.getText(), "", false, true, true);
+                favourites.addEdit(tfGivenName.getString(),tfGivenDescription.getString(),tfGivenLattitude.getString(),tfGivenLongitude.getString(),"waypoint",get_lstFavourites(), false, siNalezeno.getText(), "", false, true, true);
                 /*
                  *Zephy 19.11.07 REM - pri editaci bodu a zadani chybnych souradnic byla prebita hlaska o chybne zadanych souradnicich a vlezlo se zpet do seznamu. Toto bylo presunuto do Favourites.java
                  */
@@ -1315,14 +1293,8 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction280
                 // Do nothing//GEN-LINE:MVDCAAction427
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase427
-        } else if (displayable == tbError) {
-            if (command == cmdMenu) {//GEN-END:MVDCACase427
-                // Insert pre-action code here
-                getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction394
-// Insert post-action code here
-            }//GEN-BEGIN:MVDCACase394
         } else if (displayable == tbDecypher) {
-            if (command == cmdBack) {//GEN-END:MVDCACase394
+            if (command == cmdBack) {//GEN-END:MVDCACase427
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstGPS());//GEN-LINE:MVDCAAction418
 // Insert post-action code here
@@ -1501,7 +1473,9 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 // Insert post-action code here
                 Displayable fRet = null;
                 if (fromPreview) {
-                    fRet = get_frmOverview(); 
+                    fRet = get_frmOverview();
+                    if (fieldNoteItem.getType() == FieldNotes.TYPE_FOUND_IT)
+                        get_siNalezenoOver().setText(Utils.formatDate(fieldNoteItem.getDate()));
                 } else if (fromFieldNotes) {
                     fRet = get_lstFieldNotes();
                     
@@ -1529,7 +1503,53 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 getDisplay().setCurrent(get_lstMode());//GEN-LINE:MVDCAAction625
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase625
-        }//GEN-END:MVDCACase625
+        } else if (displayable == lstSettings) {
+            if (command == lstSettings.SELECT_COMMAND) {
+                switch (get_lstSettings().getSelectedIndex()) {
+                    case 0://GEN-END:MVDCACase625
+                        // Insert pre-action code here
+                        getDisplay().setCurrent(get_frmSettingsGeneral());//GEN-LINE:MVDCAAction635
+                        // Insert post-action code here
+                        break;//GEN-BEGIN:MVDCACase635
+                    case 1://GEN-END:MVDCACase635
+                        // Insert pre-action code here
+                        getDisplay().setCurrent(get_frmSettingsGPS());//GEN-LINE:MVDCAAction639
+                        // Insert post-action code here
+                        break;//GEN-BEGIN:MVDCACase639
+                    case 2://GEN-END:MVDCACase639
+                        // Insert pre-action code here
+                        getDisplay().setCurrent(get_frmSettingsFieldNotes());//GEN-LINE:MVDCAAction641
+                        // Insert post-action code here
+                        break;//GEN-BEGIN:MVDCACase641
+                }
+            } else if (command == cmdBack) {//GEN-END:MVDCACase641
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction637
+                // Insert post-action code here
+            }//GEN-BEGIN:MVDCACase637
+        } else if (displayable == frmSettingsGPS) {
+            if (command == cmdBack) {//GEN-END:MVDCACase637
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstSettings());//GEN-LINE:MVDCAAction646
+                // Insert post-action code here
+            } else if (command == cmdSave) {//GEN-LINE:MVDCACase646
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstSettings());//GEN-LINE:MVDCAAction644
+                // Insert post-action code here
+                settings.save();
+            }//GEN-BEGIN:MVDCACase644
+        } else if (displayable == frmSettingsFieldNotes) {
+            if (command == cmdBack) {//GEN-END:MVDCACase644
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstSettings());//GEN-LINE:MVDCAAction657
+                // Insert post-action code here
+            } else if (command == cmdSave) {//GEN-LINE:MVDCACase657
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstSettings());//GEN-LINE:MVDCAAction654
+                // Insert post-action code here
+                settings.save();
+            }//GEN-BEGIN:MVDCACase654
+        }//GEN-END:MVDCACase654
 // Insert global post-action code here
         
         if (displayable == openFileBrowser && openFileBrowser != null) {
@@ -2345,29 +2365,28 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
         return imgSettings;
     }//GEN-END:MVDGetEnd140
     
-    /** This method returns instance for frmSettings component and should be called instead of accessing frmSettings field directly.//GEN-BEGIN:MVDGetBegin141
-     * @return Instance for frmSettings component
+    /** This method returns instance for frmSettingsGeneral component and should be called instead of accessing frmSettingsGeneral field directly.//GEN-BEGIN:MVDGetBegin141
+     * @return Instance for frmSettingsGeneral component
      */
-    public Form get_frmSettings() {
-        if (frmSettings == null) {//GEN-END:MVDGetBegin141
+    public Form get_frmSettingsGeneral() {
+        if (frmSettingsGeneral == null) {//GEN-END:MVDGetBegin141
             // Insert pre-init code here
-            frmSettings = new Form("Nastaven\u00ED", new Item[] {//GEN-BEGIN:MVDGetInit141
+            frmSettingsGeneral = new Form("Nastaven\u00ED - Obecn\u00E9", new Item[] {//GEN-BEGIN:MVDGetInit141
                 get_stringItem3(),
                 get_tfName(),
                 get_tfPassword(),
                 get_cgCacheFilter(),
                 get_tfNumberCaches(),
-                get_cgInternalGPSType(),
-                get_cgFieldNotes(),
+                get_cgAcceptingDialogs(),
                 get_tfBackLight(),
                 get_stringItem10()
             });
-            frmSettings.addCommand(get_cmdSave());
-            frmSettings.addCommand(get_cmdBack());
-            frmSettings.setCommandListener(this);//GEN-END:MVDGetInit141
+            frmSettingsGeneral.addCommand(get_cmdSave());
+            frmSettingsGeneral.addCommand(get_cmdBack());
+            frmSettingsGeneral.setCommandListener(this);//GEN-END:MVDGetInit141
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd141
-        return frmSettings;
+        return frmSettingsGeneral;
     }//GEN-END:MVDGetEnd141
     
     /** This method returns instance for cmdSave component and should be called instead of accessing cmdSave field directly.//GEN-BEGIN:MVDGetBegin143
@@ -2586,46 +2605,8 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
         return imgAdvertisement;
     }//GEN-END:MVDGetEnd189
     
-    /** This method returns instance for frmDebug component and should be called instead of accessing frmDebug field directly.//GEN-BEGIN:MVDGetBegin190
-     * @return Instance for frmDebug component
-     */
-    public Form get_frmDebug() {
-        if (frmDebug == null) {//GEN-END:MVDGetBegin190
-            // Insert pre-init code here
-            frmDebug = new Form("Debug", new Item[] {//GEN-BEGIN:MVDGetInit190
-                get_siDebug(),
-                get_siDebug2()
-            });
-            frmDebug.addCommand(get_cmdMenu());
-            frmDebug.setCommandListener(this);//GEN-END:MVDGetInit190
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd190
-        return frmDebug;
-    }//GEN-END:MVDGetEnd190
     
-    /** This method returns instance for siDebug component and should be called instead of accessing siDebug field directly.//GEN-BEGIN:MVDGetBegin192
-     * @return Instance for siDebug component
-     */
-    public StringItem get_siDebug() {
-        if (siDebug == null) {//GEN-END:MVDGetBegin192
-            // Insert pre-init code here
-            siDebug = new StringItem("", "");//GEN-LINE:MVDGetInit192
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd192
-        return siDebug;
-    }//GEN-END:MVDGetEnd192
     
-    /** This method returns instance for siDebug2 component and should be called instead of accessing siDebug2 field directly.//GEN-BEGIN:MVDGetBegin193
-     * @return Instance for siDebug2 component
-     */
-    public StringItem get_siDebug2() {
-        if (siDebug2 == null) {//GEN-END:MVDGetBegin193
-            // Insert pre-init code here
-            siDebug2 = new StringItem("", "");//GEN-LINE:MVDGetInit193
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd193
-        return siDebug2;
-    }//GEN-END:MVDGetEnd193
     
     
     /** This method returns instance for lstDevices component and should be called instead of accessing lstDevices field directly.//GEN-BEGIN:MVDGetBegin3
@@ -2721,21 +2702,6 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
         return tfKeyword;
     }//GEN-END:MVDGetEnd220
     
-    /** This method returns instance for lstKeyword component and should be called instead of accessing lstKeyword field directly.//GEN-BEGIN:MVDGetBegin223
-     * @return Instance for lstKeyword component
-     */
-    public List get_lstKeyword() {
-        if (lstKeyword == null) {//GEN-END:MVDGetBegin223
-            // Insert pre-init code here
-            lstKeyword = new List("Nalezen\u00E9 ke\u0161e:", Choice.IMPLICIT, new String[] {"\u017D\u00E1dn\u00E1 data"}, new Image[] {null});//GEN-BEGIN:MVDGetInit223
-            lstKeyword.addCommand(get_cmdBack());
-            lstKeyword.setCommandListener(this);
-            lstKeyword.setSelectedFlags(new boolean[] {false});
-            lstKeyword.setFitPolicy(Choice.TEXT_WRAP_ON);//GEN-END:MVDGetInit223
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd223
-        return lstKeyword;
-    }//GEN-END:MVDGetEnd223
     
     /** This method returns instance for lstSearch component and should be called instead of accessing lstSearch field directly.//GEN-BEGIN:MVDGetBegin226
      * @return Instance for lstSearch component
@@ -3016,8 +2982,6 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
             frmAddGiven = new Form("P\u0159idat bod", new Item[] {//GEN-BEGIN:MVDGetInit273
                 get_tfGivenLattitude(),
                 get_tfGivenLongitude(),
-                get_cgGivenFormat(),
-                get_stringItem4(),
                 get_tfGivenName(),
                 get_tfGivenDescription(),
                 get_siNalezeno()
@@ -3054,17 +3018,6 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
         return tfGivenLongitude;
     }//GEN-END:MVDGetEnd275
     
-    /** This method returns instance for stringItem4 component and should be called instead of accessing stringItem4 field directly.//GEN-BEGIN:MVDGetBegin276
-     * @return Instance for stringItem4 component
-     */
-    public StringItem get_stringItem4() {
-        if (stringItem4 == null) {//GEN-END:MVDGetBegin276
-            // Insert pre-init code here
-            stringItem4 = new StringItem("Vzor:", "\n1) N st\u00B0 mi.mmm \n    E sst\u00B0 mi.mmm\n2) N st\u00B0 mi ss.sss \n    E sst\u00B0 mi ss.sss");//GEN-LINE:MVDGetInit276
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd276
-        return stringItem4;
-    }//GEN-END:MVDGetEnd276
     
     /** This method returns instance for tfGivenName component and should be called instead of accessing tfGivenName field directly.//GEN-BEGIN:MVDGetBegin277
      * @return Instance for tfGivenName component
@@ -3735,19 +3688,6 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         return siAverageLongitude;
     }//GEN-END:MVDGetEnd392
     
-    /** This method returns instance for tbError component and should be called instead of accessing tbError field directly.//GEN-BEGIN:MVDGetBegin393
-     * @return Instance for tbError component
-     */
-    public TextBox get_tbError() {
-        if (tbError == null) {//GEN-END:MVDGetBegin393
-            // Insert pre-init code here
-            tbError = new TextBox("Nastala chyba", null, 120, TextField.ANY);//GEN-BEGIN:MVDGetInit393
-            tbError.addCommand(get_cmdMenu());
-            tbError.setCommandListener(this);//GEN-END:MVDGetInit393
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd393
-        return tbError;
-    }//GEN-END:MVDGetEnd393
     
     /** This method returns instance for fntSmallBold component and should be called instead of accessing fntSmallBold field directly.//GEN-BEGIN:MVDGetBegin395
      * @return Instance for fntSmallBold component
@@ -3952,28 +3892,6 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         return imgOther;
     }//GEN-END:MVDGetEnd455
     
-    /** This method returns instance for cgGivenFormat component and should be called instead of accessing cgGivenFormat field directly.//GEN-BEGIN:MVDGetBegin456
-     * @return Instance for cgGivenFormat component
-     */
-    public ChoiceGroup get_cgGivenFormat() {
-        if (cgGivenFormat == null) {//GEN-END:MVDGetBegin456
-            // Insert pre-init code here
-            cgGivenFormat = new ChoiceGroup("Form\u00E1t:", Choice.EXCLUSIVE, new String[] {//GEN-BEGIN:MVDGetInit456
-                "Stupn\u011B, Min.",
-                "Stupn\u011B, Min., Sec"
-            }, new Image[] {
-                null,
-                null
-            });
-            cgGivenFormat.setSelectedFlags(new boolean[] {
-                false,
-                false
-            });
-            cgGivenFormat.setFitPolicy(Choice.TEXT_WRAP_ON);//GEN-END:MVDGetInit456
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd456
-        return cgGivenFormat;
-    }//GEN-END:MVDGetEnd456
     
     
     
@@ -4402,34 +4320,6 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd574
         return cmdPostFieldNotes;
     }//GEN-END:MVDGetEnd574
-
-    /** This method returns instance for cgFieldNotes component and should be called instead of accessing cgFieldNotes field directly.//GEN-BEGIN:MVDGetBegin577
-     * @return Instance for cgFieldNotes component
-     */
-    public ChoiceGroup get_cgFieldNotes() {
-        if (cgFieldNotes == null) {//GEN-END:MVDGetBegin577
-            // Insert pre-init code here
-            cgFieldNotes = new ChoiceGroup("Nastaven\u00ED Field notes:", Choice.MULTIPLE, new String[] {//GEN-BEGIN:MVDGetInit577
-                "Inkrem. Field notes",
-                "Ikonky ve Field notes",
-                "Nejprve n\u00E1zev ke\u0161e",
-                "Zalamovat text"
-            }, new Image[] {
-                null,
-                null,
-                null,
-                null
-            });
-            cgFieldNotes.setSelectedFlags(new boolean[] {
-                false,
-                false,
-                false,
-                false
-            });//GEN-END:MVDGetInit577
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd577
-        return cgFieldNotes;
-    }//GEN-END:MVDGetEnd577
     /** This method returns instance for cmdSetFound component and should be called instead of accessing cmdSetFound field directly.//GEN-BEGIN:MVDGetBegin584
      * @return Instance for cmdSetFound component
      */
@@ -4569,35 +4459,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd611
         return cmdDownloadAll;
     }//GEN-END:MVDGetEnd611
-
-    /** This method returns instance for cgInternalGPSType component and should be called instead of accessing cgInternalGPSType field directly.//GEN-BEGIN:MVDGetBegin613
-     * @return Instance for cgInternalGPSType component
-     */
-    public ChoiceGroup get_cgInternalGPSType() {
-        if (cgInternalGPSType == null) {//GEN-END:MVDGetBegin613
-            // Insert pre-init code here
-            cgInternalGPSType = new ChoiceGroup("Typ intern\u00ED GPS:", Choice.POPUP, new String[] {//GEN-BEGIN:MVDGetInit613
-                "Obecn\u00FD",
-                "Obec. 1s aktual.",
-                "Sam. SGH-i5x0",
-                "BlackBerry"
-            }, new Image[] {
-                null,
-                null,
-                null,
-                null
-            });
-            cgInternalGPSType.setSelectedFlags(new boolean[] {
-                true,
-                false,
-                false,
-                false
-            });//GEN-END:MVDGetInit613
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd613
-        return cgInternalGPSType;
-    }//GEN-END:MVDGetEnd613
- 
+  
     /** This method returns instance for ssAdvertisment component and should be called instead of accessing ssAdvertisment field directly.//GEN-BEGIN:MVDGetBegin624
      * @return Instance for ssAdvertisment component
      */
@@ -4638,6 +4500,201 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd631
         return stringItem2;
     }//GEN-END:MVDGetEnd631
+
+    /** This method returns instance for lstSettings component and should be called instead of accessing lstSettings field directly.//GEN-BEGIN:MVDGetBegin632
+     * @return Instance for lstSettings component
+     */
+    public List get_lstSettings() {
+        if (lstSettings == null) {//GEN-END:MVDGetBegin632
+            // Insert pre-init code here
+            lstSettings = new List("Nastaven\u00ED", Choice.IMPLICIT, new String[] {//GEN-BEGIN:MVDGetInit632
+                "Obecn\u00E9",
+                "GPS",
+                "Field Notes"
+            }, new Image[] {
+                null,
+                null,
+                null
+            });
+            lstSettings.addCommand(get_cmdBack());
+            lstSettings.setCommandListener(this);
+            lstSettings.setSelectedFlags(new boolean[] {
+                true,
+                false,
+                false
+            });//GEN-END:MVDGetInit632
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd632
+        return lstSettings;
+    }//GEN-END:MVDGetEnd632
+
+    /** This method returns instance for frmSettingsGPS component and should be called instead of accessing frmSettingsGPS field directly.//GEN-BEGIN:MVDGetBegin642
+     * @return Instance for frmSettingsGPS component
+     */
+    public Form get_frmSettingsGPS() {
+        if (frmSettingsGPS == null) {//GEN-END:MVDGetBegin642
+            // Insert pre-init code here
+            frmSettingsGPS = new Form("Nastaven\u00ED - GPS", new Item[] {get_cgInternalGPSType()});//GEN-BEGIN:MVDGetInit642
+            frmSettingsGPS.addCommand(get_cmdSave());
+            frmSettingsGPS.addCommand(get_cmdBack());
+            frmSettingsGPS.setCommandListener(this);//GEN-END:MVDGetInit642
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd642
+        return frmSettingsGPS;
+    }//GEN-END:MVDGetEnd642
+
+    /** This method returns instance for okCommand1 component and should be called instead of accessing okCommand1 field directly.//GEN-BEGIN:MVDGetBegin643
+     * @return Instance for okCommand1 component
+     */
+    public Command get_okCommand1() {
+        if (okCommand1 == null) {//GEN-END:MVDGetBegin643
+            // Insert pre-init code here
+            okCommand1 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit643
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd643
+        return okCommand1;
+    }//GEN-END:MVDGetEnd643
+
+    /** This method returns instance for okCommand2 component and should be called instead of accessing okCommand2 field directly.//GEN-BEGIN:MVDGetBegin645
+     * @return Instance for okCommand2 component
+     */
+    public Command get_okCommand2() {
+        if (okCommand2 == null) {//GEN-END:MVDGetBegin645
+            // Insert pre-init code here
+            okCommand2 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit645
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd645
+        return okCommand2;
+    }//GEN-END:MVDGetEnd645
+
+    /** This method returns instance for cgInternalGPSType component and should be called instead of accessing cgInternalGPSType field directly.//GEN-BEGIN:MVDGetBegin647
+     * @return Instance for cgInternalGPSType component
+     */
+    public ChoiceGroup get_cgInternalGPSType() {
+        if (cgInternalGPSType == null) {//GEN-END:MVDGetBegin647
+            // Insert pre-init code here
+            cgInternalGPSType = new ChoiceGroup("Typ intern\u00ED GPS", Choice.POPUP, new String[] {//GEN-BEGIN:MVDGetInit647
+                "Obecn\u00FD",
+                "Obec. 1s aktualizace",
+                "Sam. SGH-i5x0",
+                "BlackBerry"
+            }, new Image[] {
+                null,
+                null,
+                null,
+                null
+            });
+            cgInternalGPSType.setSelectedFlags(new boolean[] {
+                false,
+                false,
+                false,
+                false
+            });//GEN-END:MVDGetInit647
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd647
+        return cgInternalGPSType;
+    }//GEN-END:MVDGetEnd647
+
+    /** This method returns instance for frmSettingsFieldNotes component and should be called instead of accessing frmSettingsFieldNotes field directly.//GEN-BEGIN:MVDGetBegin652
+     * @return Instance for frmSettingsFieldNotes component
+     */
+    public Form get_frmSettingsFieldNotes() {
+        if (frmSettingsFieldNotes == null) {//GEN-END:MVDGetBegin652
+            // Insert pre-init code here
+            frmSettingsFieldNotes = new Form("Nastaven\u00ED - Field Notes", new Item[] {get_cgFieldNotes()});//GEN-BEGIN:MVDGetInit652
+            frmSettingsFieldNotes.addCommand(get_cmdSave());
+            frmSettingsFieldNotes.addCommand(get_cmdBack());
+            frmSettingsFieldNotes.setCommandListener(this);//GEN-END:MVDGetInit652
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd652
+        return frmSettingsFieldNotes;
+    }//GEN-END:MVDGetEnd652
+
+    /** This method returns instance for okCommand3 component and should be called instead of accessing okCommand3 field directly.//GEN-BEGIN:MVDGetBegin653
+     * @return Instance for okCommand3 component
+     */
+    public Command get_okCommand3() {
+        if (okCommand3 == null) {//GEN-END:MVDGetBegin653
+            // Insert pre-init code here
+            okCommand3 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit653
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd653
+        return okCommand3;
+    }//GEN-END:MVDGetEnd653
+
+    /** This method returns instance for okCommand4 component and should be called instead of accessing okCommand4 field directly.//GEN-BEGIN:MVDGetBegin655
+     * @return Instance for okCommand4 component
+     */
+    public Command get_okCommand4() {
+        if (okCommand4 == null) {//GEN-END:MVDGetBegin655
+            // Insert pre-init code here
+            okCommand4 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit655
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd655
+        return okCommand4;
+    }//GEN-END:MVDGetEnd655
+
+    /** This method returns instance for okCommand5 component and should be called instead of accessing okCommand5 field directly.//GEN-BEGIN:MVDGetBegin656
+     * @return Instance for okCommand5 component
+     */
+    public Command get_okCommand5() {
+        if (okCommand5 == null) {//GEN-END:MVDGetBegin656
+            // Insert pre-init code here
+            okCommand5 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit656
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd656
+        return okCommand5;
+    }//GEN-END:MVDGetEnd656
+
+    /** This method returns instance for cgFieldNotes component and should be called instead of accessing cgFieldNotes field directly.//GEN-BEGIN:MVDGetBegin658
+     * @return Instance for cgFieldNotes component
+     */
+    public ChoiceGroup get_cgFieldNotes() {
+        if (cgFieldNotes == null) {//GEN-END:MVDGetBegin658
+            // Insert pre-init code here
+            cgFieldNotes = new ChoiceGroup("Obecn\u00E9", Choice.MULTIPLE, new String[] {//GEN-BEGIN:MVDGetInit658
+                "Inkrem. Field notes",
+                "Ikonky ve Field notes",
+                "Nejprve n\u00E1zev ke\u0161e",
+                "Zalamovat text"
+            }, new Image[] {
+                null,
+                null,
+                null,
+                null
+            });
+            cgFieldNotes.setSelectedFlags(new boolean[] {
+                false,
+                false,
+                false,
+                false
+            });//GEN-END:MVDGetInit658
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd658
+        return cgFieldNotes;
+    }//GEN-END:MVDGetEnd658
+
+    /** This method returns instance for cgAcceptingDialogs component and should be called instead of accessing cgAcceptingDialogs field directly.//GEN-BEGIN:MVDGetBegin663
+     * @return Instance for cgAcceptingDialogs component
+     */
+    public ChoiceGroup get_cgAcceptingDialogs() {
+        if (cgAcceptingDialogs == null) {//GEN-END:MVDGetBegin663
+            // Insert pre-init code here
+            cgAcceptingDialogs = new ChoiceGroup("Potvrzovat dialogy", Choice.EXCLUSIVE, new String[] {//GEN-BEGIN:MVDGetInit663
+                "Ano",
+                "Ne"
+            }, new Image[] {
+                null,
+                null
+            });
+            cgAcceptingDialogs.setSelectedFlags(new boolean[] {
+                false,
+                false
+            });//GEN-END:MVDGetInit663
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd663
+        return cgAcceptingDialogs;
+    }//GEN-END:MVDGetEnd663
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {
@@ -4729,9 +4786,11 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         else if (type==AlertType.WARNING)
             caption = "Upozornění";
         Alert alert = new Alert(caption,text,null,type);
-        alert.setTimeout(Alert.FOREVER);
-        if (timeout > 0)
+        if (timeout > 0 && !settings.acceptingDialogs) {
             alert.setTimeout(timeout);
+        } else {
+            alert.setTimeout(Alert.FOREVER);
+        }
         if (next == null) next = getDisplay().getCurrent();
         getDisplay().setCurrent(alert, next);
         return alert;
