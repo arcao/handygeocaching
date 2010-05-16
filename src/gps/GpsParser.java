@@ -89,6 +89,8 @@ public class GpsParser implements Runnable
     private int bufferPosition = 0;
     
     private Thread thread;
+    
+    public Compass compass;
 
     public boolean isDgpsUsed() {
         return dgpsUsed;
@@ -168,10 +170,29 @@ public class GpsParser implements Runnable
         communicationURL = address;
         source = gpsSource;
         
+        compass = null;
+        
         if (source == INTERNAL)
         {
             internal = References.getInternal(gui, this, settings);
         }
+        
+        settings.useInternalCompass = createCompass();
+    }
+    
+    public boolean createCompass() {
+        if (settings.useInternalCompass) {
+            compass = Compass.getCompass();
+            if (compass != null) {
+                if (!compass.isSupported()) {
+                    compass = null;
+                    return false;
+                }
+                compass.setMagnetigDeclination(settings.compassDeclination);   
+            }
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -189,7 +210,9 @@ public class GpsParser implements Runnable
      
     public double getHeading()
     {
-        return heading;
+        if (compass == null)
+            return heading;
+        return compass.getAzimuth();
     }
     
     /**

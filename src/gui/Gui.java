@@ -330,7 +330,12 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Command okCommand4;
     private Command okCommand5;
     private ChoiceGroup cgFieldNotes;
-    private ChoiceGroup cgAcceptingDialogs;//GEN-END:MVDFields
+    private ChoiceGroup cgAcceptingDialogs;
+    private Form frmSettingsCompass;
+    private Command okCommand6;
+    private Command okCommand7;
+    private ChoiceGroup cgUseInternalCompass;
+    private TextField tfCompassDeclination;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -399,7 +404,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                         break;//GEN-BEGIN:MVDCACase115
                     case 3://GEN-END:MVDCACase115
                         // Insert pre-action code here
-                        settings.set();
                         getDisplay().setCurrent(get_lstSettings());//GEN-LINE:MVDCAAction139
                         // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase139
@@ -1508,21 +1512,30 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 switch (get_lstSettings().getSelectedIndex()) {
                     case 0://GEN-END:MVDCACase625
                         // Insert pre-action code here
+                        settings.set();
                         getDisplay().setCurrent(get_frmSettingsGeneral());//GEN-LINE:MVDCAAction635
                         // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase635
                     case 1://GEN-END:MVDCACase635
                         // Insert pre-action code here
+                        settings.set();
                         getDisplay().setCurrent(get_frmSettingsGPS());//GEN-LINE:MVDCAAction639
                         // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase639
                     case 2://GEN-END:MVDCACase639
                         // Insert pre-action code here
+                        settings.set();
                         getDisplay().setCurrent(get_frmSettingsFieldNotes());//GEN-LINE:MVDCAAction641
                         // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase641
+                    case 3://GEN-END:MVDCACase641
+                        // Insert pre-action code here
+                        settings.set();
+                        getDisplay().setCurrent(get_frmSettingsCompass());//GEN-LINE:MVDCAAction668
+                        // Insert post-action code here
+                        break;//GEN-BEGIN:MVDCACase668
                 }
-            } else if (command == cmdBack) {//GEN-END:MVDCACase641
+            } else if (command == cmdBack) {//GEN-END:MVDCACase668
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction637
                 // Insert post-action code here
@@ -1549,7 +1562,18 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 // Insert post-action code here
                 settings.save();
             }//GEN-BEGIN:MVDCACase654
-        }//GEN-END:MVDCACase654
+        } else if (displayable == frmSettingsCompass) {
+            if (command == cmdBack) {//GEN-END:MVDCACase654
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstSettings());//GEN-LINE:MVDCAAction670
+                // Insert post-action code here
+            } else if (command == cmdSave) {//GEN-LINE:MVDCACase670
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstSettings());//GEN-LINE:MVDCAAction672
+                // Insert post-action code here
+                settings.save();
+            }//GEN-BEGIN:MVDCACase672
+        }//GEN-END:MVDCACase672
 // Insert global post-action code here
         
         if (displayable == openFileBrowser && openFileBrowser != null) {
@@ -4510,8 +4534,10 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
             lstSettings = new List("Nastaven\u00ED", Choice.IMPLICIT, new String[] {//GEN-BEGIN:MVDGetInit632
                 "Obecn\u00E9",
                 "GPS",
-                "Field Notes"
+                "Field Notes",
+                "Kompas"
             }, new Image[] {
+                null,
                 null,
                 null,
                 null
@@ -4520,6 +4546,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
             lstSettings.setCommandListener(this);
             lstSettings.setSelectedFlags(new boolean[] {
                 true,
+                false,
                 false,
                 false
             });//GEN-END:MVDGetInit632
@@ -4695,6 +4722,82 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd663
         return cgAcceptingDialogs;
     }//GEN-END:MVDGetEnd663
+
+    /** This method returns instance for frmSettingsCompass component and should be called instead of accessing frmSettingsCompass field directly.//GEN-BEGIN:MVDGetBegin666
+     * @return Instance for frmSettingsCompass component
+     */
+    public Form get_frmSettingsCompass() {
+        if (frmSettingsCompass == null) {//GEN-END:MVDGetBegin666
+            // Insert pre-init code here
+            frmSettingsCompass = new Form("Nastaven\u00ED - Kompas", new Item[] {//GEN-BEGIN:MVDGetInit666
+                get_cgUseInternalCompass(),
+                get_tfCompassDeclination()
+            });
+            frmSettingsCompass.addCommand(get_cmdBack());
+            frmSettingsCompass.addCommand(get_cmdSave());
+            frmSettingsCompass.setCommandListener(this);//GEN-END:MVDGetInit666
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd666
+        return frmSettingsCompass;
+    }//GEN-END:MVDGetEnd666
+
+    /** This method returns instance for okCommand6 component and should be called instead of accessing okCommand6 field directly.//GEN-BEGIN:MVDGetBegin669
+     * @return Instance for okCommand6 component
+     */
+    public Command get_okCommand6() {
+        if (okCommand6 == null) {//GEN-END:MVDGetBegin669
+            // Insert pre-init code here
+            okCommand6 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit669
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd669
+        return okCommand6;
+    }//GEN-END:MVDGetEnd669
+
+    /** This method returns instance for okCommand7 component and should be called instead of accessing okCommand7 field directly.//GEN-BEGIN:MVDGetBegin671
+     * @return Instance for okCommand7 component
+     */
+    public Command get_okCommand7() {
+        if (okCommand7 == null) {//GEN-END:MVDGetBegin671
+            // Insert pre-init code here
+            okCommand7 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit671
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd671
+        return okCommand7;
+    }//GEN-END:MVDGetEnd671
+
+    /** This method returns instance for cgUseInternalCompass component and should be called instead of accessing cgUseInternalCompass field directly.//GEN-BEGIN:MVDGetBegin673
+     * @return Instance for cgUseInternalCompass component
+     */
+    public ChoiceGroup get_cgUseInternalCompass() {
+        if (cgUseInternalCompass == null) {//GEN-END:MVDGetBegin673
+            // Insert pre-init code here
+            cgUseInternalCompass = new ChoiceGroup("Pou\u017E\u00EDt intern\u00ED kompas:", Choice.EXCLUSIVE, new String[] {//GEN-BEGIN:MVDGetInit673
+                "Ano",
+                "Ne"
+            }, new Image[] {
+                null,
+                null
+            });
+            cgUseInternalCompass.setSelectedFlags(new boolean[] {
+                false,
+                false
+            });//GEN-END:MVDGetInit673
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd673
+        return cgUseInternalCompass;
+    }//GEN-END:MVDGetEnd673
+
+    /** This method returns instance for tfCompassDeclination component and should be called instead of accessing tfCompassDeclination field directly.//GEN-BEGIN:MVDGetBegin676
+     * @return Instance for tfCompassDeclination component
+     */
+    public TextField get_tfCompassDeclination() {
+        if (tfCompassDeclination == null) {//GEN-END:MVDGetBegin676
+            // Insert pre-init code here
+            tfCompassDeclination = new TextField("Magnetick\u00E1 deklinace:", null, 120, TextField.ANY);//GEN-LINE:MVDGetInit676
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd676
+        return tfCompassDeclination;
+    }//GEN-END:MVDGetEnd676
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {

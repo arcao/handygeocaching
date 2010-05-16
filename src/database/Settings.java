@@ -10,6 +10,7 @@
  */
 package database;
 
+import gps.Compass;
 import gps.Gps;
 import gui.Gui;
 import java.io.ByteArrayInputStream;
@@ -17,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
+import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Choice;
 import javax.microedition.rms.RecordStore;
 
@@ -51,6 +53,8 @@ public class Settings
     public boolean wrappedFieldNotesList;
     public int internalGPSType;
     public boolean acceptingDialogs;
+    public boolean useInternalCompass;
+    public float compassDeclination; 
     
     //ostatni promenne
     private RecordStore recordStore;   
@@ -105,6 +109,8 @@ public class Settings
             wrappedFieldNotesList = true;
             internalGPSType = INTERNAL_GPS_GENERAL;
             acceptingDialogs = false;
+            useInternalCompass = false;
+            compassDeclination = 2.5f;
             
             if (recordStore.getNumRecords() == 0)
             {  //prvni start aplikace
@@ -131,6 +137,8 @@ public class Settings
                 wrappedFieldNotesList = DI.readBoolean();
                 internalGPSType = DI.readInt();
                 acceptingDialogs = DI.readBoolean();
+                useInternalCompass = DI.readBoolean();
+                compassDeclination = DI.readFloat();
             }
             return true;
         }
@@ -173,6 +181,9 @@ public class Settings
             gui.get_cgInternalGPSType().setSelectedIndex(internalGPSType, true);
             
             gui.get_cgAcceptingDialogs().setSelectedIndex((acceptingDialogs) ? 0 : 1, true);
+            
+            gui.get_cgUseInternalCompass().setSelectedIndex((useInternalCompass) ? 0 : 1, true);
+            gui.get_tfCompassDeclination().setString(Compass.formatDelination(compassDeclination));
         }
         catch (Exception e)
         {
@@ -211,8 +222,19 @@ public class Settings
             internalGPSType = gui.get_cgInternalGPSType().getSelectedIndex();
             
             acceptingDialogs = (gui.get_cgAcceptingDialogs().getSelectedIndex() == 0);
+            useInternalCompass = (gui.get_cgUseInternalCompass().getSelectedIndex() == 0);
+            compassDeclination = Compass.parseDecliantion(gui.get_tfCompassDeclination().getString());
             
             gui.get_lstFieldNotes().setFitPolicy((wrappedFieldNotesList)? Choice.TEXT_WRAP_ON : Choice.TEXT_WRAP_OFF);
+            if (gui.gps != null) {
+                if (gui.gps.getGpsParser() != null) {
+                    boolean success = gui.gps.getGpsParser().createCompass();
+                    if (useInternalCompass && !success) {
+                        useInternalCompass = false;
+                        gui.showAlert("Zařízení nepodporuje interní kompas.", AlertType.WARNING, gui.get_lstSettings());
+                    }
+                }
+            }
             
             store(false);
         }
@@ -246,6 +268,8 @@ public class Settings
             dos.writeBoolean(wrappedFieldNotesList);
             dos.writeInt(internalGPSType);
             dos.writeBoolean(acceptingDialogs);
+            dos.writeBoolean(useInternalCompass);
+            dos.writeFloat(compassDeclination);
             
             byte[] bytes = buffer.toByteArray();
             if (createNewRecord)

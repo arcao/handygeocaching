@@ -31,7 +31,7 @@ public class Gps implements Runnable
 {
     //kostanty
     private static final long BREAK = 1000; //refresh
-    private static final long BREAK_NAVI = 500; //refresh
+    private static final long BREAK_NAVI = 250; //refresh
     private static final int MAXIMUM_SKIPS = 20; //maximalni pocet refreshu bez spojeni z modulem
     
     //mozne akce
@@ -346,7 +346,7 @@ public class Gps implements Runnable
             try
             {
                 if (thread != null)
-                    thread.sleep((action == NAVIGATION && gpsParser.source != GpsParser.INTERNAL)? BREAK_NAVI : BREAK);
+                    thread.sleep((action == NAVIGATION)? BREAK_NAVI : BREAK);
             }
             catch (InterruptedException e)
             {
@@ -356,7 +356,7 @@ public class Gps implements Runnable
                 //rozsviceni displeje
                 if (settings.flashbackPeriod > 0)
                 {
-                    if (flashbackLightPause < ((action == NAVIGATION && gpsParser.source != GpsParser.INTERNAL)? 2 * (settings.flashbackPeriod*2-1): settings.flashbackPeriod*2-1))
+                    if (flashbackLightPause < ((action == NAVIGATION)? 4 * (settings.flashbackPeriod*2-1): settings.flashbackPeriod*2-1))
                     {
                         flashbackLightPause++;
                     }
@@ -562,7 +562,7 @@ public class Gps implements Runnable
             deg = Float.parseFloat(tmp.substring(index, end));
             index = end;
 
-            while (!Character.isDigit(tmp.charAt(index))) index++;
+            while (index < tmp.length() && !Character.isDigit(tmp.charAt(index))) index++;
             if (index < tmp.length()) {
                 end = getDoubleNumberEnd(tmp, index);
                 min = Float.parseFloat(tmp.substring(index, end));
