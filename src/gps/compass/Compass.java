@@ -9,21 +9,23 @@
  * (read more at: http://www.gnu.org/licenses/gpl.html)
  */
 
-package gps;
+package gps.compass;
+
+import gps.Gps;
 
 /**
  * Třída pro získání azimutu z kompasu vestavěném v mobilním zařízení.
  * @author Arcao
  */
 public abstract class Compass {
-    protected float magneticDeclination = 0;
+    protected float magneticDeclination = 0f;
     
     /**
      * Nastavuje rozdíl ve stupních mezi pravým a magnetickým severem
      * @param declination rozdíl ve stupních 
      */
-    public void setMagnetigDeclination(float declination) {
-        magneticDeclination = declination;
+    public void setMagnetigDeclination(float magneticDeclination) {
+        this.magneticDeclination = magneticDeclination;
     }
     
     public float getMagneticDeclination() {
@@ -65,18 +67,28 @@ public abstract class Compass {
      * Vrací true, pokud je kompas v mobilním zařízení podporován, jinak ne.
      * @return true, pokud je kompas podporován
      */
-    public abstract boolean isSupported();
+    public static boolean isSupported() {
+        try {
+            Compass c = getCompass(0f);
+            if (c == null || Float.isNaN(c.getAzimuth()))
+                return false;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     
     /**
      * Vrací instanci objektu Compass, pokud se nezadaří (není podpora, nebo zakázal uživatel, vrací null)
      * @return instanci objektu Compass
      */
-    public static Compass getCompass() {
+    public static Compass getCompass(float magneticDeclination) {
         try {
             Class.forName("javax.microedition.location.Orientation");
             
-            Class c = Class.forName("gps.CompassImplementation");
-            return (Compass) c.newInstance();
+            Compass c = (Compass) Class.forName("gps.compass.CompassImplementation").newInstance();
+            c.setMagnetigDeclination(magneticDeclination);
+            return c;
         } catch (Exception e) {
             return null;
         }

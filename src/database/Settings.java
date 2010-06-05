@@ -10,7 +10,7 @@
  */
 package database;
 
-import gps.Compass;
+import gps.compass.Compass;
 import gps.Gps;
 import gui.Gui;
 import java.io.ByteArrayInputStream;
@@ -226,14 +226,13 @@ public class Settings
             compassDeclination = Compass.parseDecliantion(gui.get_tfCompassDeclination().getString());
             
             gui.get_lstFieldNotes().setFitPolicy((wrappedFieldNotesList)? Choice.TEXT_WRAP_ON : Choice.TEXT_WRAP_OFF);
-            if (gui.gps != null) {
-                if (gui.gps.getGpsParser() != null) {
-                    boolean success = gui.gps.getGpsParser().createCompass();
-                    if (useInternalCompass && !success) {
-                        useInternalCompass = false;
-                        gui.showAlert("Zařízení nepodporuje interní kompas.", AlertType.WARNING, gui.get_lstSettings());
-                    }
-                }
+            boolean success = Compass.isSupported();
+            if (useInternalCompass && !success) {
+                useInternalCompass = false;
+                gui.showAlert("Zařízení nepodporuje interní kompas.", AlertType.WARNING, gui.get_lstSettings());
+            }
+            if (gui.gpsParser != null) {
+                gui.gpsParser.createCompass();
             }
             
             store(false);

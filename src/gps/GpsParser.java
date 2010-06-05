@@ -12,6 +12,7 @@ package gps;
 
 import database.Favourites;
 import database.Settings;
+import gps.compass.Compass;
 import gui.Gui;
 import http.Http;
 import java.io.ByteArrayOutputStream;
@@ -170,28 +171,21 @@ public class GpsParser implements Runnable
         communicationURL = address;
         source = gpsSource;
         
-        compass = null;
-        
         if (source == INTERNAL)
         {
             internal = References.getInternal(gui, this, settings);
         }
         
-        settings.useInternalCompass = createCompass();
+        createCompass();
     }
     
     public boolean createCompass() {
-        if (settings.useInternalCompass) {
-            compass = Compass.getCompass();
-            if (compass != null) {
-                if (!compass.isSupported()) {
-                    compass = null;
-                    return false;
-                }
-                compass.setMagnetigDeclination(settings.compassDeclination);   
-            }
+        if (settings.useInternalCompass && Compass.isSupported()) {
+            compass = Compass.getCompass(settings.compassDeclination);
             return true;
         }
+        settings.useInternalCompass = false;
+        compass = null;
         return false;
     }
     
@@ -210,9 +204,12 @@ public class GpsParser implements Runnable
      
     public double getHeading()
     {
-        if (compass == null)
-            return heading;
-        return compass.getAzimuth();
+        if (compass != null) {
+            float h = compass.getAzimuth();
+            if (!Float.isNaN(h))
+                return h;
+        }
+        return heading;
     }
     
     /**

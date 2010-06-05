@@ -12,6 +12,7 @@ package gui;
 
 import database.FieldNotes;
 import database.FieldNotesItem;
+import gps.compass.Compass;
 import java.util.Calendar;
 import javax.microedition.lcdui.ItemStateListener;
 import utils.ConfirmDialog;
@@ -81,7 +82,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private MultiSolver multiSolver;
     private Patterns patterns;
     public Http http;
-    private GpsParser gpsParser;
+    public GpsParser gpsParser;
     private IconLoader iconLoader;
     private Track track;
     private References references;
@@ -335,7 +336,16 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Command okCommand6;
     private Command okCommand7;
     private ChoiceGroup cgUseInternalCompass;
-    private TextField tfCompassDeclination;//GEN-END:MVDFields
+    private TextField tfCompassDeclination;
+    private Image imgDummy;
+    private Form frmCoordinatesProjection;
+    private Command okCommand8;
+    private Command okCommand9;
+    private TextField tfProjectionName;
+    private TextField tfProjectionLatitude;
+    private TextField tfProjectionLongtitude;
+    private TextField tfProjectionAzimuth;
+    private TextField tfProjectionDistance;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -862,7 +872,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
         } else if (displayable == lstGPS) {
             if (command == lstGPS.SELECT_COMMAND) {
                 switch (get_lstGPS().getSelectedIndex()) {
-                    case 4://GEN-END:MVDCACase243
+                    case 5://GEN-END:MVDCACase243
                         // naviguj
                         if (modeGPS) {
                             // Do nothing
@@ -908,7 +918,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                         getDisplay().setCurrent(get_frmTrackingNumber());//GEN-LINE:MVDCAAction433
                         // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase433
-                    case 5://GEN-END:MVDCACase433
+                    case 6://GEN-END:MVDCACase433
                         // Insert pre-action code here
                         //Zephy 21.11.07 gpsstatus+\
                         // gps signal
@@ -930,8 +940,16 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                         // Do nothing//GEN-LINE:MVDCAAction469
                         // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase469
+                    case 4://GEN-END:MVDCACase469
+                        // Insert pre-action code here
+                        getDisplay().setCurrent(get_frmCoordinatesProjection());//GEN-LINE:MVDCAAction678
+                        // Insert post-action code here
+                        get_tfProjectionLatitude().setString(gpsParser.getFriendlyLatitude());
+                        get_tfProjectionLongtitude().setString(gpsParser.getFriendlyLongitude());
+                        get_tfProjectionAzimuth().setString(Compass.formatDelination(0f));
+                        break;//GEN-BEGIN:MVDCACase678
                 }
-            } else if (command == cmdBack) {//GEN-END:MVDCACase469
+            } else if (command == cmdBack) {//GEN-END:MVDCACase678
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction244
                 // Insert post-action code here
@@ -1573,7 +1591,43 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 // Insert post-action code here
                 settings.save();
             }//GEN-BEGIN:MVDCACase672
-        }//GEN-END:MVDCACase672
+        } else if (displayable == frmCoordinatesProjection) {
+            if (command == cmdBack) {//GEN-END:MVDCACase672
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstGPS());//GEN-LINE:MVDCAAction682
+                // Insert post-action code here
+            } else if (command == cmdFavourite) {//GEN-LINE:MVDCACase682
+                // Insert pre-action code here
+                if (get_tfProjectionName().getString().trim().length() == 0) {
+                    showAlert("Vyplňte prosím název bodu.", AlertType.ERROR, getDisplay().getCurrent());
+                    return;
+                }
+                double lat = Gps.convertDegToDouble(get_tfProjectionLatitude().getString());
+                double lon = Gps.convertDegToDouble(get_tfProjectionLongtitude().getString());
+                if (lat == Double.NaN || lon == Double.NaN) {
+                    showAlert("Souřadnice nemají správný formát", AlertType.ERROR, getDisplay().getCurrent());
+                    return;
+                }
+                double distance = 0;
+                try {
+                    distance = Double.parseDouble(get_tfProjectionDistance().getString());
+                } catch (Exception e) {}
+                if (distance <= 0) {
+                    showAlert("Vzdálenost musí být větší než nula.", AlertType.ERROR, getDisplay().getCurrent());
+                    return;
+                }
+                double azimuth = Gps.convertDegToDouble(get_tfProjectionAzimuth().getString());
+                if (azimuth == Double.NaN) {
+                    
+                }
+                double[] coords = Gps.coordinateProjection(lat, lon, azimuth, distance);
+                
+                favourites.editId = -1;
+                favourites.addEdit(get_tfProjectionName().getString(), "", Gps.convertDoubleToDeg(coords[0], false), Gps.convertDoubleToDeg(coords[1], true), "average", get_lstGPS(), false, "", "", true, true, true);
+                // Do nothing//GEN-LINE:MVDCAAction684
+                // Insert post-action code here
+            }//GEN-BEGIN:MVDCACase684
+        }//GEN-END:MVDCACase684
 // Insert global post-action code here
         
         if (displayable == openFileBrowser && openFileBrowser != null) {
@@ -2785,6 +2839,7 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
                 "TB/GC",
                 "De\u0161ifr\u00E1tor",
                 "Pr\u016Fm\u011Brov\u00E1n\u00ED",
+                "Projekce bodu",
                 "Navigace",
                 "GPS Sign\u00E1l"
             }, new Image[] {
@@ -2792,12 +2847,14 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
                 get_imgTravelbug(),
                 get_imgDecypher(),
                 get_imgAveraging(),
+                get_imgAveraging(),
                 get_imgNavigate(),
                 get_imgGps()
             });
             lstGPS.addCommand(get_cmdBack());
             lstGPS.setCommandListener(this);
             lstGPS.setSelectedFlags(new boolean[] {
+                false,
                 false,
                 false,
                 false,
@@ -4798,6 +4855,127 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd676
         return tfCompassDeclination;
     }//GEN-END:MVDGetEnd676
+
+    /** This method returns instance for imgDummy component and should be called instead of accessing imgDummy field directly.//GEN-BEGIN:MVDGetBegin679
+     * @return Instance for imgDummy component
+     */
+    public Image get_imgDummy() {
+        if (imgDummy == null) {//GEN-END:MVDGetBegin679
+            // Insert pre-init code here
+            try {//GEN-BEGIN:MVDGetInit679
+                imgDummy = Image.createImage("/dummyIcon.png");
+            } catch (java.io.IOException exception) {
+                exception.printStackTrace();
+            }//GEN-END:MVDGetInit679
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd679
+        return imgDummy;
+    }//GEN-END:MVDGetEnd679
+
+    /** This method returns instance for frmCoordinatesProjection component and should be called instead of accessing frmCoordinatesProjection field directly.//GEN-BEGIN:MVDGetBegin680
+     * @return Instance for frmCoordinatesProjection component
+     */
+    public Form get_frmCoordinatesProjection() {
+        if (frmCoordinatesProjection == null) {//GEN-END:MVDGetBegin680
+            // Insert pre-init code here
+            frmCoordinatesProjection = new Form("Projekce bodu", new Item[] {//GEN-BEGIN:MVDGetInit680
+                get_tfProjectionName(),
+                get_tfProjectionLatitude(),
+                get_tfProjectionLongtitude(),
+                get_tfProjectionAzimuth(),
+                get_tfProjectionDistance()
+            });
+            frmCoordinatesProjection.addCommand(get_cmdBack());
+            frmCoordinatesProjection.addCommand(get_cmdFavourite());
+            frmCoordinatesProjection.setCommandListener(this);//GEN-END:MVDGetInit680
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd680
+        return frmCoordinatesProjection;
+    }//GEN-END:MVDGetEnd680
+
+    /** This method returns instance for okCommand8 component and should be called instead of accessing okCommand8 field directly.//GEN-BEGIN:MVDGetBegin681
+     * @return Instance for okCommand8 component
+     */
+    public Command get_okCommand8() {
+        if (okCommand8 == null) {//GEN-END:MVDGetBegin681
+            // Insert pre-init code here
+            okCommand8 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit681
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd681
+        return okCommand8;
+    }//GEN-END:MVDGetEnd681
+
+    /** This method returns instance for okCommand9 component and should be called instead of accessing okCommand9 field directly.//GEN-BEGIN:MVDGetBegin683
+     * @return Instance for okCommand9 component
+     */
+    public Command get_okCommand9() {
+        if (okCommand9 == null) {//GEN-END:MVDGetBegin683
+            // Insert pre-init code here
+            okCommand9 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit683
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd683
+        return okCommand9;
+    }//GEN-END:MVDGetEnd683
+
+    /** This method returns instance for tfProjectionName component and should be called instead of accessing tfProjectionName field directly.//GEN-BEGIN:MVDGetBegin685
+     * @return Instance for tfProjectionName component
+     */
+    public TextField get_tfProjectionName() {
+        if (tfProjectionName == null) {//GEN-END:MVDGetBegin685
+            // Insert pre-init code here
+            tfProjectionName = new TextField("N\u00E1zev bodu:", null, 120, TextField.ANY);//GEN-LINE:MVDGetInit685
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd685
+        return tfProjectionName;
+    }//GEN-END:MVDGetEnd685
+
+    /** This method returns instance for tfProjectionLatitude component and should be called instead of accessing tfProjectionLatitude field directly.//GEN-BEGIN:MVDGetBegin686
+     * @return Instance for tfProjectionLatitude component
+     */
+    public TextField get_tfProjectionLatitude() {
+        if (tfProjectionLatitude == null) {//GEN-END:MVDGetBegin686
+            // Insert pre-init code here
+            tfProjectionLatitude = new TextField("Sou\u0159adnice bodu:", null, 120, TextField.ANY);//GEN-LINE:MVDGetInit686
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd686
+        return tfProjectionLatitude;
+    }//GEN-END:MVDGetEnd686
+
+    /** This method returns instance for tfProjectionLongtitude component and should be called instead of accessing tfProjectionLongtitude field directly.//GEN-BEGIN:MVDGetBegin687
+     * @return Instance for tfProjectionLongtitude component
+     */
+    public TextField get_tfProjectionLongtitude() {
+        if (tfProjectionLongtitude == null) {//GEN-END:MVDGetBegin687
+            // Insert pre-init code here
+            tfProjectionLongtitude = new TextField("", null, 120, TextField.ANY);//GEN-LINE:MVDGetInit687
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd687
+        return tfProjectionLongtitude;
+    }//GEN-END:MVDGetEnd687
+
+    /** This method returns instance for tfProjectionAzimuth component and should be called instead of accessing tfProjectionAzimuth field directly.//GEN-BEGIN:MVDGetBegin688
+     * @return Instance for tfProjectionAzimuth component
+     */
+    public TextField get_tfProjectionAzimuth() {
+        if (tfProjectionAzimuth == null) {//GEN-END:MVDGetBegin688
+            // Insert pre-init code here
+            tfProjectionAzimuth = new TextField("Azimuth:", null, 120, TextField.ANY);//GEN-LINE:MVDGetInit688
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd688
+        return tfProjectionAzimuth;
+    }//GEN-END:MVDGetEnd688
+
+    /** This method returns instance for tfProjectionDistance component and should be called instead of accessing tfProjectionDistance field directly.//GEN-BEGIN:MVDGetBegin689
+     * @return Instance for tfProjectionDistance component
+     */
+    public TextField get_tfProjectionDistance() {
+        if (tfProjectionDistance == null) {//GEN-END:MVDGetBegin689
+            // Insert pre-init code here
+            tfProjectionDistance = new TextField("Vzd\u00E1lenost:", null, 120, TextField.DECIMAL);//GEN-LINE:MVDGetInit689
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd689
+        return tfProjectionDistance;
+    }//GEN-END:MVDGetEnd689
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {

@@ -9,33 +9,23 @@
  * (read more at: http://www.gnu.org/licenses/gpl.html)
  */
 
-package gps;
+package gps.compass;
 
 /**
  * Implementace abstraktní třídy kompasu
  * @author Arcao
  */
-public class CompassImplementation extends Compass {
+class CompassImplementation extends Compass {
     public float getAzimuth() {
         try {
             javax.microedition.location.Orientation o = javax.microedition.location.Orientation.getOrientation();
             if (o.isOrientationMagnetic()) {
-                return o.getCompassAzimuth() + magneticDeclination;
+                return (o.getCompassAzimuth() + magneticDeclination) % 360;
             } else {
                 return o.getCompassAzimuth();
             }
-
         } catch (Exception e) {
             return Float.NaN;
-        }
-    }
-     public boolean isSupported() {
-
-        try {
-            javax.microedition.location.Orientation.getOrientation();
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 }
