@@ -529,7 +529,8 @@ public class Gps implements Runnable
         sb.append(deg);
         sb.append("° ");
 
-        double min = (source - deg) * 60;
+        //chyba zaokrouhlovani, musime nejprve nasobit a az pak odecist :), jinak ztratime presnost na tisicine
+        double min = source * 60D - deg * 60D;
         sb.append(Utils.round(min, precision));
 
         return sb.toString();
@@ -538,16 +539,18 @@ public class Gps implements Runnable
     public static double convertDegToDouble(String source) {
         String tmp = source.trim();
 
+        System.out.println("deg2double source: " + source);
+        
         int index = 0;
         int end = 0;
 
         char ch = ' ';
 
-        double deg = 0;
-        double min = 0;
-        double sec = 0;
+        double deg = 0D;
+        double min = 0D;
+        double sec = 0D;
 
-        int direction = 1;
+        double direction = 1;
 
         try {
             ch = Character.toUpperCase(tmp.charAt(index));
@@ -566,18 +569,23 @@ public class Gps implements Runnable
             while (index < tmp.length() && !Character.isDigit(tmp.charAt(index))) index++;
             if (index < tmp.length()) {
                 end = getDoubleNumberEnd(tmp, index);
-                min = Float.parseFloat(tmp.substring(index, end));
+                min = Double.parseDouble(tmp.substring(index, end));
                 index = end;
 
                 while (index < tmp.length() && !Character.isDigit(tmp.charAt(index))) index++;
                 if (index < tmp.length()) {
                     end = getDoubleNumberEnd(tmp, index);
-                    sec = Float.parseFloat(tmp.substring(index, end));
+                    sec = Double.parseDouble(tmp.substring(index, end));
                     index = end;
                 }
             }
+            
+            System.out.println("deg2double deg: " + deg);
+            System.out.println("deg2double min: " + min);
+            System.out.println("deg2double sec: " + sec);
+            System.out.println("deg2double: " + (direction * (deg + (min / 60D) + (sec / 3600D))));
 
-            return direction * (deg + (min / 60) + (sec / 3600));
+            return direction * (deg + (min / 60D) + (sec / 3600D));
         } catch (Exception e) {
             return Float.NaN;
         }
