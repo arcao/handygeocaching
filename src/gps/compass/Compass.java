@@ -63,14 +63,19 @@ public abstract class Compass {
      */
     public abstract float getAzimuth();
     
+    protected abstract boolean hasCompass();
+    
     /**
      * Vrací true, pokud je kompas v mobilním zařízení podporován, jinak ne.
      * @return true, pokud je kompas podporován
      */
     public static boolean isSupported() {
         try {
+            if (System.getProperty("microedition.location.version") == null)
+                return false;
+            
             Compass c = getCompass(0f);
-            if (c == null || Float.isNaN(c.getAzimuth()))
+            if (c == null || !c.hasCompass())
                 return false;
             return true;
         } catch (Exception e) {

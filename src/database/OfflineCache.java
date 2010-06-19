@@ -121,7 +121,7 @@ public class OfflineCache {
         try {
             recordStore.closeRecordStore();
             recordStore.deleteRecordStore(dbName);
-            recordStore = recordStore.openRecordStore(dbName, true);
+            recordStore = RecordStore.openRecordStore(dbName, true);
         } catch (Exception e) {
             e.printStackTrace();
         }

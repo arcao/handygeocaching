@@ -15,17 +15,29 @@ package gps.compass;
  * Implementace abstraktní třídy kompasu
  * @author Arcao
  */
-class CompassImplementation extends Compass {
+public class CompassImplementation extends Compass {
     public float getAzimuth() {
         try {
             javax.microedition.location.Orientation o = javax.microedition.location.Orientation.getOrientation();
             if (o.isOrientationMagnetic()) {
-                return (o.getCompassAzimuth() + magneticDeclination) % 360;
+                return o.getCompassAzimuth() + magneticDeclination;
             } else {
                 return o.getCompassAzimuth();
             }
+
         } catch (Exception e) {
             return Float.NaN;
+        }
+    }
+    
+    
+    public boolean hasCompass() {
+        try {
+            if (javax.microedition.location.Orientation.getOrientation() != null)
+                return true;
+            return false;
+        } catch (Exception e) {
+            return false;
         }
     }
 }

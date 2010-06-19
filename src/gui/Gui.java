@@ -944,9 +944,9 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                         // Insert pre-action code here
                         getDisplay().setCurrent(get_frmCoordinatesProjection());//GEN-LINE:MVDCAAction678
                         // Insert post-action code here
-                        get_tfProjectionLatitude().setString(gpsParser.getFriendlyLatitude());
-                        get_tfProjectionLongtitude().setString(gpsParser.getFriendlyLongitude());
-                        get_tfProjectionAzimuth().setString(Compass.formatDelination(0f));
+                        gps.start(Gps.CURRENT_POSITION_PROJECTION);
+                        if (get_tfProjectionAzimuth().getString().trim().length() == 0)
+                            get_tfProjectionAzimuth().setString(Compass.formatDelination(0f));
                         break;//GEN-BEGIN:MVDCACase678
                 }
             } else if (command == cmdBack) {//GEN-END:MVDCACase678

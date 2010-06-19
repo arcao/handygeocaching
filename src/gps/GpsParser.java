@@ -163,6 +163,9 @@ public class GpsParser implements Runnable
         nmeaGGACount = 0;
         nmeaGSACount = 0;
         
+        friendlyLatitude = "";
+        friendlyLongitude = "";
+        
         gui = ref;
         http = ref2;
         settings = ref3;

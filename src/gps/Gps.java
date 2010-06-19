@@ -45,6 +45,7 @@ public class Gps implements Runnable
     //Zephy 21.11.07 gpsstatus+\
     public static final int GPS_SIGNAL = 6;
     //Zephy 21.11.07 gpsstatus+/
+    public static final int CURRENT_POSITION_PROJECTION = 7;
     
     //reference na ostatni moduly
     private Gui gui;
@@ -330,6 +331,12 @@ public class Gps implements Runnable
                         stop();
                         http.start(Http.NEAREST_CACHES, false);
                     }
+                    else if (action == CURRENT_POSITION_PROJECTION)
+                    {
+                        gui.get_tfProjectionLatitude().setString(gpsParser.getFriendlyLatitude());
+                        gui.get_tfProjectionLongtitude().setString(gpsParser.getFriendlyLongitude());
+                        stop();
+                    }
                     else //ziskani souradnic u oblibenych
                     {
                         gui.get_frmAddGiven().setTitle("Souřadnice získány");
@@ -537,7 +544,7 @@ public class Gps implements Runnable
     }
 
     public static double convertDegToDouble(String source) {
-        String tmp = source.trim();
+        String tmp = source.trim().replace(',','.');
 
         System.out.println("deg2double source: " + source);
         
@@ -614,83 +621,10 @@ public class Gps implements Runnable
         double y = Math.sin(distance/R)*Math.sin(azimuth/ro)/Math.cos(lat/ro);
         double la2 = MathUtil.atan2(y, x);
         double lon = longtitude + la2*ro;
-        
-        //double lon = (((longtitude/ro - la2 + Math.PI) % (2*Math.PI)) - Math.PI) * ro;
-                
+              
         ret[0] = lat;
         ret[1] = lon;
         return ret;
-        
-        //pocitano na kruznici a jen pro N a E
-        /*latitude = Math.toRadians(latitude);
-        longtitude = Math.toRadians(longtitude);
-        azimuth = Math.toRadians(azimuth);
-        distance = distance;
-        
-        double rLat = 6378000D;
-        double rLon = rLat * Math.cos(latitude);
-        
-        double latInc = (distance * Math.cos(azimuth)) / rLat;
-        double lonInc = (distance * Math.sin(azimuth)) / rLon;
-        
-        ret[0] = Math.toDegrees(latitude + latInc);
-        ret[1] = Math.toDegrees(longtitude + lonInc);
-        
-        return ret;
-        */
-        /*
-        //source from: http://forum.builder.cz/read.php?13,2091135,2091451#msg-2091667
-        //bohuzel nejak nefunkcni
-        ret[0] = latitude;
-        ret[1] = longtitude;
-        
-        if (distance < 1) return ret;
-
-        double c, r, b;                           // Valenta 30.01.1989
-        double f2, l2;
-        double lon = longtitude * Math.PI / 180.0, lat = latitude * Math.PI / 180.0, azim = (azimuth % 360) * Math.PI / 180.0;
-        r = 6378.0;
-        c = distance / r;
-        f2 = Math.sin(lat) * Math.cos(c) + Math.cos(lat) * Math.sin(c) * Math.cos(azim);
-        f2 = Utils.asin(f2);
-
-        b = Math.sin(c) * Math.sin(azim) / Math.cos(f2);
-        b = Utils.asin(Math.abs(b));
-
-        if (azim < Math.PI) l2 = lon + b;
-        else l2 = lon - b;
-
-        if (l2 > Math.PI) l2 -= 2.0 * Math.PI;
-        if (l2 < -Math.PI) l2 += 2.0 * Math.PI;
-
-        //if(l2 > 2.*Math.PI) l2-=2.*Math.PI;
-        //if(l2 < 0.   ) l2+=2.*Math.PI;
-        if (f2 > 2.0 * Math.PI) f2 -= 2.0 * Math.PI;
-        if (f2 > Math.PI) f2 -= Math.PI;
-        if (f2 < -Math.PI) f2 += Math.PI;
-        
-        ret[0] = (f2 * 180.0 / Math.PI); //latitude
-        ret[1] = (l2 * 180.0 / Math.PI); //longitude
-        
-        return ret;
-        */
-        
-        //prevod na radiany
-        /*
-        latitude = Math.toRadians(latitude);
-        longtitude = Math.toRadians(longtitude);
-        azimuth = Math.toRadians(azimuth % 360);
-        distance = distance / 6378000D;
-        
-        double lat = Utils.asin(Math.sin(latitude) * Math.cos(distance) + Math.cos(latitude) * Math.sin(distance) * Math.cos(azimuth));
-        double dlon = Utils.atan2(Math.sin(azimuth) * Math.sin(distance) * Math.cos(latitude), Math.cos(distance) - Math.sin(latitude) * Math.sin(lat));
-        double lon = ((longtitude - dlon + Math.PI) % (2*Math.PI)) - Math.PI;
-        
-        //prevod na stupne
-        ret[0] = Math.toDegrees(lat);
-        ret[1] = Math.toDegrees(lon);
-        return ret;
-        */
     }
     
     

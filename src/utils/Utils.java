@@ -494,7 +494,6 @@ public class Utils
     }
     
     public static String round(double source, int decimals) {
-        System.out.println("round in: " + source);
         if (decimals < 0)
             throw new IllegalArgumentException("decimals must be great or equal to zero");
 
@@ -509,16 +508,13 @@ public class Utils
             StringBuffer sb = new StringBuffer(val);
             sb.append('.');
             for(int i = 0; i < decimals; i++) sb.append('0');
-            System.out.println("round out: " + sb.toString());
             return sb.toString();
         } else {
             if (val.length() - (dot + decimals) > 0) {
-                System.out.println("round out: " + val.substring(0, dot + decimals + 1));
                 return val.substring(0, dot + decimals + 1);
             }
             StringBuffer sb = new StringBuffer(val);
             for(int i = val.length(); i <= dot + decimals; i++) sb.append('0');
-            System.out.println("round out: " + sb.toString());
             return sb.toString();
         }
     }
