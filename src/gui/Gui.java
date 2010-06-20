@@ -345,7 +345,11 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private TextField tfProjectionLatitude;
     private TextField tfProjectionLongtitude;
     private TextField tfProjectionAzimuth;
-    private TextField tfProjectionDistance;//GEN-END:MVDFields
+    private TextField tfProjectionDistance;
+    private StringItem siDownloadSize;
+    private Command cmdSelectAll;
+    private Command screenCommand1;
+    private Command okCommand10;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -1121,9 +1125,19 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 if (selected != -1) {
                     favourites.openCacheInBrowser(selected);
                 }
-            }//GEN-BEGIN:MVDCACase628
+            } else if (command == cmdSelectAll) {//GEN-LINE:MVDCACase628
+                // Insert pre-action code here
+                // Do nothing//GEN-LINE:MVDCAAction692
+                // Insert post-action code here
+                boolean flagsState = true;
+                boolean flags[] = new boolean[lstFavourites.size()];
+                lstFavourites.getSelectedFlags(flags);
+                if (firstChecked(lstFavourites) != -1) flagsState = false;
+                for (int i = 0; i < flags.length; i++) flags[i] = flagsState;
+                lstFavourites.setSelectedFlags(flags);
+            }//GEN-BEGIN:MVDCACase692
         } else if (displayable == frmFavourite) {
-            if (command == cmdBack) {//GEN-END:MVDCACase628
+            if (command == cmdBack) {//GEN-END:MVDCACase692
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstFavourites());//GEN-LINE:MVDCAAction262
                 // Insert post-action code here
@@ -1460,9 +1474,19 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 
                 getDisplay().setCurrent(get_frmFieldNote());//GEN-LINE:MVDCAAction567
                 // Insert post-action code here
-            }//GEN-BEGIN:MVDCACase567
+            } else if (command == cmdSelectAll) {//GEN-LINE:MVDCACase567
+                // Insert pre-action code here
+                // Do nothing//GEN-LINE:MVDCAAction694
+                // Insert post-action code here
+                boolean flagsState = true;
+                boolean flags[] = new boolean[lstFieldNotes.size()];
+                lstFieldNotes.getSelectedFlags(flags);
+                if (firstChecked(lstFieldNotes) != -1) flagsState = false;
+                for (int i = 0; i < flags.length; i++) flags[i] = flagsState;
+                lstFieldNotes.setSelectedFlags(flags);
+            }//GEN-BEGIN:MVDCACase694
         } else if (displayable == frmFieldNote) {
-            if (command == cmdBack) {//GEN-END:MVDCACase567
+            if (command == cmdBack) {//GEN-END:MVDCACase694
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction552
                 // Insert post-action code here
@@ -1918,7 +1942,10 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
     public Form get_frmLoading() {
         if (frmLoading == null) {//GEN-END:MVDGetBegin53
             // Insert pre-init code here
-            frmLoading = new Form("Pros\u00EDm \u010Dekejte", new Item[] {get_siMessage()});//GEN-BEGIN:MVDGetInit53
+            frmLoading = new Form("Pros\u00EDm \u010Dekejte", new Item[] {//GEN-BEGIN:MVDGetInit53
+                get_siMessage(),
+                get_siDownloadSize()
+            });
             frmLoading.addCommand(get_cmdStop());
             frmLoading.setCommandListener(this);//GEN-END:MVDGetInit53
             // Insert post-init code here
@@ -2901,19 +2928,20 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
             lstFavourites = new List("Obl\u00EDben\u00E9", Choice.MULTIPLE, new String[0], new Image[0]);//GEN-BEGIN:MVDGetInit251
             lstFavourites.addCommand(get_cmdBack());
             lstFavourites.addCommand(get_cmdSelect());
-            lstFavourites.addCommand(get_cmdDeleteAll());
+            lstFavourites.addCommand(get_cmdNavigate());
+            lstFavourites.addCommand(get_cmdSelectAll());
             lstFavourites.addCommand(get_cmdAddActual());
             lstFavourites.addCommand(get_cmdAddGiven());
-            lstFavourites.addCommand(get_cmdDelete());
             lstFavourites.addCommand(get_cmdEdit());
-            lstFavourites.addCommand(get_cmdNavigate());
-            lstFavourites.addCommand(get_cmdMultiSolver());
+            lstFavourites.addCommand(get_cmdDelete());
+            lstFavourites.addCommand(get_cmdDeleteAll());
             lstFavourites.addCommand(get_cmdMap());
             lstFavourites.addCommand(get_cmdMapyCz());
             lstFavourites.addCommand(get_cmdShowCacheInBrowser());
+            lstFavourites.addCommand(get_cmdMultiSolver());
             lstFavourites.addCommand(get_cmdAddFieldNotes());
-            lstFavourites.addCommand(get_cmdPoznamka());
             lstFavourites.addCommand(get_cmdImportGPX());
+            lstFavourites.addCommand(get_cmdPoznamka());
             lstFavourites.setCommandListener(this);
             lstFavourites.setSelectedFlags(new boolean[0]);
             lstFavourites.setFitPolicy(Choice.TEXT_WRAP_OFF);//GEN-END:MVDGetInit251
@@ -4260,6 +4288,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
             lstFieldNotes.addCommand(get_cmdEdit());
             lstFieldNotes.addCommand(get_cmdDelete());
             lstFieldNotes.addCommand(get_cmdDeleteAll());
+            lstFieldNotes.addCommand(get_cmdSelectAll());
             lstFieldNotes.addCommand(get_cmdPostFieldNotes());
             lstFieldNotes.setCommandListener(this);
             lstFieldNotes.setSelectedFlags(new boolean[0]);
@@ -4976,6 +5005,54 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd689
         return tfProjectionDistance;
     }//GEN-END:MVDGetEnd689
+
+    /** This method returns instance for siDownloadSize component and should be called instead of accessing siDownloadSize field directly.//GEN-BEGIN:MVDGetBegin690
+     * @return Instance for siDownloadSize component
+     */
+    public StringItem get_siDownloadSize() {
+        if (siDownloadSize == null) {//GEN-END:MVDGetBegin690
+            // Insert pre-init code here
+            siDownloadSize = new StringItem("    ", "Stahuji: 1/10 KB");//GEN-LINE:MVDGetInit690
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd690
+        return siDownloadSize;
+    }//GEN-END:MVDGetEnd690
+
+    /** This method returns instance for cmdSelectAll component and should be called instead of accessing cmdSelectAll field directly.//GEN-BEGIN:MVDGetBegin691
+     * @return Instance for cmdSelectAll component
+     */
+    public Command get_cmdSelectAll() {
+        if (cmdSelectAll == null) {//GEN-END:MVDGetBegin691
+            // Insert pre-init code here
+            cmdSelectAll = new Command("O(d)zna\u010Dit v\u0161e", Command.SCREEN, 2);//GEN-LINE:MVDGetInit691
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd691
+        return cmdSelectAll;
+    }//GEN-END:MVDGetEnd691
+
+    /** This method returns instance for screenCommand1 component and should be called instead of accessing screenCommand1 field directly.//GEN-BEGIN:MVDGetBegin693
+     * @return Instance for screenCommand1 component
+     */
+    public Command get_screenCommand1() {
+        if (screenCommand1 == null) {//GEN-END:MVDGetBegin693
+            // Insert pre-init code here
+            screenCommand1 = new Command("Screen", Command.SCREEN, 1);//GEN-LINE:MVDGetInit693
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd693
+        return screenCommand1;
+    }//GEN-END:MVDGetEnd693
+
+    /** This method returns instance for okCommand10 component and should be called instead of accessing okCommand10 field directly.//GEN-BEGIN:MVDGetBegin695
+     * @return Instance for okCommand10 component
+     */
+    public Command get_okCommand10() {
+        if (okCommand10 == null) {//GEN-END:MVDGetBegin695
+            // Insert pre-init code here
+            okCommand10 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit695
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd695
+        return okCommand10;
+    }//GEN-END:MVDGetEnd695
     
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {

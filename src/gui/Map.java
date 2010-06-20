@@ -68,8 +68,16 @@ public class Map extends Canvas implements Runnable
 
     private int BOTTOM_MARGIN;
     
-    public Map(Gui ref, Gps ref2, IconLoader ref3, Track ref4)
+    private boolean switchLeftRight;
+    
+    //popisky tlacitek
+    private final static String BACK = "Zpět";
+    private final static String NAVIGATION = "Navigace";
+    private final static String NIGHT = "Noční";
+            
+    public Map(Gui ref, Gps ref2, IconLoader ref3, Track ref4, boolean switchLeftRight)
     {
+        this.switchLeftRight = switchLeftRight;
         try
         {
             gui = ref;
@@ -156,7 +164,7 @@ public class Map extends Canvas implements Runnable
             {
                 //loading
                 g.setFont(gui.get_fntNormal());
-                g.drawString("Načítám mapu",screenWidthHalf,screenHeightHalf,Graphics.TOP|Graphics.HCENTER);
+                g.drawString("Načítám mapu",screenWidthHalf,screenHeightHalf,Graphics.BASELINE|Graphics.HCENTER);
                 firstPaint = false;
             }
             else if (fixMessage.equals(""))
@@ -269,14 +277,14 @@ public class Map extends Canvas implements Runnable
             } else {
                 g.setFont(gui.get_fntBold());
             }
-            g.drawString("Zpět",3,screenHeight, Graphics.BOTTOM|Graphics.LEFT);
+            g.drawString(BACK,3,screenHeight, Graphics.BOTTOM|Graphics.LEFT);
             
             if (hasPointerEvents())
-                g.drawString("Noční",screenWidth/2,screenHeight, Graphics.BOTTOM|Graphics.HCENTER);
+                g.drawString(NIGHT,screenWidth/2,screenHeight, Graphics.BOTTOM|Graphics.HCENTER);
             
             //tlacitko navigace
             if (gps.isNavigating())
-                g.drawString("Navigace", screenWidth-3,screenHeight,Graphics.BOTTOM|Graphics.RIGHT);
+                g.drawString(NAVIGATION, screenWidth-3,screenHeight,Graphics.BOTTOM|Graphics.RIGHT);
         }
         catch (Exception e)
         {
@@ -342,9 +350,9 @@ public class Map extends Canvas implements Runnable
         int width = getWidth();
         int widthHalf = width / 2;
         Font fnt = (getWidth()<140) ? gui.get_fntSmallBold() : gui.get_fntBold();
-        int widthNocni = fnt.stringWidth("Noční") + 2*BORDER;
-        int widthZpet = fnt.stringWidth("Zpět") + 2*BORDER;
-        int widthNavigace = fnt.stringWidth("Navigace") + 2*BORDER;
+        int widthNocni = fnt.stringWidth(NIGHT) + 2*BORDER;
+        int widthZpet = fnt.stringWidth(BACK) + 2*BORDER;
+        int widthNavigace = fnt.stringWidth(NAVIGATION) + 2*BORDER;
                 
         int HEIGHT = getHeight();
         int BAR_HEIGHT = BOTTOM_MARGIN + BORDER;

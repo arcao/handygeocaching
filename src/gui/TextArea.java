@@ -59,11 +59,19 @@ public class TextArea extends Canvas implements Runnable {
     private Thread repeatThread = null;
     
     private Thread rebuildThread = null;
-        
-    /** Creates a new instance of TextArea */
+    
+    private boolean switchLeftRight = false;
+    
     public TextArea(Display display) {
+        this(display, false);
+    }
+    
+    /** Creates a new instance of TextArea */
+    public TextArea(Display display, boolean switchLeftRight) {
         text = "";
         lineBuffer = new String[0];
+        
+        this.switchLeftRight = switchLeftRight;
         
         lastWidth = -1;
         lastHeight = -1;
@@ -96,58 +104,76 @@ public class TextArea extends Canvas implements Runnable {
     }
 
     public void setText(String text) {
-        this.text = text.trim();
+        this.text = text.trim() + "\n ";
         lastWidth = -1;
         lastHeight = -1;
     }
 
     public Runnable getLeftButtonAction() {
-        return leftButtonAction;
+        return (switchLeftRight)? rightButtonAction : leftButtonAction;
     }
 
     public void setLeftButtonAction(Runnable leftButtonAction) {
-        this.leftButtonAction = leftButtonAction;
+        if (switchLeftRight)
+            this.rightButtonAction = leftButtonAction;
+        else
+            this.leftButtonAction = leftButtonAction;
     }
 
     public Displayable getLeftButtonScreen() {
-        return leftButtonScreen;
+        return (switchLeftRight)? rightButtonScreen : leftButtonScreen;
     }
 
     public void setLeftButtonScreen(Displayable leftButtonScreen) {
-        this.leftButtonScreen = leftButtonScreen;
+        if (switchLeftRight)
+            this.rightButtonScreen = leftButtonScreen;
+        else
+            this.leftButtonScreen = leftButtonScreen;
     }
 
     public String getLeftButtonText() {
-        return leftButtonText;
+        return (switchLeftRight)? rightButtonText : leftButtonText;
     }
 
     public void setLeftButtonText(String leftButtonText) {
-        this.leftButtonText = leftButtonText;
+        if (switchLeftRight)
+            this.rightButtonText = leftButtonText;
+        else
+            this.leftButtonText = leftButtonText;
         repaint();
     }
 
     public Runnable getRightButtonAction() {
-        return rightButtonAction;
+        return (switchLeftRight)? leftButtonAction : rightButtonAction;
     }
 
     public void setRightButtonAction(Runnable rightButtonAction) {
-        this.rightButtonAction = rightButtonAction;
+        if (switchLeftRight)
+            this.leftButtonAction = rightButtonAction;
+        else
+            this.rightButtonAction = rightButtonAction;
     }
 
     public Displayable getRightButtonScreen() {
-        return rightButtonScreen;
+        return (switchLeftRight)? leftButtonScreen : rightButtonScreen;
     }
 
     public void setRightButtonScreen(Displayable rightButtonScreen) {
-        this.rightButtonScreen = rightButtonScreen;
+        if (switchLeftRight)
+            this.leftButtonScreen = rightButtonScreen;
+        else
+            this.rightButtonScreen = rightButtonScreen;
     }
 
     public String getRightButtonText() {
-        return rightButtonText;
+        return (switchLeftRight)? leftButtonText : rightButtonText;
     }
 
     public void setRightButtonText(String rightButtonText) {
-        this.rightButtonText = rightButtonText;
+        if (switchLeftRight)
+            this.leftButtonText = rightButtonText;
+        else
+            this.rightButtonText = rightButtonText;
         repaint();
     }
     
@@ -184,12 +210,15 @@ public class TextArea extends Canvas implements Runnable {
         StringBuffer sbLine = new StringBuffer();
         
         while (pos < len) {
-            while(text.charAt(pos) == ' ')
+            while(pos < len && text.charAt(pos) == ' ')
                 pos++;
+            
+            if (pos >= len)
+                break;
             
             found = findWhiteChar(text, pos);
             if (found == -1)
-                found = len - 1;
+                found = len - 2;
             
             //bereme i white char
             found++;
@@ -211,9 +240,10 @@ public class TextArea extends Canvas implements Runnable {
                 } else {
                     //nevejde se ani na dalsi radek
                     //rozpulit slovo, protoze se nevejde na radek
-                    while (pos <= found) {
+                    while (pos < found) {
                         int charWidth = font.charWidth(text.charAt(pos));
-                        while (pos <= found && left + charWidth < maxWidth) {
+                        System.out.println(text.substring(pos, found));
+                        while (pos < found && left + charWidth < maxWidth) {
                             sbLine.append(text.charAt(pos));
                             left+= charWidth;
                             pos++;
@@ -279,44 +309,45 @@ public class TextArea extends Canvas implements Runnable {
                 
         //pokud se zmenilo rozliseni prekopeme radky
         if (width != lastWidth || height != lastHeight) {
-            rebuild();
+            lastWidth = width;
+            lastHeight = height;
+            //rebuild();
             //smazani pozadi
-            //g.setColor((Gui.getInstance().nightMode) ? 0x0 : 0xffffff); //pozadi
-            //g.fillRect(0, 0, width, height);
-            //g.setColor((Gui.getInstance().nightMode) ? 0xffffff : 0x0); //text
+            g.setColor((Gui.getInstance().nightMode) ? 0x0 : 0xffffff); //pozadi
+            g.fillRect(0, 0, width, height);
+            g.setColor((Gui.getInstance().nightMode) ? 0xffffff : 0x0); //text
             
-            //g.drawString("Pracuji...", width/2, height/2, Graphics.HCENTER | Graphics.VCENTER);
-            //if (rebuildThread == null) {
-            //    rebuildThread = new Thread() {
-            //        public void run() {
-            //            rebuild();
-            //            rebuildThread = null;
-            //        }
-            //    };
-            //    rebuildThread.start();
-            //}
-            //return;
-        }
-        
-        //smazani pozadi
-        g.setColor((Gui.getInstance().nightMode) ? 0x0 : 0xffffff); //pozadi
-        g.fillRect(0, 0, width, height);
-        g.setColor((Gui.getInstance().nightMode) ? 0xffffff : 0x0); //text
-        
-        for(int i = 0; i < linesPerScreen; i++) {
-            if (position + i >= lineBuffer.length - 1)
-                break;
-            g.drawString(lineBuffer[position + i], PADDING, i * lineHeight, Graphics.TOP | Graphics.LEFT);
-        }
-        
-        //vykresleni SCROLLBARU
-        if (position > 0) {
-            scroll_top = ((height - lineHeightBold) * position) / lineBuffer.length;
+            g.drawString("Načítám...", width/2, height/2, Graphics.HCENTER | Graphics.BASELINE);
+            if (rebuildThread == null) {
+                rebuildThread = new Thread() {
+                    public void run() {
+                        rebuild();
+                        repaint();
+                        rebuildThread = null;
+                    }
+                };
+                rebuildThread.start();
+            }
         } else {
-            scroll_top = 0;
+            //smazani pozadi
+            g.setColor((Gui.getInstance().nightMode) ? 0x0 : 0xffffff); //pozadi
+            g.fillRect(0, 0, width, height);
+            g.setColor((Gui.getInstance().nightMode) ? 0xffffff : 0x0); //text
+
+            for(int i = 0; i < linesPerScreen; i++) {
+                if (position + i >= lineBuffer.length - 1)
+                    break;
+                g.drawString(lineBuffer[position + i], PADDING, i * lineHeight, Graphics.TOP | Graphics.LEFT);
+            }
+
+            //vykresleni SCROLLBARU
+            if (position > 0) {
+                scroll_top = ((height - lineHeightBold) * position) / lineBuffer.length;
+            } else {
+                scroll_top = 0;
+            }
+            g.fillRect(width - SCROLL_WIDTH, scroll_top, SCROLL_WIDTH, scroll_height);
         }
-        g.fillRect(width - SCROLL_WIDTH, scroll_top, SCROLL_WIDTH, scroll_height);
-        
         //vykresleni spodniho radku
         g.setColor((Gui.getInstance().nightMode) ? 0x0 : 0xffffff); //pozadi
         g.fillRect(0, height - lineHeightBold, width, lineHeightBold);

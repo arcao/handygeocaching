@@ -89,6 +89,9 @@ public class Http implements Runnable
     public String response; //odpoved HTTP, vyuziva se hlavne pri ukladani do cache
     public String favouriteResponse; //odpoved HTTP, vyuziva se pri ukladani do oblibenych
     private boolean refresh; //refresh mod - znovunacteni ulozene kese a aktualizace db
+    
+    private HttpConnection connection;
+    private boolean terminated = true;
 
     public Http(Gui ref, Settings ref2, Favourites ref3, IconLoader ref4, Patterns ref5)
     {
@@ -122,7 +125,15 @@ public class Http implements Runnable
      * Zastavi prenos, ukonci vlakno
      */
     public void stop() {
-       t.interrupt();
+        terminated = true;
+        try {
+            if (connection != null)
+                connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        t.interrupt();
+        connection = null;
     }
     
     /***
@@ -131,6 +142,7 @@ public class Http implements Runnable
     public void start(int act, boolean refr)
     {
         offline = false;
+        terminated = false;
         refresh = refr;
         //Bug v Gauge u N5800 - nepouzivat Gauge
         //gui.get_gaLoading().setValue(Gauge.CONTINUOUS_IDLE);
@@ -394,7 +406,7 @@ public class Http implements Runnable
                 try {
                     for (int i = 0; i < waypoints.length; i++) {
                         response = downloadData("part=overview&waypoint="+waypoints[i],false, true, "Stahuji keš " + foundCaches[i][0] + "...");
-                        if (checkData(response))
+                        if (checkData(response) && !terminated)
                         {
                             String[][] listing = parseData(response);
                             favourites.editId = -1;
@@ -672,21 +684,24 @@ public class Http implements Runnable
     {
         InputStreamReader reader = null;
         InputStream is = null;
-        HttpConnection c = null;
+        connection = null;
         try
         {
+            gui.get_siDownloadSize().setText("Připojuji se...");
             // Vytvoreni http spojeni
-            c = (HttpConnection) Connector.open(url);
+            connection = (HttpConnection) Connector.open(url);
             
             // Nastaveni pristupove metody
-            c.setRequestMethod(HttpConnection.GET);
+            connection.setRequestMethod(HttpConnection.GET);
 
             // Otevreni vstupniho proudu
             //Bug v Gauge u N5800 - nepouzivat Gauge
             //gui.get_gaLoading().setValue(Gauge.CONTINUOUS_RUNNING);
-            if (c.getResponseCode() != 200)
+            if (connection.getResponseCode() != HttpConnection.HTTP_OK || terminated)
                 throw new Exception("TIMEOUT");
-            is = c.openInputStream();
+            
+            gui.get_siDownloadSize().setText("Stahuji data...");
+            is = connection.openInputStream();
             reader = new InputStreamReader(is, "UTF-8");
             //Bug v Gauge u N5800 - nepouzivat Gauge
             //gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
@@ -698,18 +713,24 @@ public class Http implements Runnable
             char[] charBuffer = new char[1024];
             int len;
             
+            long maxLen = connection.getLength();
+            long currLen = 0;
+            
+            setDownloadStatus(maxLen, currLen);
+            
             while ((len = reader.read(charBuffer)) != -1)
             {
+                setDownloadStatus(maxLen, currLen);
                 //Bug v Gauge u N5800 - nepouzivat Gauge
                 //gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
                 sb.append(charBuffer, 0, len);
                 //if (x%50==0)
                 //    gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
                 //x++;
+                currLen+=len;
             }
-
             String s = sb.toString();
-            s = Utils.repairUTF8(s);
+            //s = Utils.repairUTF8(s);
             //Bug v Gauge u N5800 - nepouzivat Gauge
             //gui.get_gaLoading().setValue(Gauge.INCREMENTAL_IDLE);
             //vraceni vystupnich dat
@@ -742,9 +763,9 @@ public class Http implements Runnable
                 {
                     is.close();
                 }
-                if (c != null)
+                if (connection != null)
                 {
-                    c.close();
+                    connection.close();
                 }
             }
             catch (IOException ex)
@@ -752,6 +773,21 @@ public class Http implements Runnable
                 ex.printStackTrace();
             }
         }
+    }
+    
+    private void setDownloadStatus(long maxLength, long currLength) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("Stahuji: ");
+        sb.append(currLength / 1024);
+        sb.append("/");
+        if (maxLength == -1) {
+            sb.append("?");
+        } else {
+            sb.append(maxLength / 1024);
+        }
+        sb.append(" KB");
+        
+        gui.get_siDownloadSize().setText(sb.toString());
     }
     
     
@@ -784,6 +820,7 @@ public class Http implements Runnable
         
         if (cachedResponse == null) //odpoved neni v kesi, stahujeme z netu
         {
+            gui.get_siDownloadSize().setText("");
             gui.getDisplay().setCurrent(gui.get_frmLoading());
             if (message != null)                
                 gui.get_siMessage().setText(message);
@@ -791,13 +828,13 @@ public class Http implements Runnable
                 gui.get_siMessage().setText("Přihlašování k serveru geocaching.com...");
             else
                 gui.get_siMessage().setText("Připojování k serveru a stahování dat...");
-            String adress = ((useArcaoUrl) ? arcao_url : url) + "?" + data;
-            if (addCookie) adress+= "&cookie="+cookie;
+            String address = ((useArcaoUrl) ? arcao_url : url) + "?" + data;
+            if (addCookie) address+= "&cookie="+cookie;
             String returns = "";
-            System.out.println(adress);
-            returns = connect(adress);
+            System.out.println(address);
+            returns = connect(address);
             //pokud se to zjebne zkusim to jeste jednou
-            if (returns.startsWith("err"))
+            if (returns.startsWith("err") && !terminated)
             { 
                 try
                 {
@@ -806,17 +843,17 @@ public class Http implements Runnable
                 catch (InterruptedException ex)
                 {
                 }
-                returns = connect(adress);
+                returns = connect(address);
             }
             System.out.println(returns);
-                                   
-            if (cachedAction && action == HINT)
-                hintCache.add(waypoint, returns);
-            else if (cachedAction && action == DETAIL)
-                listingCache.add(waypoint, returns);
-            else if (cachedAction)
-                cache.addCachedResponse(data, returns);
-            
+            if (!terminated) {
+                if (cachedAction && action == HINT)
+                    hintCache.add(waypoint, returns);
+                else if (cachedAction && action == DETAIL)
+                    listingCache.add(waypoint, returns);
+                else if (cachedAction)
+                    cache.addCachedResponse(data, returns);
+            }
             return returns;
         }
         else //nacitame z kese
@@ -832,6 +869,8 @@ public class Http implements Runnable
     {
         try
         {
+            if (terminated)
+                return false;
             if (data.equals("err:TIMEOUT"))
             {
                 gui.showAlert("Vypršel časový limit spojení. Server geocaching.com neodpovídá. Zkuste to za chvilku znovu.",AlertType.ERROR,gui.get_lstMenu());

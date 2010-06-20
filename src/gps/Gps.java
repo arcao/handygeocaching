@@ -546,8 +546,6 @@ public class Gps implements Runnable
     public static double convertDegToDouble(String source) {
         String tmp = source.trim().replace(',','.');
 
-        System.out.println("deg2double source: " + source);
-        
         int index = 0;
         int end = 0;
 
@@ -587,11 +585,6 @@ public class Gps implements Runnable
                 }
             }
             
-            System.out.println("deg2double deg: " + deg);
-            System.out.println("deg2double min: " + min);
-            System.out.println("deg2double sec: " + sec);
-            System.out.println("deg2double: " + (direction * (deg + (min / 60D) + (sec / 3600D))));
-
             return direction * (deg + (min / 60D) + (sec / 3600D));
         } catch (Exception e) {
             return Float.NaN;
@@ -600,7 +593,6 @@ public class Gps implements Runnable
 
     private static int getDoubleNumberEnd(String source, int start) {
         for (int i = start; i < source.length(); i++) {
-            //TODO desetina tecka ve forme carky
             if (!Character.isDigit(source.charAt(i)) && source.charAt(i) != '.') {
                 return i;
             }
