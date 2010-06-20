@@ -323,33 +323,22 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private StringItem stringItem2;
     private List lstSettings;
     private Form frmSettingsGPS;
-    private Command okCommand1;
-    private Command okCommand2;
     private ChoiceGroup cgInternalGPSType;
     private Form frmSettingsFieldNotes;
-    private Command okCommand3;
-    private Command okCommand4;
-    private Command okCommand5;
     private ChoiceGroup cgFieldNotes;
     private ChoiceGroup cgAcceptingDialogs;
     private Form frmSettingsCompass;
-    private Command okCommand6;
-    private Command okCommand7;
     private ChoiceGroup cgUseInternalCompass;
     private TextField tfCompassDeclination;
     private Image imgDummy;
     private Form frmCoordinatesProjection;
-    private Command okCommand8;
-    private Command okCommand9;
     private TextField tfProjectionName;
     private TextField tfProjectionLatitude;
     private TextField tfProjectionLongtitude;
     private TextField tfProjectionAzimuth;
     private TextField tfProjectionDistance;
     private StringItem siDownloadSize;
-    private Command cmdSelectAll;
-    private Command screenCommand1;
-    private Command okCommand10;//GEN-END:MVDFields
+    private Command cmdSelectAll;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -4655,31 +4644,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd642
         return frmSettingsGPS;
     }//GEN-END:MVDGetEnd642
-
-    /** This method returns instance for okCommand1 component and should be called instead of accessing okCommand1 field directly.//GEN-BEGIN:MVDGetBegin643
-     * @return Instance for okCommand1 component
-     */
-    public Command get_okCommand1() {
-        if (okCommand1 == null) {//GEN-END:MVDGetBegin643
-            // Insert pre-init code here
-            okCommand1 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit643
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd643
-        return okCommand1;
-    }//GEN-END:MVDGetEnd643
-
-    /** This method returns instance for okCommand2 component and should be called instead of accessing okCommand2 field directly.//GEN-BEGIN:MVDGetBegin645
-     * @return Instance for okCommand2 component
-     */
-    public Command get_okCommand2() {
-        if (okCommand2 == null) {//GEN-END:MVDGetBegin645
-            // Insert pre-init code here
-            okCommand2 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit645
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd645
-        return okCommand2;
-    }//GEN-END:MVDGetEnd645
-
+  
     /** This method returns instance for cgInternalGPSType component and should be called instead of accessing cgInternalGPSType field directly.//GEN-BEGIN:MVDGetBegin647
      * @return Instance for cgInternalGPSType component
      */
@@ -4722,43 +4687,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd652
         return frmSettingsFieldNotes;
     }//GEN-END:MVDGetEnd652
-
-    /** This method returns instance for okCommand3 component and should be called instead of accessing okCommand3 field directly.//GEN-BEGIN:MVDGetBegin653
-     * @return Instance for okCommand3 component
-     */
-    public Command get_okCommand3() {
-        if (okCommand3 == null) {//GEN-END:MVDGetBegin653
-            // Insert pre-init code here
-            okCommand3 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit653
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd653
-        return okCommand3;
-    }//GEN-END:MVDGetEnd653
-
-    /** This method returns instance for okCommand4 component and should be called instead of accessing okCommand4 field directly.//GEN-BEGIN:MVDGetBegin655
-     * @return Instance for okCommand4 component
-     */
-    public Command get_okCommand4() {
-        if (okCommand4 == null) {//GEN-END:MVDGetBegin655
-            // Insert pre-init code here
-            okCommand4 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit655
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd655
-        return okCommand4;
-    }//GEN-END:MVDGetEnd655
-
-    /** This method returns instance for okCommand5 component and should be called instead of accessing okCommand5 field directly.//GEN-BEGIN:MVDGetBegin656
-     * @return Instance for okCommand5 component
-     */
-    public Command get_okCommand5() {
-        if (okCommand5 == null) {//GEN-END:MVDGetBegin656
-            // Insert pre-init code here
-            okCommand5 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit656
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd656
-        return okCommand5;
-    }//GEN-END:MVDGetEnd656
-
+   
     /** This method returns instance for cgFieldNotes component and should be called instead of accessing cgFieldNotes field directly.//GEN-BEGIN:MVDGetBegin658
      * @return Instance for cgFieldNotes component
      */
@@ -4826,31 +4755,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd666
         return frmSettingsCompass;
     }//GEN-END:MVDGetEnd666
-
-    /** This method returns instance for okCommand6 component and should be called instead of accessing okCommand6 field directly.//GEN-BEGIN:MVDGetBegin669
-     * @return Instance for okCommand6 component
-     */
-    public Command get_okCommand6() {
-        if (okCommand6 == null) {//GEN-END:MVDGetBegin669
-            // Insert pre-init code here
-            okCommand6 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit669
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd669
-        return okCommand6;
-    }//GEN-END:MVDGetEnd669
-
-    /** This method returns instance for okCommand7 component and should be called instead of accessing okCommand7 field directly.//GEN-BEGIN:MVDGetBegin671
-     * @return Instance for okCommand7 component
-     */
-    public Command get_okCommand7() {
-        if (okCommand7 == null) {//GEN-END:MVDGetBegin671
-            // Insert pre-init code here
-            okCommand7 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit671
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd671
-        return okCommand7;
-    }//GEN-END:MVDGetEnd671
-
+  
     /** This method returns instance for cgUseInternalCompass component and should be called instead of accessing cgUseInternalCompass field directly.//GEN-BEGIN:MVDGetBegin673
      * @return Instance for cgUseInternalCompass component
      */
@@ -4921,31 +4826,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd680
         return frmCoordinatesProjection;
     }//GEN-END:MVDGetEnd680
-
-    /** This method returns instance for okCommand8 component and should be called instead of accessing okCommand8 field directly.//GEN-BEGIN:MVDGetBegin681
-     * @return Instance for okCommand8 component
-     */
-    public Command get_okCommand8() {
-        if (okCommand8 == null) {//GEN-END:MVDGetBegin681
-            // Insert pre-init code here
-            okCommand8 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit681
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd681
-        return okCommand8;
-    }//GEN-END:MVDGetEnd681
-
-    /** This method returns instance for okCommand9 component and should be called instead of accessing okCommand9 field directly.//GEN-BEGIN:MVDGetBegin683
-     * @return Instance for okCommand9 component
-     */
-    public Command get_okCommand9() {
-        if (okCommand9 == null) {//GEN-END:MVDGetBegin683
-            // Insert pre-init code here
-            okCommand9 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit683
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd683
-        return okCommand9;
-    }//GEN-END:MVDGetEnd683
-
+  
     /** This method returns instance for tfProjectionName component and should be called instead of accessing tfProjectionName field directly.//GEN-BEGIN:MVDGetBegin685
      * @return Instance for tfProjectionName component
      */
@@ -5029,31 +4910,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd691
         return cmdSelectAll;
     }//GEN-END:MVDGetEnd691
-
-    /** This method returns instance for screenCommand1 component and should be called instead of accessing screenCommand1 field directly.//GEN-BEGIN:MVDGetBegin693
-     * @return Instance for screenCommand1 component
-     */
-    public Command get_screenCommand1() {
-        if (screenCommand1 == null) {//GEN-END:MVDGetBegin693
-            // Insert pre-init code here
-            screenCommand1 = new Command("Screen", Command.SCREEN, 1);//GEN-LINE:MVDGetInit693
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd693
-        return screenCommand1;
-    }//GEN-END:MVDGetEnd693
-
-    /** This method returns instance for okCommand10 component and should be called instead of accessing okCommand10 field directly.//GEN-BEGIN:MVDGetBegin695
-     * @return Instance for okCommand10 component
-     */
-    public Command get_okCommand10() {
-        if (okCommand10 == null) {//GEN-END:MVDGetBegin695
-            // Insert pre-init code here
-            okCommand10 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit695
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd695
-        return okCommand10;
-    }//GEN-END:MVDGetEnd695
-    
+      
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {
             cvsNavigation = new Navigation(this, gps, favourites);

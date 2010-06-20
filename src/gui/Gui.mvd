@@ -2376,21 +2376,11 @@
                 <ContainerPropertyItem value="cgInternalGPSType"/>
             </ContainerProperty>
         </DesignComponent>
-        <DesignComponent id="okCommand1" typeid="MIDP:javax.microedition.lcdui.Command" uid="643">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
-        </DesignComponent>
         <DesignComponent id="$CommandAction13" typeid="MIDP:CommandAction" uid="644">
             <Property name="targetDisplayable" value="lstSettings"/>
             <Property name="targetForwardDisplayable" value="frmSettingsGPS"/>
             <Property name="actionSource" value="cmdSave"/>
             <Property name="actionOrigin" value="frmSettingsGPS"/>
-        </DesignComponent>
-        <DesignComponent id="okCommand2" typeid="MIDP:javax.microedition.lcdui.Command" uid="645">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
         </DesignComponent>
         <DesignComponent id="$CommandAction24" typeid="MIDP:CommandAction" uid="646">
             <Property name="targetDisplayable" value="lstSettings"/>
@@ -2439,26 +2429,11 @@
                 <ContainerPropertyItem value="cgFieldNotes"/>
             </ContainerProperty>
         </DesignComponent>
-        <DesignComponent id="okCommand3" typeid="MIDP:javax.microedition.lcdui.Command" uid="653">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
-        </DesignComponent>
         <DesignComponent id="$CommandAction10" typeid="MIDP:CommandAction" uid="654">
             <Property name="targetDisplayable" value="lstSettings"/>
             <Property name="targetForwardDisplayable"/>
             <Property name="actionSource" value="cmdSave"/>
             <Property name="actionOrigin" value="frmSettingsFieldNotes"/>
-        </DesignComponent>
-        <DesignComponent id="okCommand4" typeid="MIDP:javax.microedition.lcdui.Command" uid="655">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
-        </DesignComponent>
-        <DesignComponent id="okCommand5" typeid="MIDP:javax.microedition.lcdui.Command" uid="656">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
         </DesignComponent>
         <DesignComponent id="$CommandAction25" typeid="MIDP:CommandAction" uid="657">
             <Property name="targetDisplayable" value="lstSettings"/>
@@ -2538,21 +2513,11 @@
             <Property name="targetForwardDisplayable"/>
             <Property name="actionHolder" value="Midp2ListElementDC17"/>
         </DesignComponent>
-        <DesignComponent id="okCommand6" typeid="MIDP:javax.microedition.lcdui.Command" uid="669">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
-        </DesignComponent>
         <DesignComponent id="$CommandAction38" typeid="MIDP:CommandAction" uid="670">
             <Property name="targetDisplayable" value="lstSettings"/>
             <Property name="targetForwardDisplayable"/>
             <Property name="actionSource" value="cmdBack"/>
             <Property name="actionOrigin" value="frmSettingsCompass"/>
-        </DesignComponent>
-        <DesignComponent id="okCommand7" typeid="MIDP:javax.microedition.lcdui.Command" uid="671">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
         </DesignComponent>
         <DesignComponent id="$CommandAction41" typeid="MIDP:CommandAction" uid="672">
             <Property name="targetDisplayable" value="lstSettings"/>
@@ -2612,21 +2577,11 @@
                 <ContainerPropertyItem value="tfProjectionDistance"/>
             </ContainerProperty>
         </DesignComponent>
-        <DesignComponent id="okCommand8" typeid="MIDP:javax.microedition.lcdui.Command" uid="681">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
-        </DesignComponent>
         <DesignComponent id="$CommandAction59" typeid="MIDP:CommandAction" uid="682">
             <Property name="targetDisplayable" value="lstGPS"/>
             <Property name="targetForwardDisplayable"/>
             <Property name="actionSource" value="cmdBack"/>
             <Property name="actionOrigin" value="frmCoordinatesProjection"/>
-        </DesignComponent>
-        <DesignComponent id="okCommand9" typeid="MIDP:javax.microedition.lcdui.Command" uid="683">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
         </DesignComponent>
         <DesignComponent id="$CommandAction81" typeid="MIDP:CommandAction" uid="684">
             <Property name="targetDisplayable"/>
@@ -2676,21 +2631,11 @@
             <Property name="actionSource" value="cmdSelectAll"/>
             <Property name="actionOrigin" value="lstFavourites"/>
         </DesignComponent>
-        <DesignComponent id="screenCommand1" typeid="MIDP:javax.microedition.lcdui.Command" uid="693">
-            <Property name="label" value="STRING:Screen"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="SCREEN"/>
-        </DesignComponent>
         <DesignComponent id="$CommandAction110" typeid="MIDP:CommandAction" uid="694">
             <Property name="targetDisplayable"/>
             <Property name="targetForwardDisplayable"/>
             <Property name="actionSource" value="cmdSelectAll"/>
             <Property name="actionOrigin" value="lstFieldNotes"/>
-        </DesignComponent>
-        <DesignComponent id="okCommand10" typeid="MIDP:javax.microedition.lcdui.Command" uid="695">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
         </DesignComponent>
     </DesignDocument>
     <FlowDocument version="1.1">

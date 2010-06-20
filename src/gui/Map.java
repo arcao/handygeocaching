@@ -74,7 +74,11 @@ public class Map extends Canvas implements Runnable
     private final static String BACK = "Zpět";
     private final static String NAVIGATION = "Navigace";
     private final static String NIGHT = "Noční";
-            
+    
+    public Map(Gui ref, Gps ref2, IconLoader ref3, Track ref4) {
+        this(ref,ref2, ref3, ref4, false);
+    }
+    
     public Map(Gui ref, Gps ref2, IconLoader ref3, Track ref4, boolean switchLeftRight)
     {
         this.switchLeftRight = switchLeftRight;
