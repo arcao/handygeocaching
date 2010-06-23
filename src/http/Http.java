@@ -91,7 +91,7 @@ public class Http implements Runnable
     private boolean refresh; //refresh mod - znovunacteni ulozene kese a aktualizace db
     
     private HttpConnection connection;
-    private boolean terminated = true;
+    private boolean terminated = false;
 
     public Http(Gui ref, Settings ref2, Favourites ref3, IconLoader ref4, Patterns ref5)
     {
@@ -197,6 +197,7 @@ public class Http implements Runnable
      */
     public void startOffline(int act, String resp)
     {
+        terminated = false;
         action = act;
         response = resp;
         offline = true;
