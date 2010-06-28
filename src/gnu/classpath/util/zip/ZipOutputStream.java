@@ -57,7 +57,7 @@ import java.util.Vector;
  *
  * @author Jochen Hoenicke 
  */
-public class ZipOutputStream extends DeflaterOutputStream implements ZipConstants
+public class ZipOutputStream extends DeflaterOutputStream
 {
   private Vector entries = new Vector();
   private CRC32 crc = new CRC32();
@@ -227,7 +227,7 @@ public class ZipOutputStream extends DeflaterOutputStream implements ZipConstant
     entry.setMethod(method);
     curMethod = method;
     /* Write the local file header */
-    writeLeInt(LOCSIG);
+    writeLeInt(ZipConstants.LOCSIG);
     writeLeShort(method == STORED
 		 ? ZIP_STORED_VERSION : ZIP_DEFLATED_VERSION);
     writeLeShort(flags);
@@ -264,7 +264,7 @@ public class ZipOutputStream extends DeflaterOutputStream implements ZipConstant
     out.write(name);
     out.write(extra);
 
-    offset += LOCHDR + name.length + extra.length;
+    offset += ZipConstants.LOCHDR + name.length + extra.length;
 
     /* Activate the entry. */
 
@@ -315,11 +315,11 @@ public class ZipOutputStream extends DeflaterOutputStream implements ZipConstant
     /* Now write the data descriptor entry if needed. */
     if (curMethod == DEFLATED && (curEntry.flags & 8) != 0)
       {
-	writeLeInt(EXTSIG);
+	writeLeInt(ZipConstants.EXTSIG);
 	writeLeInt((int)curEntry.getCrc());
 	writeLeInt((int)curEntry.getCompressedSize());
 	writeLeInt((int)curEntry.getSize());
-	offset += EXTHDR;
+	offset += ZipConstants.EXTHDR;
       }
 
     entries.addElement(curEntry);
@@ -372,7 +372,7 @@ public class ZipOutputStream extends DeflaterOutputStream implements ZipConstant
 	ZipEntry entry = (ZipEntry) e.nextElement();
 	
 	int method = entry.getMethod();
-	writeLeInt(CENSIG);
+	writeLeInt(ZipConstants.CENSIG);
 	writeLeShort(method == STORED
 		     ? ZIP_STORED_VERSION : ZIP_DEFLATED_VERSION);
 	writeLeShort(method == STORED
@@ -423,10 +423,10 @@ public class ZipOutputStream extends DeflaterOutputStream implements ZipConstant
 	out.write(extra);
 	out.write(comment);
 	numEntries++;
-	sizeEntries += CENHDR + name.length + extra.length + comment.length;
+	sizeEntries += ZipConstants.CENHDR + name.length + extra.length + comment.length;
       }
 
-    writeLeInt(ENDSIG);
+    writeLeInt(ZipConstants.ENDSIG);
     writeLeShort(0); /* disk number */
     writeLeShort(0); /* disk with start of central dir */
     writeLeShort(numEntries);

@@ -49,7 +49,7 @@ import java.util.Date;
  *
  * @author Jochen Hoenicke 
  */
-public class ZipEntry implements ZipConstants
+public class ZipEntry
 {
   private static final byte KNOWN_SIZE    = 1;
   private static final byte KNOWN_CSIZE   = 2;

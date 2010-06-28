@@ -137,6 +137,8 @@ public class Gps implements Runnable
      */
     public void setNavigationTarget(String lattitude, String longitude, String name)
     {
+        if (name == null) name = "";
+        
         targetname = name;
         targetlat = convertDegToDouble(lattitude);
         targetlon = convertDegToDouble(longitude);
@@ -147,7 +149,7 @@ public class Gps implements Runnable
      */
     public boolean isNavigating()
     {
-        return (targetlat!=0 && targetlon!=0);
+        return (!Double.isNaN(targetlat) && !Double.isNaN(targetlon));
     }
     
     /**

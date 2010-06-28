@@ -35,11 +35,17 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
+/*
+Changes:
+28. June 2010 by Arcao - Removed interface with constants, S40 do not see 
+                         static fields from inherited interfaceses.
+*/
+
 package gnu.classpath.util.zip;
 
 import gnu.classpath.lang.InternalError;
 
-class DeflaterEngine implements DeflaterConstants
+class DeflaterEngine
 {
   private static final int TOO_FAR = 4096;
 
@@ -129,9 +135,9 @@ class DeflaterEngine implements DeflaterConstants
     huffman = new DeflaterHuffman(pending);
     adler = new Adler32();
 
-    window = new byte[2*WSIZE];
-    head   = new short[HASH_SIZE];
-    prev   = new short[WSIZE];
+    window = new byte[2*DeflaterConstants.WSIZE];
+    head   = new short[DeflaterConstants.HASH_SIZE];
+    prev   = new short[DeflaterConstants.WSIZE];
 
     /* We start at index 1, to avoid a implementation deficiency, that
      * we cannot build a repeat pattern at index 0.
@@ -147,10 +153,10 @@ class DeflaterEngine implements DeflaterConstants
     lookahead = 0;
     totalIn = 0;
     prevAvailable = false;
-    matchLen = MIN_MATCH - 1;
-    for (int i = 0; i < HASH_SIZE; i++)
+    matchLen = DeflaterConstants.MIN_MATCH - 1;
+    for (int i = 0; i < DeflaterConstants.HASH_SIZE; i++)
       head[i] = 0;
-    for (int i = 0; i < WSIZE; i++)
+    for (int i = 0; i < DeflaterConstants.WSIZE; i++)
       prev[i] = 0;
   }
 
@@ -189,7 +195,7 @@ class DeflaterEngine implements DeflaterConstants
 			     + DeflaterConstants.COMPR_FUNC[lvl]);
 	switch (comprFunc)
 	  {
-	  case DEFLATE_STORED:
+	  case DeflaterConstants.DEFLATE_STORED:
 	    if (strstart > blockStart)
 	      {
 		huffman.flushStoredBlock(window, blockStart, 
@@ -198,7 +204,7 @@ class DeflaterEngine implements DeflaterConstants
 	      }
 	    updateHash();
 	    break;
-	  case DEFLATE_FAST:
+	  case DeflaterConstants.DEFLATE_FAST:
 	    if (strstart > blockStart)
 	      {
 		huffman.flushBlock(window, blockStart, strstart - blockStart,
@@ -206,7 +212,7 @@ class DeflaterEngine implements DeflaterConstants
 		blockStart = strstart;
 	      }
 	    break;
-	  case DEFLATE_SLOW:
+	  case DeflaterConstants.DEFLATE_SLOW:
 	    if (prevAvailable)
 	      huffman.tallyLit(window[strstart-1] & 0xff);
 	    if (strstart > blockStart)
@@ -216,17 +222,17 @@ class DeflaterEngine implements DeflaterConstants
 		blockStart = strstart;
 	      }
 	    prevAvailable = false;
-	    matchLen = MIN_MATCH - 1;
+	    matchLen = DeflaterConstants.MIN_MATCH - 1;
 	    break;
 	  }
-	comprFunc = COMPR_FUNC[lvl];
+	comprFunc = DeflaterConstants.COMPR_FUNC[lvl];
       }
   }
 
   private void updateHash() {
-    if (DEBUGGING)
+    if (DeflaterConstants.DEBUGGING)
       System.err.println("updateHash: "+strstart);
-    ins_h = (window[strstart] << HASH_SHIFT) ^ window[strstart + 1];
+    ins_h = (window[strstart] << DeflaterConstants.HASH_SHIFT) ^ window[strstart + 1];
   }    
 
   /**
@@ -235,21 +241,21 @@ class DeflaterEngine implements DeflaterConstants
    */
   private int insertString() {
     short match;
-    int hash = ((ins_h << HASH_SHIFT) ^ window[strstart + (MIN_MATCH -1)])
-      & HASH_MASK;
+    int hash = ((ins_h << DeflaterConstants.HASH_SHIFT) ^ window[strstart + (DeflaterConstants.MIN_MATCH -1)])
+      & DeflaterConstants.HASH_MASK;
 
-    if (DEBUGGING)
+    if (DeflaterConstants.DEBUGGING)
       {
-	if (hash != (((window[strstart] << (2*HASH_SHIFT))
-		      ^ (window[strstart + 1] << HASH_SHIFT)
-		      ^ (window[strstart + 2])) & HASH_MASK))
+	if (hash != (((window[strstart] << (2*DeflaterConstants.HASH_SHIFT))
+		      ^ (window[strstart + 1] << DeflaterConstants.HASH_SHIFT)
+		      ^ (window[strstart + 2])) & DeflaterConstants.HASH_MASK))
 	  throw new InternalError("hash inconsistent: "+hash+"/"
 				  +window[strstart]+","
 				  +window[strstart+1]+","
-				  +window[strstart+2]+","+HASH_SHIFT);
+				  +window[strstart+2]+","+DeflaterConstants.HASH_SHIFT);
       }
 
-    prev[strstart & WMASK] = match = head[hash];
+    prev[strstart & DeflaterConstants.WMASK] = match = head[hash];
     head[hash] = (short) strstart;
     ins_h = hash;
     return match & 0xffff;
@@ -257,26 +263,26 @@ class DeflaterEngine implements DeflaterConstants
 
   private void slideWindow()
   {
-    System.arraycopy(window, WSIZE, window, 0, WSIZE);
-    matchStart -= WSIZE;
-    strstart -= WSIZE;
-    blockStart -= WSIZE;
+    System.arraycopy(window, DeflaterConstants.WSIZE, window, 0, DeflaterConstants.WSIZE);
+    matchStart -= DeflaterConstants.WSIZE;
+    strstart -= DeflaterConstants.WSIZE;
+    blockStart -= DeflaterConstants.WSIZE;
     
     /* Slide the hash table (could be avoided with 32 bit values
      * at the expense of memory usage).
      */
-    for (int i = 0; i < HASH_SIZE; i++) 
+    for (int i = 0; i < DeflaterConstants.HASH_SIZE; i++) 
       {
 	int m = head[i] & 0xffff;
-	head[i] = m >= WSIZE ? (short) (m - WSIZE) : 0;
+	head[i] = m >= DeflaterConstants.WSIZE ? (short) (m - DeflaterConstants.WSIZE) : 0;
       }
 
     /* Slide the prev table.
      */
-    for (int i = 0; i < WSIZE; i++) 
+    for (int i = 0; i < DeflaterConstants.WSIZE; i++) 
       {
 	int m = prev[i] & 0xffff;
-	prev[i] = m >= WSIZE ? (short) (m - WSIZE) : 0;
+	prev[i] = m >= DeflaterConstants.WSIZE ? (short) (m - DeflaterConstants.WSIZE) : 0;
       }
   }
 
@@ -292,7 +298,7 @@ class DeflaterEngine implements DeflaterConstants
     /* If the window is almost full and there is insufficient lookahead,
      * move the upper half to the lower one to make room in the upper half.
      */
-    if (strstart >= WSIZE + MAX_DIST)
+    if (strstart >= DeflaterConstants.WSIZE + DeflaterConstants.MAX_DIST)
       slideWindow();
 
     /* If there is not enough lookahead, but still some input left,
@@ -300,7 +306,7 @@ class DeflaterEngine implements DeflaterConstants
      */
     while (lookahead < DeflaterConstants.MIN_LOOKAHEAD && inputOff < inputEnd)
       {
-	int more = 2*WSIZE - lookahead - strstart;
+	int more = 2*DeflaterConstants.WSIZE - lookahead - strstart;
 	
 	if (more > inputEnd - inputOff)
 	  more = inputEnd - inputOff;
@@ -313,7 +319,7 @@ class DeflaterEngine implements DeflaterConstants
 	lookahead += more;
       }
 
-    if (lookahead >= MIN_MATCH) 
+    if (lookahead >= DeflaterConstants.MIN_MATCH) 
       updateHash();
   }
 
@@ -334,11 +340,11 @@ class DeflaterEngine implements DeflaterConstants
     int scan  = this.strstart;
     int match;
     int best_end = this.strstart + matchLen;
-    int best_len = Math.max(matchLen, MIN_MATCH - 1);
+    int best_len = Math.max(matchLen, DeflaterConstants.MIN_MATCH - 1);
     
-    int limit = Math.max(strstart - MAX_DIST, 0);
+    int limit = Math.max(strstart - DeflaterConstants.MAX_DIST, 0);
 
-    int strend = scan + MAX_MATCH - 1;
+    int strend = scan + DeflaterConstants.MAX_MATCH - 1;
     byte scan_end1 = window[best_end - 1];
     byte scan_end  = window[best_end];
 
@@ -353,7 +359,7 @@ class DeflaterEngine implements DeflaterConstants
       niceLength = lookahead;
 
     if (DeflaterConstants.DEBUGGING 
-	&& strstart > 2*WSIZE - MIN_LOOKAHEAD)
+	&& strstart > 2*DeflaterConstants.WSIZE - DeflaterConstants.MIN_LOOKAHEAD)
       throw new InternalError("need lookahead");
     
     do {
@@ -395,22 +401,22 @@ class DeflaterEngine implements DeflaterConstants
 	scan_end   = window[best_end];
       }
       scan = strstart;
-    } while ((curMatch = (prev[curMatch & WMASK] & 0xffff)) > limit
+    } while ((curMatch = (prev[curMatch & DeflaterConstants.WMASK] & 0xffff)) > limit
 	     && --chainLength != 0);
 
     matchLen = Math.min(best_len, lookahead);
-    return matchLen >= MIN_MATCH;
+    return matchLen >= DeflaterConstants.MIN_MATCH;
   }
 
   void setDictionary(byte[] buffer, int offset, int length) {
     if (DeflaterConstants.DEBUGGING && strstart != 1)
       throw new IllegalStateException("strstart not 1");
     adler.update(buffer, offset, length);
-    if (length < MIN_MATCH)
+    if (length < DeflaterConstants.MIN_MATCH)
       return;
-    if (length > MAX_DIST) {
-      offset += length - MAX_DIST;
-      length = MAX_DIST;
+    if (length > DeflaterConstants.MAX_DIST) {
+      offset += length - DeflaterConstants.MAX_DIST;
+      length = DeflaterConstants.MAX_DIST;
     }
 
     System.arraycopy(buffer, offset, window, strstart, length);
@@ -438,7 +444,7 @@ class DeflaterEngine implements DeflaterConstants
 
     if ((storedLen >= DeflaterConstants.MAX_BLOCK_SIZE) 
 	/* Block is full */
-	|| (blockStart < WSIZE && storedLen >= MAX_DIST)
+	|| (blockStart < DeflaterConstants.WSIZE && storedLen >= DeflaterConstants.MAX_DIST)
 	/* Block may move out of window */
 	|| flush)
       {
@@ -461,10 +467,10 @@ class DeflaterEngine implements DeflaterConstants
 
   private boolean deflateFast(boolean flush, boolean finish)
   {
-    if (lookahead < MIN_LOOKAHEAD && !flush)
+    if (lookahead < DeflaterConstants.MIN_LOOKAHEAD && !flush)
       return false;
 
-    while (lookahead >= MIN_LOOKAHEAD || flush)
+    while (lookahead >= DeflaterConstants.MIN_LOOKAHEAD || flush)
       {
 	if (lookahead == 0)
 	  {
@@ -475,7 +481,7 @@ class DeflaterEngine implements DeflaterConstants
 	    return false;
 	  }
 
-	if (strstart > 2 * WSIZE - MIN_LOOKAHEAD)
+	if (strstart > 2 * DeflaterConstants.WSIZE - DeflaterConstants.MIN_LOOKAHEAD)
 	  {
 	    /* slide window, as findLongestMatch need this.
 	     * This should only happen when flushing and the window
@@ -485,10 +491,10 @@ class DeflaterEngine implements DeflaterConstants
 	  }
 
 	int hashHead;
-	if (lookahead >= MIN_MATCH 
+	if (lookahead >= DeflaterConstants.MIN_MATCH 
 	    && (hashHead = insertString()) != 0
 	    && strategy != Deflater.HUFFMAN_ONLY
-	    && strstart - hashHead <= MAX_DIST
+	    && strstart - hashHead <= DeflaterConstants.MAX_DIST
 	    && findLongestMatch(hashHead))
 	  {
 	    /* longestMatch sets matchStart and matchLen */
@@ -503,7 +509,7 @@ class DeflaterEngine implements DeflaterConstants
 	    boolean full = huffman.tallyDist(strstart - matchStart, matchLen);
 	    
 	    lookahead -= matchLen;
-	    if (matchLen <= max_lazy && lookahead >= MIN_MATCH)
+	    if (matchLen <= max_lazy && lookahead >= DeflaterConstants.MIN_MATCH)
 	      {
 		while (--matchLen > 0)
 		  {
@@ -515,10 +521,10 @@ class DeflaterEngine implements DeflaterConstants
 	    else
 	      {
 		strstart += matchLen;
-		if (lookahead >= MIN_MATCH - 1)
+		if (lookahead >= DeflaterConstants.MIN_MATCH - 1)
 		  updateHash();
 	      }
-	    matchLen = MIN_MATCH - 1;
+	    matchLen = DeflaterConstants.MIN_MATCH - 1;
 	    if (!full)
 	      continue;
 	  }
@@ -544,10 +550,10 @@ class DeflaterEngine implements DeflaterConstants
 
   private boolean deflateSlow(boolean flush, boolean finish)
   {
-    if (lookahead < MIN_LOOKAHEAD && !flush)
+    if (lookahead < DeflaterConstants.MIN_LOOKAHEAD && !flush)
       return false;
 
-    while (lookahead >= MIN_LOOKAHEAD || flush)
+    while (lookahead >= DeflaterConstants.MIN_LOOKAHEAD || flush)
       {
 	if (lookahead == 0)
 	  {
@@ -564,7 +570,7 @@ class DeflaterEngine implements DeflaterConstants
 	    return false;
 	  }
 
-	if (strstart >= 2 * WSIZE - MIN_LOOKAHEAD)
+	if (strstart >= 2 * DeflaterConstants.WSIZE - DeflaterConstants.MIN_LOOKAHEAD)
 	  {
 	    /* slide window, as findLongestMatch need this.
 	     * This should only happen when flushing and the window
@@ -575,11 +581,11 @@ class DeflaterEngine implements DeflaterConstants
 
 	int prevMatch = matchStart;
 	int prevLen = matchLen;
-	if (lookahead >= MIN_MATCH)
+	if (lookahead >= DeflaterConstants.MIN_MATCH)
 	  {
 	    int hashHead = insertString();
 	    if (strategy != Deflater.HUFFMAN_ONLY
-		&& hashHead != 0 && strstart - hashHead <= MAX_DIST
+		&& hashHead != 0 && strstart - hashHead <= DeflaterConstants.MAX_DIST
 		&& findLongestMatch(hashHead))
 	      {
 		/* longestMatch sets matchStart and matchLen */
@@ -587,15 +593,15 @@ class DeflaterEngine implements DeflaterConstants
 		/* Discard match if too small and too far away */
 		if (matchLen <= 5
 		    && (strategy == Deflater.FILTERED
-			|| (matchLen == MIN_MATCH
+			|| (matchLen == DeflaterConstants.MIN_MATCH
 			    && strstart - matchStart > TOO_FAR))) {
-		  matchLen = MIN_MATCH - 1;
+		  matchLen = DeflaterConstants.MIN_MATCH - 1;
 		}
 	      }
 	  }
 	
 	/* previous match was better */
-	if (prevLen >= MIN_MATCH && matchLen <= prevLen)
+	if (prevLen >= DeflaterConstants.MIN_MATCH && matchLen <= prevLen)
 	  {
 	    if (DeflaterConstants.DEBUGGING)
 	      {
@@ -611,14 +617,14 @@ class DeflaterEngine implements DeflaterConstants
 	      {
 		strstart++;
 		lookahead--;
-		if (lookahead >= MIN_MATCH)
+		if (lookahead >= DeflaterConstants.MIN_MATCH)
 		  insertString();
 	      }
 	    while (--prevLen > 0);
 	    strstart ++;
 	    lookahead--;
 	    prevAvailable = false;
-	    matchLen = MIN_MATCH - 1;
+	    matchLen = DeflaterConstants.MIN_MATCH - 1;
 	  }
 	else
 	  {
@@ -655,13 +661,13 @@ class DeflaterEngine implements DeflaterConstants
 			     +lookahead+"], "+comprFunc+","+canFlush);
 	switch (comprFunc)
 	  {
-	  case DEFLATE_STORED:
+	  case DeflaterConstants.DEFLATE_STORED:
 	    progress = deflateStored(canFlush, finish);
 	    break;
-	  case DEFLATE_FAST:
+	  case DeflaterConstants.DEFLATE_FAST:
 	    progress = deflateFast(canFlush, finish);
 	    break;
-	  case DEFLATE_SLOW:
+	  case DeflaterConstants.DEFLATE_SLOW:
 	    progress = deflateSlow(canFlush, finish);
 	    break;
 	  default:

@@ -36,7 +36,7 @@ public class Navigation extends Canvas
     public static double compass = 0;
     public String azimut = "";
     public String dateTime = "";
-    public Image[] numbers, numbersNight;
+    private Image[] numbers, numbersNight;
     private int image;
     private int transformation;
     private Image rotatedImage;
@@ -170,7 +170,7 @@ public class Navigation extends Canvas
                     g.drawString(dateTime+" "+altitude,width/2,startY,Graphics.TOP|Graphics.HCENTER);
                 }
                 
-                gui.get_fntSmallBold();
+                g.setFont(gui.get_fntSmallBold());
             }
             else //velke displeje
             {

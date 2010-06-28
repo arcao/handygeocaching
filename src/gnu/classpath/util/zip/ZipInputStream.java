@@ -54,7 +54,7 @@ import java.io.UnsupportedEncodingException;
  *
  * @author Jochen Hoenicke
  */
-public class ZipInputStream extends InflaterInputStream implements ZipConstants
+public class ZipInputStream extends InflaterInputStream
 {
   private CRC32 crc = new CRC32();
   private ZipEntry entry = null;
@@ -147,13 +147,13 @@ public class ZipInputStream extends InflaterInputStream implements ZipConstants
       closeEntry();
 
     int header = readLeInt();
-    if (header == CENSIG)
+    if (header == ZipConstants.CENSIG)
       {
 	/* Central Header reached. */
 	close();
 	return null;
       }
-    if (header != LOCSIG)
+    if (header != ZipConstants.LOCSIG)
       throw new ZipException("Wrong Local header signature: "
 			     + Integer.toHexString(header));
     /* skip version */
@@ -212,7 +212,7 @@ public class ZipInputStream extends InflaterInputStream implements ZipConstants
 
   private void readDataDescr() throws IOException
   {
-    if (readLeInt() != EXTSIG)
+    if (readLeInt() != ZipConstants.EXTSIG)
       throw new ZipException("Data descriptor signature not found");
     entry.setCrc(readLeInt() & 0xffffffffL);
     csize = readLeInt();
