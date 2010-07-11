@@ -537,11 +537,11 @@ public class Gps implements Runnable
         int deg = (int) source;
         sb.append(deg);
         sb.append("° ");
-
-        //chyba zaokrouhlovani, musime nejprve nasobit a az pak odecist :), jinak ztratime presnost na tisicine
-        double min = source * 60D - deg * 60D;
+        
+        double min = (source - deg) * 60D;
+               
         sb.append(Utils.round(min, precision));
-
+        
         return sb.toString();
     }
 

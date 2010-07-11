@@ -498,11 +498,16 @@ public class Utils
             throw new IllegalArgumentException("decimals must be great or equal to zero");
 
         if (decimals == 0) {
-            System.out.println("round out: " + (int)source);
-            return Integer.toString((int) source);
+            return Long.toString((long) source);
         }
-            
-        String val = Double.toString(source);
+        
+        int decimalLimiter = 1;
+        for(byte i=0; i<decimals;i++)
+            decimalLimiter*=10;
+        
+        double rounded = ((double)MathUtil.round(source * decimalLimiter)) / decimalLimiter;
+               
+        String val = Double.toString(rounded);
         int dot = val.indexOf('.');
         if (dot == -1) {
             StringBuffer sb = new StringBuffer(val);

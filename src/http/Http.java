@@ -10,6 +10,7 @@
  */
 package http;
 
+import com.sun.cldc.i18n.StreamReader;
 import database.Favourites;
 import database.FieldNotes;
 import database.OfflineCache;
@@ -19,6 +20,9 @@ import gps.Gps;
 import gui.Gui;
 import gui.IconLoader;
 import gui.TextArea;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,6 +32,7 @@ import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Gauge;
 import javax.microedition.lcdui.StringItem;
+import utils.LongUTFDataInputStream;
 import utils.StringTokenizer;
 import utils.Utils;
 
@@ -683,7 +688,6 @@ public class Http implements Runnable
      */
     public String connect(String url) throws InterruptedException
     {
-        InputStreamReader reader = null;
         InputStream is = null;
         connection = null;
         try
@@ -703,39 +707,37 @@ public class Http implements Runnable
             
             gui.get_siDownloadSize().setText("Stahuji data...");
             is = connection.openInputStream();
-            reader = new InputStreamReader(is, "UTF-8");
-            //Bug v Gauge u N5800 - nepouzivat Gauge
-            //gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
-            
-            //int ch;
-            //int x = 0;
-            StringBuffer sb = new StringBuffer();
-            
-            char[] charBuffer = new char[1024];
-            int len;
-            
+                                                                      
             long maxLen = connection.getLength();
             long currLen = 0;
             
             setDownloadStatus(maxLen, currLen);
             
-            while ((len = reader.read(charBuffer)) != -1)
-            {
-                setDownloadStatus(maxLen, currLen);
-                //Bug v Gauge u N5800 - nepouzivat Gauge
-                //gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
-                sb.append(charBuffer, 0, len);
-                //if (x%50==0)
-                //    gui.get_gaLoading().setValue(Gauge.INCREMENTAL_UPDATING);
-                //x++;
-                currLen+=len;
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            // predzapiseme delku, zatim prazdnou - pozdeji doplnime
+            os.write(new byte[] {0, 0, 0, 0});
+            
+            int ch;
+            while((ch = is.read()) != -1) {
+                os.write(ch);
+                currLen++;
+                if (currLen % 1024 == 0)
+                    setDownloadStatus(maxLen, currLen);
             }
-            String s = sb.toString();
-            //s = Utils.repairUTF8(s);
-            //Bug v Gauge u N5800 - nepouzivat Gauge
-            //gui.get_gaLoading().setValue(Gauge.INCREMENTAL_IDLE);
-            //vraceni vystupnich dat
-            return s;
+            
+            byte buf[] = os.toByteArray();
+            os.close();
+            os = null;
+            
+            // dozapiseme delku
+            int size = buf.length - 4;
+
+            buf[0] = (byte) ((size >>> 24) & 0xFF);
+            buf[1] = (byte) ((size >>> 16) & 0xFF);
+            buf[2] = (byte) ((size >>> 8) & 0xFF);
+            buf[3] = (byte) ((size >>> 0) & 0xFF);
+            
+            return new LongUTFDataInputStream(new ByteArrayInputStream(buf)).readLongUTF();
             
             // v nacitani nastala chyba - tohle odchyceni vyjimky spolupracuje s
             //funkci stahniData()
@@ -756,10 +758,6 @@ public class Http implements Runnable
             try
             {
                 //zavreni spojeni i v pripade vyjimky
-                if (reader != null)
-                {
-                    reader.close();
-                }
                 if (is != null)
                 {
                     is.close();
