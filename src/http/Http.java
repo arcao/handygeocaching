@@ -10,7 +10,6 @@
  */
 package http;
 
-import com.sun.cldc.i18n.StreamReader;
 import database.Favourites;
 import database.FieldNotes;
 import database.OfflineCache;
