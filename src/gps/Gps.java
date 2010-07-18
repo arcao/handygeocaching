@@ -631,17 +631,17 @@ public class Gps implements Runnable
         double R = 6378000D;
         
         double fi2 = Math.sin(latitude/ro)*Math.cos(distance/R)+Math.cos(latitude/ro)*Math.sin(distance/R)*Math.cos(azimuth/ro);
-        System.out.println("fi2="+fi2);
+        //System.out.println("fi2="+fi2);
         double lat = ro * MathUtil.asin(fi2);
-        System.out.println("lat="+lat);
+        //System.out.println("lat="+lat);
         double x = (Math.cos(distance/R)-Math.sin(latitude/ro)*Math.sin(lat/ro))/(Math.cos(latitude/ro)*Math.cos(lat/ro));
-        System.out.println("x="+x);
+        //System.out.println("x="+x);
         double y = Math.sin(distance/R)*Math.sin(azimuth/ro)/Math.cos(lat/ro);
-        System.out.println("y="+y);
+        //System.out.println("y="+y);
         double la2 = atan2(y, x); //MathUtil.atan2(y, x);
-        System.out.println("la2="+la2);
+        //System.out.println("la2="+la2);
         double lon = longtitude + la2*ro;
-        System.out.println("lon="+lon);
+        //System.out.println("lon="+lon);
               
         ret[0] = lat;
         ret[1] = lon;

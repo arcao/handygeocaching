@@ -532,6 +532,10 @@ public class Utils
         if (tokens.length != 3)
             return 0;
         
-        return Integer.parseInt(tokens[2]);
+        try {
+            return Integer.parseInt(tokens[1]);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }
