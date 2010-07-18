@@ -530,7 +530,7 @@ public class Utils
         
         String tokens[] = tokenizer.getArray(rev, " ");
         if (tokens.length != 3)
-            return -1;
+            return 0;
         
         return Integer.parseInt(tokens[2]);
     }
