@@ -395,7 +395,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                         // Insert pre-action code here
                         getDisplay().setCurrent(get_frmAbout());//GEN-LINE:MVDCAAction41
                         // Insert post-action code here
-                        siVerze.setText(getAppProperty("MIDlet-Version")+"\n");
+                        siVerze.setText(getAppProperty("MIDlet-Version")+"-"+Utils.getVersionRevision()+"\n");
                         
                         if (settings.vip)
                             siDonate.setText("Děkuji moc za Váš příspěvek na vývoj aplikace!");

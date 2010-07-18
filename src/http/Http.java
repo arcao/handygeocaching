@@ -100,8 +100,8 @@ public class Http implements Runnable
         StringBuffer sb = new StringBuffer();
         sb.append("Handy Geocaching ");
         sb.append(Gui.getInstance().getAppProperty("MIDlet-Version"));
-        sb.append(" Model:");
-        sb.append("Unknown"); //TODO model
+        sb.append("-");
+        sb.append(Utils.getVersionRevision());
         userAgent = sb.toString();
         
         return userAgent;
