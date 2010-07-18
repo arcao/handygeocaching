@@ -21,15 +21,11 @@ import gui.IconLoader;
 import gui.TextArea;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 import javax.microedition.lcdui.AlertType;
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.Gauge;
 import javax.microedition.lcdui.StringItem;
 import utils.LongUTFDataInputStream;
 import utils.StringTokenizer;
@@ -42,8 +38,6 @@ import utils.Utils;
  */
 public class Http implements Runnable
 {
-    
-    
     //adresa skriptu
     //private static final String url = "http://handygeocaching.sluzba.cz/handy31.php";
     private static final String url = "http://hgservice.arcao.com/old/handy31.php";
@@ -96,6 +90,22 @@ public class Http implements Runnable
     
     private HttpConnection connection;
     private boolean terminated = false;
+    
+    private static String userAgent = null;
+    
+    public static String getUserAgent() {
+        if (userAgent != null)
+            return userAgent;
+        
+        StringBuffer sb = new StringBuffer();
+        sb.append("Handy Geocaching ");
+        sb.append(Gui.getInstance().getAppProperty("MIDlet-Version"));
+        sb.append(" Model:");
+        sb.append("Unknown"); //TODO model
+        userAgent = sb.toString();
+        
+        return userAgent;
+    }
 
     public Http(Gui ref, Settings ref2, Favourites ref3, IconLoader ref4, Patterns ref5)
     {
@@ -697,6 +707,7 @@ public class Http implements Runnable
             
             // Nastaveni pristupove metody
             connection.setRequestMethod(HttpConnection.GET);
+            connection.setRequestProperty("User-Agent", getUserAgent());
 
             // Otevreni vstupniho proudu
             //Bug v Gauge u N5800 - nepouzivat Gauge
@@ -737,7 +748,7 @@ public class Http implements Runnable
             buf[3] = (byte) ((size >>> 0) & 0xFF);
             
             return new LongUTFDataInputStream(new ByteArrayInputStream(buf)).readLongUTF();
-            
+              
             // v nacitani nastala chyba - tohle odchyceni vyjimky spolupracuje s
             //funkci stahniData()
         }

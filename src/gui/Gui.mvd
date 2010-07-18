@@ -2605,12 +2605,12 @@
             <ContainerProperty name="commands"/>
         </DesignComponent>
         <DesignComponent id="tfProjectionAzimuth" typeid="MIDP:javax.microedition.lcdui.TextField" uid="688">
-            <Property name="label" value="STRING:Azimuth:"/>
+            <Property name="label" value="STRING:Azimuth (\u00B0):"/>
             <Property name="maxSize" value="120"/>
             <ContainerProperty name="commands"/>
         </DesignComponent>
         <DesignComponent id="tfProjectionDistance" typeid="MIDP:javax.microedition.lcdui.TextField" uid="689">
-            <Property name="label" value="STRING:Vzd\u00E1lenost:"/>
+            <Property name="label" value="STRING:Vzd\u00E1lenost (m):"/>
             <Property name="maxSize" value="120"/>
             <Property name="constraints" value="5"/>
             <ContainerProperty name="commands"/>

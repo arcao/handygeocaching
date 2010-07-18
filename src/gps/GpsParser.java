@@ -14,6 +14,7 @@ import database.Favourites;
 import database.Settings;
 import gps.compass.Compass;
 import gui.Gui;
+import http.Go4CacheClient;
 import http.Http;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -92,6 +93,7 @@ public class GpsParser implements Runnable
     private Thread thread;
     
     public Compass compass;
+    public Go4CacheClient go4cacheClient;
 
     public boolean isDgpsUsed() {
         return dgpsUsed;
@@ -180,6 +182,7 @@ public class GpsParser implements Runnable
         }
         
         createCompass();
+        createGo4CacheClient();
     }
     
     public boolean createCompass() {
@@ -190,6 +193,22 @@ public class GpsParser implements Runnable
         settings.useInternalCompass = false;
         compass = null;
         return false;
+    }
+    
+    public boolean createGo4CacheClient() {
+        if (settings.publicCoorditaesByGo4Cache) {
+            if (go4cacheClient == null) {
+                go4cacheClient = new Go4CacheClient(settings.name);
+            }
+            go4cacheClient.setUserName(settings.name);
+            return true;
+        } else {
+            if (go4cacheClient != null) {
+                go4cacheClient.stop();
+                go4cacheClient = null;
+            }
+            return false;
+        }
     }
     
     /**
@@ -622,12 +641,19 @@ public class GpsParser implements Runnable
                 nmeaGLLCount++;
                 extractData(param, 1, 2, 3, 4, 5);
                 fix = (param[6].charAt(0) == 'A');
+                if (go4cacheClient != null)
+                    go4cacheClient.setFix(fix);
+                
+                if (go4cacheClient != null && fix)
+                    go4cacheClient.setCoordinates(latitude, longitude);
             }
             else if (param[0].equals("$GPRMC"))
             {
                 nmeaRMCCount++;
                 extractData(param, 3, 4, 5, 6, 1);
                 fix = (param[2].charAt(0) == 'A');
+                if (go4cacheClient != null)
+                    go4cacheClient.setFix(fix);
                 if (fix)
                 {
                     day = Integer.parseInt(param[9].substring(0, 2));
@@ -639,6 +665,9 @@ public class GpsParser implements Runnable
                         speed = 0;
                     if (param[8].length() > 0)
                         heading = Double.parseDouble(param[8]);
+                    
+                    if (go4cacheClient != null)
+                        go4cacheClient.setCoordinates(latitude, longitude);
                 }
             }
             else if (param[0].equals("$GPGGA"))
@@ -648,6 +677,9 @@ public class GpsParser implements Runnable
                 if (param[6].equals("0"))
                 {
                     fix = false;
+                    if (go4cacheClient != null)
+                        go4cacheClient.setFix(fix);
+                
                     //Zephy 21.11.07 gpsstatus+\
                     fixSatellites = 0;
                     //Zephy 21.11.07 gpsstatus+/
@@ -660,6 +692,8 @@ public class GpsParser implements Runnable
                     fixSatellites = Integer.parseInt(param[7]);
                     if (param[9].length() > 0)
                         altitude = Double.parseDouble(param[9]);
+                    if (go4cacheClient != null)
+                        go4cacheClient.setCoordinates(latitude, longitude);
                 }
             }
             else if (param[0].equals("$GPGSA"))

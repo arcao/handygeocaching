@@ -523,4 +523,15 @@ public class Utils
             return sb.toString();
         }
     }
+    
+    public static int getVersionRevision() {
+        String rev = "$Revision$";
+        StringTokenizer tokenizer = new StringTokenizer();
+        
+        String tokens[] = tokenizer.getArray(rev, " ");
+        if (tokens.length != 3)
+            return -1;
+        
+        return Integer.parseInt(tokens[2]);
+    }
 }

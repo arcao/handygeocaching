@@ -136,8 +136,8 @@ public abstract class MathUtil {
      * and negative for clockwise angles (lower half-plane, y < 0).
      * This in turn uses ieee7854_arctan2(double).
      */
-    public static final double atan2(double b, double a) {
-        return ieee754_atan2(a, b);
+    public static final double atan2(double y, double x) {
+        return ieee754_atan2(y, x);
     }
     
         /* __ieee754_exp(x)
@@ -936,7 +936,7 @@ public abstract class MathUtil {
          * to produce the hexadecimal values shown.
          */
     
-    private static final double ieee754_atan2(double x, double y) {
+    private static final double ieee754_atan2(double y, double x) {
         double z;
         int k,m;
         int hx,hy,ix,iy;

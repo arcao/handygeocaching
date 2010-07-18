@@ -937,7 +937,14 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                         // Insert pre-action code here
                         getDisplay().setCurrent(get_frmCoordinatesProjection());//GEN-LINE:MVDCAAction678
                         // Insert post-action code here
-                        gps.start(Gps.CURRENT_POSITION_PROJECTION);
+                        if (!modeGPS) {
+                            get_tfProjectionLatitude().setString(settings.lastLattitude);
+                            get_tfProjectionLongtitude().setString(settings.lastLongitude);
+                        } else {
+                            get_tfProjectionLatitude().setString("");
+                            get_tfProjectionLongtitude().setString("");
+                            gps.start(Gps.CURRENT_POSITION_PROJECTION);
+                        }
                         if (get_tfProjectionAzimuth().getString().trim().length() == 0)
                             get_tfProjectionAzimuth().setString(Compass.formatDelination(0f));
                         break;//GEN-BEGIN:MVDCACase678
@@ -4869,7 +4876,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public TextField get_tfProjectionAzimuth() {
         if (tfProjectionAzimuth == null) {//GEN-END:MVDGetBegin688
             // Insert pre-init code here
-            tfProjectionAzimuth = new TextField("Azimuth:", null, 120, TextField.ANY);//GEN-LINE:MVDGetInit688
+            tfProjectionAzimuth = new TextField("Azimuth (\u00B0):", null, 120, TextField.ANY);//GEN-LINE:MVDGetInit688
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd688
         return tfProjectionAzimuth;
@@ -4881,7 +4888,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public TextField get_tfProjectionDistance() {
         if (tfProjectionDistance == null) {//GEN-END:MVDGetBegin689
             // Insert pre-init code here
-            tfProjectionDistance = new TextField("Vzd\u00E1lenost:", null, 120, TextField.DECIMAL);//GEN-LINE:MVDGetInit689
+            tfProjectionDistance = new TextField("Vzd\u00E1lenost (m):", null, 120, TextField.DECIMAL);//GEN-LINE:MVDGetInit689
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd689
         return tfProjectionDistance;

@@ -19,7 +19,7 @@ import java.io.UTFDataFormatException;
 
 /**
  * An easy extension of DataInputStream class for supporting readLongUTF method
- * which are using unsigned 32-bit UTF length instead of unsigned 16-bit length 
+ * which is using an unsigned 32-bit UTF length instead of unsigned 16-bit length 
  * in original readUTF method.
  * @author msloup
  */
@@ -30,7 +30,7 @@ public class LongUTFDataInputStream extends DataInputStream {
     }
     
     /**
-     * This code borrows heavily from DataInputStreat.readUTF().
+     * This code borrows heavily from DataInputStreat.readUTF() source.
      * However, it uses a 32-bit UTF length.
      *
      * @return a Unicode string.

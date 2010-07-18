@@ -55,6 +55,7 @@ public class Settings
     public boolean acceptingDialogs;
     public boolean useInternalCompass;
     public float compassDeclination; 
+    public boolean publicCoorditaesByGo4Cache;
     
     //ostatni promenne
     private RecordStore recordStore;   
@@ -111,6 +112,7 @@ public class Settings
             acceptingDialogs = false;
             useInternalCompass = false;
             compassDeclination = 2.5f;
+            publicCoorditaesByGo4Cache = false;
             
             if (recordStore.getNumRecords() == 0)
             {  //prvni start aplikace
@@ -139,6 +141,7 @@ public class Settings
                 acceptingDialogs = DI.readBoolean();
                 useInternalCompass = DI.readBoolean();
                 compassDeclination = DI.readFloat();
+                publicCoorditaesByGo4Cache = DI.readBoolean();
             }
             return true;
         }
@@ -269,6 +272,7 @@ public class Settings
             dos.writeBoolean(acceptingDialogs);
             dos.writeBoolean(useInternalCompass);
             dos.writeFloat(compassDeclination);
+            dos.writeBoolean(publicCoorditaesByGo4Cache);
             
             byte[] bytes = buffer.toByteArray();
             if (createNewRecord)

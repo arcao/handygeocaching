@@ -265,6 +265,10 @@ public class Gps implements Runnable
                         gui.get_siAverageLongitude().setText(convertDoubleToDeg(sumLon/deleno, true) +"\n");
                         gui.get_siMeasures().setText(deleno+"/100");
                         gui.get_siAdditional().setText(gpsParser.getSatelliteCount()+" sat./"+String.valueOf(gpsParser.getSpeed())+" km/h/"+String.valueOf(gpsParser.getAccuracy()));
+                        
+                        if (gpsParser.go4cacheClient != null)
+                            gpsParser.go4cacheClient.setAction("Průměruji souřadnice...");
+                
                     }
                     else if (action == NAVIGATION)
                     {
@@ -296,6 +300,9 @@ public class Gps implements Runnable
                         gui.get_cvsNavigation().dateTime = dateTime;
                         gui.get_cvsNavigation().repaint();
                         
+                        if (gpsParser.go4cacheClient != null)
+                            gpsParser.go4cacheClient.setAction("Hledám keš " + targetname + "...");
+                        
                     }
                     //Zephy 21.11.07 gpsstatus+\
                     else if (action == GPS_SIGNAL)
@@ -311,7 +318,9 @@ public class Gps implements Runnable
                         gui.get_cvsSignal().hdop = gpsParser.getHDOP();
                         gui.get_cvsSignal().vdop = gpsParser.getVDOP();
                         gui.get_cvsSignal().repaint();
-
+                        
+                        if (gpsParser.go4cacheClient != null)
+                            gpsParser.go4cacheClient.setAction("");
                     }
                     //Zephy 21.11.07 gpsstatus+/
 
@@ -322,6 +331,9 @@ public class Gps implements Runnable
                         gui.get_cvsMap().longitude = gpsParser.getLongitude();
                         gui.get_cvsMap().heading = (int)gpsParser.getHeading();
                         gui.get_cvsMap().repaint();
+                        
+                        if (gpsParser.go4cacheClient != null)
+                            gpsParser.go4cacheClient.setAction("Prohížím si mapu keší v okolí...");
                     }
                     else if (action == CURRENT_POSITION)
                     {
@@ -332,12 +344,18 @@ public class Gps implements Runnable
                         longitude = String.valueOf(gpsParser.getLongitude());
                         stop();
                         http.start(Http.NEAREST_CACHES, false);
+                        
+                        if (gpsParser.go4cacheClient != null)
+                            gpsParser.go4cacheClient.setAction("");
                     }
                     else if (action == CURRENT_POSITION_PROJECTION)
                     {
                         gui.get_tfProjectionLatitude().setString(gpsParser.getFriendlyLatitude());
                         gui.get_tfProjectionLongtitude().setString(gpsParser.getFriendlyLongitude());
                         stop();
+                        
+                        if (gpsParser.go4cacheClient != null)
+                            gpsParser.go4cacheClient.setAction("");
                     }
                     else //ziskani souradnic u oblibenych
                     {
@@ -345,6 +363,9 @@ public class Gps implements Runnable
                         gui.get_tfGivenLattitude().setString(gpsParser.getFriendlyLatitude());
                         gui.get_tfGivenLongitude().setString(gpsParser.getFriendlyLongitude());
                         stop();
+                        
+                        if (gpsParser.go4cacheClient != null)
+                            gpsParser.go4cacheClient.setAction("");
                     }
                 }
             }
@@ -610,16 +631,37 @@ public class Gps implements Runnable
         double R = 6378000D;
         
         double fi2 = Math.sin(latitude/ro)*Math.cos(distance/R)+Math.cos(latitude/ro)*Math.sin(distance/R)*Math.cos(azimuth/ro);
+        System.out.println("fi2="+fi2);
         double lat = ro * MathUtil.asin(fi2);
+        System.out.println("lat="+lat);
         double x = (Math.cos(distance/R)-Math.sin(latitude/ro)*Math.sin(lat/ro))/(Math.cos(latitude/ro)*Math.cos(lat/ro));
+        System.out.println("x="+x);
         double y = Math.sin(distance/R)*Math.sin(azimuth/ro)/Math.cos(lat/ro);
-        double la2 = MathUtil.atan2(y, x);
+        System.out.println("y="+y);
+        double la2 = atan2(y, x); //MathUtil.atan2(y, x);
+        System.out.println("la2="+la2);
         double lon = longtitude + la2*ro;
+        System.out.println("lon="+lon);
               
         ret[0] = lat;
         ret[1] = lon;
         return ret;
     }
     
+    /**
+     * Vraci uhel bodu v radianech proti ose x
+     * Implementace dle wikipedie s osetrenim y=0. MathUtil.atan2 
+     * vraci divne vysledky pro urcite hodnoty.
+     *
+     * @param y souradnice bodu na ose y
+     * @param x souradnice bodu na ose x
+     * @return uhel bodu v radianech proti ose x
+     */
+    private static double atan2(double y, double x) {
+        if (y == 0)
+            return (x>=0) ? 0 : Math.PI;
+        
+        return 2*MathUtil.atan((Math.sqrt(x*x+y*y)-x)/y);
+    }
     
 }
