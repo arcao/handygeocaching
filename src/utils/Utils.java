@@ -531,7 +531,6 @@ public class Utils
         String tokens[] = tokenizer.getArray(rev, " ");
         if (tokens.length != 3)
             return 0;
-        
         try {
             return Integer.parseInt(tokens[1]);
         } catch (Exception e) {
