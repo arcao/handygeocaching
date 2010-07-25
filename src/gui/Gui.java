@@ -340,8 +340,6 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private StringItem siDownloadSize;
     private Command cmdSelectAll;
     private Form frmSettingsGo4Cache;
-    private Command okCommand1;
-    private Command okCommand2;
     private ChoiceGroup cgShareCoordinatesOnGo4Cache;
     private StringItem siGo4CacheAbout;//GEN-END:MVDFields
     private Navigation cvsNavigation;
@@ -4960,31 +4958,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd697
         return frmSettingsGo4Cache;
     }//GEN-END:MVDGetEnd697
-
-    /** This method returns instance for okCommand1 component and should be called instead of accessing okCommand1 field directly.//GEN-BEGIN:MVDGetBegin700
-     * @return Instance for okCommand1 component
-     */
-    public Command get_okCommand1() {
-        if (okCommand1 == null) {//GEN-END:MVDGetBegin700
-            // Insert pre-init code here
-            okCommand1 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit700
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd700
-        return okCommand1;
-    }//GEN-END:MVDGetEnd700
-
-    /** This method returns instance for okCommand2 component and should be called instead of accessing okCommand2 field directly.//GEN-BEGIN:MVDGetBegin702
-     * @return Instance for okCommand2 component
-     */
-    public Command get_okCommand2() {
-        if (okCommand2 == null) {//GEN-END:MVDGetBegin702
-            // Insert pre-init code here
-            okCommand2 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit702
-            // Insert post-init code here
-        }//GEN-BEGIN:MVDGetEnd702
-        return okCommand2;
-    }//GEN-END:MVDGetEnd702
-
+  
     /** This method returns instance for cgShareCoordinatesOnGo4Cache component and should be called instead of accessing cgShareCoordinatesOnGo4Cache field directly.//GEN-BEGIN:MVDGetBegin704
      * @return Instance for cgShareCoordinatesOnGo4Cache component
      */
@@ -5151,7 +5125,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     }
     
     public void changeCmdInfoLabel(String label) {
-        cmdInfo = new Command("Listing("+label+"kB)", Command.SCREEN, 3);
+        cmdListing = new Command("Listing("+label+"kB)", Command.SCREEN, 3);
     }
     
     public void searchBluetooth() {

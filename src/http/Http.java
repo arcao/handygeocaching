@@ -384,9 +384,9 @@ public class Http implements Runnable
                             gui.get_siInventory().setText(gui.get_siInventory().getText()+"\n"+"Tato keš umožňuje stažení vzorečků do MultiSolveru!");
                         }    
                         //nastaveni kB podrobnosti
-                        gui.get_frmOverview().removeCommand(gui.get_cmdInfo());
+                        gui.get_frmOverview().removeCommand(gui.get_cmdListing());
                         gui.changeCmdInfoLabel(listing[0][14]);
-                        gui.get_frmOverview().addCommand(gui.get_cmdInfo());
+                        gui.get_frmOverview().addCommand(gui.get_cmdListing());
                         //je mozne obnovit listing?
                         gui.get_frmOverview().removeCommand(gui.get_cmdRefresh());
                         if (offline)

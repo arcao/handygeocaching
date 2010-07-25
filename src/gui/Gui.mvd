@@ -2660,21 +2660,11 @@
             <Property name="targetForwardDisplayable"/>
             <Property name="actionHolder" value="Midp2ListElementDC31"/>
         </DesignComponent>
-        <DesignComponent id="okCommand1" typeid="MIDP:javax.microedition.lcdui.Command" uid="700">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
-        </DesignComponent>
         <DesignComponent id="$CommandAction111" typeid="MIDP:CommandAction" uid="701">
             <Property name="targetDisplayable" value="lstSettings"/>
             <Property name="targetForwardDisplayable"/>
             <Property name="actionSource" value="cmdBack"/>
             <Property name="actionOrigin" value="frmSettingsGo4Cache"/>
-        </DesignComponent>
-        <DesignComponent id="okCommand2" typeid="MIDP:javax.microedition.lcdui.Command" uid="702">
-            <Property name="label" value="STRING:Ok"/>
-            <Property name="priority" value="1"/>
-            <Property name="type" value="OK"/>
         </DesignComponent>
         <DesignComponent id="$CommandAction112" typeid="MIDP:CommandAction" uid="703">
             <Property name="targetDisplayable" value="lstSettings"/>
@@ -2746,11 +2736,11 @@
         <Node id="frmFieldNote" location="408,312" order="$CommandAction97,$CommandAction98,,,,,,,,,$Default,,,,,"/>
         <Node id="frmMemoryInfo" location="2136,1240" order="$CommandAction107,,,,,,,,,,$Default,,,,,"/>
         <Node id="ssAdvertisment" location="432,1120" order="$InternalCommandAction2,,,,,,,,,,$Default,,,,,"/>
+        <Node id="lstSettings" location="872,872" order="$SelectCaseCommandAction27,$CommandAction12,$SelectCaseCommandAction28,$SelectCaseCommandAction29,$SelectCaseCommandAction17,$SelectCaseCommandAction31,,,,,$Default,,,,,"/>
         <Node id="frmSettingsGPS" location="720,776" order="$CommandAction13,$CommandAction24,,,,,,,,,$Default,,,,,"/>
         <Node id="frmSettingsFieldNotes" location="648,504" order="$CommandAction10,$CommandAction25,,,,,,,,,$Default,,,,,"/>
         <Node id="frmSettingsCompass" location="656,616" order="$CommandAction38,$CommandAction41,,,,,,,,,$Default,,,,,"/>
         <Node id="frmCoordinatesProjection" location="1456,1824" order="$CommandAction59,$CommandAction81,,,,,,,,,$Default,,,,,"/>
-        <Node id="lstSettings" location="872,872" order="$SelectCaseCommandAction27,$CommandAction12,$SelectCaseCommandAction28,$SelectCaseCommandAction29,$SelectCaseCommandAction17,$SelectCaseCommandAction31,,,,,$Default,,,,,"/>
         <Node id="frmSettingsGo4Cache" location="856,408" order="$CommandAction111,$CommandAction112,,,,,,,,,$Default,,,,,"/>
         <Link id="$StartPoint$ActionLink" path="200,1160,282,1160,282,1096,392,1096"/>
         <Link id="$CommandAction2$ActionLink" path="2152,200,2305,200,2305,672,47,672,47,1160,120,1160"/>
@@ -2824,16 +2814,16 @@
         <Link id="$SelectCaseCommandAction29$ActionLink" path="912,816,1011,816,1011,657,447,657,447,480,608,480"/>
         <Link id="$CommandAction13$ActionLink" path="760,768,811,768,811,848,832,848"/>
         <Link id="$CommandAction24$ActionLink" path="760,752,811,752,811,848,832,848"/>
+        <Link id="$CommandAction10$ActionLink" path="688,496,754,496,754,634,811,634,811,848,832,848"/>
         <Link id="$CommandAction25$ActionLink" path="688,480,754,480,754,634,811,634,811,848,832,848"/>
+        <Link id="$SelectCaseCommandAction17$ActionLink" path="896,800,896,664,509,664,509,592,616,592"/>
         <Link id="$CommandAction38$ActionLink" path="696,608,759,608,759,629,811,629,811,848,832,848"/>
         <Link id="$CommandAction41$ActionLink" path="696,592,754,592,754,634,811,634,811,848,832,848"/>
         <Link id="$SelectCaseCommandAction30$ActionLink" path="1176,1752,1176,1663,1352,1800,1416,1800"/>
         <Link id="$CommandAction59$ActionLink" path="1496,1816,1592,1816,1592,1861,1141,1861,1141,1800,1160,1800"/>
         <Link id="$SelectCaseCommandAction31$ActionLink" path="880,800,880,683,534,683,534,384,816,384"/>
         <Link id="$CommandAction111$ActionLink" path="896,400,959,400,959,634,811,634,811,848,832,848"/>
-        <Link id="$CommandAction10$ActionLink" path="688,496,754,496,754,634,811,634,811,848,832,848"/>
         <Link id="$CommandAction112$ActionLink" path="896,384,959,384,959,634,811,634,811,848,832,848"/>
-        <Link id="$SelectCaseCommandAction17$ActionLink" path="896,800,896,664,509,664,509,592,616,592"/>
     </FlowDocument>
     <ScreenDesigner version="1.0">
         <CustomScreenSize height="128" width="128"/>
