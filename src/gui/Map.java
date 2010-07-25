@@ -223,7 +223,7 @@ public class Map extends Canvas implements Runnable
                     int text_x_end = screenWidthHalf+item_x+iconSizeHalf+2+zoomed_x+fnt.stringWidth(mapItem.name);
                     
                     if (img_x + iconSize >= 0 && img_x <= screenWidth && img_y + iconSize >= 0 && img_y <= screenHeight) {
-                        g.drawImage(iconLoader.loadIcon(mapItem.icon),img_x,img_y,Graphics.TOP|Graphics.LEFT);
+                        g.drawImage(iconLoader.loadCacheIcon(mapItem.icon),img_x,img_y,Graphics.TOP|Graphics.LEFT);
                         g.drawString(mapItem.name,screenWidthHalf+item_x+iconSizeHalf+2+zoomed_x,screenHeightHalf+item_y-iconSizeHalf+zoomed_y,Graphics.TOP|Graphics.LEFT);
                     } else if (text_x_end >= 0 && img_x <= screenWidth) {
                         g.drawString(mapItem.name,screenWidthHalf+item_x+iconSizeHalf+2+zoomed_x,screenHeightHalf+item_y-iconSizeHalf+zoomed_y,Graphics.TOP|Graphics.LEFT);

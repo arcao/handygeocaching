@@ -11,6 +11,7 @@
 package utils;
 
 import database.Favourites;
+import gps.Gps;
 import gui.Gui;
 import http.Http;
 import java.io.IOException;
@@ -194,8 +195,8 @@ public class GPXImport extends Form implements CommandListener {
                     //    System.out.println("{"+parser.getAttributeNamespace(i)+"}"+parser.getAttributeName(i)+"="+parser.getAttributeValue(i));
                     //}
                     
-                    parts[0][4] = getFriendlyLatLon(parser.getAttributeValue(null, "lat"), true); //latitude
-                    parts[0][5] = getFriendlyLatLon(parser.getAttributeValue(null, "lon"), false); //longitude
+                    parts[0][4] = Gps.formatDeg(parser.getAttributeValue(null, "lat"), false); //latitude
+                    parts[0][5] = Gps.formatDeg(parser.getAttributeValue(null, "lon"), true); //longitude
                     
                     while ((parser.getEventType() != XmlPullParser.END_TAG) || (parser.getName().equals(tagName) == false)) {
                         parser.next();
@@ -230,10 +231,10 @@ public class GPXImport extends Form implements CommandListener {
                                     parts[0][9] = ""; // disabled/archived
                                     String available = parser.getAttributeValue(null, "available");
                                     String archived = parser.getAttributeValue(null, "archived");
-                                    if (available != null && available.toLowerCase().equals("false")) {
+                                    if (available != null && available.equalsIgnoreCase("false")) {
                                         parts[0][9] = "disabled";
                                     }
-                                    if (archived != null && archived.toLowerCase().equals("false")) {
+                                    if (archived != null && archived.equalsIgnoreCase("true")) {
                                         parts[0][9] = "archived";
                                     }
                                 } else if (parser.getName().equals("name")) {
@@ -374,7 +375,7 @@ public class GPXImport extends Form implements CommandListener {
             return "gc_unknown";
         } else if (name.startsWith("earth")) {
             return "gc_earthcache";
-        } else if (name.startsWith("event")) {
+        } else if (name.startsWith("event") || name.startsWith("mega-event")) {
             return "gc_event";
         } else if (name.startsWith("cito")) {
             return "gc_cito";
@@ -386,9 +387,10 @@ public class GPXImport extends Form implements CommandListener {
             return "gc_vistual";
         } else if (name.startsWith("locationless")) {
             return "gc_locationless";
+        } else if (name.startsWith("wherigo")) {
+            return "gc_wherigo";
         }
         
-        //TODO Detekce wherigo
         return "gc_unknown";
     }
     

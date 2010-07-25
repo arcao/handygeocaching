@@ -55,16 +55,16 @@ public class IconLoader extends Canvas
     public Image loadIcon(String name) {
         return loadIcon(name, true);
     }
-    
+
     public Image loadIcon(String name, boolean sizable)
     {
         Image img = null;
         try
         {
             if (sizable) {
-                img = ImageCache.get("/icons"+iconSize+"/"+name+".png");
+                img = ImageCache.get("/icons"+iconSize+"/"+name+".png", null);
             } else {
-                img = ImageCache.get("/images/"+name+".png");
+                img = ImageCache.get("/images/"+name+".png", null);
             }
         }
         catch (Exception e)
@@ -73,4 +73,19 @@ public class IconLoader extends Canvas
         }
         return img;
     }
+    
+    public Image loadCacheIcon(String name)
+    {
+        Image img = null;
+        try
+        {
+            img = ImageCache.get("/icons"+iconSize+"/"+name+".png", "/icons"+iconSize+"/gc_unknown.png");
+        }
+        catch (Exception e)
+        {
+            gui.showError("loadIcon",e.toString(),this.getWidth()+"x"+this.getWidth());
+        }
+        return img;
+    }
+    
 }

@@ -55,7 +55,7 @@ public class Settings
     public boolean acceptingDialogs;
     public boolean useInternalCompass;
     public float compassDeclination; 
-    public boolean publicCoorditaesByGo4Cache;
+    public boolean shareCoordinatesOnGo4Cache;
     
     //ostatni promenne
     private RecordStore recordStore;   
@@ -112,7 +112,7 @@ public class Settings
             acceptingDialogs = false;
             useInternalCompass = false;
             compassDeclination = 2.5f;
-            publicCoorditaesByGo4Cache = false;
+            shareCoordinatesOnGo4Cache = false;
             
             if (recordStore.getNumRecords() == 0)
             {  //prvni start aplikace
@@ -141,7 +141,7 @@ public class Settings
                 acceptingDialogs = DI.readBoolean();
                 useInternalCompass = DI.readBoolean();
                 compassDeclination = DI.readFloat();
-                publicCoorditaesByGo4Cache = DI.readBoolean();
+                shareCoordinatesOnGo4Cache = DI.readBoolean();
             }
             return true;
         }
@@ -187,6 +187,7 @@ public class Settings
             
             gui.get_cgUseInternalCompass().setSelectedIndex((useInternalCompass) ? 0 : 1, true);
             gui.get_tfCompassDeclination().setString(Compass.formatDelination(compassDeclination));
+            gui.get_cgShareCoordinatesOnGo4Cache().setSelectedIndex((shareCoordinatesOnGo4Cache) ? 0 : 1, true);
         }
         catch (Exception e)
         {
@@ -227,6 +228,7 @@ public class Settings
             acceptingDialogs = (gui.get_cgAcceptingDialogs().getSelectedIndex() == 0);
             useInternalCompass = (gui.get_cgUseInternalCompass().getSelectedIndex() == 0);
             compassDeclination = Compass.parseDecliantion(gui.get_tfCompassDeclination().getString());
+            shareCoordinatesOnGo4Cache = (gui.get_cgShareCoordinatesOnGo4Cache().getSelectedIndex() == 0);
             
             gui.get_lstFieldNotes().setFitPolicy((wrappedFieldNotesList)? Choice.TEXT_WRAP_ON : Choice.TEXT_WRAP_OFF);
             boolean success = Compass.isSupported();
@@ -236,6 +238,7 @@ public class Settings
             }
             if (gui.gpsParser != null) {
                 gui.gpsParser.createCompass();
+                gui.gpsParser.createGo4CacheClient();
             }
             
             store(false);
@@ -272,7 +275,7 @@ public class Settings
             dos.writeBoolean(acceptingDialogs);
             dos.writeBoolean(useInternalCompass);
             dos.writeFloat(compassDeclination);
-            dos.writeBoolean(publicCoorditaesByGo4Cache);
+            dos.writeBoolean(shareCoordinatesOnGo4Cache);
             
             byte[] bytes = buffer.toByteArray();
             if (createNewRecord)

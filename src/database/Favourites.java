@@ -117,7 +117,11 @@ public class Favourites extends Database
             //prima navigace
             if (!view)
             {
-                gps.setNavigationTarget(lattitude, longitude, name);
+                String geoid = name;
+                if (isCache(type)) {
+                    geoid = getGeoIdFromCacheParts(description);
+                }
+                gps.setNavigationTarget(lattitude, longitude, name, geoid);
             }
             //zobrazeni
             else
@@ -206,7 +210,6 @@ public class Favourites extends Database
             String[][] data = gui.http.parseData(description);
                         
             gui.platformRequest("http://www.geocaching.com/seek/cache_details.aspx?wp="+data[0][7]);
-            viewAll();
         }
         catch (Exception e)
         {
@@ -574,7 +577,7 @@ public class Favourites extends Database
                             DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(rc.nextRecordId())));
                             String name = dis.readUTF();
                             String type = dis.readUTF();
-                            gui.get_lstFavourites().append(name,iconLoader.loadIcon(type));
+                            gui.get_lstFavourites().append(name,iconLoader.loadCacheIcon(type));
                         }
                     } catch (Exception e) {}
                     lForm.setFinish();
@@ -607,6 +610,14 @@ public class Favourites extends Database
             return new String[0];
         }
     }
+    
+    public String getGeoIdFromCacheParts(String description) {
+        String[][] data = gui.http.parseData(description);
+        if (data.length == 0 || data[0].length < 8)
+            return null;
+        return data[0][7];
+    }
+    
     public String[] getCachePartsID(int id) {
         try {
             DataInputStream dis = new DataInputStream(new ByteArrayInputStream(recordStore.getRecord(id)));

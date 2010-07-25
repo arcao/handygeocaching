@@ -20,8 +20,8 @@ import javax.microedition.lcdui.ImageItem;
  */
 public class ImageCache {
     private static Vector cache = null;
-    
-    public static Image get(final String fileName) {
+        
+    public static Image get(final String fileName, final String defaultFileName) {
         if (cache == null)
             cache = new Vector();
         
@@ -34,7 +34,19 @@ public class ImageCache {
         
         //nenalezeno
         try {
-            ImageCacheItem newItem = new ImageCacheItem(fileName, Image.createImage(fileName));
+            Image image = null;
+            try {
+                image = Image.createImage(fileName);
+            } catch (Exception e) {
+                //pokud se nepovedlo nacist, pokusime se nacist defaultFilename
+                if (defaultFileName != null) {
+                    image = Image.createImage(defaultFileName);
+                } else {
+                    throw e;
+                }
+            }
+                            
+            ImageCacheItem newItem = new ImageCacheItem(fileName, image);
             cache.addElement(newItem);
 
             return newItem.getImage();
@@ -45,6 +57,6 @@ public class ImageCache {
     }
     
     public static Image createImage(String fileName) {
-        return get(fileName);
+        return get(fileName, null);
     }
 }

@@ -159,7 +159,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private StringItem siDifficulty;
     private StringItem siInventory;
     private Command cmdHint;
-    private Command cmdInfo;
+    private Command cmdListing;
     private Command cmdLogs;
     private Command cmdWaypoints;
     private Form frmWaypoints;
@@ -338,7 +338,12 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private TextField tfProjectionAzimuth;
     private TextField tfProjectionDistance;
     private StringItem siDownloadSize;
-    private Command cmdSelectAll;//GEN-END:MVDFields
+    private Command cmdSelectAll;
+    private Form frmSettingsGo4Cache;
+    private Command okCommand1;
+    private Command okCommand2;
+    private ChoiceGroup cgShareCoordinatesOnGo4Cache;
+    private StringItem siGo4CacheAbout;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -395,7 +400,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                         // Insert pre-action code here
                         getDisplay().setCurrent(get_frmAbout());//GEN-LINE:MVDCAAction41
                         // Insert post-action code here
-                        siVerze.setText(getAppProperty("MIDlet-Version")/*+"-"+Utils.getVersionRevision()*/+"\n");
+                        siVerze.setText(Utils.getVersion());
                         
                         if (settings.vip)
                             siDonate.setText("Děkuji moc za Váš příspěvek na vývoj aplikace!");
@@ -563,7 +568,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                     } else {
                         settings.saveCoordinates(get_tfLattitude().getString(), get_tfLongitude().getString());
                         getDisplay().setCurrent(get_cvsNavigation());
-                        gps.setNavigationTarget(get_tfLattitude().getString(), get_tfLongitude().getString(),"Zadaný bod");
+                        gps.setNavigationTarget(get_tfLattitude().getString(), get_tfLongitude().getString(),"Zadaný bod", "");
                         gps.start(Gps.NAVIGATION);
                         gps.setPreviousScreen(frmCoordinates);
                     }
@@ -638,7 +643,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert post-action code here
                 http.waypointCacheName = get_siName().getText();
                 http.start(Http.WAYPOINTS, false);
-            } else if (command == cmdInfo) {//GEN-LINE:MVDCACase109
+            } else if (command == cmdListing) {//GEN-LINE:MVDCACase109
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction105
                 // Insert post-action code here
@@ -661,7 +666,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 if (modeGPS) {
                     // Do nothing//GEN-LINE:MVDCAAction168
                     getDisplay().setCurrent(get_cvsNavigation());
-                    gps.setNavigationTarget(get_siOverviewLattitude().getText(), get_siOverviewLongitude().getText(), get_siName().getText());
+                    gps.setNavigationTarget(get_siOverviewLattitude().getText(), get_siOverviewLongitude().getText(), get_siName().getText(), get_siWaypoint().getText());
                     gps.start(Gps.NAVIGATION);
                     gps.setPreviousScreen(frmOverview);
                 } else {
@@ -1144,7 +1149,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                     navigateToFavourite = true;
                     navigateToPoint = false;
                     getDisplay().setCurrent(get_cvsNavigation());
-                    gps.setNavigationTarget(get_siFavouriteLattitude().getText(), get_siFavouriteLongitude().getText(), get_frmFavourite().getTitle());
+                    gps.setNavigationTarget(get_siFavouriteLattitude().getText(), get_siFavouriteLongitude().getText(), get_frmFavourite().getTitle(), get_frmFavourite().getTitle());
                     gps.start(Gps.NAVIGATION);
                     gps.setPreviousScreen(frmFavourite);
                 } else {
@@ -1572,8 +1577,14 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                         getDisplay().setCurrent(get_frmSettingsCompass());//GEN-LINE:MVDCAAction668
                         // Insert post-action code here
                         break;//GEN-BEGIN:MVDCACase668
+                    case 4://GEN-END:MVDCACase668
+                        // Insert pre-action code here
+                        settings.set();
+                        getDisplay().setCurrent(get_frmSettingsGo4Cache());//GEN-LINE:MVDCAAction699
+                        // Insert post-action code here
+                        break;//GEN-BEGIN:MVDCACase699
                 }
-            } else if (command == cmdBack) {//GEN-END:MVDCACase668
+            } else if (command == cmdBack) {//GEN-END:MVDCACase699
                 // Insert pre-action code here
                 getDisplay().setCurrent(get_lstMenu());//GEN-LINE:MVDCAAction637
                 // Insert post-action code here
@@ -1647,7 +1658,18 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 // Do nothing//GEN-LINE:MVDCAAction684
                 // Insert post-action code here
             }//GEN-BEGIN:MVDCACase684
-        }//GEN-END:MVDCACase684
+        } else if (displayable == frmSettingsGo4Cache) {
+            if (command == cmdBack) {//GEN-END:MVDCACase684
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstSettings());//GEN-LINE:MVDCAAction701
+                // Insert post-action code here
+            } else if (command == cmdSave) {//GEN-LINE:MVDCACase701
+                // Insert pre-action code here
+                getDisplay().setCurrent(get_lstSettings());//GEN-LINE:MVDCAAction703
+                // Insert post-action code here
+                settings.save();
+            }//GEN-BEGIN:MVDCACase703
+        }//GEN-END:MVDCACase703
 // Insert global post-action code here
         
         if (displayable == openFileBrowser && openFileBrowser != null) {
@@ -2102,11 +2124,11 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 get_siPoznamkaOver()
             });
             frmOverview.addCommand(get_cmdBack());
+            frmOverview.addCommand(get_cmdNavigate());
             frmOverview.addCommand(get_cmdHint());
-            frmOverview.addCommand(get_cmdInfo());
+            frmOverview.addCommand(get_cmdListing());
             frmOverview.addCommand(get_cmdLogs());
             frmOverview.addCommand(get_cmdWaypoints());
-            frmOverview.addCommand(get_cmdNavigate());
             frmOverview.addCommand(get_cmdNext());
             frmOverview.addCommand(get_cmdFavourite());
             frmOverview.addCommand(get_cmdDownloadPatterns());
@@ -2216,16 +2238,16 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         return cmdHint;
     }//GEN-END:MVDGetEnd102
     
-    /** This method returns instance for cmdInfo component and should be called instead of accessing cmdInfo field directly.//GEN-BEGIN:MVDGetBegin104
-     * @return Instance for cmdInfo component
+    /** This method returns instance for cmdListing component and should be called instead of accessing cmdListing field directly.//GEN-BEGIN:MVDGetBegin104
+     * @return Instance for cmdListing component
      */
-    public Command get_cmdInfo() {
-        if (cmdInfo == null) {//GEN-END:MVDGetBegin104
+    public Command get_cmdListing() {
+        if (cmdListing == null) {//GEN-END:MVDGetBegin104
             // Insert pre-init code here
-            cmdInfo = new Command("Podrobnosti", Command.SCREEN, 3);//GEN-LINE:MVDGetInit104
+            cmdListing = new Command("Listing", Command.SCREEN, 3);//GEN-LINE:MVDGetInit104
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd104
-        return cmdInfo;
+        return cmdListing;
     }//GEN-END:MVDGetEnd104
     
     /** This method returns instance for cmdLogs component and should be called instead of accessing cmdLogs field directly.//GEN-BEGIN:MVDGetBegin106
@@ -2923,8 +2945,8 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
             // Insert pre-init code here
             lstFavourites = new List("Obl\u00EDben\u00E9", Choice.MULTIPLE, new String[0], new Image[0]);//GEN-BEGIN:MVDGetInit251
             lstFavourites.addCommand(get_cmdBack());
-            lstFavourites.addCommand(get_cmdSelect());
             lstFavourites.addCommand(get_cmdNavigate());
+            lstFavourites.addCommand(get_cmdSelect());
             lstFavourites.addCommand(get_cmdSelectAll());
             lstFavourites.addCommand(get_cmdAddActual());
             lstFavourites.addCommand(get_cmdAddGiven());
@@ -3072,7 +3094,7 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
     public Command get_cmdDelete() {
         if (cmdDelete == null) {//GEN-END:MVDGetBegin271
             // Insert pre-init code here
-            cmdDelete = new Command("Smazat", Command.SCREEN, 6);//GEN-LINE:MVDGetInit271
+            cmdDelete = new Command("Smazat", Command.SCREEN, 7);//GEN-LINE:MVDGetInit271
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd271
         return cmdDelete;
@@ -3169,7 +3191,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public Command get_cmdEdit() {
         if (cmdEdit == null) {//GEN-END:MVDGetBegin284
             // Insert pre-init code here
-            cmdEdit = new Command("Upravit", Command.SCREEN, 7);//GEN-LINE:MVDGetInit284
+            cmdEdit = new Command("Upravit", Command.SCREEN, 6);//GEN-LINE:MVDGetInit284
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd284
         return cmdEdit;
@@ -3829,7 +3851,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public Command get_cmdMultiSolver() {
         if (cmdMultiSolver == null) {//GEN-END:MVDGetBegin407
             // Insert pre-init code here
-            cmdMultiSolver = new Command("MultiSolver", Command.SCREEN, 9);//GEN-LINE:MVDGetInit407
+            cmdMultiSolver = new Command("MultiSolver", Command.SCREEN, 12);//GEN-LINE:MVDGetInit407
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd407
         return cmdMultiSolver;
@@ -3896,7 +3918,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public Command get_cmdMap() {
         if (cmdMap == null) {//GEN-END:MVDGetBegin419
             // Insert pre-init code here
-            cmdMap = new Command("Mapa", Command.SCREEN, 2);//GEN-LINE:MVDGetInit419
+            cmdMap = new Command("Mapa", Command.SCREEN, 9);//GEN-LINE:MVDGetInit419
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd419
         return cmdMap;
@@ -3957,7 +3979,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public Command get_cmdMapyCz() {
         if (cmdMapyCz == null) {//GEN-END:MVDGetBegin452
             // Insert pre-init code here
-            cmdMapyCz = new Command("Mapy.cz", Command.SCREEN, 3);//GEN-LINE:MVDGetInit452
+            cmdMapyCz = new Command("Mapy.cz", Command.SCREEN, 10);//GEN-LINE:MVDGetInit452
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd452
         return cmdMapyCz;
@@ -4179,7 +4201,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public Command get_cmdAddFieldNotes() {
         if (cmdAddFieldNotes == null) {//GEN-END:MVDGetBegin506
             // Insert pre-init code here
-            cmdAddFieldNotes = new Command("+Field note", Command.SCREEN, 10);//GEN-LINE:MVDGetInit506
+            cmdAddFieldNotes = new Command("+Field note", Command.SCREEN, 13);//GEN-LINE:MVDGetInit506
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd506
         return cmdAddFieldNotes;
@@ -4218,7 +4240,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public Command get_cmdPoznamka() {
         if (cmdPoznamka == null) {//GEN-END:MVDGetBegin520
             // Insert pre-init code here
-            cmdPoznamka = new Command("Pozn\u00E1mka", Command.SCREEN, 10);//GEN-LINE:MVDGetInit520
+            cmdPoznamka = new Command("Pozn\u00E1mka", Command.SCREEN, 15);//GEN-LINE:MVDGetInit520
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd520
         return cmdPoznamka;
@@ -4281,10 +4303,10 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
             lstFieldNotes = new List("Field notes", Choice.MULTIPLE, new String[0], new Image[0]);//GEN-BEGIN:MVDGetInit542
             lstFieldNotes.addCommand(get_cmdBack());
             lstFieldNotes.addCommand(get_cmdAdd());
+            lstFieldNotes.addCommand(get_cmdSelectAll());
             lstFieldNotes.addCommand(get_cmdEdit());
             lstFieldNotes.addCommand(get_cmdDelete());
             lstFieldNotes.addCommand(get_cmdDeleteAll());
-            lstFieldNotes.addCommand(get_cmdSelectAll());
             lstFieldNotes.addCommand(get_cmdPostFieldNotes());
             lstFieldNotes.setCommandListener(this);
             lstFieldNotes.setSelectedFlags(new boolean[0]);
@@ -4444,7 +4466,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public Command get_cmdImportGPX() {
         if (cmdImportGPX == null) {//GEN-END:MVDGetBegin586
             // Insert pre-init code here
-            cmdImportGPX = new Command("Importovat...", Command.SCREEN, 11);//GEN-LINE:MVDGetInit586
+            cmdImportGPX = new Command("Importovat...", Command.SCREEN, 14);//GEN-LINE:MVDGetInit586
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd586
         return cmdImportGPX;
@@ -4589,7 +4611,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public Command get_cmdShowCacheInBrowser() {
         if (cmdShowCacheInBrowser == null) {//GEN-END:MVDGetBegin627
             // Insert pre-init code here
-            cmdShowCacheInBrowser = new Command("Geocaching.com", Command.SCREEN, 3);//GEN-LINE:MVDGetInit627
+            cmdShowCacheInBrowser = new Command("Geocaching.com", Command.SCREEN, 11);//GEN-LINE:MVDGetInit627
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd627
         return cmdShowCacheInBrowser;
@@ -4617,8 +4639,10 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
                 "Obecn\u00E9",
                 "GPS",
                 "Field Notes",
-                "Kompas"
+                "Kompas",
+                "Go4Cache.com"
             }, new Image[] {
+                null,
                 null,
                 null,
                 null,
@@ -4628,6 +4652,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
             lstSettings.setCommandListener(this);
             lstSettings.setSelectedFlags(new boolean[] {
                 true,
+                false,
                 false,
                 false,
                 false
@@ -4912,11 +4937,87 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public Command get_cmdSelectAll() {
         if (cmdSelectAll == null) {//GEN-END:MVDGetBegin691
             // Insert pre-init code here
-            cmdSelectAll = new Command("O(d)zna\u010Dit v\u0161e", Command.SCREEN, 2);//GEN-LINE:MVDGetInit691
+            cmdSelectAll = new Command("O(d)zna\u010Dit v\u0161e", Command.SCREEN, 3);//GEN-LINE:MVDGetInit691
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd691
         return cmdSelectAll;
     }//GEN-END:MVDGetEnd691
+
+    /** This method returns instance for frmSettingsGo4Cache component and should be called instead of accessing frmSettingsGo4Cache field directly.//GEN-BEGIN:MVDGetBegin697
+     * @return Instance for frmSettingsGo4Cache component
+     */
+    public Form get_frmSettingsGo4Cache() {
+        if (frmSettingsGo4Cache == null) {//GEN-END:MVDGetBegin697
+            // Insert pre-init code here
+            frmSettingsGo4Cache = new Form("Slu\u017Eba Go4Cache.com", new Item[] {//GEN-BEGIN:MVDGetInit697
+                get_cgShareCoordinatesOnGo4Cache(),
+                get_siGo4CacheAbout()
+            });
+            frmSettingsGo4Cache.addCommand(get_cmdBack());
+            frmSettingsGo4Cache.addCommand(get_cmdSave());
+            frmSettingsGo4Cache.setCommandListener(this);//GEN-END:MVDGetInit697
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd697
+        return frmSettingsGo4Cache;
+    }//GEN-END:MVDGetEnd697
+
+    /** This method returns instance for okCommand1 component and should be called instead of accessing okCommand1 field directly.//GEN-BEGIN:MVDGetBegin700
+     * @return Instance for okCommand1 component
+     */
+    public Command get_okCommand1() {
+        if (okCommand1 == null) {//GEN-END:MVDGetBegin700
+            // Insert pre-init code here
+            okCommand1 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit700
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd700
+        return okCommand1;
+    }//GEN-END:MVDGetEnd700
+
+    /** This method returns instance for okCommand2 component and should be called instead of accessing okCommand2 field directly.//GEN-BEGIN:MVDGetBegin702
+     * @return Instance for okCommand2 component
+     */
+    public Command get_okCommand2() {
+        if (okCommand2 == null) {//GEN-END:MVDGetBegin702
+            // Insert pre-init code here
+            okCommand2 = new Command("Ok", Command.OK, 1);//GEN-LINE:MVDGetInit702
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd702
+        return okCommand2;
+    }//GEN-END:MVDGetEnd702
+
+    /** This method returns instance for cgShareCoordinatesOnGo4Cache component and should be called instead of accessing cgShareCoordinatesOnGo4Cache field directly.//GEN-BEGIN:MVDGetBegin704
+     * @return Instance for cgShareCoordinatesOnGo4Cache component
+     */
+    public ChoiceGroup get_cgShareCoordinatesOnGo4Cache() {
+        if (cgShareCoordinatesOnGo4Cache == null) {//GEN-END:MVDGetBegin704
+            // Insert pre-init code here
+            cgShareCoordinatesOnGo4Cache = new ChoiceGroup("Sd\u00EDlet polohu?", Choice.EXCLUSIVE, new String[] {//GEN-BEGIN:MVDGetInit704
+                "Ano",
+                "Ne"
+            }, new Image[] {
+                null,
+                null
+            });
+            cgShareCoordinatesOnGo4Cache.setSelectedFlags(new boolean[] {
+                false,
+                true
+            });//GEN-END:MVDGetInit704
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd704
+        return cgShareCoordinatesOnGo4Cache;
+    }//GEN-END:MVDGetEnd704
+
+    /** This method returns instance for siGo4CacheAbout component and should be called instead of accessing siGo4CacheAbout field directly.//GEN-BEGIN:MVDGetBegin707
+     * @return Instance for siGo4CacheAbout component
+     */
+    public StringItem get_siGo4CacheAbout() {
+        if (siGo4CacheAbout == null) {//GEN-END:MVDGetBegin707
+            // Insert pre-init code here
+            siGo4CacheAbout = new StringItem("O slu\u017Eb\u011B:", "Go4Cache slou\u017E\u00ED ke sd\u00EDlen\u00ED polohy mezi ka\u010Dery a zobrazen\u00ED polohy ka\u010Der\u016F na map\u011B. V\u00EDce o t\u00E9to slu\u017Eb\u011B se dozv\u00EDte na http://go4cache.com/about/.\n\nAktu\u00E1ln\u00ED poloha je odesl\u00E1na jednou za 5 minut.");//GEN-LINE:MVDGetInit707
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd707
+        return siGo4CacheAbout;
+    }//GEN-END:MVDGetEnd707
       
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {

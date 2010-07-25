@@ -10,6 +10,7 @@
  */
 package utils;
 
+import gui.Gui;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -524,17 +525,26 @@ public class Utils
         }
     }
     
+    public static String getVersion() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(Gui.getInstance().getAppProperty("MIDlet-Version"));
+        int rev = getVersionRevision();
+        if (rev > 0) {
+            sb.append("-r");
+            sb.append(rev);
+        }
+        return sb.toString();
+    }
+    
     public static int getVersionRevision() {
-        String rev = "$Revision$";
-        StringTokenizer tokenizer = new StringTokenizer();
+        String revision = Gui.getInstance().getAppProperty("Revision");
+        if (revision==null)
+            return -1;
         
-        String tokens[] = tokenizer.getArray(rev, " ");
-        if (tokens.length != 3)
-            return 0;
         try {
-            return Integer.parseInt(tokens[1]);
-        } catch (Exception e) {
-            return 0;
+            return Integer.parseInt(revision);
+        } catch(Exception e) {
+            return -1;
         }
     }
 }

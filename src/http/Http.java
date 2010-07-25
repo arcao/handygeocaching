@@ -99,12 +99,7 @@ public class Http implements Runnable
         
         StringBuffer sb = new StringBuffer();
         sb.append("Handy Geocaching ");
-        sb.append(Gui.getInstance().getAppProperty("MIDlet-Version"));
-        int rev = Utils.getVersionRevision();
-        if (rev > 0) {
-            sb.append("-r");
-            sb.append(rev);
-        }
+        sb.append(Utils.getVersion());
         String platform = System.getProperty("microedition.platform");
         if (platform != null) {
             sb.append(" ");
@@ -294,7 +289,7 @@ public class Http implements Runnable
                             waypoints = new String[foundCaches.length];
                             for (int i=0;i<foundCaches.length;i++)
                             {
-                                gui.get_lstNearestCaches().append(foundCaches[i][0],iconLoader.loadIcon(foundCaches[i][1]));
+                                gui.get_lstNearestCaches().append(foundCaches[i][0],iconLoader.loadCacheIcon(foundCaches[i][1]));
                                 waypoints[i] = foundCaches[i][2];
                             }
                             gui.getDisplay().setCurrent(gui.get_lstNearestCaches());
@@ -321,7 +316,7 @@ public class Http implements Runnable
                         waypoints = new String[foundCaches.length];
                         for (int i=0;i<foundCaches.length;i++)
                         {
-                            gui.get_lstNearestCaches().append(foundCaches[i][0],iconLoader.loadIcon(foundCaches[i][1]));
+                            gui.get_lstNearestCaches().append(foundCaches[i][0],iconLoader.loadCacheIcon(foundCaches[i][1]));
                             waypoints[i] = foundCaches[i][2];
                         }
                         gui.getDisplay().setCurrent(gui.get_lstNearestCaches());
@@ -821,6 +816,9 @@ public class Http implements Runnable
         
     public String downloadData(String data, boolean useArcaoUrl, boolean addCookie, String message) throws InterruptedException
     {
+        //protocol 1.1
+        data+= "&protocol=1.1";
+        
         boolean cachedAction = false;
         String cachedResponse = null;
         if ((action == OVERVIEW || action == DOWNLOAD_ALL_CACHES || action == WAYPOINTS || action == LOGS || action == ALL_LOGS) && !refresh)

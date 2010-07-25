@@ -196,9 +196,10 @@ public class GpsParser implements Runnable
     }
     
     public boolean createGo4CacheClient() {
-        if (settings.publicCoorditaesByGo4Cache) {
+        if (settings.shareCoordinatesOnGo4Cache) {
             if (go4cacheClient == null) {
                 go4cacheClient = new Go4CacheClient(settings.name);
+                go4cacheClient.start();
             }
             go4cacheClient.setUserName(settings.name);
             return true;

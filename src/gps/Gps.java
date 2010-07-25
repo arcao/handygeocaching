@@ -60,7 +60,7 @@ public class Gps implements Runnable
     private double[] buffer2;
     private int bufferPosition = 0;
     private boolean plnybuffer = false;
-    public String lattitude, longitude = null;
+    public String lattitude, longitude, targetgeoid = null;
     private String targetname = ""; //nazev navigacniho bodu
     private double targetlat = 0, targetlon = 0; //navigacni souradnice
     private int lastNmeaCount = 0; //minuly pocet nmea zprav pro odpojovani
@@ -135,11 +135,12 @@ public class Gps implements Runnable
     /**
      * Nastavi navigacni souradnice
      */
-    public void setNavigationTarget(String lattitude, String longitude, String name)
+    public void setNavigationTarget(String lattitude, String longitude, String name, String geoId)
     {
         if (name == null) name = "";
         
         targetname = name;
+        targetgeoid = geoId;
         targetlat = convertDegToDouble(lattitude);
         targetlon = convertDegToDouble(longitude);
     }
@@ -267,7 +268,7 @@ public class Gps implements Runnable
                         gui.get_siAdditional().setText(gpsParser.getSatelliteCount()+" sat./"+String.valueOf(gpsParser.getSpeed())+" km/h/"+String.valueOf(gpsParser.getAccuracy()));
                         
                         if (gpsParser.go4cacheClient != null)
-                            gpsParser.go4cacheClient.setAction("Průměruji souřadnice...");
+                            gpsParser.go4cacheClient.setActionAveragingCoordinates();
                 
                     }
                     else if (action == NAVIGATION)
@@ -301,7 +302,7 @@ public class Gps implements Runnable
                         gui.get_cvsNavigation().repaint();
                         
                         if (gpsParser.go4cacheClient != null)
-                            gpsParser.go4cacheClient.setAction("Hledám keš " + targetname + "...");
+                            gpsParser.go4cacheClient.setActionHeading(targetgeoid);
                         
                     }
                     //Zephy 21.11.07 gpsstatus+\
@@ -320,7 +321,7 @@ public class Gps implements Runnable
                         gui.get_cvsSignal().repaint();
                         
                         if (gpsParser.go4cacheClient != null)
-                            gpsParser.go4cacheClient.setAction("");
+                            gpsParser.go4cacheClient.setActionNothing();
                     }
                     //Zephy 21.11.07 gpsstatus+/
 
@@ -333,7 +334,7 @@ public class Gps implements Runnable
                         gui.get_cvsMap().repaint();
                         
                         if (gpsParser.go4cacheClient != null)
-                            gpsParser.go4cacheClient.setAction("Prohížím si mapu keší v okolí...");
+                            gpsParser.go4cacheClient.setActionViewingCacheMap();
                     }
                     else if (action == CURRENT_POSITION)
                     {
@@ -346,7 +347,7 @@ public class Gps implements Runnable
                         http.start(Http.NEAREST_CACHES, false);
                         
                         if (gpsParser.go4cacheClient != null)
-                            gpsParser.go4cacheClient.setAction("");
+                            gpsParser.go4cacheClient.setActionNothing();
                     }
                     else if (action == CURRENT_POSITION_PROJECTION)
                     {
@@ -355,7 +356,7 @@ public class Gps implements Runnable
                         stop();
                         
                         if (gpsParser.go4cacheClient != null)
-                            gpsParser.go4cacheClient.setAction("");
+                            gpsParser.go4cacheClient.setActionNothing();
                     }
                     else //ziskani souradnic u oblibenych
                     {
@@ -365,7 +366,7 @@ public class Gps implements Runnable
                         stop();
                         
                         if (gpsParser.go4cacheClient != null)
-                            gpsParser.go4cacheClient.setAction("");
+                            gpsParser.go4cacheClient.setActionNothing();
                     }
                 }
             }
