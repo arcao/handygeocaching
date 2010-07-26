@@ -196,47 +196,34 @@ public class Go4CacheClient implements Runnable {
     }
     
     private static String generateHash(String u, String lt, String ln, String a) {
-        StringBuffer sb=new StringBuffer();
-        StringBuffer sc=new StringBuffer();
-        String[] s={"@","G",u,"3","H","h","n","|",lt,"D","c",ln,"g","0",a,"Y","1"};
-        int[] i={0,3,10,8,9,5,2,7,6,4,1};
-        String ret = sa(sb.append(s[i[(2<<2)+1]>>1]).append(s[(i[(1<<1)+1]>>1)+3])
-        .append(s[i[(2<<3)-7]<<1]).append(s[i[1<<3]+1]).append(s[(i[(16>>1)+2]<<4)-5])
-        .append(s[(i[(1<<1)+1]>>1)+3]).append(s[(i[(3<<1)-5]<<2)+2])
-        .append(s[(i[(1<<1)-1]<<1)+1]).append(sa(sc.append(s[(1<<2)+1])
-        .append(s[(3>>2)]).append(s[(2<<2)-2]).append(s[(6<<1)-3]).append(s[(7<<1)+1])
-        .append(s[25>>1]).append(s[7>>1]).append(s[(3<<2)+1]).append(s[(5<<1)])
-        .append(s[(6>>4)]).append(s[(6<<1)-2]).append(s[9>>1]).append(s[(9<<1)-2])
-        .append(s[(1<<2)+2]).append(s[11>>3]).toString())).toString());
-        System.out.println(sc.toString());
-        System.out.println(sb.toString());
-        System.out.println(ret);
-        return ret;
+        StringBuffer sb=new StringBuffer();StringBuffer sc=new StringBuffer();
+        String[] s={"@","G",u,"3","H","h","n","|",lt,"D","c",ln,"g","0",a,"Y",
+        "1"};int[] i={0,3,10,8,9,5,2,7,6,4,1};return sa(sb.append(s[i[(2<<2)+1]>>
+        1]).append(s[(i[(1<<1)+1]>>1)+3]).append(s[i[(2<<3)-7]<<1]).append(s[i[1
+        <<3]+1]).append(s[(i[(16>>1)+2]<<4)-5]).append(s[(i[(1<<1)+1]>>1)+3])
+        .append(s[(i[(3<<1)-5]<<2)+2]).append(s[(i[(1<<1)-1]<<1)+1]).append(sa
+        (sc.append(s[(1<<2)+1]).append(s[(3>>2)]).append(s[(2<<2)-2]).append(s
+        [(6<<1)-3]).append(s[(7<<1)+1]).append(s[25>>1]).append(s[7>>1]).
+        append(s[(3<<2)+1]).append(s[(5<<1)]).append(s[(6>>4)]).append(s[(6<<1)-
+        2]).append(s[9>>1]).append(s[(9<<1)-2]).append(s[(1<<2)+2]).append(s[11
+        >>3]).toString())).toString());
     }
-    
-    private static int r(int n, int c) {
-        return (n<<c)|(n>>>(32-c));
-    }
-    
+    private static int r(int n,int c){return (n<<c)|(n>>>(32-c));}
     private static String sa(String str) {
-        byte[] x;
-        try {x=str.getBytes("UTF-8");}catch(Exception e){return new String();}
-        int[] blks=new int[(((x.length+8)>>6)+1)*16];int i;
+        byte[] x;try {x=str.getBytes("UTF-8");}catch(Exception e){return new 
+        String();}int[] blks=new int[(((x.length+8)>>6)+1)*16];int i;
         for(i=0;i<x.length;i++) blks[i>>2]|=(x[i]&0xFF)<<(24-(i%4)*8);      
         blks[i>>2]|=0x80<<(24-(i%4)*8);blks[blks.length-1]=x.length*8;
-        int[] w = new int[80];
-        int a=1732584193,b=-271733879,c=-1732584194,d=271733878,e=-1009589776;
-        for(i = 0; i < blks.length; i += 16) {
-        int olda=a,oldb=b,oldc=c,oldd=d,olde=e;          
-        for(int j = 0; j < 80; j++) {
+        int[] w = new int[80];int a=1732584193,b=-271733879,c=-1732584194,d=
+        271733878,e=-1009589776;for(i = 0; i < blks.length; i += 16) {
+        int olda=a,oldb=b,oldc=c,oldd=d,olde=e;for(int j = 0; j < 80; j++) {
         w[j]=(j<16)?blks[i+j]:r(w[j-3]^w[j-8]^w[j-14]^w[j-16],1);
         int t=r(a,5)+e+w[j]+((j<20)?1518500249+((b&c)|((~b)&d))
         :(j<40)?1859775393+(b^c^d):(j<60)?-1894007588+((b&c)|(b&d)|(c&d))
         :-899497514+(b^c^d));e=d;d=c;c=r(b,30);b=a;a=t;
-        }a+=olda;b+=oldb;c+=oldc;d+=oldd;e+=olde;}
-        int[] words={a,b,c,d,e};
-        StringBuffer sb=new StringBuffer();
-        for(i=0;i<words.length;i++) for(int j=7;j>=0;j--) sb.append(hex.charAt((words[i]>>(j*4))&0xF));        
-        return sb.toString();
+        }a+=olda;b+=oldb;c+=oldc;d+=oldd;e+=olde;}int[] words={a,b,c,d,e};
+        StringBuffer sb=new StringBuffer();for(i=0;i<words.length;i++) for(int 
+        j=7;j>=0;j--) sb.append(hex.charAt((words[i]>>(j*4))&0xF));return sb.
+        toString();
     }
 }
