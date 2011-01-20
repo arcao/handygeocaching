@@ -11,6 +11,7 @@
 package utils;
 
 import gui.Gui;
+import gui.IconLoader;
 import gui.LoadingForm;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -23,6 +24,7 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
    
 /**
@@ -40,6 +42,7 @@ public class OpenFileBrowser extends List implements CommandListener
     public final static Command OK = OPEN;
     public final static Command CANCEL = new Command("Storno", Command.EXIT, 3);
    
+    private final static String CURRENT_DIRECTORY = "<Tento adresář>";
     private final static String UP_DIRECTORY = "..";  
     private final static String MEGA_ROOT = "/";  
     private final static String SEP_STR = "/";  
@@ -53,7 +56,12 @@ public class OpenFileBrowser extends List implements CommandListener
     
     private boolean buggyAPI = false; 
     
+    private boolean directorySelectionAllowed = false;
+    
     private Object tag;
+    
+    private Image FILE_ICON = null;
+    private Image DIRECTORY_ICON = null;
 
     public static boolean isApiAvailable() {
         return System.getProperty("microedition.io.file.FileConnection.version") != null;
@@ -66,6 +74,11 @@ public class OpenFileBrowser extends List implements CommandListener
         this.listener = listener;
         this.display = display;
         currDirName = MEGA_ROOT;
+        
+        IconLoader iconLoader = Gui.getInstance().iconLoader;
+        
+        FILE_ICON = iconLoader.loadIcon("file");
+        DIRECTORY_ICON = iconLoader.loadIcon("directory");
 
         setCommandListener(this);
         setSelectCommand(OPEN);  
@@ -103,10 +116,18 @@ public class OpenFileBrowser extends List implements CommandListener
                 }
                 list();
             } else {
-                if (!buggyAPI) {
-                    fileName = "file:///" + currDirName + currFile;
+                if (directorySelectionAllowed && currFile.equals(CURRENT_DIRECTORY)) {
+                    if (!buggyAPI) {
+                        fileName = "file:///" + currDirName;
+                    } else {
+                        fileName = "file://" + currDirName;
+                    }
                 } else {
-                    fileName = "file://" + currDirName + currFile;
+                    if (!buggyAPI) {
+                        fileName = "file:///" + currDirName + currFile;
+                    } else {
+                        fileName = "file://" + currDirName + currFile;
+                    }
                 }
                 if (nextScreen != null)
                     display.setCurrent(nextScreen);
@@ -158,13 +179,16 @@ public class OpenFileBrowser extends List implements CommandListener
                             buggyAPI = true;
                         }
                         
-                        append(UP_DIRECTORY,null);
+                        append(UP_DIRECTORY, DIRECTORY_ICON);
+                        
+                        if (directorySelectionAllowed) 
+                            append(CURRENT_DIRECTORY, DIRECTORY_ICON);
                         
                         e = currDir.list();
                         while (e.hasMoreElements()) {
                             fileName = (String) e.nextElement();
                             if (fileName.length() > 1 && fileName.charAt(fileName.length()-1) == SEP)
-                                append(fileName,null);  
+                                append(fileName, DIRECTORY_ICON);  
                         }
                         
                         e = currDir.list();
@@ -174,7 +198,7 @@ public class OpenFileBrowser extends List implements CommandListener
                             if (fileName.length() >= 4)
                                 ext =  fileName.substring(fileName.length() - 4).toLowerCase();
                             if (ext.equals(".gpx") || ext.equals(".loc"))
-                                append(fileName,null);
+                                append(fileName, FILE_ICON);
                         }
                     }
                 } catch (IOException ioe) {
@@ -257,5 +281,13 @@ public class OpenFileBrowser extends List implements CommandListener
     
     public String getFileName() {
         return fileName;
+    }
+
+    public void setDirectorySelectionAllowed(boolean directorySelectionAllowed) {
+        this.directorySelectionAllowed = directorySelectionAllowed;
+    }
+
+    public boolean isDirectorySelectionAllowed() {
+        return directorySelectionAllowed;
     }
 }   

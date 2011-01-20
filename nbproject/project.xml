@@ -4,7 +4,6 @@
     <configuration>
         <configurations xmlns="http://www.netbeans.org/ns/project-configurations/1">
             <configuration>Release</configuration>
-            <configuration>ReleaseSigned</configuration>
         </configurations>
         <data xmlns="http://www.netbeans.org/ns/j2me-project">
             <name>HandyGeocaching</name>

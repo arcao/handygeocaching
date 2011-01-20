@@ -1,5 +1,5 @@
 /*
- * Import.java
+ * GPXImport.java
  * This file is part of HandyGeocaching.
  *
  * HandyGeocaching is free software; you can redistribute it and/or modify
@@ -55,7 +55,7 @@ public class GPXImport extends Form implements CommandListener {
     
     private Http http;
     
-    /** Creates a new instance of Import */
+    /** Creates a new instance of GPXImport */
     public GPXImport(Favourites favourites, Display display, Http http) {
         super("Import z GPX");
         

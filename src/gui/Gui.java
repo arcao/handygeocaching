@@ -83,7 +83,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Patterns patterns;
     public Http http;
     public GpsParser gpsParser;
-    private IconLoader iconLoader;
+    public IconLoader iconLoader;
     private Track track;
     private References references;
     
