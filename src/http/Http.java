@@ -716,7 +716,7 @@ public class Http implements Runnable
             
             if (postData != null) {
                 connection.setRequestProperty("Content-Length", Integer.toString(postData.length));
-                // TODO form data type header
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
                                 
                 gui.get_siDownloadSize().setText("Odesílám data...");
                 
