@@ -31,10 +31,11 @@ import javax.microedition.lcdui.List;
  * Slouzi k vybrani souboru v pameti mobilu.
  * @author Arcao
  */
-public class OpenFileBrowser extends List implements CommandListener   
+public class FileBrowser extends List implements CommandListener   
 {  
     private String currDirName;
     private String fileName = "";
+    private boolean directorySelected = false;
    
     private final static Command OPEN = new Command("Otevřít", Command.ITEM, 1);  
     private final static Command BACK = new Command("Zpět", Command.BACK, 2);
@@ -68,8 +69,8 @@ public class OpenFileBrowser extends List implements CommandListener
     }
 
     
-    public OpenFileBrowser(Display display, CommandListener listener) {
-        super("Importovat...", List.IMPLICIT);
+    public FileBrowser(Display display, CommandListener listener) {
+        super("", List.IMPLICIT);
         
         this.listener = listener;
         this.display = display;
@@ -86,13 +87,12 @@ public class OpenFileBrowser extends List implements CommandListener
         addCommand(CANCEL);
     }
     
-    public boolean open(Displayable nextScreen) {
+    public boolean show() {
         if (!isApiAvailable()) {
             Gui.getInstance().showAlert("Telefon neumožňuje načítat soubory.", AlertType.ERROR, display.getCurrent());
             return false;
         }
         
-        this.nextScreen = nextScreen;
         backScreen = display.getCurrent();
         display.setCurrent(this);
         list();
@@ -122,12 +122,14 @@ public class OpenFileBrowser extends List implements CommandListener
                     } else {
                         fileName = "file://" + currDirName;
                     }
+                    directorySelected = true;
                 } else {
                     if (!buggyAPI) {
                         fileName = "file:///" + currDirName + currFile;
                     } else {
                         fileName = "file://" + currDirName + currFile;
                     }
+                    directorySelected = false;
                 }
                 if (nextScreen != null)
                     display.setCurrent(nextScreen);
@@ -156,7 +158,7 @@ public class OpenFileBrowser extends List implements CommandListener
         final LoadingForm lForm = new LoadingForm(display, "Načítám...", "Načítám seznam souborů...", this, null);
         lForm.show();
         
-        final OpenFileBrowser that = this;
+        final FileBrowser that = this;
                 
         new Thread(new Runnable() {
             public void run() {
@@ -278,6 +280,10 @@ public class OpenFileBrowser extends List implements CommandListener
     public Displayable getNextScreen() {
         return nextScreen;
     }
+
+    public void setNextScreen(Displayable nextScreen) {
+        this.nextScreen = nextScreen;
+    }
     
     public String getFileName() {
         return fileName;
@@ -289,5 +295,9 @@ public class OpenFileBrowser extends List implements CommandListener
 
     public boolean isDirectorySelectionAllowed() {
         return directorySelectionAllowed;
+    }
+
+    public boolean isDirectorySelected() {
+        return directorySelected;
     }
 }   

@@ -506,7 +506,7 @@
         </DesignComponent>
         <DesignComponent id="siVerze" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="127">
             <Property name="label" value="STRING:Verze:"/>
-            <Property name="text" value="STRING:"/>
+            <Property name="text" value="CODE:Utils.getVersion()"/>
             <ContainerProperty name="commands"/>
         </DesignComponent>
         <DesignComponent id="stringItem1" typeid="MIDP:javax.microedition.lcdui.StringItem" uid="128">
@@ -2710,7 +2710,6 @@
         <Node id="frmOverview" location="3392,208" order="$CommandAction21,$CommandAction23,$CommandAction19,$CommandAction22,$CommandAction33,$CommandAction20,$CommandAction34,,$CommandAction45,$CommandAction78,$Default,$CommandAction85,$CommandAction61,$CommandAction105,,"/>
         <Node id="frmWaypoints" location="2752,208" order="$CommandAction3,$CommandAction48,,,,,,,,,$Default,,,,,"/>
         <Node id="frmLogs" location="5960,208" order="$CommandAction26,$CommandAction35,,,,,,,,,$Default,,,,,"/>
-        <Node id="frmAbout" location="1200,856" order="$CommandAction27,$CommandAction106,,,,,,,,,$Default,,,,,"/>
         <Node id="frmSettingsGeneral" location="856,584" order=",$CommandAction32,$CommandAction1,,,,,,,,$Default,,,,,"/>
         <Node id="frmConnecting" location="2432,208" order="$CommandAction11,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmAllLogs" location="5640,208" order="$CommandAction36,,,,,,,,,,$Default,,,,,"/>
@@ -2742,6 +2741,7 @@
         <Node id="frmSettingsCompass" location="656,616" order="$CommandAction38,$CommandAction41,,,,,,,,,$Default,,,,,"/>
         <Node id="frmCoordinatesProjection" location="1456,1824" order="$CommandAction59,$CommandAction81,,,,,,,,,$Default,,,,,"/>
         <Node id="frmSettingsGo4Cache" location="856,408" order="$CommandAction111,$CommandAction112,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmAbout" location="1200,856" order="$CommandAction27,$CommandAction106,,,,,,,,,$Default,,,,,"/>
         <Link id="$StartPoint$ActionLink" path="200,1160,282,1160,282,1096,392,1096"/>
         <Link id="$CommandAction2$ActionLink" path="2152,200,2305,200,2305,672,47,672,47,1160,120,1160"/>
         <Link id="$CommandAction4$ActionLink" path="3112,200,3223,200,3223,1861,1141,1861,1141,1800,1160,1800"/>

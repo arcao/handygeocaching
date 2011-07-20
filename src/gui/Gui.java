@@ -17,7 +17,7 @@ import java.util.Calendar;
 import javax.microedition.lcdui.ItemStateListener;
 import utils.ConfirmDialog;
 import utils.GPXImport;
-import utils.OpenFileBrowser;
+import utils.FileBrowser;
 import database.Favourites;
 import database.MultiSolver;
 import database.Patterns;
@@ -347,7 +347,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     //Zephy 21.11.07 gpsstatus+\
     private Signal cvsSignal;
     //Zephy 21.11.07 gpsstatus+/
-    private OpenFileBrowser openFileBrowser = null;
+    private FileBrowser openFileBrowser = null;
     private GPXImport gpxImportForm = null;
 //GEN-LINE:MVDMethods
     
@@ -398,8 +398,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
                         // Insert pre-action code here
                         getDisplay().setCurrent(get_frmAbout());//GEN-LINE:MVDCAAction41
                         // Insert post-action code here
-                        siVerze.setText(Utils.getVersion());
-                        
+                       
                         if (settings.vip)
                             siDonate.setText("Děkuji moc za Váš příspěvek na vývoj aplikace!");
                         break;//GEN-BEGIN:MVDCACase41
@@ -1114,8 +1113,9 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction587
                 // Insert post-action code here
-                openFileBrowser = new OpenFileBrowser(getDisplay(), this);
-                openFileBrowser.open(null);
+                openFileBrowser = new FileBrowser(getDisplay(), this);
+                openFileBrowser.setDirectorySelectionAllowed(false);
+                openFileBrowser.show();
             } else if (command == cmdShowCacheInBrowser) {//GEN-LINE:MVDCACase587
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction628
@@ -1671,7 +1671,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
 // Insert global post-action code here
         
         if (displayable == openFileBrowser && openFileBrowser != null) {
-            if (command == OpenFileBrowser.OK) {
+            if (command == FileBrowser.OK) {
                 gpxImportForm = new GPXImport(favourites, getDisplay(), http);
                 gpxImportForm.setListener(this);
                 gpxImportForm.parse(openFileBrowser.getFileName());
@@ -2433,7 +2433,7 @@ frmAbout.setCommandListener (this);//GEN-END:MVDGetInit126
     public StringItem get_siVerze() {
         if (siVerze == null) {//GEN-END:MVDGetBegin127
             // Insert pre-init code here
-            siVerze = new StringItem("Verze:", "");//GEN-LINE:MVDGetInit127
+            siVerze = new StringItem("Verze:", Utils.getVersion());//GEN-LINE:MVDGetInit127
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd127
         return siVerze;

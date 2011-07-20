@@ -23,6 +23,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 import javax.microedition.lcdui.AlertType;
@@ -677,7 +679,7 @@ public class Http implements Runnable
             case FIELD_NOTES:
                 try
                 {
-                    response = downloadData("action=fieldnotes&fieldnotes="+Utils.urlUTF8Encode(FieldNotes.getInstance().getFieldNotes())+"&incremental="+((settings.incrementalFieldNotes)?"1":"0"), true, true, "Nahrávám Field notes na GC.com...");
+                    response = sendData("action=fieldnotes&incremental="+((settings.incrementalFieldNotes)?"1":"0"), "fieldnotes="+Utils.urlUTF8Encode(FieldNotes.getInstance().getFieldNotes()), true, true, "Nahrávám Field notes na GC.com...");
                     if (checkData(response))
                     {
                         gui.showAlert("Nahráno " + response + " nových Field notes na GC.com.",AlertType.INFO,gui.get_lstFieldNotes());
@@ -698,7 +700,7 @@ public class Http implements Runnable
     /***
      * Vlastni pripojeni k HTTP a prevod streamu na string
      */
-    public String connect(String url) throws InterruptedException
+    public String connect(String url, byte[] postData) throws InterruptedException
     {
         InputStream is = null;
         connection = null;
@@ -709,8 +711,20 @@ public class Http implements Runnable
             connection = (HttpConnection) Connector.open(url);
             
             // Nastaveni pristupove metody
-            connection.setRequestMethod(HttpConnection.GET);
+            connection.setRequestMethod(postData == null ? HttpConnection.GET : HttpConnection.POST);
             connection.setRequestProperty("User-Agent", getUserAgent());
+            
+            if (postData != null) {
+                connection.setRequestProperty("Content-Length", Integer.toString(postData.length));
+                // TODO form data type header
+                                
+                gui.get_siDownloadSize().setText("Odesílám data...");
+                
+                OutputStream os = connection.openOutputStream();
+                os.write(postData);
+                os.flush();
+                os.close();
+            }
 
             // Otevreni vstupniho proudu
             //Bug v Gauge u N5800 - nepouzivat Gauge
@@ -807,14 +821,24 @@ public class Http implements Runnable
      * Zjednodusovaci metoda a rozhodovani, zda se data budou nacitat z kese nebo ne
      */
     public String downloadData(String data) throws InterruptedException {
-        return downloadData(data, false, true, null);
+        return downloadData(data, false, true, null, null);
     }
     
     public String downloadData(String data, boolean useArcaoUrl, boolean addCookie) throws InterruptedException {
-        return downloadData(data, useArcaoUrl, addCookie, null);
+        return downloadData(data, useArcaoUrl, addCookie, null, null);
+    }
+    
+    public String downloadData(String data, boolean useArcaoUrl, boolean addCookie, String message) throws InterruptedException 
+    {
+        return downloadData(data, useArcaoUrl, addCookie, message, null);
+    }
+    
+    public String sendData(String data, String postData, boolean useArcaoUrl, boolean addCookie, String message) throws InterruptedException 
+    {
+        return downloadData(data, useArcaoUrl, addCookie, message, postData);
     }
         
-    public String downloadData(String data, boolean useArcaoUrl, boolean addCookie, String message) throws InterruptedException
+    public String downloadData(String data, boolean useArcaoUrl, boolean addCookie, String message, String postData) throws InterruptedException
     {
         //protocol 1.1
         data+= "&protocol=1.1";
@@ -835,6 +859,16 @@ public class Http implements Runnable
         
         if (cachedResponse == null) //odpoved neni v kesi, stahujeme z netu
         {
+            byte[] postByteData = null;
+            if (postData != null) {
+                try {
+                    postByteData = postData.getBytes("UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    System.out.println("UTF-8 encoding not supported!");
+                    e.printStackTrace();
+                }
+            }
+            
             gui.get_siDownloadSize().setText("");
             gui.getDisplay().setCurrent(gui.get_frmLoading());
             if (message != null)                
@@ -847,7 +881,8 @@ public class Http implements Runnable
             if (addCookie) address+= "&cookie="+cookie;
             String returns = "";
             System.out.println(address);
-            returns = connect(address);
+            System.out.println("Post data:" + postData);
+            returns = connect(address, postByteData);
             //pokud se to zjebne zkusim to jeste jednou
             if (returns.startsWith("err") && !terminated)
             { 
@@ -858,7 +893,7 @@ public class Http implements Runnable
                 catch (InterruptedException ex)
                 {
                 }
-                returns = connect(address);
+                returns = connect(address, postByteData);
             }
             System.out.println(returns);
             if (!terminated) {
