@@ -708,14 +708,15 @@ public class Http implements Runnable
         {
             gui.get_siDownloadSize().setText("Připojuji se...");
             // Vytvoreni http spojeni
-            connection = (HttpConnection) Connector.open(url);
+            connection = (HttpConnection) Connector.open(url, postData == null ? Connector.READ : Connector.READ_WRITE);
             
             // Nastaveni pristupove metody
             connection.setRequestMethod(postData == null ? HttpConnection.GET : HttpConnection.POST);
             connection.setRequestProperty("User-Agent", getUserAgent());
             
             if (postData != null) {
-                connection.setRequestProperty("Content-Length", Integer.toString(postData.length));
+                // Do not set!!! There is bug in Java implementation.
+                //connection.setRequestProperty("Content-Length", Integer.toString(postData.length));
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
                                 
                 gui.get_siDownloadSize().setText("Odesílám data...");
