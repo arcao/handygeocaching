@@ -174,9 +174,20 @@ public class Favourites extends Database
             
             //lattitude = Utils.replaceString(Utils.replaceString(lattitude, "° ","d"),"N ","");
             //longitude = Utils.replaceString(Utils.replaceString(longitude, "° ","d"),"E ","");
-            lattitude = Double.toString(Gps.convertDegToDouble(lattitude));
-            longitude = Double.toString(gps.convertDegToDouble(longitude));
-            gui.platformRequest("http://wap.mapy.cz/search?from=&query="+lattitude+"+"+longitude+"&mapType=ophoto&zoom=16");
+            double lat = Gps.convertDegToDouble(lattitude);
+            double lon = Gps.convertDegToDouble(longitude);
+            
+            System.out.println("lat: " + lat);
+            System.out.println("lon: " + lon);
+            
+            String lat1 = Integer.toString((int) lat);
+            String lat2 = Utils.addZeros(Integer.toString((int) ((lat - (int)lat) * 1000000D)), 6);
+            String lon1 = Integer.toString((int) lon);
+            String lon2 = Utils.addZeros(Integer.toString((int) ((lon - (int)lon) * 1000000D)), 6);
+            
+            String url = "http://wap.mapy.cz/search?searchType=gps&t=hybrid&z=16&ddn1="+lat1+"&ddn2="+lat2+"&dde1="+lon1+"&dde2="+lon2;
+            System.out.println("Browser: " + url);
+            gui.platformRequest(url);
         }
         catch (Exception e)
         {
