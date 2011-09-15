@@ -172,8 +172,6 @@ public class Favourites extends Database
             String lattitude = dis.readUTF();
             String longitude = dis.readUTF();
             
-            //lattitude = Utils.replaceString(Utils.replaceString(lattitude, "° ","d"),"N ","");
-            //longitude = Utils.replaceString(Utils.replaceString(longitude, "° ","d"),"E ","");
             double lat = Gps.convertDegToDouble(lattitude);
             double lon = Gps.convertDegToDouble(longitude);
             
