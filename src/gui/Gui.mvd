@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MVDData version="1.3">
-    <DesignDocument designVersion="MIDP-2" uidCounter="708">
+    <DesignDocument designVersion="MIDP-2" uidCounter="711">
         <DesignComponent id="$MobileDevice" typeid="MIDP:$MobileDevice" uid="0"/>
         <DesignComponent id="$StartPoint" typeid="MIDP:$StartPoint" uid="1">
             <Property name="targetDisplayable" value="ssAdvertisment"/>
@@ -2375,6 +2375,7 @@
             </ContainerProperty>
             <ContainerProperty name="items">
                 <ContainerPropertyItem value="cgInternalGPSType"/>
+                <ContainerPropertyItem value="cgSkipNmeaParsingErrors"/>
             </ContainerProperty>
         </DesignComponent>
         <DesignComponent id="$CommandAction13" typeid="MIDP:CommandAction" uid="644">
@@ -2696,6 +2697,25 @@
             <Property name="text" value="STRING:Go4Cache slou\u017E\u00ED ke sd\u00EDlen\u00ED polohy mezi ka\u010Dery a zobrazen\u00ED polohy ka\u010Der\u016F na map\u011B. V\u00EDce o t\u00E9to slu\u017Eb\u011B se dozv\u00EDte na http://go4cache.com/about/.\n\nAktu\u00E1ln\u00ED poloha je odesl\u00E1na jednou za 5 minut."/>
             <ContainerProperty name="commands"/>
         </DesignComponent>
+        <DesignComponent id="cgSkipNmeaParsingErrors" typeid="MIDP:javax.microedition.lcdui.ChoiceGroup" uid="708">
+            <Property name="label" value="STRING:Potla\u010Dit hl\u00E1\u0161en\u00ED chyb u NMEA"/>
+            <Property name="choiceType" value="EXCLUSIVE"/>
+            <ContainerProperty name="commands"/>
+            <ContainerProperty name="elements">
+                <ContainerPropertyItem value="Midp2ChoiceElementDC37"/>
+                <ContainerPropertyItem value="Midp2ChoiceElementDC38"/>
+            </ContainerProperty>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC37" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="709">
+            <Property name="string" value="STRING:Ano"/>
+            <Property name="image"/>
+            <Property name="selected" value="false"/>
+        </DesignComponent>
+        <DesignComponent id="Midp2ChoiceElementDC38" typeid="MIDP:GROUP-org.netbeans.modules.mvd.model.midp2.Midp2ChoiceElementDC" uid="710">
+            <Property name="string" value="STRING:Ne"/>
+            <Property name="image"/>
+            <Property name="selected" value="true"/>
+        </DesignComponent>
     </DesignDocument>
     <FlowDocument version="1.1">
         <Node id="$MobileDevice" location="160,1184" order=",$StartPoint,,,,,,,,,$ExitPoint,,,,,"/>
@@ -2710,6 +2730,7 @@
         <Node id="frmOverview" location="3392,208" order="$CommandAction21,$CommandAction23,$CommandAction19,$CommandAction22,$CommandAction33,$CommandAction20,$CommandAction34,,$CommandAction45,$CommandAction78,$Default,$CommandAction85,$CommandAction61,$CommandAction105,,"/>
         <Node id="frmWaypoints" location="2752,208" order="$CommandAction3,$CommandAction48,,,,,,,,,$Default,,,,,"/>
         <Node id="frmLogs" location="5960,208" order="$CommandAction26,$CommandAction35,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmAbout" location="1200,856" order="$CommandAction27,$CommandAction106,,,,,,,,,$Default,,,,,"/>
         <Node id="frmSettingsGeneral" location="856,584" order=",$CommandAction32,$CommandAction1,,,,,,,,$Default,,,,,"/>
         <Node id="frmConnecting" location="2432,208" order="$CommandAction11,,,,,,,,,,$Default,,,,,"/>
         <Node id="frmAllLogs" location="5640,208" order="$CommandAction36,,,,,,,,,,$Default,,,,,"/>
@@ -2736,12 +2757,11 @@
         <Node id="frmMemoryInfo" location="2136,1240" order="$CommandAction107,,,,,,,,,,$Default,,,,,"/>
         <Node id="ssAdvertisment" location="432,1120" order="$InternalCommandAction2,,,,,,,,,,$Default,,,,,"/>
         <Node id="lstSettings" location="872,872" order="$SelectCaseCommandAction27,$CommandAction12,$SelectCaseCommandAction28,$SelectCaseCommandAction29,$SelectCaseCommandAction17,$SelectCaseCommandAction31,,,,,$Default,,,,,"/>
-        <Node id="frmSettingsGPS" location="720,776" order="$CommandAction13,$CommandAction24,,,,,,,,,$Default,,,,,"/>
         <Node id="frmSettingsFieldNotes" location="648,504" order="$CommandAction10,$CommandAction25,,,,,,,,,$Default,,,,,"/>
         <Node id="frmSettingsCompass" location="656,616" order="$CommandAction38,$CommandAction41,,,,,,,,,$Default,,,,,"/>
         <Node id="frmCoordinatesProjection" location="1456,1824" order="$CommandAction59,$CommandAction81,,,,,,,,,$Default,,,,,"/>
         <Node id="frmSettingsGo4Cache" location="856,408" order="$CommandAction111,$CommandAction112,,,,,,,,,$Default,,,,,"/>
-        <Node id="frmAbout" location="1200,856" order="$CommandAction27,$CommandAction106,,,,,,,,,$Default,,,,,"/>
+        <Node id="frmSettingsGPS" location="720,776" order="$CommandAction13,$CommandAction24,,,,,,,,,$Default,,,,,"/>
         <Link id="$StartPoint$ActionLink" path="200,1160,282,1160,282,1096,392,1096"/>
         <Link id="$CommandAction2$ActionLink" path="2152,200,2305,200,2305,672,47,672,47,1160,120,1160"/>
         <Link id="$CommandAction4$ActionLink" path="3112,200,3223,200,3223,1861,1141,1861,1141,1800,1160,1800"/>

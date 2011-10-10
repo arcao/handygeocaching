@@ -341,7 +341,8 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Command cmdSelectAll;
     private Form frmSettingsGo4Cache;
     private ChoiceGroup cgShareCoordinatesOnGo4Cache;
-    private StringItem siGo4CacheAbout;//GEN-END:MVDFields
+    private StringItem siGo4CacheAbout;
+    private ChoiceGroup cgSkipNmeaParsingErrors;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -4666,7 +4667,10 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
     public Form get_frmSettingsGPS() {
         if (frmSettingsGPS == null) {//GEN-END:MVDGetBegin642
             // Insert pre-init code here
-            frmSettingsGPS = new Form("Nastaven\u00ED - GPS", new Item[] {get_cgInternalGPSType()});//GEN-BEGIN:MVDGetInit642
+            frmSettingsGPS = new Form("Nastaven\u00ED - GPS", new Item[] {//GEN-BEGIN:MVDGetInit642
+                get_cgInternalGPSType(),
+                get_cgSkipNmeaParsingErrors()
+            });
             frmSettingsGPS.addCommand(get_cmdSave());
             frmSettingsGPS.addCommand(get_cmdBack());
             frmSettingsGPS.setCommandListener(this);//GEN-END:MVDGetInit642
@@ -4992,6 +4996,28 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd707
         return siGo4CacheAbout;
     }//GEN-END:MVDGetEnd707
+
+    /** This method returns instance for cgSkipNmeaParsingErrors component and should be called instead of accessing cgSkipNmeaParsingErrors field directly.//GEN-BEGIN:MVDGetBegin708
+     * @return Instance for cgSkipNmeaParsingErrors component
+     */
+    public ChoiceGroup get_cgSkipNmeaParsingErrors() {
+        if (cgSkipNmeaParsingErrors == null) {//GEN-END:MVDGetBegin708
+            // Insert pre-init code here
+            cgSkipNmeaParsingErrors = new ChoiceGroup("Potla\u010Dit hl\u00E1\u0161en\u00ED chyb u NMEA", Choice.EXCLUSIVE, new String[] {//GEN-BEGIN:MVDGetInit708
+                "Ano",
+                "Ne"
+            }, new Image[] {
+                null,
+                null
+            });
+            cgSkipNmeaParsingErrors.setSelectedFlags(new boolean[] {
+                false,
+                true
+            });//GEN-END:MVDGetInit708
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd708
+        return cgSkipNmeaParsingErrors;
+    }//GEN-END:MVDGetEnd708
       
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {

@@ -537,7 +537,11 @@ public class GpsParser implements Runnable
         }
         catch (Exception ex)
         {
-            gui.showError("extractData",ex.toString(),nmea);
+            if (settings.skipNmeaParsingErrors) {
+                ex.printStackTrace();
+            } else {
+                gui.showError("extractData",ex.toString(),nmea);
+            }
         }
     }
     //Zephy 21.11.07 gpsstatus+\
@@ -738,7 +742,11 @@ public class GpsParser implements Runnable
         }
         catch (Exception e)
         {
-            gui.showError("receiveNmea",e.toString(),nmea);
+            if (settings.skipNmeaParsingErrors) {
+                e.printStackTrace();
+            } else {
+                gui.showError("receiveNmea",e.toString(),nmea);
+            }
         }
     }
    

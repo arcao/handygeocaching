@@ -56,6 +56,7 @@ public class Settings
     public boolean useInternalCompass;
     public float compassDeclination; 
     public boolean shareCoordinatesOnGo4Cache;
+    public boolean skipNmeaParsingErrors;
     
     //ostatni promenne
     private RecordStore recordStore;   
@@ -113,6 +114,7 @@ public class Settings
             useInternalCompass = false;
             compassDeclination = 2.5f;
             shareCoordinatesOnGo4Cache = false;
+            skipNmeaParsingErrors = false;
             
             if (recordStore.getNumRecords() == 0)
             {  //prvni start aplikace
@@ -142,6 +144,7 @@ public class Settings
                 useInternalCompass = DI.readBoolean();
                 compassDeclination = DI.readFloat();
                 shareCoordinatesOnGo4Cache = DI.readBoolean();
+                skipNmeaParsingErrors = DI.readBoolean();
             }
             return true;
         }
@@ -182,6 +185,7 @@ public class Settings
             gui.get_cgFieldNotes().setSelectedFlags(flags);
             
             gui.get_cgInternalGPSType().setSelectedIndex(internalGPSType, true);
+            gui.get_cgSkipNmeaParsingErrors().setSelectedIndex((skipNmeaParsingErrors) ? 0 : 1, true);
             
             gui.get_cgAcceptingDialogs().setSelectedIndex((acceptingDialogs) ? 0 : 1, true);
             
@@ -224,6 +228,7 @@ public class Settings
             wrappedFieldNotesList = selected[3];
             
             internalGPSType = gui.get_cgInternalGPSType().getSelectedIndex();
+            skipNmeaParsingErrors = (gui.get_cgSkipNmeaParsingErrors().getSelectedIndex() == 0);
             
             acceptingDialogs = (gui.get_cgAcceptingDialogs().getSelectedIndex() == 0);
             useInternalCompass = (gui.get_cgUseInternalCompass().getSelectedIndex() == 0);
@@ -276,6 +281,7 @@ public class Settings
             dos.writeBoolean(useInternalCompass);
             dos.writeFloat(compassDeclination);
             dos.writeBoolean(shareCoordinatesOnGo4Cache);
+            dos.writeBoolean(skipNmeaParsingErrors);
             
             byte[] bytes = buffer.toByteArray();
             if (createNewRecord)
