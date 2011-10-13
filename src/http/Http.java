@@ -55,7 +55,7 @@ public class Http implements Runnable
     public static final int WAYPOINTS = 5;
     public static final int LOGS = 6;
     public static final int NEXT_NEAREST = 7;
-    public static final int ALL_LOGS = 8;
+    public static final int NEXT_LOGS = 8;
     public static final int KEYWORD = 9;
     public static final int TRACKABLE = 19;
     public static final int PATTERNS = 11;
@@ -92,7 +92,9 @@ public class Http implements Runnable
     
     private HttpConnection connection;
     private boolean terminated = false;
-    
+    private int page = 2;
+    private TextArea area;
+
     private static String userAgent = null;
     
     public static String getUserAgent() {
@@ -455,18 +457,18 @@ public class Http implements Runnable
                     response = downloadData("part=info&waypoint="+waypoint, false, true, "Stahuji listing keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
-                        TextArea area = new TextArea(gui.getDisplay());
+                        area = new TextArea(gui.getDisplay());
                         area.setLeftButtonText("Zpět");
                         area.setLeftButtonScreen(gui.get_frmOverview());
+                        area.setRightButtonText("Obnovit");
+                        area.setRightButtonAction(new Runnable() {
+                           public void run() {
+                               start(action, true);
+                           } 
+                        });
+                        
                         area.setText(response);
                         area.show();
-                        //gui.get_frmInfo().deleteAll();
-                        //gui.get_frmInfo().append(gui.get_siBegin());
-                        //gui.get_frmInfo().append(response);
-                        //gui.get_frmInfo().append(gui.get_siEnd());
-                        //limitace Javy na telefonech SE? nasledujici radka zobrazi jen par vet.
-                        //gui.get_siContent().setText(response);
-                        //gui.getDisplay().setCurrent(gui.get_frmInfo());
                     }
                 }
                 catch (InterruptedException e) {
@@ -483,14 +485,18 @@ public class Http implements Runnable
                     response = downloadData("part=hint&waypoint="+waypoint, false, true, "Stahuji nápovědu keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
-                        TextArea area = new TextArea(gui.getDisplay());
+                        area = new TextArea(gui.getDisplay());
                         area.setLeftButtonText("Zpět");
                         area.setLeftButtonScreen(gui.get_frmOverview());
+                        area.setRightButtonText("Obnovit");
+                        area.setRightButtonAction(new Runnable() {
+                           public void run() {
+                               start(action, true);
+                           } 
+                        });
+                        
                         area.setText(response);
                         area.show();
-                        //gui.get_frmHint().deleteAll();
-                        //gui.get_frmHint().append(response);
-                        //gui.getDisplay().setCurrent(gui.get_frmHint());
                     }
                 }
                 catch (InterruptedException e) {
@@ -535,7 +541,7 @@ public class Http implements Runnable
                         //gui.get_frmLogs().deleteAll();
                         
                         StringBuffer sb = new StringBuffer();
-                        TextArea area = new TextArea(gui.getDisplay());
+                        area = new TextArea(gui.getDisplay());
                         area.setLeftButtonText("Zpět");
                         area.setLeftButtonScreen(gui.get_frmOverview());
                         
@@ -547,10 +553,11 @@ public class Http implements Runnable
                                 //gui.get_frmLogs().removeCommand(cmdMoreLogs);
                                 if (!logs[i][0].equals("0"))
                                 {
-                                    area.setRightButtonText("Dalších " + logs[i][0]);
+                                    area.setRightButtonText("Další");
                                     area.setRightButtonAction(new Runnable() {
                                         public void run() {
-                                            start(Http.ALL_LOGS, false);
+                                            page = 2;
+                                            start(Http.NEXT_LOGS, false);
                                         }
                                     });
                                     //gui.get_frmLogs().addCommand(cmdMoreLogs);
@@ -588,21 +595,33 @@ public class Http implements Runnable
                     gui.showError("logs",e.toString(),response);
                 }
                 break;
-            case ALL_LOGS:
+            case NEXT_LOGS:
                 try
                 {
-                    response = downloadData("part=alllogs&guideline="+guideline, false, true, "Stahuji všechny logy keše " + waypointCacheName + "...");
+                    response = downloadData("part=nextlogs&guideline="+guideline+"&page="+page, false, true, "Stahuji "+page+" stránku logů keše " + waypointCacheName + "...");
                     if (checkData(response))
                     {
                         String[][] logs = parseData(response);
                         //gui.get_frmAllLogs().deleteAll();
                         StringBuffer sb = new StringBuffer();
-                        TextArea area = new TextArea(gui.getDisplay());
-                        area.setLeftButtonText("Zpět");
+                        area = new TextArea(gui.getDisplay());
+                        area.setLeftButtonText("Předchozí");
                         area.setLeftButtonAction(new Runnable() {
                             public void run() {
-                                start(Http.LOGS, false);
+                                page--;
+                                if (page == 1) {
+                                    start(Http.LOGS, false);
+                                } else {
+                                    start(Http.NEXT_LOGS, false);
+                                }
                             }
+                        });
+                        area.setRightButtonText("Další");
+                        area.setRightButtonAction(new Runnable() {
+                           public void run() {
+                               page++;
+                               start(Http.NEXT_LOGS, false);
+                           } 
                         });
                         
                         for (int i=0;i<logs.length;i++)
@@ -846,14 +865,14 @@ public class Http implements Runnable
         
         boolean cachedAction = false;
         String cachedResponse = null;
-        if ((action == OVERVIEW || action == DOWNLOAD_ALL_CACHES || action == WAYPOINTS || action == LOGS || action == ALL_LOGS) && !refresh)
+        if ((action == OVERVIEW || action == DOWNLOAD_ALL_CACHES || action == WAYPOINTS || action == LOGS || action == NEXT_LOGS) && !refresh)
         {
             cachedAction = true;
             cachedResponse = cache.loadCachedResponse(data);
-        } else if (action == HINT) {
+        } else if (action == HINT && !refresh) {
             cachedAction = true;
             cachedResponse = hintCache.get(waypoint);
-        } else if (action == DETAIL) {
+        } else if (action == DETAIL && !refresh) {
             cachedAction = true;
             cachedResponse = listingCache.get(waypoint);
         }
@@ -996,6 +1015,12 @@ public class Http implements Runnable
             else if (data.equals("ERR_FIELD_NOTES_FAILED")) 
             {
                 gui.showAlert("Nepovedlo se odeslat Field notes.",AlertType.ERROR,gui.get_lstFieldNotes());
+                return false;
+            }
+            else if (data.equals("NO_MORE_LOGS"))
+            {
+                page--;
+                gui.showAlert("Keš neobsahuje další logy.",AlertType.WARNING, area);
                 return false;
             }
             else

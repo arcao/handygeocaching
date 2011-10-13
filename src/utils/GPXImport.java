@@ -304,11 +304,15 @@ public class GPXImport extends Form implements CommandListener {
                     parts[0][0] = parts[0][0].replace('{','(').replace('}',')'); 
                     parts[0][1] = parts[0][1].replace('{','(').replace('}',')'); 
                     parts[0][8] = parts[0][8].replace('{','(').replace('}',')'); 
-                                        
+                  
+                    // Pokud neni nalezeno jmeno v GS namespace, tak nastavit napevno, ze se jedna o waypoint
+                    if (parts[0][0].length() == 0)
+                        parts[0][10] = "waypoint";
+                    
                     favourites.editId = -1;
                     
                     if (parts[0][10].equals("waypoint")) {
-                        if (waypointName.length() > 2 && lastGcCode.length() > 2 && waypointName.substring(2).equalsIgnoreCase(lastGcCode.substring(2)))
+                        if (lastCacheName.length() > 0 && waypointName.length() > 2 && lastGcCode.length() > 2 && waypointName.substring(2).equalsIgnoreCase(lastGcCode.substring(2)))
                             waypointName = lastCacheName + "-" + realWaypointName;
                         favourites.addEdit(waypointName, cmt, parts[0][4], parts[0][5], parts[0][10], null, false, "", comment, false, false, false);
                     } else {

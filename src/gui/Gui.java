@@ -745,7 +745,7 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                 getDisplay().setCurrent(get_frmOverview());//GEN-LINE:MVDCAAction119
                 // Insert post-action code here
             } else {
-                http.start(Http.ALL_LOGS, false);
+                //http.start(Http.ALL_LOGS, false);
             }//GEN-BEGIN:MVDCACase119
         } else if (displayable == frmAbout) {
             if (command == cmdBack) {//GEN-END:MVDCACase119
