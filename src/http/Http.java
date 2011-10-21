@@ -284,7 +284,7 @@ public class Http implements Runnable
                     if (rightCoordFormat)
                     {
                         String coordinates = "lattitude="+gps.convertDegToDouble(gui.get_tfLattitude().getString())+"&longitude="+gps.convertDegToDouble(gui.get_tfLongitude().getString());
-                        response = downloadData("part=nearest&"+coordinates+"&filter="+settings.filter+"&numberCaches="+settings.numberCaches, false, true, "Stahuji seznam nejbližších keší...");
+                        response = downloadData("part=nearest&"+coordinates+"&filter="+settings.filter+"&numberCaches="+settings.numberCaches+"&userFilter="+Utils.urlUTF8Encode(settings.name), false, true, "Stahuji seznam nejbližších keší...");
                         if (checkData(response))
                         {
                             foundCaches = parseData(response);

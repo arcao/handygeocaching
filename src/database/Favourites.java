@@ -363,6 +363,30 @@ public class Favourites extends Database
         }
     }
     
+     public String getCacheNameByGeoCode(String geoCode) {
+        try
+        {
+            RecordEnumeration rc = getRecordEnumeration();
+            int count = rc.numRecords();
+            
+            for (int i = 0; i < count; i++)
+            {
+                int id = rc.nextRecordId();
+                String[] data = getCachePartsID(id);
+                if (data.length == 0)
+                    continue;
+                if (data[7].equals(geoCode))
+                    return data[0];
+            }
+            return null;
+        }
+        catch (Exception e)
+        {
+            gui.showError("getCacheName",e.toString(),"");
+            return "";
+        }
+    }
+    
     
     public void setFound(int number, Date found, Displayable nextScreen) {
         try

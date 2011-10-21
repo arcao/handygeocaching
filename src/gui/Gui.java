@@ -16,6 +16,8 @@ import gps.compass.Compass;
 import java.util.Calendar;
 import javax.microedition.lcdui.ItemStateListener;
 import utils.ConfirmDialog;
+import utils.ExportDialog;
+import utils.FieldNotesExport;
 import utils.GPXImport;
 import utils.FileBrowser;
 import database.Favourites;
@@ -308,7 +310,7 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private TextField tfFNText;
     private Command cmdPostFieldNotes;
     private Command cmdSetFound;
-    private Command cmdImportGPX;
+    private Command cmdImport;
     private Gauge gaLoadingIndicator;
     private Command cmdMemoryInfo;
     private Form frmMemoryInfo;
@@ -342,7 +344,8 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     private Form frmSettingsGo4Cache;
     private ChoiceGroup cgShareCoordinatesOnGo4Cache;
     private StringItem siGo4CacheAbout;
-    private ChoiceGroup cgSkipNmeaParsingErrors;//GEN-END:MVDFields
+    private ChoiceGroup cgSkipNmeaParsingErrors;
+    private Command cmdExport;//GEN-END:MVDFields
     private Navigation cvsNavigation;
     private Map cvsMap;
     //Zephy 21.11.07 gpsstatus+\
@@ -350,6 +353,8 @@ public class Gui extends MIDlet implements CommandListener, ItemStateListener {
     //Zephy 21.11.07 gpsstatus+/
     private FileBrowser openFileBrowser = null;
     private GPXImport gpxImportForm = null;
+    private FieldNotesExport fieldNotesExport;
+    private ExportDialog fieldNotesExportDialog;
 //GEN-LINE:MVDMethods
     
     
@@ -1110,12 +1115,13 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction214
                     getDisplay().setCurrent(get_tbPoznamka());//GEN-LINE:MVDCAAction521
                 // Insert post-action code here
                 }
-            } else if (command == cmdImportGPX) {//GEN-LINE:MVDCACase521
+            } else if (command == cmdImport) {//GEN-LINE:MVDCACase521
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction587
                 // Insert post-action code here
                 openFileBrowser = new FileBrowser(getDisplay(), this);
                 openFileBrowser.setDirectorySelectionAllowed(false);
+                openFileBrowser.addExtension("gpx");
                 openFileBrowser.show();
             } else if (command == cmdShowCacheInBrowser) {//GEN-LINE:MVDCACase587
                 // Insert pre-action code here
@@ -1484,9 +1490,16 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
                 if (firstChecked(lstFieldNotes) != -1) flagsState = false;
                 for (int i = 0; i < flags.length; i++) flags[i] = flagsState;
                 lstFieldNotes.setSelectedFlags(flags);
-            }//GEN-BEGIN:MVDCACase694
+            } else if (command == cmdExport) {//GEN-LINE:MVDCACase694
+                // Insert pre-action code here
+                // Do nothing//GEN-LINE:MVDCAAction713
+                // Insert post-action code here
+                fieldNotesExportDialog = new ExportDialog(getDisplay());
+                fieldNotesExportDialog.setCommandListener(this);
+                fieldNotesExportDialog.show();
+            }//GEN-BEGIN:MVDCACase713
         } else if (displayable == frmFieldNote) {
-            if (command == cmdBack) {//GEN-END:MVDCACase694
+            if (command == cmdBack) {//GEN-END:MVDCACase713
                 // Insert pre-action code here
                 // Do nothing//GEN-LINE:MVDCAAction552
                 // Insert post-action code here
@@ -1681,6 +1694,20 @@ getDisplay ().setCurrent (get_lstFavourites());//GEN-LINE:MVDCAAction517
         } else if (displayable == gpxImportForm && gpxImportForm != null) {
             if (command == GPXImport.CANCEL || command == GPXImport.SUCCESS) {
                 favourites.viewAll();
+            }
+        } else if (displayable == fieldNotesExportDialog && fieldNotesExportDialog != null) {
+            if (command == ExportDialog.CANCEL) {
+                getDisplay().setCurrent(get_lstFieldNotes());
+            } else if (command == ExportDialog.OK) {
+                fieldNotesExport = new FieldNotesExport(getDisplay());
+                fieldNotesExport.setListener(this);
+                fieldNotesExport.save(fieldNotesExportDialog.getFileName());
+            }
+        } else if (displayable == fieldNotesExport && fieldNotesExport != null) {
+            if (command == FieldNotesExport.SUCCESS) {
+                showAlert("Field Notes vyexportovány.",AlertType.INFO,get_lstFieldNotes(), true);
+            } else {
+                getDisplay().setCurrent(get_lstFieldNotes());
             }
         }
         
@@ -2957,7 +2984,7 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
             lstFavourites.addCommand(get_cmdShowCacheInBrowser());
             lstFavourites.addCommand(get_cmdMultiSolver());
             lstFavourites.addCommand(get_cmdAddFieldNotes());
-            lstFavourites.addCommand(get_cmdImportGPX());
+            lstFavourites.addCommand(get_cmdImport());
             lstFavourites.addCommand(get_cmdPoznamka());
             lstFavourites.setCommandListener(this);
             lstFavourites.setSelectedFlags(new boolean[0]);
@@ -4306,6 +4333,7 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
             lstFieldNotes.addCommand(get_cmdEdit());
             lstFieldNotes.addCommand(get_cmdDelete());
             lstFieldNotes.addCommand(get_cmdDeleteAll());
+            lstFieldNotes.addCommand(get_cmdExport());
             lstFieldNotes.addCommand(get_cmdPostFieldNotes());
             lstFieldNotes.setCommandListener(this);
             lstFieldNotes.setSelectedFlags(new boolean[0]);
@@ -4459,16 +4487,16 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         return cmdSetFound;
     }//GEN-END:MVDGetEnd584
 
-    /** This method returns instance for cmdImportGPX component and should be called instead of accessing cmdImportGPX field directly.//GEN-BEGIN:MVDGetBegin586
-     * @return Instance for cmdImportGPX component
+    /** This method returns instance for cmdImport component and should be called instead of accessing cmdImport field directly.//GEN-BEGIN:MVDGetBegin586
+     * @return Instance for cmdImport component
      */
-    public Command get_cmdImportGPX() {
-        if (cmdImportGPX == null) {//GEN-END:MVDGetBegin586
+    public Command get_cmdImport() {
+        if (cmdImport == null) {//GEN-END:MVDGetBegin586
             // Insert pre-init code here
-            cmdImportGPX = new Command("Importovat...", Command.SCREEN, 14);//GEN-LINE:MVDGetInit586
+            cmdImport = new Command("Importovat...", Command.SCREEN, 14);//GEN-LINE:MVDGetInit586
             // Insert post-init code here
         }//GEN-BEGIN:MVDGetEnd586
-        return cmdImportGPX;
+        return cmdImport;
     }//GEN-END:MVDGetEnd586
     /** This method returns instance for gaLoadingIndicator component and should be called instead of accessing gaLoadingIndicator field directly.//GEN-BEGIN:MVDGetBegin596
      * @return Instance for gaLoadingIndicator component
@@ -5018,6 +5046,18 @@ siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED
         }//GEN-BEGIN:MVDGetEnd708
         return cgSkipNmeaParsingErrors;
     }//GEN-END:MVDGetEnd708
+
+    /** This method returns instance for cmdExport component and should be called instead of accessing cmdExport field directly.//GEN-BEGIN:MVDGetBegin712
+     * @return Instance for cmdExport component
+     */
+    public Command get_cmdExport() {
+        if (cmdExport == null) {//GEN-END:MVDGetBegin712
+            // Insert pre-init code here
+            cmdExport = new Command("Exportovat...", Command.SCREEN, 15);//GEN-LINE:MVDGetInit712
+            // Insert post-init code here
+        }//GEN-BEGIN:MVDGetEnd712
+        return cmdExport;
+    }//GEN-END:MVDGetEnd712
       
     public Navigation get_cvsNavigation() {
         if (cvsNavigation == null) {

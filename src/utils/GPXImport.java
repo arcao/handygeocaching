@@ -37,12 +37,12 @@ import kxml2.xmlpull.XmlPullParserException;
  */
 public class GPXImport extends Form implements CommandListener {
     private Favourites favourites;
-    private static final String GPX_NS1 = "http://www.topografix.com/GPX/1/0";
-    private static final String GPX_NS2 = "http://www.topografix.com/GPX/1/1";
-    private static final String GROUNDSPEAK_NS = "http://www.groundspeak.com/cache/1/";
-    private static final String GROUNDSPEAK_NS1 = "http://www.groundspeak.com/cache/1/0";
-    private static final String GROUNDSPEAK_NS2 = "http://www.groundspeak.com/cache/1/0/1";
-    private static final String GROUNDSPEAK_NS3 = "http://www.groundspeak.com/cache/1/1";
+    private static final String GPX_NS1 = "http://www.topografix.com/GPX/1/0".toLowerCase();
+    private static final String GPX_NS2 = "http://www.topografix.com/GPX/1/1".toLowerCase();
+    private static final String GROUNDSPEAK_NS = "http://www.groundspeak.com/cache/1/".toLowerCase();
+    private static final String GROUNDSPEAK_NS1 = "http://www.groundspeak.com/cache/1/0".toLowerCase();
+    private static final String GROUNDSPEAK_NS2 = "http://www.groundspeak.com/cache/1/0/1".toLowerCase();
+    private static final String GROUNDSPEAK_NS3 = "http://www.groundspeak.com/cache/1/1".toLowerCase();
         
     public static final Command SUCCESS = new Command("SUCCESS", Command.OK, 0);
     public static final Command CANCEL = new Command("Storno", Command.BACK, 0);
@@ -202,7 +202,7 @@ public class GPXImport extends Form implements CommandListener {
                         parser.next();
                         
                         if (parser.getEventType() == XmlPullParser.START_TAG) {
-                            if (!parser.getNamespace().startsWith(GROUNDSPEAK_NS)) {
+                            if (!parser.getNamespace().toLowerCase().startsWith(GROUNDSPEAK_NS)) {
                                 if (parser.getName().equals("name")) {
                                     parser.next();
                                     waypointName = parser.getText(); //gcCode
@@ -277,13 +277,13 @@ public class GPXImport extends Form implements CommandListener {
                                     parts[0][12] = (hint.length() > 0) ? "1":"0";
                                     //comment+= ((comment.length() > 0) ? "\r\n" : "") + parser.getText();
                                 } else if (parser.getName().equals("logs")) {
-                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("logs") || !parser.getNamespace().startsWith(GROUNDSPEAK_NS))
+                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("logs") || !parser.getNamespace().toLowerCase().startsWith(GROUNDSPEAK_NS))
                                         parser.next();
                                 } else if (parser.getName().equals("attributes")) {
-                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("attributes") || !parser.getNamespace().startsWith(GROUNDSPEAK_NS))
+                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("attributes") || !parser.getNamespace().toLowerCase().startsWith(GROUNDSPEAK_NS))
                                         parser.next();
                                 } else if (parser.getName().equals("travelbugs")) {
-                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("travelbugs") || !parser.getNamespace().startsWith(GROUNDSPEAK_NS)) {
+                                    while (parser.getEventType() != XmlPullParser.END_TAG || !parser.getName().equals("travelbugs") || !parser.getNamespace().toLowerCase().startsWith(GROUNDSPEAK_NS)) {
                                         parser.next();
                                         if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("name")) {
                                             parser.next();
@@ -304,6 +304,8 @@ public class GPXImport extends Form implements CommandListener {
                     parts[0][0] = parts[0][0].replace('{','(').replace('}',')'); 
                     parts[0][1] = parts[0][1].replace('{','(').replace('}',')'); 
                     parts[0][8] = parts[0][8].replace('{','(').replace('}',')'); 
+                    
+                    System.out.println(Favourites.cachePartsToDesc(parts));
                   
                     // Pokud neni nalezeno jmeno v GS namespace, tak nastavit napevno, ze se jedna o waypoint
                     if (parts[0][0].length() == 0)
@@ -312,8 +314,19 @@ public class GPXImport extends Form implements CommandListener {
                     favourites.editId = -1;
                     
                     if (parts[0][10].equals("waypoint")) {
-                        if (lastCacheName.length() > 0 && waypointName.length() > 2 && lastGcCode.length() > 2 && waypointName.substring(2).equalsIgnoreCase(lastGcCode.substring(2)))
+                        if ((lastCacheName.length() > 0 && waypointName.length() > 2 && lastGcCode.length() > 2 && waypointName.substring(2).equalsIgnoreCase(lastGcCode.substring(2))) ||
+                            (lastCacheName.length() > 0 && waypointName.length() == 0)) {
                             waypointName = lastCacheName + "-" + realWaypointName;
+                        } else {
+                            //pokusime se najit nazev kese ke kteremu patri waypoint
+                            lastGcCode = "GC" + waypointName.substring(2);
+                            lastCacheName = favourites.getCacheNameByGeoCode(lastGcCode);
+                            if (lastCacheName != null) {
+                                waypointName = lastCacheName + "-" + realWaypointName;
+                            } else {
+                                lastCacheName = "";
+                            }
+                        }
                         favourites.addEdit(waypointName, cmt, parts[0][4], parts[0][5], parts[0][10], null, false, "", comment, false, false, false);
                     } else {
                         favourites.addEdit(parts[0][0], Favourites.cachePartsToDesc(parts), parts[0][4], parts[0][5], parts[0][10], null, false, "", comment, false, false, false);

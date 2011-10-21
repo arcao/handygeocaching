@@ -15,6 +15,7 @@ import gui.IconLoader;
 import gui.LoadingForm;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Vector;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
@@ -63,6 +64,8 @@ public class FileBrowser extends List implements CommandListener
     
     private Image FILE_ICON = null;
     private Image DIRECTORY_ICON = null;
+    
+    private Vector extensions;
 
     public static boolean isApiAvailable() {
         return System.getProperty("microedition.io.file.FileConnection.version") != null;
@@ -77,9 +80,10 @@ public class FileBrowser extends List implements CommandListener
         currDirName = MEGA_ROOT;
         
         IconLoader iconLoader = Gui.getInstance().iconLoader;
+        extensions = new Vector();
         
-        FILE_ICON = iconLoader.loadIcon("file");
-        DIRECTORY_ICON = iconLoader.loadIcon("directory");
+        //FILE_ICON = iconLoader.loadIcon("file");
+        //DIRECTORY_ICON = iconLoader.loadIcon("directory");
 
         setCommandListener(this);
         setSelectCommand(OPEN);  
@@ -88,6 +92,7 @@ public class FileBrowser extends List implements CommandListener
     }
     
     public boolean show() {
+        System.out.println("Displaying FileBrowser");
         if (!isApiAvailable()) {
             Gui.getInstance().showAlert("Telefon neumožňuje načítat soubory.", AlertType.ERROR, display.getCurrent());
             return false;
@@ -152,6 +157,17 @@ public class FileBrowser extends List implements CommandListener
                 listener.commandAction(CANCEL, this);
         }  
     }
+    
+    public boolean isAllowed(String fileName) {
+        int extPos = fileName.lastIndexOf('.');
+        String ext;
+        if (extPos == -1) {
+            ext = "";
+        } else {
+            ext = fileName.substring(extPos + 1);
+        }
+        return extensions.size() == 0 || extensions.contains(ext.toLowerCase());
+    }
      
     private void list() {
         try {
@@ -197,9 +213,7 @@ public class FileBrowser extends List implements CommandListener
                         while (e.hasMoreElements()) {
                             fileName = (String) e.nextElement();
                             String ext = "";
-                            if (fileName.length() >= 4)
-                                ext =  fileName.substring(fileName.length() - 4).toLowerCase();
-                            if (ext.equals(".gpx") || ext.equals(".loc"))
+                            if (isAllowed(fileName) && fileName.length() > 1 && fileName.charAt(fileName.length()-1) != SEP)
                                 append(fileName, FILE_ICON);
                         }
                     }
@@ -228,10 +242,8 @@ public class FileBrowser extends List implements CommandListener
                     Gui.getInstance().showError("OFBrowser_list", "Exception", ex.toString());
                     return;
                 } finally {
-                    if (currDir != null) {
-                        try { currDir.close(); } catch (Exception ex) { }
-                        currDir = null;
-                    }
+                    IOUtils.silentClose(currDir);
+                    currDir = null;
                 }    
                 lForm.setFinish();
             }  
@@ -299,5 +311,9 @@ public class FileBrowser extends List implements CommandListener
 
     public boolean isDirectorySelected() {
         return directorySelected;
+    }
+    
+    public void addExtension(String ext) {
+        extensions.addElement(ext.toLowerCase());
     }
 }   
