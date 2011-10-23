@@ -2474,7 +2474,7 @@ frmAbout.setCommandListener (this);//GEN-END:MVDGetInit126
         if (stringItem1 == null) {//GEN-END:MVDGetBegin128
             // Insert pre-init code here
             /*
-stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spol. s.r.o., Palack\u00E9ho t\u0159\u00EDda 16, 61200 Brno.\n\nAplikaci vytvo\u0159il David V\u00E1vra (Destil). Kontakt: me@destil.cz\n\nV p\u0159\u00EDpad\u011B probl\u00E9m\u016F a pro v\u00EDce informac\u00ED nav\u0161tivte str\u00E1nky http://hg.destil.cz");//GEN-LINE:MVDGetInit128
+stringItem1 = new StringItem ("O aplikaci:", "Aplikaci vytvo\u0159il David V\u00E1vra (Destil). Kontakt: me@destil.cz\n\nNyn\u00ED aplikaci vyv\u00EDj\u00ED Martin Sloup (Arcao). Kontakt: arcao@arcao.com\n\nV p\u0159\u00EDpad\u011B probl\u00E9m\u016F a pro v\u00EDce informac\u00ED nav\u0161tivte str\u00E1nky http://arcao.com/hg.");//GEN-LINE:MVDGetInit128
             */
             stringItem1 = new StringItem("O aplikaci:", "Tuto aplikaci sponzoruje Axima spol. s.r.o., Palack\u00E9ho t\u0159\u00EDda 16, 61200 Brno.\n\nAplikaci vytvo\u0159il David V\u00E1vra (Destil). Nyní aplikaci vyvíjí Martin Sloup (Arcao)\n\nV p\u0159\u00EDpad\u011B probl\u00E9m\u016F a pro v\u00EDce informac\u00ED nav\u0161tivte str\u00E1nky http://code.google.com/p/handygeocaching\n"); 
 // Insert post-init code here
@@ -3203,7 +3203,7 @@ stringItem1 = new StringItem ("O aplikaci:", "Tuto aplikaci sponzoruje Axima spo
         if (siDonate == null) {//GEN-END:MVDGetBegin281
             // Insert pre-init code here
             /*
-siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED, podpo\u0159te finan\u010Dn\u011B jej\u00ED v\u00FDvoj! Za\u0161lete pros\u00EDm libovolnou \u010D\u00E1stku na \u00FA\u010Det autora:\n\n51-5385890237/0100\n\nVe zpr\u00E1v\u011B pro p\u0159\u00EDjemce uve\u010F\u0165e sv\u016Fj nick na GC.com, p\u0159estane se V\u00E1m pak ukazovat \u00FAvodn\u00ED reklama.");//GEN-LINE:MVDGetInit281
+siDonate = new StringItem ("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED, podpo\u0159te finan\u010Dn\u011B jej\u00ED v\u00FDvoj! Jak na to naleznete na str\u00E1nce http://arcao.com/hg.");//GEN-LINE:MVDGetInit281
             */
             siDonate = new StringItem("Donate:", "Pokud se V\u00E1m aplikace l\u00EDb\u00ED, podpo\u0159te finan\u010Dn\u011B jej\u00ED v\u00FDvoj! Za\u0161lete pros\u00EDm libovolnou \u010D\u00E1stku na \u00FA\u010Det autora:\n\n670100-2201481946/6210\n\nVe zpr\u00E1v\u011B pro p\u0159\u00EDjemce uve\u010F\u0165e sv\u016Fj nick na GC.com, p\u0159estane se V\u00E1m pak ukazovat \u00FAvodn\u00ED reklama.");
             // Insert post-init code here
