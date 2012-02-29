@@ -104,7 +104,8 @@ public class GPXImport extends Form implements CommandListener {
     private void parse(InputStream in) throws IOException, XmlPullParserException, Exception {
         KXmlParser parser = new KXmlParser();
         parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true);
-        parser.setInput(in, "UTF-8");
+        // try to detect encoding by BOM or fall to UTF-8
+        parser.setInput(in, null);
         //ParseEvent pe = null;
         
         //System.out.println("Search gpx tag..");
