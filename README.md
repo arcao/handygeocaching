@@ -2,7 +2,7 @@
 Handy Geocaching je mobilní javová aplikace pro usnadnění geocachingu. Spojuje mobilní přístup ke stránkám geocaching.com s navigačními funkcemi. Umožňuje vyhledávání keší (nejbližší, podle waypointu, podle klíčového slova) a stahování všech potřebných informací o nich(listing, nápověda, přídavné waypointy, …).
 
 ## Stažení aplikace ##
-### [Stabilní verze](https://github.com/arcao/handygeocaching/releases/latest) ###
+### [Stabilní verze](https://github.com/arcao/handygeocaching/releases) ###
 Stažení JAD, JAR souborů (instalace přímo z telefonu) [poslední stabilní verze](https://github.com/arcao/handygeocaching/releases/latest):
   * [HandyGeocaching.jad](http://lab.arcao.com/aplikace/j2me/handygeocaching/latest/stable/HandyGeocaching.jad)
   * [HandyGeocaching.jar](http://lab.arcao.com/aplikace/j2me/handygeocaching/latest/stable/HandyGeocaching.jar)
