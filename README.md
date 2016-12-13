@@ -4,8 +4,8 @@ Handy Geocaching je mobilní javová aplikace pro usnadnění geocachingu. Spoju
 ## Stažení aplikace ##
 ### [Stabilní verze](https://github.com/arcao/handygeocaching/releases) ###
 Stažení JAD, JAR souborů (instalace přímo z telefonu) [poslední stabilní verze](https://github.com/arcao/handygeocaching/releases/latest):
-  * [HandyGeocaching.jad](http://lab.arcao.com/aplikace/j2me/handygeocaching/latest/stable/HandyGeocaching.jad)
-  * [HandyGeocaching.jar](http://lab.arcao.com/aplikace/j2me/handygeocaching/latest/stable/HandyGeocaching.jar)
+  * [HandyGeocaching.jad](http://lab.arcao.com/aplikace/j2me/handygeocaching/latest/stable/HandyGeocaching.jad) (zkráceně https://goo.gl/VjOdaH)
+  * [HandyGeocaching.jar](http://lab.arcao.com/aplikace/j2me/handygeocaching/latest/stable/HandyGeocaching.jar) (zkráceně https://goo.gl/JqPmRB)
 
 Pozor: Na začátku nového roku vypršel podpisový certifikát, kterým je podepsán HandyGeocaching (nový certifikát stojí cca 5700 Kč/rok, o zakoupení neuvažuji). Proto všechny nově vydané verze budou již jen nepodepsané. Rozdíl mezi mezi podepsanou a nepodepsanou verzi je ten, že u podepsané existuje možnost v nastavení aplikací vypnout otravné potvrzení na čtení / zápis souborů (například v novějších Nokiích je toto možné nastavit i u nepodepsaných aplikací).
 
