@@ -1,3 +1,5 @@
+## Tento projekt se již aktivně neudržuje, promiňte :)
+---
 # Handy Geocaching #
 Handy Geocaching je mobilní javová aplikace pro usnadnění geocachingu. Spojuje mobilní přístup ke stránkám geocaching.com s navigačními funkcemi. Umožňuje vyhledávání keší (nejbližší, podle waypointu, podle klíčového slova) a stahování všech potřebných informací o nich(listing, nápověda, přídavné waypointy, …).
 
