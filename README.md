@@ -1,4 +1,4 @@
-## Tento projekt se již aktivně neudržuje, promiňte :)
+## Tento projekt se již aktivně nevyvíjí. Pouze se udržuje webová služba [handygeocaching-service](https://github.com/arcao/handygeocaching-service), aby byla zachována alespoň základní funkčnost aplikace.
 ---
 # Handy Geocaching #
 Handy Geocaching je mobilní javová aplikace pro usnadnění geocachingu. Spojuje mobilní přístup ke stránkám geocaching.com s navigačními funkcemi. Umožňuje vyhledávání keší (nejbližší, podle waypointu, podle klíčového slova) a stahování všech potřebných informací o nich(listing, nápověda, přídavné waypointy, …).
